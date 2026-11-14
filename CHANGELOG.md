@@ -38,6 +38,12 @@ The looks follow their components: `menuItemLabel`, `menuItemNote` and `menuItem
 
 New, and only added:
 
+- Three composite components with every part shadcn has: `card` (`Card`, `CardHeader`, `CardTitle`,
+  `CardDescription`, `CardAction`, `CardContent`, `CardFooter`), `field` (`FieldSet`, `FieldLegend`,
+  `FieldGroup`, `Field`, `FieldContent`, `FieldLabel`, `FieldTitle`, `FieldDescription`,
+  `FieldSeparator`, `FieldError`; `orientation` vertical / horizontal / responsive) and `item`
+  (`ItemGroup`, `ItemSeparator`, `Item`, `ItemMedia`, `ItemContent`, `ItemTitle`, `ItemDescription`,
+  `ItemActions`, `ItemHeader`, `ItemFooter`; `variant` default / outline / muted, `size` default / sm).
 - `Radio` takes `size` (`sm` / `default` / `lg`) as `Checkbox` does, from one table of scales: 0.8,
   1, 1.25 (`ChoiceSize`).
 - `IconButton` and `RoundButton` take `size` (`sm` / `default` / `lg`); its default is the size they
