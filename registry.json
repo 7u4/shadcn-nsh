@@ -597,7 +597,7 @@
       "type": "registry:ui",
       "title": "Tabs",
       "description": "A pill track or underlined row with a traveling indicator.",
-      "registryDependencies": ["icons", "surface", "theme"],
+      "registryDependencies": ["icons", "label", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/tabs.tsx",
@@ -612,7 +612,7 @@
       "type": "registry:ui",
       "title": "Segmented",
       "description": "A sunk track whose raised thumb springs to the selected segment.",
-      "registryDependencies": ["tabs", "theme"],
+      "registryDependencies": ["label", "tabs", "theme"],
       "files": [
         {
           "path": "packages/ui/segmented.tsx",
@@ -626,7 +626,7 @@
       "type": "registry:ui",
       "title": "Accordion",
       "description": "List rows that reveal panels with a turning chevron.",
-      "registryDependencies": ["icons", "surface", "theme"],
+      "registryDependencies": ["icons", "label", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/accordion.tsx",
@@ -641,7 +641,7 @@
       "type": "registry:ui",
       "title": "Collapsible",
       "description": "A disclosure row that reveals a panel beneath it.",
-      "registryDependencies": ["accordion", "open-state", "surface"],
+      "registryDependencies": ["accordion", "label", "open-state", "surface"],
       "files": [
         {
           "path": "packages/ui/collapsible.tsx",
