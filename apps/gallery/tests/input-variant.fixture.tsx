@@ -4,7 +4,7 @@ import { inputLook } from "../../../packages/ui";
 
 // What the look draws, as words: the ghost field's fill and edge, the ring both keep, and the
 // default field's fill and edge, so a test can hold the two apart. `—` is absent.
-const said = (value: unknown) => (value === undefined || value === null ? "—" : String(value));
+const said = (value: number | undefined) => value ?? "—";
 const ghost = inputLook({ variant: "ghost" });
 const plain = inputLook();
 const line = (name: string, look: ReturnType<typeof inputLook>) =>
