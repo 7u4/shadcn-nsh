@@ -24,6 +24,7 @@ every call site. There are no aliases — a migration is a type error, not a war
 | `<Radio variant="ring" />`                         | `<Radio />` (`default` is the ring)                       |
 | `<Switch size="small" />`                          | `<Switch size="sm" />`                                    |
 | `<SegmentedList size="regular" />`                 | `<SegmentedList size="default" />`                        |
+| `<IconButton>` / `<RoundButton>` with no name      | pass `accessibilityLabel`, now required on both           |
 | `<Icon name="chevron" />`                          | `<Icon icon={ChevronRight} />`, an import from `lucide`   |
 
 Icons come from [`lucide`](https://lucide.dev): a component imports the icon it draws
@@ -51,6 +52,7 @@ New, and only added:
   already had, so nothing moves on its own. `RoundButton`'s `side` still sets an exact diameter.
 - Every `tone` prop is one type, `Tone | (() => Tone)`: a value, or a function read where the control
   draws (`Badge`, `Meter`, `Stat`, `Status`, `Progress`, `DiffHunkActions`).
+- `Button`, `Link`, `Toggle`, `Checkbox`, `Radio`, `MenuItem` and `SplitButtonSegment` take the text of a string child as the control's name for screen readers, unless `accessibilityLabel` says otherwise; children drawn as given derive nothing.
 - Each control exports its own axis union (`ButtonVariant`, `BadgeVariant`, `ChoiceSize`, …), and a
   test holds them all to the vocabulary.
 - `shadcn-nsh init --theme shadcn` installs shadcn's neutral palette and its flat finishes, the

@@ -7,6 +7,7 @@ import { platform, split, Text, token, View } from "nsh";
 import { Link as BaseLink, type LinkProps as BaseLinkProps } from "nsh/base";
 
 import { Icon } from "./lib/icons";
+import { labelOf } from "./lib/label";
 
 // @port look/nav.tsx
 const pointer = platform.desktop;
@@ -121,7 +122,8 @@ export type LinkProps = Omit<BaseLinkProps, "children"> & {
   inline?: boolean;
   /** External arrow after the label. */
   icon?: boolean;
-  /** A string is the label; anything else is drawn as given. */
+  /** A string is the label; anything else is drawn as given. A string label is also the link's
+   * name for screen readers, unless `accessibilityLabel` says otherwise. */
   children?: string | JSX.Element;
 };
 
@@ -149,6 +151,7 @@ export function Link(props: LinkProps) {
   return (
     <BaseLink
       {...rest}
+      accessibilityLabel={labelOf(props.accessibilityLabel, props.children)}
       class={props.class ? `${look().class} ${props.class}` : look().class}
       style={props.style}
       focusVisibleStyle={[look().focusVisibleStyle, props.focusVisibleStyle ?? null]}

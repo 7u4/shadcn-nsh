@@ -13,6 +13,7 @@ import {
   DisclosureChevron,
   type DisclosurePanelOptions,
 } from "./accordion";
+import { labelOf } from "./lib/label";
 import { createOpenState, createSlot, type OpenState, type Slot } from "./lib/open-state";
 import { RowLabel } from "./lib/surface";
 
@@ -92,13 +93,7 @@ export function CollapsibleTrigger(props: CollapsibleTriggerProps) {
     return (
       <View
         role="button"
-        accessibilityLabel={
-          props.accessibilityLabel != null
-            ? props.accessibilityLabel
-            : typeof children === "string"
-              ? children
-              : undefined
-        }
+        accessibilityLabel={labelOf(props.accessibilityLabel, children) ?? undefined}
         accessibilityState={{ expanded: ctx.open(), disabled }}
         class={props.class ? `${look.class} ${props.class}` : look.class}
         onPress={disabled ? undefined : () => ctx.setOpen(!ctx.open())}

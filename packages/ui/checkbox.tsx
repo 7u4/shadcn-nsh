@@ -7,6 +7,7 @@ import { split, Text, View } from "nsh";
 import { Checkbox as BaseCheckbox, type CheckboxProps as BaseCheckboxProps } from "nsh/base";
 
 import { Icon } from "./lib/icons";
+import { labelOf } from "./lib/label";
 import { controlSize } from "./lib/surface";
 
 // @port look/choice.tsx
@@ -200,7 +201,8 @@ export type CheckboxProps = Omit<BaseCheckboxProps, "children"> & {
   size?: ChoiceSize;
   /** A round box (a task's, as reminders draw it). */
   round?: boolean;
-  /** A string is the label; anything else is drawn as given. */
+  /** A string is the label; anything else is drawn as given. A string label is also the
+   * checkbox's name for screen readers, unless `accessibilityLabel` says otherwise. */
   children?: string | JSX.Element;
 };
 
@@ -225,6 +227,7 @@ export function Checkbox(props: CheckboxProps) {
   return (
     <BaseCheckbox
       {...rest}
+      accessibilityLabel={labelOf(props.accessibilityLabel, props.children)}
       class={props.class ? `group ${props.class}` : "group"}
       indicatorClass={
         props.indicatorClass

@@ -18,6 +18,7 @@ import {
 } from "nsh/base";
 
 import { Icon } from "./lib/icons";
+import { labelOf } from "./lib/label";
 import { controlSize, listRow, RowDivider, RowLabel, type ListRowOptions } from "./lib/surface";
 
 // @port look/disclosure.tsx
@@ -187,13 +188,7 @@ export function AccordionTrigger(props: AccordionTriggerProps) {
     <BaseAccordionTrigger
       {...rest}
       class={mergeClass(look.class, props.class)}
-      accessibilityLabel={
-        props.accessibilityLabel !== undefined
-          ? props.accessibilityLabel
-          : typeof props.children === "string"
-            ? props.children
-            : undefined
-      }
+      accessibilityLabel={labelOf(props.accessibilityLabel, props.children)}
       style={[look.style, props.style ?? null]}
       hoverStyle={[look.hoverStyle ?? null, props.hoverStyle ?? null]}
       activeStyle={[look.activeStyle, props.activeStyle ?? null]}
