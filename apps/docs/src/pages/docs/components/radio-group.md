@@ -63,6 +63,10 @@ import { Radio, RadioGroup } from "@/components/ui/radio-group";
 </Radio>
 ```
 
+### Names for screen readers
+
+A string child is the row's label and its name for screen readers; `accessibilityLabel` wins when it should differ. Children drawn as given derive no name.
+
 ## API
 
 Every prop of [`nsh/base` Radio](https://nsh.dev/elements/radio) and [`RadioGroup`](https://nsh.dev/elements/radio-group) passes through. Style props go over the look's. The row is the `group` the ring sinks with while pressed. `RadioGroupItem` is an alias of `Radio`.
