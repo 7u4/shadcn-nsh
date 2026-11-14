@@ -53,6 +53,9 @@ New, and only added:
 - Every `tone` prop is one type, `Tone | (() => Tone)`: a value, or a function read where the control
   draws (`Badge`, `Meter`, `Stat`, `Status`, `Progress`, `DiffHunkActions`).
 - `Button`, `Link`, `Toggle`, `Checkbox`, `Radio`, `MenuItem` and `SplitButtonSegment` take the text of a string child as the control's name for screen readers, unless `accessibilityLabel` says otherwise; children drawn as given derive nothing.
+- `Input` takes `variant`: `default` is the sunk field it always was, `ghost` is the same text
+  and placeholder with no fill and no edge at rest, keeping the focus ring, the invalid edge and
+  the disabled look. `inputLook` takes the same option (`InputVariant`).
 - Each control exports its own axis union (`ButtonVariant`, `BadgeVariant`, `ChoiceSize`, …), and a
   test holds them all to the vocabulary.
 - `shadcn-nsh init --theme shadcn` installs shadcn's neutral palette and its flat finishes, the

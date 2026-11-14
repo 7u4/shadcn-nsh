@@ -107,6 +107,22 @@ function App() {
       </Split>
 
       <DemoCard>
+        <DemoSection title="Ghost">
+          <View style={{ gap: 10, flex: 1 }}>
+            <Input variant="ghost" placeholder="Search" accessibilityLabel="Search" />
+            <Input
+              variant="ghost"
+              value="Untitled note"
+              onChange={({ value }) => notes.set(value)}
+              accessibilityLabel="Title"
+              style={{ fontSize: 17, fontWeight: "600" }}
+            />
+            <Input variant="default" value="For comparison" accessibilityLabel="For comparison" />
+          </View>
+        </DemoSection>
+      </DemoCard>
+
+      <DemoCard>
         <DemoSection title="States">
           <View style={{ gap: 10, flex: 1 }}>
             <Input value="Read only" readonly accessibilityLabel="Read only" />
