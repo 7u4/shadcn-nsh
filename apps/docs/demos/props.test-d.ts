@@ -96,7 +96,7 @@ import type {
   ItemSize,
   ItemVariant,
 } from "@/packages/ui/index";
-import type { ButtonSize, ButtonVariant } from "@/packages/ui/index";
+import type { ButtonSize, ButtonVariant, InputVariant } from "@/packages/ui/index";
 import type {
   AccordionHeaderProps,
   AccordionItemProps,
@@ -138,6 +138,7 @@ import type {
   OtpInputProps,
   PaginationProps,
   PopoverContentProps,
+  PressableProps,
   ProgressProps,
   RadioGroupProps,
   RadioProps,
@@ -214,10 +215,24 @@ type _alertDialogContent = Assert<
 type _avatar = Assert<KeepsBase<BaseAvatarProps, AvatarProps, never>>;
 /** `ButtonProps`. */
 type _button = Assert<KeepsBase<BaseButtonProps, ButtonProps, never>>;
-/** `IconButtonProps`. */
-type _iconButton = Assert<KeepsBase<BaseButtonProps, IconButtonProps, never>>;
-/** `RoundButtonProps`. */
-type _roundButton = Assert<KeepsBase<BaseButtonProps, RoundButtonProps, never>>;
+/** `IconButtonProps` — every base prop. `accessibilityLabel` is required here, over the base's
+ * optional one: the check meets the base's own form, and the `@ts-expect-error` below holds the
+ * required one. */
+type _iconButton = Assert<
+  KeepsBase<
+    BaseButtonProps,
+    Omit<IconButtonProps, "accessibilityLabel"> & Pick<BaseButtonProps, "accessibilityLabel">,
+    never
+  >
+>;
+/** `RoundButtonProps` — as `IconButtonProps`, with `accessibilityLabel` required. */
+type _roundButton = Assert<
+  KeepsBase<
+    BaseButtonProps,
+    Omit<RoundButtonProps, "accessibilityLabel"> & Pick<BaseButtonProps, "accessibilityLabel">,
+    never
+  >
+>;
 /** `SplitButtonSegmentProps`. */
 type _splitButtonSegment = Assert<KeepsBase<BaseButtonProps, SplitButtonSegmentProps, never>>;
 /** `CalendarProps`. */
@@ -352,6 +367,8 @@ type _popoverContent = Assert<
     "defaultOpen" | "onCancel" | "onClose" | "onOpen" | "onOpenChange" | "open" | "trigger"
   >
 >;
+/** `PressableProps`. */
+type _pressable = Assert<KeepsBase<BaseButtonProps, PressableProps, never>>;
 /** `ProgressProps`. */
 type _progress = Assert<KeepsBase<BaseProgressProps, ProgressProps, never>>;
 /** `RadioGroupProps`. */
@@ -456,6 +473,13 @@ const _fieldLegendVariant: FieldLegendVariant = "label";
 const _itemVariant: ItemVariant = "muted";
 const _itemSize: ItemSize = "sm";
 const _itemMediaVariant: ItemMediaVariant = "image";
+/** An input's own axis: the field's fill and edge, or neither (`ghost`). */
+const _inputGhost: InputVariant = "ghost";
+const _inputDefault: InputVariant = "default";
+// @ts-expect-error — an input is `default` or `ghost`: `outline` is a button's.
+const _inputOutline: InputVariant = "outline";
+// @ts-expect-error — an input is `default` or `ghost`, not `filled`.
+const _inputFilled: InputVariant = "filled";
 // @ts-expect-error — a field is `vertical`, `horizontal` or `responsive`, not stacked.
 const _fieldStacked: FieldOrientation = "stacked";
 // @ts-expect-error — a legend is `legend` or `label`, not `title`.
@@ -479,6 +503,12 @@ const _droppedVariant: ButtonVariant = "primary";
 const _droppedSize: ButtonSize = "small";
 // @ts-expect-error — an icon button shows as chosen through the base's `selected`, not `on`.
 const _iconButtonOn: IconButtonProps = { on: true };
+// @ts-expect-error — an icon alone names nothing: `accessibilityLabel` is required.
+const _iconButtonUnnamed: IconButtonProps = {};
+// @ts-expect-error — a round icon button names nothing either: `accessibilityLabel` is required.
+const _roundButtonUnnamed: RoundButtonProps = {};
+/** Named, as every icon button must be. */
+const _iconButtonNamed: IconButtonProps = { accessibilityLabel: "Search" };
 // @ts-expect-error — a trigger's field or outline is a `variant`, not a `kind`.
 const _selectTriggerKind: SelectTriggerProps = { kind: "outline" };
 // @ts-expect-error — a box's size is `sm` / `default` / `lg`, not a scale.
@@ -501,6 +531,10 @@ const _iconName: IconProps = { name: "chevron" };
 export {
   _fieldLegendVariant,
   _fieldOrientation,
+  _inputDefault,
+  _inputGhost,
+  _inputOutline,
+  _inputFilled,
   _itemMediaVariant,
   _itemSize,
   _itemVariant,
@@ -515,6 +549,9 @@ export {
   _droppedSize,
   _droppedVariant,
   _iconButtonOn,
+  _iconButtonUnnamed,
+  _iconButtonNamed,
+  _roundButtonUnnamed,
   _iconName,
   _menuItemDanger,
   _paginationOutlined,
@@ -565,6 +602,7 @@ export type {
   _otpInput,
   _pagination,
   _popoverContent,
+  _pressable,
   _progress,
   _radioGroup,
   _radio,

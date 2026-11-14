@@ -3,7 +3,8 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { captured, makeFixture, type Fixture } from "../testing/fixture";
 import { runView } from "./view";
 
-const fixture = (): Fixture => makeFixture({ items: ["theme", "press", "spinner", "button"] });
+const fixture = (): Fixture =>
+  makeFixture({ items: ["theme", "press", "spinner", "button", "label"] });
 
 let current: Fixture | null = null;
 
@@ -21,8 +22,9 @@ describe("view", () => {
 
     expect(out.result).toBe(0);
     expect(out.text).toContain("button (registry:ui)");
-    expect(out.text).toContain("  depends on: press, spinner, theme");
+    expect(out.text).toContain("  depends on: label, press, spinner, theme");
     expect(out.text).toContain("file components/ui/button.tsx");
+    expect(out.text).toContain("file lib/label.ts");
     expect(out.text).toContain("file lib/press.ts");
     expect(out.text).toContain("file lib/theme.ts");
     // The app's layout decides the import: `@shadcn-nsh/theme` → `lib/theme` two levels up.

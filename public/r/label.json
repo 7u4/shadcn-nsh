@@ -1,0 +1,15 @@
+{
+  "name": "label",
+  "type": "registry:lib",
+  "title": "Label",
+  "description": "The name screen readers say of a control whose content is a text label.",
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "packages/ui/lib/label.ts",
+      "type": "registry:lib",
+      "target": "lib/label.ts",
+      "content": "// The name screen readers say of a control whose content is a text label: the caller's\n// `accessibilityLabel` if it gave one, else the string child. Owned by this library: the shells\n// share one rule rather than writing it out again in each.\nimport type { JSX } from \"nsh\";\n\n/**\n * What screen readers say of `props`: `accessibilityLabel` when the caller gave one (an explicit\n * `null` included, which names nothing), else the string child, else `undefined` — content drawn\n * as given (`<Button><Icon /></Button>`) derives no name, so a control that is only an icon asks\n * for one on its props (`IconButton`).\n */\nexport function labelOf(\n  accessibilityLabel: string | null | undefined,\n  children: string | JSX.Element | undefined,\n): string | null | undefined {\n  if (accessibilityLabel !== undefined) return accessibilityLabel;\n  return typeof children === \"string\" && children !== \"\" ? children : undefined;\n}\n"
+    }
+  ]
+}
