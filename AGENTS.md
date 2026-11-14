@@ -84,6 +84,7 @@ NSH CLI **只安装、从不编译**：装 `port-map.json` 的 `upstream.cli`（
 
 ```sh
 bun run port:new <id> --from <上游> …  # 脚手架：路由、外壳、演示、文档、registry
+bun run port:new <id> --base <nsh/base 符号>  # 本库自己的组件（无上游）：不写路由、不 vendor
 bun run port:vendor <id>       # 新增组件时从上游抽取初稿（不覆盖已有代码）
 bun run port:check             # 上游变化提醒（自上次审阅以来）、清单完整、CLI 不落后于基线
 bun run port:review            # 记下审阅：把 upstream.reviewed 推到基线
