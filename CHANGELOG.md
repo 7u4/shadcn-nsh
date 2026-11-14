@@ -56,6 +56,10 @@ New, and only added:
 - `Input` takes `variant`: `default` is the sunk field it always was, `ghost` is the same text
   and placeholder with no fill and no edge at rest, keeping the focus ring, the invalid edge and
   the disabled look. `inputLook` takes the same option (`InputVariant`).
+- `Pressable` (`pressable`), a region that takes presses and adds only their feedback: the
+  lightest hover fill, the press's sink, the keyboard's ring. No fill, padding, height or radius
+  of its own, so a whole row, a picture or a paragraph can be the target; `pressableLook` is the
+  look on its own, and a string child names the region as a button's does.
 - Each control exports its own axis union (`ButtonVariant`, `BadgeVariant`, `ChoiceSize`, …), and a
   test holds them all to the vocabulary.
 - `shadcn-nsh init --theme shadcn` installs shadcn's neutral palette and its flat finishes, the
