@@ -60,6 +60,14 @@ describe("projectOf", () => {
     });
   });
 
+  test("a workspace member installs with the manager its workspace's lock file names", async () => {
+    const root = tree({ "bun.lock": "", "package.json": "{}", "apps/client/package.json": "{}" });
+    expect(await projectOf(path.join(root, "apps/client"))).toEqual({
+      root: path.join(root, "apps/client"),
+      manager: "bun",
+    });
+  });
+
   test("an app with no package.json at all is its own root", async () => {
     const root = tree({ "app/nsh.json": "{}" });
     expect(await projectOf(path.join(root, "app"))).toEqual({

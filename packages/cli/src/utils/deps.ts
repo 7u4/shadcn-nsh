@@ -32,19 +32,21 @@ async function exists(file: string): Promise<boolean> {
 /**
  * Where a package manager runs, and which one: the nearest directory above `dir` holding a
  * `package.json` (the app's, or a monorepo's), and the manager named by the nearest lock file on
- * the way up — `npm` when there is none (`bun.lock` / `pnpm-lock.yaml` / `yarn.lock`).
+ * the way up — past that `package.json`, since a workspace member has none of its own — `npm` when
+ * there is none (`bun.lock` / `pnpm-lock.yaml` / `yarn.lock`).
  */
 export async function projectOf(dir: string): Promise<{ root: string; manager: PackageManager }> {
   const start = path.resolve(dir);
+  let root: string | undefined;
   let manager: PackageManager | undefined;
   for (let at = start; ; at = path.dirname(at)) {
     for (const [lock, name] of LOCKFILES) {
       if (manager == null && (await exists(path.join(at, lock)))) manager = name;
     }
-    if (await exists(path.join(at, "package.json"))) {
-      return { root: at, manager: manager ?? "npm" };
+    if (root == null && (await exists(path.join(at, "package.json")))) root = at;
+    if (manager != null || path.dirname(at) === at) {
+      return { root: root ?? start, manager: manager ?? "npm" };
     }
-    if (path.dirname(at) === at) return { root: start, manager: manager ?? "npm" };
   }
 }
 
