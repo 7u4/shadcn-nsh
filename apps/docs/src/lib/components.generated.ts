@@ -168,6 +168,13 @@ export const components: ComponentDoc[] = [
     description: "A text field — sunk, ghost, multiline, masked, or invalid.",
   },
   {
+    slug: "input-group",
+    title: "InputGroup",
+    nshElement: "input-group",
+    description:
+      "A field's frame around an input and what sits beside it — an icon, a unit, a button.",
+  },
+  {
     slug: "item",
     title: "Item",
     nshElement: "item",

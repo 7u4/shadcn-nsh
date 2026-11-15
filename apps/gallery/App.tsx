@@ -21,6 +21,11 @@ import {
   HoverCardContent,
   HoverCardTrigger,
   Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  InputGroupText,
   Menu,
   MenuCheckboxItem,
   MenuContent,
@@ -76,6 +81,7 @@ function App() {
   const tab = signal("one");
   const bold = signal(false);
   const language = signal<string | null>("en");
+  const query = signal("");
   const langOpen = signal(false);
   const frames = signal<string[]>(["react"]);
   const comboOpen = signal(false);
@@ -155,6 +161,27 @@ function App() {
                 </Radio>
               </View>
             </RadioGroup>
+            {/* The group draws the frame; the input in it draws none (the render check, and the
+                gallery tests, hold the two apart). */}
+            <InputGroup>
+              <InputGroupAddon align="inline-start">
+                <InputGroupText>Q</InputGroupText>
+              </InputGroupAddon>
+              <InputGroupInput
+                placeholder="Search"
+                value={query()}
+                onChange={({ value }) => query.set(value)}
+              />
+              <InputGroupAddon align="inline-end">
+                <InputGroupButton
+                  size="icon-xs"
+                  accessibilityLabel="Clear"
+                  onPress={() => query.set("")}
+                >
+                  <InputGroupText>x</InputGroupText>
+                </InputGroupButton>
+              </InputGroupAddon>
+            </InputGroup>
             <Progress value={progress()} />
             <Slider
               value={volume()}

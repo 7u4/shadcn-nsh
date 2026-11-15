@@ -37,6 +37,13 @@ const OWN_VARIANTS: Record<string, string> = {
 /** Every `size` value: the three of a scale, and the icon-only ones a shadcn button takes. */
 const SIZES = ["sm", "default", "lg", "xs", "icon", "icon-xs", "icon-sm", "icon-lg"];
 
+/**
+ * The size unions that are not a scale, each with the page that names it: `InputGroupButtonSize`
+ * is shadcn's own scale for a button inside a group (`xs`, `sm`, `icon-xs`, `icon-sm`), whose
+ * values this library maps to its steps, so it has no `default` of its own.
+ */
+const OFF_SCALE_SIZES: Record<string, string> = { InputGroupButtonSize: "input-group" };
+
 /** The exported type aliases of one module, by name, with their declared text. */
 function unionsOf(source: string): Map<string, string> {
   const unions = new Map<string, string>();
@@ -117,6 +124,7 @@ describe("the API's vocabulary", () => {
 
   test("every size has a value, and the middle of the scale is `default`", () => {
     for (const name of checked("Size")) {
+      if (name in OFF_SCALE_SIZES) continue;
       expect(unions.get(name)!.values, name).toContain("default");
     }
   });

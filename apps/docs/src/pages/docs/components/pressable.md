@@ -54,6 +54,30 @@ A string child is plain text, and its text is the region's name for screen reade
 <Pressable onPress={read}>A whole paragraph can be the region.</Pressable>
 ```
 
+### The role it reads as
+
+A region says what it is with `role` (`role="button"` is the default, `role="link"`, `role="tab"`, …): that is NSH's own name for it, and React Native's `accessibilityRole` is not it. What a region _is_ — a link, a key in a toolbar — is the `role`; its state is `selected` and `disabled`, the base button's own props, which screen readers say. There is no `accessibilityState` prop: React Native's state names are not NSH's.
+
+A pressable is not an on / off control, and it has no `checked`: no prop makes one a switch, and a region that looks like one still reads as a button. For a setting, use `Switch`, which owns the switch role and its value for screen readers — either the whole row (the switch's children are its label, so a tap anywhere toggles it) or shadcn's `Field` with the switch at the end of the row. See [`Switch`](./switch).
+
+```tsx
+{
+  /* Not this: a region that reads as a selected button, not as a switch. */
+}
+<Pressable selected={on()} onPress={toggle}>
+  Extract text from images
+</Pressable>;
+
+{
+  /* This: the control that is on or off, and its name. */
+}
+<Switch
+  accessibilityLabel="Extract text from images"
+  checked={on()}
+  onChange={({ checked }) => on.set(checked)}
+/>;
+```
+
 ### Disabled
 
 ```tsx

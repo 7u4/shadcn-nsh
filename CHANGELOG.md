@@ -28,6 +28,25 @@ Two names moved to make room for shadcn's:
 Where nsh has no selector to copy shadcn's CSS, the deviation is in the component's page: `alert`
 keeps the icon's column when there is no icon (`has-[>svg]`), `button-group` joins its buttons with a
 style each one wears (a child selector), and `label` takes `disabled` itself (a `peer-disabled`).
+Also unreleased:
+
+- `InputGroup` (`input-group`), a field's frame around a control and what sits beside it, after
+  shadcn's InputGroup: `InputGroup`, `InputGroupInput`, `InputGroupTextarea`, `InputGroupAddon`
+  (`align`: `inline-start` / `inline-end` / `block-start` / `block-end`), `InputGroupText`, and
+  `InputGroupButton` (`size`: `xs` / `sm` / `icon-xs` / `icon-sm`, taken from this library's scale;
+  `variant` is a button's, `ghost` unless set). The group draws the field — its fill, its edge, the
+  focus edge and ring while a control in it has the keys, the danger tone while `invalid`, flat on
+  the quieter edge and dimmed while `disabled` — and the control in it draws none of that, so a
+  group has one frame. The radius you write on it (`style={{ borderRadius: 22 }}`) is the radius its
+  focus ring follows, which a `variant="ghost"` `Input` in a `View` of your own cannot do: the ghost
+  input keeps its own focus edge and ring, and a group is what replaces it.
+- The `input` page says as much under its ghost variant and points at `InputGroup`; both pages are
+  in the docs with the examples above.
+- The `switch` page writes a settings row both ways — the switch as the whole row (`listRow`), and
+  shadcn's `Field` in a row with the switch at the end — and says what each is read as; its demo
+  shows a list of them and the same row in a right-to-left app. The `pressable` page says where a
+  region's role and its state come from (`role`, not React Native's `accessibilityRole`; a region
+  is not an on / off control — that is `Switch`). No component code changed.
 
 ## 0.3.0 — the unified API
 

@@ -66,4 +66,5 @@ export const componentIds = [
   "alert",
   "empty",
   "button-group",
+  "input-group",
 ] as const;
