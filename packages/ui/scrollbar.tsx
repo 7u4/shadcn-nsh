@@ -81,3 +81,6 @@ export const Scrollbar = Bar as typeof Bar & {
 Scrollbar.setTheme = (theme?: ScrollbarTheme | null) => {
   BaseScrollbar.setTheme(theme === undefined ? scrollbarTheme : theme);
 };
+
+/** The colors of a scrollbar's parts (`theme`), from `nsh/base`. */
+export type { ScrollbarTheme };

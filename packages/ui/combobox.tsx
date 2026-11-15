@@ -167,7 +167,7 @@ export type ComboboxProps = {
   children?: JSX.Element;
   /** The user chose or toggled items: their values. */
   onChange?: (event: { value: string[] }) => void;
-  onOpenChange?: (event: { open: boolean; reason: OpenChangeReason }) => void;
+  onOpenChange?: (event: { open: boolean; reason: ComboboxOpenChangeReason }) => void;
   onOpen?: () => void;
   onClose?: () => void;
   onCancel?: () => void;
@@ -199,7 +199,7 @@ export type ComboboxContentProps = Omit<
   | "children"
 > & {
   /** The rows, when they are not `ComboboxItem` children (a list the app already holds). */
-  items?: SelectItemData[];
+  items?: ComboboxSelectItem[];
   /** Least popup width with a pointer (forwarded to `listboxProps`). */
   minWidth?: number;
   children?: JSX.Element;
@@ -447,3 +447,9 @@ export function ComboboxItem(props: ComboboxItemProps) {
   cleanup(() => ctx.items.unregister(item.value));
   return null;
 }
+
+/** Why a combobox's list closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type ComboboxOpenChangeReason = OpenChangeReason;
+
+/** An option of the list (`items`): `nsh/base`'s `SelectItem`, under this part's name. */
+export type ComboboxSelectItem = SelectItemData;

@@ -80,3 +80,6 @@ export function DataTable<T>(props: DataTableProps<T>) {
   const [, rest] = split(props, ["classes"]);
   return <BaseDataTable {...rest} classes={mergeClasses(dataTableClasses, props.classes)} />;
 }
+
+/** The classes of a table's parts (`dataTableClasses`), from `nsh/base`. */
+export type { DataTableClasses };

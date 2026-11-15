@@ -80,3 +80,16 @@ New, and only added:
   `dialogBare()` (`DialogVariant`); the backdrop, Escape, the back button, the focus and its return
   are `nsh/base`'s, unchanged. With the content filling the window, nothing of the backdrop shows,
   so the dialog closes from the app's own control, Escape or the back button.
+- Every type the shells' props, refs and callbacks name comes from `nsh/base`, and each component
+  file now re-exports the ones it uses, so a call site imports them from its own copy: `command`
+  exports `CommandItem`, `CommandEntry`, `CommandGroup` and `CommandRef`, `text-view` exports
+  `TextViewImage`, `TextViewClasses` and `TextViewRef`, `dock-area` exports `DockAreaRef`,
+  `DockAreaLayout`, `DockRegion`, `DockNode`, `DockPlacement`, `DockPanel`, `DockPanelOptions`,
+  `DockTarget`, `DockDropIndicator` and `DockInfo` (a tab is `DockTabValue`, since `DockTab` is the
+  component), and the rest of the library the same (`CalendarEntry`, `DataTableClasses`,
+  `DiffViewStyles`, `EmojiEntry` and its neighbours, `PaginationItemState`, `ScrollbarTheme`,
+  `TreeEntry`, `AlertDialogRole`, `ColorChannel` / `ColorFormat` / `ColorSpace`). Where `nsh/base`'s
+  name is taken here, the export is prefixed by the component: `MenuOpenChangeReason`,
+  `SheetOpenChangeReason`, `PopoverOpenChangeReason`, `HoverCardOpenChangeReason`,
+  `ContextMenuOpenChangeReason`, `ComboboxOpenChangeReason`, `TooltipOpenChangeReason`,
+  `DatePickerOpenChangeReason`, `AlertDialogChangeReason`, `ComboboxSelectItem`, `DatePickerEntry`.

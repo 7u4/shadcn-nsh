@@ -25,7 +25,7 @@ export type AlertDialogProps = {
   open?: boolean | null;
   defaultOpen?: boolean;
   children?: JSX.Element;
-  onOpenChange?: (event: { open: boolean; reason: DialogChangeReason }) => void;
+  onOpenChange?: (event: { open: boolean; reason: AlertDialogChangeReason }) => void;
   onOpen?: () => void;
   onClose?: () => void;
   onCancel?: () => void;
@@ -297,3 +297,9 @@ export function AlertDialogDescription(props: AlertDialogDescriptionProps) {
   if (typeof props.children !== "string") return props.children;
   return <Text style={[dialogText(), props.style ?? null]}>{props.children}</Text>;
 }
+
+/** What an `AlertDialogAction` is for screen readers (`role`), from `nsh/base`. */
+export type { AlertDialogRole };
+
+/** Why an alert dialog closed (`onOpenChange`'s `reason`): `nsh/base`'s `DialogChangeReason`, under this part's name. */
+export type AlertDialogChangeReason = DialogChangeReason;

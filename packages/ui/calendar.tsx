@@ -426,3 +426,6 @@ export function Calendar(props: CalendarProps) {
     />
   );
 }
+
+/** A day as the calendar hands it over (`onSelect`, `renderItem`), from `nsh/base`. */
+export type { CalendarEntry };

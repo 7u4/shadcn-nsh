@@ -572,3 +572,12 @@ export function ColorPopover(props: ColorPopoverProps): JSX.Element {
   );
 }
 // @port end
+
+/** What a channel of the panel edits (red, hue, chroma…), from `nsh/base`. */
+export type { ColorChannel };
+
+/** How a color is written out (`hex`, `rgb`, `hsl`, `oklch`…), from `nsh/base`. */
+export type { ColorFormat };
+
+/** The space the sliders and the plane work in, from `nsh/base`. */
+export type { ColorSpace };

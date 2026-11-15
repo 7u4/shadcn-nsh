@@ -273,3 +273,6 @@ export function DialogFooter(props: DialogFooterProps) {
     </View>
   );
 }
+
+/** Why a dialog closed (`onOpenChange`'s `reason`), from `nsh/base`. */
+export type { DialogChangeReason };

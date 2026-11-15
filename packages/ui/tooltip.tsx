@@ -71,7 +71,7 @@ export type TooltipProps = {
    */
   style?: StyleProp<ViewStyle>;
   children?: JSX.Element;
-  onOpenChange?: (event: { open: boolean; reason: OpenChangeReason }) => void;
+  onOpenChange?: (event: { open: boolean; reason: TooltipOpenChangeReason }) => void;
   onOpen?: () => void;
   onClose?: () => void;
 };
@@ -253,3 +253,6 @@ function AnchorBubble(props: { content: TooltipContentProps; ctx: TooltipContext
     </Bubble>
   );
 }
+
+/** Why a tooltip closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type TooltipOpenChangeReason = OpenChangeReason;

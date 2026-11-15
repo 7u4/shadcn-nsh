@@ -127,14 +127,14 @@ the backdrop shows: close it from your own button (Escape and the back button ar
 
 `Dialog` owns the open state. `DialogContent` mounts [`nsh/base` Dialog](https://nsh.dev/elements/dialog); every base prop passes through it, and base owns the backdrop, the popup host and Escape, back and swipe.
 
-| Part                | Props                                                                                            |
-| ------------------- | ------------------------------------------------------------------------------------------------ |
-| `Dialog`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onOpen`, `onClose`, `onCancel`         |
-| `DialogTrigger`     | `children`, `variant`, `disabled`, `style`                                                       |
+| Part                | Props                                                                                                                                              |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Dialog`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onOpen`, `onClose`, `onCancel`                                                           |
+| `DialogTrigger`     | `children`, `variant`, `disabled`, `style`                                                                                                         |
 | `DialogContent`     | `variant` (`default` / `bare`), `width`, every `nsh/base` Dialog prop; `style` over `dialogCard` (or `dialogBare`), `backdropStyle` over the scrim |
-| `DialogTitle`       | `children`; a string takes `dialogTitle`                                                         |
-| `DialogDescription` | `children`; a string takes `dialogText`                                                          |
-| `DialogFooter`      | `children`, `style`                                                                              |
-| `DialogClose`       | As `DialogTrigger`, plus `onPress` before it closes                                              |
+| `DialogTitle`       | `children`; a string takes `dialogTitle`                                                                                                           |
+| `DialogDescription` | `children`; a string takes `dialogText`                                                                                                            |
+| `DialogFooter`      | `children`, `style`                                                                                                                                |
+| `DialogClose`       | As `DialogTrigger`, plus `onPress` before it closes                                                                                                |
 
 A string child of `DialogTrigger` or `DialogClose` is a `Button`; `variant` picks its look (`secondary` by default). Anything else is drawn as given.
