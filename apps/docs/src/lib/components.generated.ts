@@ -363,6 +363,12 @@ export const components: ComponentDoc[] = [
     description: "Brand-colored links and a pulsing streaming caret.",
   },
   {
+    slug: "textarea",
+    title: "Textarea",
+    nshElement: "textarea",
+    description: "A field of several lines, in the look of the input.",
+  },
+  {
     slug: "time-field",
     title: "Time Field",
     nshElement: "time-field",

@@ -1063,6 +1063,19 @@
           "target": "components/ui/aspect-ratio.tsx"
         }
       ]
+    },
+    {
+      "name": "textarea",
+      "type": "registry:ui",
+      "title": "Textarea",
+      "description": "A field of several lines, in the look of the input.",
+      "files": [
+        {
+          "path": "packages/ui/textarea.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/textarea.tsx"
+        }
+      ]
     }
   ]
 }

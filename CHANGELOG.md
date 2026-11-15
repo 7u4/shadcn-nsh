@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **`textarea`.** A field of several lines: `nsh/base`'s Input with `multiline` on, in the look of
+  `input.tsx` (`inputLook`, reused, not copied) — the same fill, edge, text and placeholder, the
+  focus edge while it has the keys, 50% while disabled, and `invalid` for the danger edge. It sits
+  as tall as a one-line input at least; a box that follows its text keeps `onContentSizeChange`'s
+  height plus the look's padding (shadcn's `field-sizing-content`, written out in the page).
 - **`breadcrumb`.** A trail from the app's root to the page it shows: `Breadcrumb` and its parts
   (`List`, `Item`, `Link`, `Page`, `Separator`, `Ellipsis`), the steps small and muted with a chevron
   between them, a step's link taking the text color under the pointer and the theme's focus ring with
