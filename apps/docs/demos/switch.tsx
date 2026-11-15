@@ -1,19 +1,53 @@
 // The official switch scene (`references/nsh/website/demos/el-switch.tsx`) with this library's
 // parts: three settings, each row the switch itself, the second disabled while the first is off;
 // an inspector says what is checked and logs every change. A second card shows the two sizes, a
-// switch standing alone with its track all of it.
+// switch standing alone with its track all of it, then shadcn's settings row — a `Field` in a row,
+// its title and description beside a switch that carries the row's name — and that row in a
+// right-to-left app.
 import { mount, signal, Text, View } from "nsh";
 
+import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel } from "@/packages/ui/field";
 import { listRow, RowDivider, RowLabel, sectionSurface } from "@/packages/ui/lib/surface";
 import { Switch } from "@/packages/ui/switch";
 
 import { DemoCard, DemoPage, DemoSection } from "./kit";
 import { desktop, Log, Panel, Split, ui } from "./stage";
 
+/**
+ * A settings row at the call site, as shadcn composes it: a `Field` in a row, its title and its
+ * description in `FieldContent` (which takes the room the control leaves), the switch after them.
+ * The switch is the control, so it carries the row's title as its name and is read as a switch
+ * that is on or off; nothing is pinned to a side, so a right-to-left app puts the switch first.
+ */
+function SettingRow(props: {
+  label: string;
+  detail: string;
+  checked: boolean;
+  disabled?: boolean;
+  onChange: (event: { checked: boolean }) => void;
+}) {
+  return (
+    <Field orientation="horizontal">
+      <FieldContent>
+        <FieldLabel>{props.label}</FieldLabel>
+        <FieldDescription>{props.detail}</FieldDescription>
+      </FieldContent>
+      <Switch
+        accessibilityLabel={props.label}
+        checked={props.checked}
+        disabled={props.disabled}
+        onChange={props.onChange}
+      />
+    </Field>
+  );
+}
+
 function App() {
   const wifi = signal(true);
   const bluetooth = signal(false);
   const ask = signal(true);
+  const extract = signal(true);
+  const usage = signal(false);
   const events = signal<string[]>([]);
   const change =
     (name: string, set: (next: boolean) => void) =>
@@ -39,6 +73,9 @@ function App() {
                 {`Wi-Fi ${wifi() ? "on" : "off"} · ask ${ask() ? "on" : "off"}`}
                 {wifi() ? "" : " (disabled)"}
                 {` · Bluetooth ${bluetooth() ? "on" : "off"}`}
+              </Text>
+              <Text style={{ fontSize: 13, color: ui().text }}>
+                {`extract ${extract() ? "on" : "off"} · usage ${usage() ? "on" : "off"}`}
               </Text>
             </Panel>
             <Log title="onChange({ checked })" lines={events()} minHeight={92} />
@@ -96,6 +133,43 @@ function App() {
           <Text style={{ fontSize: 13, color: ui().muted }}>
             Bluetooth {bluetooth() ? "on" : "off"}
           </Text>
+        </DemoSection>
+
+        <DemoSection title="Settings rows" axis="block">
+          <FieldGroup>
+            <SettingRow
+              label="Extract text from images"
+              detail="Read the text in a screenshot you paste or open."
+              checked={extract()}
+              onChange={change("Extract text", (next) => extract.set(next))}
+            />
+            <SettingRow
+              label="Send usage data"
+              detail="What you open and for how long. Never what you type."
+              checked={usage()}
+              onChange={change("Usage data", (next) => usage.set(next))}
+            />
+            <SettingRow
+              label="Automatic updates"
+              detail="Installs a new version while the app is closed."
+              checked={false}
+              disabled
+              onChange={() => {}}
+            />
+          </FieldGroup>
+        </DemoSection>
+
+        <DemoSection title="Right to left" axis="block">
+          {/* The same row in a right-to-left app: the content is still written first and the switch
+              after it, and the direction puts them the other way round. */}
+          <View style={{ direction: "rtl" }}>
+            <SettingRow
+              label="Extract text from images"
+              detail="Read the text in a screenshot you paste or open."
+              checked={extract()}
+              onChange={change("Extract text", (next) => extract.set(next))}
+            />
+          </View>
         </DemoSection>
       </DemoCard>
     </DemoPage>

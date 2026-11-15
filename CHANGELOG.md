@@ -14,6 +14,11 @@
   input keeps its own focus edge and ring, and a group is what replaces it.
 - The `input` page says as much under its ghost variant and points at `InputGroup`; both pages are
   in the docs with the examples above.
+- The `switch` page writes a settings row both ways — the switch as the whole row (`listRow`), and
+  shadcn's `Field` in a row with the switch at the end — and says what each is read as; its demo
+  shows a list of them and the same row in a right-to-left app. The `pressable` page says where a
+  region's role and its state come from (`role`, not React Native's `accessibilityRole`; a region
+  is not an on / off control — that is `Switch`). No component code changed.
 
 ## 0.3.0 — the unified API
 

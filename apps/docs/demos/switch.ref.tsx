@@ -1,9 +1,11 @@
 // The reference of `switch.tsx`: the same scene as upstream writes it, `switchLook` spread on
-// `nsh/base`'s Switch. The render check requires the two to draw the same pixels.
+// `nsh/base`'s Switch, and the settings row's `fieldFamilyLook`s on its views and texts. The
+// render check requires the two to draw the same pixels.
 import { colors } from "@shadcn-nsh/theme";
 import { mount, signal, Text, View } from "nsh";
 import { Switch } from "nsh/base";
 
+import { fieldFamilyLook } from "@/packages/ui/field";
 import { listRow, RowDivider, RowLabel, sectionSurface } from "@/packages/ui/lib/surface";
 import { switchHitSlop, switchLook, type SwitchSize } from "@/packages/ui/switch";
 
@@ -15,12 +17,14 @@ function Alone(props: {
   label: string;
   size: SwitchSize;
   checked: boolean;
+  disabled?: boolean;
   onChange: (event: { checked: boolean }) => void;
 }) {
   return (
     <Switch
       accessibilityLabel={props.label}
       checked={props.checked}
+      disabled={props.disabled}
       onChange={props.onChange}
       hitSlop={switchHitSlop(props.size)}
       {...switchLook(() => props.checked, props.size)}
@@ -28,10 +32,44 @@ function Alone(props: {
   );
 }
 
+/**
+ * A family's looks, read where they are drawn: `fieldFamilyLook` makes its label's color once, when
+ * it is called, so a look kept in the component body would keep the appearance the page opened in.
+ */
+const fields = () => fieldFamilyLook();
+
+/** A settings row, as `switch.tsx` composes it: `fieldFamilyLook`'s row (the content taking the
+ * room the control leaves), its label and description, and the switch after them. */
+function SettingRow(props: {
+  label: string;
+  detail: string;
+  checked: boolean;
+  disabled?: boolean;
+  onChange: (event: { checked: boolean }) => void;
+}) {
+  return (
+    <View role="group" style={fields().field(true)}>
+      <View style={fields().content}>
+        <Text style={fields().title}>{props.label}</Text>
+        <Text style={fields().description}>{props.detail}</Text>
+      </View>
+      <Alone
+        label={props.label}
+        size="default"
+        checked={props.checked}
+        disabled={props.disabled}
+        onChange={props.onChange}
+      />
+    </View>
+  );
+}
+
 function App() {
   const wifi = signal(true);
   const bluetooth = signal(false);
   const ask = signal(true);
+  const extract = signal(true);
+  const usage = signal(false);
   const events = signal<string[]>([]);
   const change =
     (name: string, set: (next: boolean) => void) =>
@@ -57,6 +95,9 @@ function App() {
                 {`Wi-Fi ${wifi() ? "on" : "off"} · ask ${ask() ? "on" : "off"}`}
                 {wifi() ? "" : " (disabled)"}
                 {` · Bluetooth ${bluetooth() ? "on" : "off"}`}
+              </Text>
+              <Text style={{ fontSize: 13, color: colors.text }}>
+                {`extract ${extract() ? "on" : "off"} · usage ${usage() ? "on" : "off"}`}
               </Text>
             </Panel>
             <Log title="onChange({ checked })" lines={events()} minHeight={92} />
@@ -115,6 +156,41 @@ function App() {
           <Text style={{ fontSize: 13, color: colors.muted }}>
             Bluetooth {bluetooth() ? "on" : "off"}
           </Text>
+        </DemoSection>
+
+        <DemoSection title="Settings rows" axis="block">
+          <View style={fieldFamilyLook().group}>
+            <SettingRow
+              label="Extract text from images"
+              detail="Read the text in a screenshot you paste or open."
+              checked={extract()}
+              onChange={change("Extract text", (next) => extract.set(next))}
+            />
+            <SettingRow
+              label="Send usage data"
+              detail="What you open and for how long. Never what you type."
+              checked={usage()}
+              onChange={change("Usage data", (next) => usage.set(next))}
+            />
+            <SettingRow
+              label="Automatic updates"
+              detail="Installs a new version while the app is closed."
+              checked={false}
+              disabled
+              onChange={() => {}}
+            />
+          </View>
+        </DemoSection>
+
+        <DemoSection title="Right to left" axis="block">
+          <View style={{ direction: "rtl" }}>
+            <SettingRow
+              label="Extract text from images"
+              detail="Read the text in a screenshot you paste or open."
+              checked={extract()}
+              onChange={change("Extract text", (next) => extract.set(next))}
+            />
+          </View>
         </DemoSection>
       </DemoCard>
     </DemoPage>
