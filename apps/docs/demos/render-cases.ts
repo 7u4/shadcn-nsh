@@ -19,6 +19,9 @@ type App = {
   rightClick(selector: string): Promise<void>;
   /** A held finger: the same trigger on a touch screen. */
   longPress(selector: string): Promise<void>;
+  /** The pointer over what `selector` names: a hover's fill or ink. Desktops and the web only,
+   * so it rejects on a phone. */
+  hover(selector: string): Promise<void>;
   /** Resolves once a view matching `selector` is on screen (its timeout bounds the wait). */
   waitFor(selector: string, options?: { timeout?: number } | null): Promise<void>;
   wait(ms: number): Promise<void>;
@@ -102,6 +105,16 @@ const overrides: Record<string, Override> = {
     },
   },
   dialog: { steps: (app) => app.press("Open a card") },
+  // The pointer rests on the trail's first step: its ink goes from the muted one to the page's
+  // text color, the one state a still can show (the keyboard's ring needs the keyboard). A phone
+  // has no pointer, so the touch pass keeps the resting look.
+  breadcrumb: {
+    steps: async (app) => {
+      // The trail's first step (the page has three `Home`s, one per section).
+      await app.hover("text:Home >> nth=0").catch(() => {});
+      await app.wait(160);
+    },
+  },
   "alert-dialog": { steps: (app) => app.press("Delete…") },
   sheet: { steps: (app) => app.press('side="bottom"') },
   popover: { steps: (app) => app.press("Order 1024") },

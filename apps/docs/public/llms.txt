@@ -75,6 +75,8 @@ Every page links its base element where `nsh/base` has one: behavior, keyboard s
 - /docs/components/emoji-picker: Gallery look for nsh/base EmojiPicker: tabs, search, tones and preview. → https://nsh.dev/elements/emoji-picker
 - /docs/components/editor: Rich document typography and code editor pass-through. → https://nsh.dev/elements/rich-editor
 - /docs/components/color-picker: Area, sliders, joined fields, swatches, and popover trigger. → https://nsh.dev/elements/color-picker
+- /docs/components/breadcrumb: The trail from the app's root to the page it shows, its steps parted by a chevron. → styled on `nsh` View and Text (no base element)
+- /docs/components/aspect-ratio: A box as wide as its column, as tall as its ratio says. → styled on `nsh` View (no base element)
 
 ## Elsewhere
 

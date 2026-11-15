@@ -67,4 +67,6 @@ export const componentIds = [
   "empty",
   "button-group",
   "input-group",
+  "breadcrumb",
+  "aspect-ratio",
 ] as const;

@@ -22,6 +22,12 @@ export const components: ComponentDoc[] = [
     description: "A confirmation card that waits for an action, on the shared dialog look.",
   },
   {
+    slug: "aspect-ratio",
+    title: "Aspect ratio",
+    nshElement: null,
+    description: "A box as wide as its column and as tall as its ratio says.",
+  },
+  {
     slug: "avatar",
     title: "Avatar",
     nshElement: "avatar",
@@ -32,6 +38,12 @@ export const components: ComponentDoc[] = [
     title: "Badge",
     nshElement: "badge",
     description: "A small capsule label in a neutral, toned, or outline style.",
+  },
+  {
+    slug: "breadcrumb",
+    title: "Breadcrumb",
+    nshElement: null,
+    description: "The trail from where the app starts to the page it shows.",
   },
   {
     slug: "button",
