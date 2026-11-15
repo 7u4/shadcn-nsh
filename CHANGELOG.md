@@ -70,16 +70,11 @@ New, and only added:
 Behaviour, appearance and the `nsh/base` props underneath are unchanged: every component still draws
 the same pixels as its look spread on the base control, which the render check compares.
 
+
 ## Unreleased
 
 New, and only added:
 
-- `DialogContent` takes `variant`: `default` is the card it always was, and `bare` is the whole
-  window — no surface, edge, padding, corner or shadow, and no `margin` / `maxWidth` in the middle —
-  for a lightbox: a photo, its caption and the app's own floating close button over it. The look is
-  `dialogBare()` (`DialogVariant`); the backdrop, Escape, the back button, the focus and its return
-  are `nsh/base`'s, unchanged. With the content filling the window, nothing of the backdrop shows,
-  so the dialog closes from the app's own control, Escape or the back button.
 - Every type the shells' props, refs and callbacks name comes from `nsh/base`, and each component
   file now re-exports the ones it uses, so a call site imports them from its own copy: `command`
   exports `CommandItem`, `CommandEntry`, `CommandGroup` and `CommandRef`, `text-view` exports
@@ -93,7 +88,11 @@ New, and only added:
   `SheetOpenChangeReason`, `PopoverOpenChangeReason`, `HoverCardOpenChangeReason`,
   `ContextMenuOpenChangeReason`, `ComboboxOpenChangeReason`, `TooltipOpenChangeReason`,
   `DatePickerOpenChangeReason`, `AlertDialogChangeReason`, `ComboboxSelectItem`, `DatePickerEntry`.
+
+Fixed:
+
 - Text is upper- and lower-cased for its locale (`toLocaleUpperCase` / `toLocaleLowerCase`) rather
   than the language-neutral way, so a heading keeps its letters where they have a locale of their
   own (a command palette's headings, a popup's placement words, an emoji section's name, a color
   picker's labels read aloud).
+

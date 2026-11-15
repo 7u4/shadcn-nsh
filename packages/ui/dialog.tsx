@@ -1,5 +1,4 @@
-// A dialog: the looks (`dialogCard`, `dialogBare`, `dialogTitle`, `dialogText`) and the parts that
-// wear them: a card in the middle of the window, or a popup that fills it (a lightbox).
+// A card dialog: the look (`dialogCard`, `dialogTitle`, `dialogText`) and the parts that wear it.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors, finish, focusRing, terminal } from "@shadcn-nsh/theme";
 import type { JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
@@ -48,17 +47,6 @@ export function dialogTitle(): TextStyle {
 export function dialogText(): TextStyle {
   return { fontSize: pointer ? 13 : 15, lineHeight: pointer ? 19 : 21, color: colors.muted };
 }
-
-/**
- * A dialog with no chrome of its own, for a lightbox: the popup fills the window, with no surface,
- * edge, padding, corner or shadow, and no `margin` or `maxWidth` holding it in the middle. Given to
- * `nsh/base`'s `Dialog`'s `style`, it is the whole of the dialog's look: what fills it is the
- * content's (a photo, its caption, the app's own close button). Everything modal stays the base's:
- * the backdrop, Escape, the back button, the focus and its return.
- */
-export function dialogBare(): ViewStyle {
-  return { width: "100%", height: "100%" };
-}
 // @port end
 
 /** The root: it owns whether the dialog is open, and nothing of how it looks. */
@@ -73,24 +61,15 @@ export type DialogProps = {
   onCancel?: () => void;
 };
 
-/** How a dialog presents: the card (`dialogCard`), or the bare window (`dialogBare`). */
-export type DialogVariant = "default" | "bare";
-
 /**
- * The dialog's popup. Every prop of `nsh/base`'s Dialog passes through but the ones the root owns;
+ * The card. Every prop of `nsh/base`'s Dialog passes through but the ones the root owns;
  * `style` and `backdropStyle` go over the look's. `animation` defaults to `fade`, a card's.
  */
 export type DialogContentProps = Omit<
   BaseDialogProps,
   "open" | "onOpenChange" | "onOpen" | "onClose" | "onCancel"
 > & {
-  /**
-   * `default` is the card; `bare` fills the window with nothing drawn around the content, for a
-   * lightbox (a photo, its caption, the app's own close button over it). The backdrop, Escape, the
-   * back button and the focus are the base's either way.
-   */
-  variant?: DialogVariant;
-  /** The card's width, never wider than 90% of the window (default 360 with a pointer, 320 on a touch screen). `bare` takes the window, so it ignores this. */
+  /** The card's width, never wider than 90% of the window (default 360 with a pointer, 320 on a touch screen). */
   width?: number;
 };
 
@@ -207,17 +186,10 @@ export function DialogClose(props: DialogCloseProps) {
   );
 }
 
-/** The card (or, with `variant="bare"`, the window), over the theme's scrim. */
+/** The card, over the theme's scrim. */
 export function DialogContent(props: DialogContentProps) {
   const ctx = useDialog();
-  const [, rest] = split(props, [
-    "variant",
-    "width",
-    "children",
-    "style",
-    "backdropStyle",
-    "animation",
-  ]);
+  const [, rest] = split(props, ["width", "children", "style", "backdropStyle", "animation"]);
   return (
     <BaseDialog
       {...rest}
@@ -228,11 +200,8 @@ export function DialogContent(props: DialogContentProps) {
       onClose={ctx.onClose}
       onCancel={ctx.onCancel}
       backdropStyle={[backdrop(), props.backdropStyle ?? null]}
-      style={[
-        // The widths of upstream's dialog demo (`el-dialog`); a bare dialog takes the window.
-        props.variant === "bare" ? dialogBare() : dialogCard(props.width ?? (pointer ? 360 : 320)),
-        props.style ?? null,
-      ]}
+      // The widths of upstream's dialog demo (`el-dialog`).
+      style={[dialogCard(props.width ?? (pointer ? 360 : 320)), props.style ?? null]}
     >
       {props.children}
     </BaseDialog>
