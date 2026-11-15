@@ -126,7 +126,7 @@ The settings row's looks are the field family's, for a `nsh/base` view of your o
 </View>
 ```
 
-Read each look where you draw it, not once in the component body: `fieldFamilyLook` builds its label's color when it is called, so a look kept in a `const` keeps the appearance the page opened in.
+Each part of `fieldFamilyLook()` reads the theme when it is drawn, so a look kept in a `const` still follows the scheme.
 
 ## API
 

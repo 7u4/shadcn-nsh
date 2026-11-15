@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- **A field's label follows the scheme.** `fieldFamilyLook()` built its `title` and `labelInRow`
+  color when it was called, so a look kept in a `const` kept the scheme the page opened in (a black
+  label on a dark page). They read the theme when drawn now, as the other parts did.
+
 ## 0.6.0 — a theme says what it draws
 
 What the shadcn theme still had to work around, worked around in the library instead, so a theme

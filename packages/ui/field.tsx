@@ -67,11 +67,12 @@ const rowGap = () => 12;
  * and horizontal above.
  */
 export function fieldFamilyLook(): FieldFamilyLook {
-  const label: TextStyle = {
+  // Read where it is drawn, as every part below: a look kept in a `const` follows the scheme.
+  const label = (): TextStyle => ({
     fontSize: controlSize.label,
     fontWeight: "500",
     color: colors.text,
-  };
+  });
   return {
     get set(): ViewStyle {
       return {
@@ -111,10 +112,10 @@ export function fieldFamilyLook(): FieldFamilyLook {
       color: colors.text,
     }),
     get title(): TextStyle {
-      return { ...label, alignSelf: "flex-start" };
+      return { ...label(), alignSelf: "flex-start" };
     },
     get labelInRow(): TextStyle {
-      return { ...label, flexShrink: 1 };
+      return { ...label(), flexShrink: 1 };
     },
     get description(): TextStyle {
       return { fontSize: density.note, color: colors.muted };
