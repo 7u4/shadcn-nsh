@@ -1,8 +1,12 @@
 // The official dialog scene (`references/nsh/website/demos/el-dialog.tsx`) with this library's
-// parts: a card opened from a button and a page sheet opened from another, a switch for whether
-// the backdrop closes the card, and an inspector holding both open flags, the cancel count and
-// the last lifecycle line.
-import { mount, signal, Text, View, type ViewStyle } from "nsh";
+// parts: a card opened from a button, a page sheet opened from another and a lightbox
+// (`variant="bare"`) opened from a third, a switch for whether the backdrop closes the card, and
+// an inspector holding both open flags, the cancel count and the last lifecycle line.
+//
+// The lightbox's photo is the gallery's URL (`photos.ts`); the page fetches it at load, so a press
+// on its trigger draws the frame at once.
+import { alpha } from "@shadcn-nsh/theme";
+import { Image, mount, safeArea, signal, Text, token, View, type ViewStyle } from "nsh";
 
 import {
   Dialog,
@@ -17,7 +21,18 @@ import { listRow, RowLabel } from "@/packages/ui/lib/surface";
 import { Switch } from "@/packages/ui/switch";
 
 import { DemoPage } from "./kit";
+import { photoUrl } from "./photos";
 import { desktop, Panel, Split, ui, wide } from "./stage";
+
+/** The lightbox's photo, and what its caption says. */
+const lightboxPhoto = { photo: "liftoff" as const, name: "Liftoff", detail: "Clear of the tower" };
+
+/** The photo, fetched once at load: a lightbox opened later paints its frame in the frame that
+ * places it. A download that fails leaves the image's empty frame, as the photo pages do. */
+const warmed = signal(false);
+Promise.allSettled([Image.prefetch(photoUrl(lightboxPhoto.photo, "large"))]).then(() =>
+  warmed.set(true),
+);
 
 /** The page sheet's own panel: a card in the middle with a pointer, a sheet along the bottom edge
  * on a touch screen (the dialog's look is a card, so the app gives this one its place). */
@@ -38,6 +53,7 @@ const sheetPanel = (): ViewStyle =>
 function App() {
   const card = signal(false);
   const sheet = signal(false);
+  const lightbox = signal(false);
   const backdropCloses = signal(true);
   const cancels = signal(0);
   const log = signal("–");
@@ -45,7 +61,7 @@ function App() {
     ? "Close with Escape or a click on the backdrop."
     : "Close with a tap on the backdrop, a swipe down or the back button. On iOS the sheet is a system pageSheet.";
   const state = () =>
-    `open: card ${String(card())} · sheet ${String(sheet())} · onCancel ${cancels()}×`;
+    `open: card ${String(card())} · sheet ${String(sheet())} · lightbox ${String(lightbox())} · onCancel ${cancels()}×`;
   // The app's own close: the base reports it as the user's, so the app's line stays.
   const closedByApp = (what: string) => () => log.set(`closed by the app: ${what}`);
   const heard = (open: boolean, reason: string) => {
@@ -139,6 +155,77 @@ function App() {
               </DialogDescription>
               <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
                 <DialogClose variant="default">Close</DialogClose>
+              </View>
+            </DialogContent>
+          </Dialog>
+
+          {/* The window filling one: no card, so the photo, its caption and the close button are
+              the app's own, laid over the whole popup. */}
+          <Dialog
+            open={lightbox()}
+            onOpenChange={({ open, reason }) => {
+              lightbox.set(open);
+              heard(open, reason);
+            }}
+            onOpen={() => log.set("onOpen: lightbox")}
+            onCancel={() => cancels.update((n) => n + 1)}
+          >
+            <DialogTrigger style={wide() ? undefined : { flex: 1, alignSelf: "stretch" }}>
+              Open as a lightbox
+            </DialogTrigger>
+            <DialogContent
+              variant="bare"
+              backdropTestID="lightbox-backdrop"
+              accessibilityLabel={lightboxPhoto.name}
+            >
+              <Image
+                src={warmed() ? photoUrl(lightboxPhoto.photo, "large") : undefined}
+                fadeDuration={0}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  objectFit: "cover",
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  // The theme's scrim at the foot, so the caption reads on the photo.
+                  backgroundImage: `linear-gradient(180deg, transparent 55%, ${token("scrim")} 100%)`,
+                }}
+              />
+              <View
+                style={{
+                  position: "absolute",
+                  top: safeArea().top + 12,
+                  right: 12,
+                  flexDirection: "row",
+                }}
+              >
+                <DialogClose variant="secondary">Close</DialogClose>
+              </View>
+              <View
+                style={{
+                  position: "absolute",
+                  left: 20,
+                  right: 20,
+                  bottom: safeArea().bottom + 20,
+                  gap: 2,
+                }}
+              >
+                <Text style={{ fontSize: 20, fontWeight: "700", color: ui().caption }}>
+                  {lightboxPhoto.name}
+                </Text>
+                <Text style={{ fontSize: 13, color: alpha(ui().caption, 0.82) }}>
+                  {lightboxPhoto.detail}
+                </Text>
               </View>
             </DialogContent>
           </Dialog>

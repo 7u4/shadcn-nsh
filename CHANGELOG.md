@@ -69,3 +69,14 @@ New, and only added:
 
 Behaviour, appearance and the `nsh/base` props underneath are unchanged: every component still draws
 the same pixels as its look spread on the base control, which the render check compares.
+
+## Unreleased
+
+New, and only added:
+
+- `DialogContent` takes `variant`: `default` is the card it always was, and `bare` is the whole
+  window — no surface, edge, padding, corner or shadow, and no `margin` / `maxWidth` in the middle —
+  for a lightbox: a photo, its caption and the app's own floating close button over it. The look is
+  `dialogBare()` (`DialogVariant`); the backdrop, Escape, the back button, the focus and its return
+  are `nsh/base`'s, unchanged. With the content filling the window, nothing of the backdrop shows,
+  so the dialog closes from the app's own control, Escape or the back button.

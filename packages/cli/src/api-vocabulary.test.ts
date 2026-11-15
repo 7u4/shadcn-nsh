@@ -20,7 +20,8 @@ const VARIANTS = ["default", "secondary", "outline", "ghost", "destructive", "li
 
 /**
  * The variant values outside shadcn's button set, each with the component page that names it:
- * `tile` is a radio drawn as a card (`Radio`), `line` an underlined tab track; `legend` and
+ * `tile` is a radio drawn as a card (`Radio`), `line` an underlined tab track, `bare` a dialog that
+ * fills the window instead of drawing a card (`Dialog`); `legend` and
  * `label` are a field's legend (`FieldLegend`), and `muted`, `icon` and `image` an item's surface
  * and its media (`Item`, `ItemMedia`), as shadcn names them.
  */
@@ -32,6 +33,7 @@ const OWN_VARIANTS: Record<string, string> = {
   muted: "item",
   icon: "item",
   image: "item",
+  bare: "dialog",
 };
 
 /** Every `size` value: the three of a scale, and the icon-only ones a shadcn button takes. */

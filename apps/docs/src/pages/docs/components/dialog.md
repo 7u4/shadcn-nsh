@@ -102,6 +102,27 @@ Escape, a backdrop press and a downward swipe close the dialog; turn any of them
 </DialogContent>
 ```
 
+### Bare
+
+`variant="bare"` drops the card: the popup is the whole window, with no surface, edge, padding,
+corner or shadow, and nothing holding it in the middle. It is for a lightbox — a photo, a caption
+and the app's own floating close button over it. The content is laid over the window, so nothing of
+the backdrop shows: close it from your own button (Escape and the back button are still the base's).
+
+```tsx
+<Dialog open={shown()} onOpenChange={({ open }) => setShown(open)}>
+  <DialogContent variant="bare">
+    <Image src={photo} style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }} />
+    <View style={{ position: "absolute", top: 12, right: 12 }}>
+      <DialogClose>Close</DialogClose>
+    </View>
+  </DialogContent>
+</Dialog>
+```
+
+`dialogBare()` is that look on its own, for the reference page and for an app that lays the
+`nsh/base` dialog out itself; `DialogVariant` is the type of the axis.
+
 ## API
 
 `Dialog` owns the open state. `DialogContent` mounts [`nsh/base` Dialog](https://nsh.dev/elements/dialog); every base prop passes through it, and base owns the backdrop, the popup host and Escape, back and swipe.
@@ -110,7 +131,7 @@ Escape, a backdrop press and a downward swipe close the dialog; turn any of them
 | ------------------- | ------------------------------------------------------------------------------------------------ |
 | `Dialog`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onOpen`, `onClose`, `onCancel`         |
 | `DialogTrigger`     | `children`, `variant`, `disabled`, `style`                                                       |
-| `DialogContent`     | `width`, every `nsh/base` Dialog prop; `style` over `dialogCard`, `backdropStyle` over the scrim |
+| `DialogContent`     | `variant` (`default` / `bare`), `width`, every `nsh/base` Dialog prop; `style` over `dialogCard` (or `dialogBare`), `backdropStyle` over the scrim |
 | `DialogTitle`       | `children`; a string takes `dialogTitle`                                                         |
 | `DialogDescription` | `children`; a string takes `dialogText`                                                          |
 | `DialogFooter`      | `children`, `style`                                                                              |
