@@ -224,6 +224,12 @@ export const components: ComponentDoc[] = [
     description: "A menu of items, separators and submenus on the shared menu look.",
   },
   {
+    slug: "menubar",
+    title: "Menubar",
+    nshElement: "menubar",
+    description: "A row of menus whose triggers stand in one bar, as a desktop app's menu bar.",
+  },
+  {
     slug: "meter",
     title: "Meter",
     nshElement: null,

@@ -1089,6 +1089,19 @@
           "target": "components/ui/drawer.tsx"
         }
       ]
+    },
+    {
+      "name": "menubar",
+      "type": "registry:ui",
+      "title": "Menubar",
+      "description": "A row of menus whose triggers stand in one bar.",
+      "files": [
+        {
+          "path": "packages/ui/menubar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/menubar.tsx"
+        }
+      ]
     }
   ]
 }

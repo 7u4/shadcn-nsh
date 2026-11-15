@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **`menubar`.** A row of menus: `Menubar`, `MenubarMenu`, `MenubarTrigger`, `MenubarContent`, and
+  the menu's rows under the bar's names (`MenubarItem`, `MenubarCheckboxItem`, `MenubarRadioItem`,
+  `MenubarLabel`, `MenubarSeparator`, `MenubarShortcut`, `MenubarGroup`, `MenubarSub`,
+  `MenubarSubTrigger`, `MenubarSubContent`). The bar is 36 points high with a pointer (50 on a touch
+  screen) inside a 1-point edge, its triggers 26 (40) tall, the trigger of the open menu on the
+  neutral `accent` fill. Rows, submenus and the popup are `menu`'s looks, so `add menubar` brings
+  `menu` with it.
 - **`drawer`.** A panel from the bottom edge with the parts a card's panel wears around it:
   `Drawer`, `DrawerTrigger`, `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerDescription`,
   `DrawerFooter`, `DrawerClose`. Against `sheet` it is the phone's panel: bottom by default, a

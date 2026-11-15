@@ -120,6 +120,11 @@ const overrides: Record<string, Override> = {
   // The drawer over everything: a scrim hides the page, so the shot is the open drawer itself.
   drawer: { steps: (app) => app.press("Share…") },
   popover: { steps: (app) => app.press("Order 1024") },
+  // The bar stays; the menu opens under its trigger, which wears the chosen fill.
+  menubar: {
+    steps: (app) => app.press("File"),
+    extraSettle: 16,
+  },
   menu: {
     steps: (app) => app.press("File ▾"),
     // Its popup's shadow lands a frame after the entrance: 16 ms more, on both pages.

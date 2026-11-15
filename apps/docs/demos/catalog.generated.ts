@@ -71,4 +71,5 @@ export const componentIds = [
   "aspect-ratio",
   "textarea",
   "drawer",
+  "menubar",
 ] as const;
