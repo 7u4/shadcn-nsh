@@ -70,7 +70,6 @@ New, and only added:
 Behaviour, appearance and the `nsh/base` props underneath are unchanged: every component still draws
 the same pixels as its look spread on the base control, which the render check compares.
 
-
 ## Unreleased
 
 New, and only added:
@@ -96,3 +95,10 @@ Fixed:
   own (a command palette's headings, a popup's placement words, an emoji section's name, a color
   picker's labels read aloud).
 
+Documented:
+
+- The dialog page shows a lightbox as the card undone rather than as another presentation: the
+  content's `style` takes the surface, edge, padding, corners, shadow and 360-point place away and
+  fills the window, and the app's own full-window view closes it. No API changes; the gallery's
+  dialog tests measure the result, and `maxWidth` takes a length, never `none`, so the page says
+  `"100%"`.
