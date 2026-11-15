@@ -9,8 +9,8 @@ import { controlSize, density } from "./lib/surface";
 
 /**
  * An item's surface: `default` (nothing around it, for a list of rows with a separator),
- * `outline` (the hairline edge of a surface, one row standing alone) or `muted` (the well a
- * section's content sits in).
+ * `outline` (the hairline edge of a surface, one row standing alone) or `muted` (the muted fill,
+ * where a section's content sits).
  */
 export type ItemVariant = "default" | "outline" | "muted";
 
@@ -57,9 +57,10 @@ const imageTile = () => controlSize.row - 8;
  * the title in the text colour at the labels' size and medium weight, the
  * description a step quieter and muted, wrapping to two lines. `default`
  * draws no surface, `outline` the hairline edge of a surface, and `muted` the
- * well. An icon's tile is a control's box plus 12, on the well with a
- * hairline edge; an image's frame is a square that clips. The terminal draws
- * rows one row high, with no surface and no tile.
+ * muted fill (`colors.mutedFill`, shadcn's `bg-muted`): a well that reads on a
+ * card and on the page, in either appearance. An icon's tile is a control's box
+ * plus 12, on the well with a hairline edge; an image's frame is a square that
+ * clips. The terminal draws rows one row high, with no surface and no tile.
  */
 export function itemLook(): ItemLook {
   /** The row's padding and gaps: `sm` takes four points off each. */
@@ -99,7 +100,7 @@ export function itemLook(): ItemLook {
             borderRadius: radius.inset,
             borderWidth: 1,
             borderColor: variant === "outline" ? colors.border : "transparent",
-            backgroundColor: variant === "muted" ? colors.inset : "transparent",
+            backgroundColor: variant === "muted" ? colors.mutedFill : "transparent",
           },
     media: (variant: ItemMediaVariant): ViewStyle =>
       terminal || variant === "default"
@@ -177,7 +178,7 @@ export type ItemSeparatorProps = ViewProps;
 
 /** One row: what sits before its content, the content, and the controls after it. */
 export type ItemProps = ViewProps & {
-  /** Default `default`: no surface. `outline` edges the row, `muted` puts it on the well. */
+  /** Default `default`: no surface. `outline` edges the row, `muted` puts it on the muted fill. */
   variant?: ItemVariant;
   /** Default `default`, room for a title and a description; `sm` is one line tighter. */
   size?: ItemSize;

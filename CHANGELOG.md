@@ -71,6 +71,19 @@ Fixed:
   than the language-neutral way, so a heading keeps its letters where they have a locale of their
   own (a command palette's headings, a popup's placement words, an emoji section's name, a color
   picker's labels read aloud).
+- **`SelectTrigger`'s `style` now places the trigger where the app puts it.** The properties that lay
+  a view out — `flex`, `flexGrow`, `flexShrink`, `flexBasis`, `width`, `minWidth`, `maxWidth`,
+  `alignSelf` and the margins — go on the view around the trigger, so a trigger grows and shrinks
+  like a view of the app's own: in a row, `style={{ flex: 1 }}` takes the room left, and
+  `minWidth: 0` lets a narrow row squeeze it under the least the look asks for (180 points with a
+  pointer), its title ending in an ellipsis instead of overflowing. The rest of the style (the fill,
+  the edge, the padding) stays on the trigger as before, and a trigger with no `style` draws exactly
+  what it always did. The field scene drops the view it wrapped around each select.
+- **`Item variant="muted"` sits on a muted fill.** It was the inset surface, which in a dark
+  appearance is all but the card's colour; it is now `colors.mutedFill`, the theme's `muted` token
+  (shadcn's `bg-muted`), which reads on a card and on the page in either appearance and stays
+  lighter than an edge. `colors` gains that one role; no theme data changed, since both themes
+  already declare `muted`. `default` and `outline` draw what they always did.
 
 ## 0.3.0 — the unified API
 

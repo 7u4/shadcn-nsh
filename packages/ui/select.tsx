@@ -303,6 +303,12 @@ export type SelectTriggerProps = {
   variant?: PickerVariant;
   /** The chevron at the end (the default). */
   chevron?: boolean;
+  /**
+   * The trigger's own style, over its look. What places it where the app puts it (`flex*`, `width`,
+   * `minWidth`, `maxWidth`, `alignSelf`, `margin*`) goes on the select's outermost view, the box the
+   * app lays out: a trigger then stretches and shrinks like a view of the app's own. The rest (the
+   * fill, the edge, the padding) stays on the trigger.
+   */
   style?: ViewStyle;
 };
 
@@ -330,9 +336,54 @@ export type SelectLabelProps = {
   children?: string;
 };
 
+/**
+ * The keys of a trigger's `style` that place it where the app puts it. They go on `SelectContent`'s
+ * view, the select's box in the app's layout, which `nsh/base`'s Select fills: the trigger alone
+ * could take neither the room a row leaves nor less room than its look asks for.
+ */
+const TRIGGER_LAYOUT: readonly string[] = [
+  "flex",
+  "flexGrow",
+  "flexShrink",
+  "flexBasis",
+  "width",
+  "maxWidth",
+  "alignSelf",
+  "margin",
+  "marginHorizontal",
+  "marginVertical",
+  "marginTop",
+  "marginRight",
+  "marginBottom",
+  "marginLeft",
+  "marginStart",
+  "marginEnd",
+];
+
+/**
+ * A trigger's `style`, in two: what the select's box wears (where it sits in the app's layout) and
+ * what the trigger itself wears. `minWidth` goes to both: the look gives a trigger a `minWidth` of
+ * its own (room for the list's rows, with a pointer), and a squeezed select cannot be narrower than
+ * that, so the app's `minWidth` has to reach the trigger as well.
+ */
+function splitTriggerStyle(style: ViewStyle | undefined): { layout: ViewStyle; look: ViewStyle } {
+  const layout: Record<string, unknown> = {};
+  const look: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(style ?? {})) {
+    (TRIGGER_LAYOUT.includes(key) ? layout : look)[key] = value;
+  }
+  if (style?.minWidth !== undefined) {
+    layout.minWidth = style.minWidth;
+    look.minWidth = style.minWidth;
+  }
+  return { layout: layout as ViewStyle, look: look as ViewStyle };
+}
+
 type SelectContextValue = OpenState & {
   items: ItemRegistry<SelectItemData>;
   trigger: Slot;
+  /** Where the trigger sits: `SelectTrigger`'s layout, for `SelectContent`'s view to wear. */
+  triggerLayout: Slot;
   value: () => string | null;
   change: (event: { value: string | null }) => void;
   /** The placeholder: `SelectValue`'s, else the root's, else "Select…". */
@@ -378,6 +429,7 @@ export function Select(props: SelectProps) {
   const state = createOpenState<OpenChangeReason>(props);
   const items = createItemRegistry<SelectItemData>([]);
   const trigger = createSlot();
+  const triggerLayout = createSlot();
   const prompt = signal<string | undefined>(undefined);
   const picked = signal(false);
   const chosen = signal<string | null>(null);
@@ -399,6 +451,7 @@ export function Select(props: SelectProps) {
         ...state,
         items,
         trigger,
+        triggerLayout,
         value,
         change,
         prompt: () => prompt() ?? props.placeholder ?? "Select…",
@@ -419,6 +472,9 @@ export function Select(props: SelectProps) {
  */
 export function SelectTrigger(props: SelectTriggerProps) {
   const ctx = useSelect();
+  // Split where it is read, in the two thunks below, so a style that reads the appearance follows
+  // it (P5): each of them runs in a reactive scope, a component's body does not.
+  ctx.triggerLayout.set(() => splitTriggerStyle(props.style).layout);
   ctx.trigger.set(() => (
     <Picker
       title={titleOf(ctx)}
@@ -431,7 +487,7 @@ export function SelectTrigger(props: SelectTriggerProps) {
       lead={props.lead}
       variant={props.variant}
       chevron={props.chevron}
-      style={props.style}
+      style={splitTriggerStyle(props.style).look}
     />
   ));
   if (typeof props.children === "string") {
@@ -471,7 +527,9 @@ export function SelectContent(props: SelectContentProps) {
     "clearButton",
   ]);
   return (
-    <View>
+    // The select's box in the app's layout: `nsh/base`'s Select fills it, and the trigger's own
+    // layout goes on it, since base's view sizes to its content.
+    <View style={ctx.triggerLayout.get()?.() as ViewStyle | undefined}>
       {props.children}
       {() => {
         const chrome = listboxProps({ minWidth: props.minWidth });
