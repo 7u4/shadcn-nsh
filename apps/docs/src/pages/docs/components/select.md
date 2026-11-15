@@ -86,6 +86,34 @@ field's well.
 </SelectTrigger>
 ```
 
+### A trigger that takes the room of a row
+
+`style` on `SelectTrigger` is the trigger's box in the app's layout: the properties that place it
+where the app puts it — `flex`, `flexGrow`, `flexShrink`, `flexBasis`, `width`, `minWidth`,
+`maxWidth`, `alignSelf` and the margins — go on the view around the trigger, so it grows, shrinks
+and keeps its distances like any other view. The rest of the style (the fill, the edge, the
+padding) stays on the trigger itself.
+
+```tsx
+<View style={{ flexDirection: "row", gap: 8 }}>
+  <Select placeholder="MM">
+    <SelectTrigger style={{ flex: 1, minWidth: 0 }} />
+    <SelectContent accessibilityLabel="Month">
+      <SelectItem value="01">01</SelectItem>
+    </SelectContent>
+  </Select>
+  <Select placeholder="YYYY">
+    <SelectTrigger style={{ flex: 1, minWidth: 0 }} />
+    <SelectContent accessibilityLabel="Year">
+      <SelectItem value="2026">2026</SelectItem>
+    </SelectContent>
+  </Select>
+</View>
+```
+
+With a pointer the trigger asks for 180 points at least (room for the list's rows); `minWidth: 0`
+lets a narrow row squeeze it, and its title ends in an ellipsis instead of overflowing.
+
 ### Uncontrolled
 
 ```tsx
@@ -101,7 +129,7 @@ The root owns the open flag and the value; `SelectContent` mounts [`nsh/base` Se
 | Part                          | Notes                                                                                                                                                 |
 | ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `Select`                      | `value` / `defaultValue`, `open` / `defaultOpen`, `disabled`, `cleanable`, `placeholder`, `onChange`, `onOpenChange`, `onOpen`, `onClose`, `onCancel` |
-| `SelectTrigger`               | A `Picker`: `icon`, `lead`, `invalid`, `variant`, `chevron`, `style`                                                                                  |
+| `SelectTrigger`               | A `Picker`: `icon`, `lead`, `invalid`, `variant`, `chevron`, `style` (the layout keys place it where the app puts it)                                 |
 | `SelectValue`                 | The placeholder while nothing is chosen (`placeholder`)                                                                                               |
 | `SelectContent`               | The list: `items` instead of `SelectItem` children, `minWidth`                                                                                        |
 | `SelectItem`                  | `value`, `disabled`, `group`; a string child is its title                                                                                             |
