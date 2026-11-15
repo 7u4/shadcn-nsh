@@ -34,6 +34,12 @@ export const components: ComponentDoc[] = [
     description: "A small capsule label in a neutral, toned, or outline style.",
   },
   {
+    slug: "breadcrumb",
+    title: "Breadcrumb",
+    nshElement: null,
+    description: "The trail from where the app starts to the page it shows.",
+  },
+  {
     slug: "button",
     title: "Button",
     nshElement: "button",

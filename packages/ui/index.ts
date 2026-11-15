@@ -62,6 +62,7 @@ export * from "./alert";
 export * from "./empty";
 export * from "./button-group";
 export * from "./input-group";
+export * from "./breadcrumb";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

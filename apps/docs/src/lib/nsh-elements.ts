@@ -7,6 +7,7 @@
  * https://nsh.dev/elements/<nshElement>.
  */
 export const NSH_ELEMENTS: Record<string, string | null> = {
+  breadcrumb: null,
   "context-menu": "menu",
   "dock-area": "dock",
   editor: "rich-editor",

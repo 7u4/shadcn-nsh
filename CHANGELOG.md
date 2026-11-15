@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **`breadcrumb`.** A trail from the app's root to the page it shows: `Breadcrumb` and its parts
+  (`List`, `Item`, `Link`, `Page`, `Separator`, `Ellipsis`), the steps small and muted with a chevron
+  between them, a step's link taking the text color under the pointer and the theme's focus ring with
+  the keyboard on it. A step is `nsh/base`'s Link, so `href` / `openWith` work as everywhere else; the
+  page is announced as the current one; a separator and the ellipsis are their marks (`›`, `…`) in a
+  terminal, which draws no icons.
 - **Hover, focus halo and a slider's thumb come from the theme.** `hovered()` reads the theme's
   `hover` token, and `focusRing()` the new `ring-halo` token; `finishes.json` gains a `handle`
   role, the slider's thumb, apart from the switch's `knob`. The default theme keeps its look

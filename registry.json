@@ -1158,6 +1158,21 @@
           "target": "components/ui/input-group.tsx"
         }
       ]
+    },
+    {
+      "name": "breadcrumb",
+      "type": "registry:ui",
+      "title": "Breadcrumb",
+      "description": "The trail from the app's root to the page it shows: links a chevron parts, the page itself last.",
+      "registryDependencies": ["icons", "label-of", "theme"],
+      "dependencies": ["lucide@^1.66.0"],
+      "files": [
+        {
+          "path": "packages/ui/breadcrumb.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/breadcrumb.tsx"
+        }
+      ]
     }
   ]
 }
