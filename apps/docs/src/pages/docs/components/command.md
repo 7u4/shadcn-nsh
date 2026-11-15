@@ -40,7 +40,7 @@ const items: CommandItem[] = [
 
 ### Shortcut and check
 
-`shortcut` is drawn as key caps with a pointer; `checked` marks the row in effect.
+`shortcut` is drawn with a pointer in `kbd`'s key cap, the library's one (`add command` brings it); `checked` marks the row in effect.
 
 ```tsx
 const items: CommandItem[] = [

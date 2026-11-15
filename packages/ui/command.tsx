@@ -2,7 +2,6 @@
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors, terminal } from "@shadcn-nsh/theme";
 import { Check, Search, type IconNode } from "lucide";
-import type { ViewStyle } from "nsh";
 import { platform, split, Text, View } from "nsh";
 import {
   Command as BaseCommand,
@@ -13,6 +12,7 @@ import {
   type CommandRef,
 } from "nsh/base";
 
+import { Kbd } from "./kbd";
 import { Icon } from "./lib/icons";
 import { controlSize } from "./lib/surface";
 
@@ -56,36 +56,9 @@ export const commandClasses = {
     "hover:bg-hover focus:border-brand/30 focus:bg-brand-tint active:opacity-70 disabled:opacity-50",
 };
 
-/**
- * A shortcut's keys (`⌘K`, `⇧⌘P`): a small key cap, 20 points tall, the
- * raised fill with a hairline edge and the label in the muted color. One
- * look for every shortcut the gallery shows: a palette's rows, a field's
- * hint, a menu's or a section's shortcut.
- */
-export function Kbd(props: { label: string; style?: ViewStyle }) {
-  return (
-    <View
-      class="border-border bg-raised rounded border px-1.5"
-      style={[{ height: 20, justifyContent: "center" }, props.style ?? null]}
-    >
-      <Text
-        style={{
-          fontSize: 11,
-          fontWeight: "500",
-          color: colors.muted,
-          fontVariant: ["tabular-nums"],
-          numberOfLines: 1,
-        }}
-      >
-        {props.label}
-      </Text>
-    </View>
-  );
-}
-
-/** A shortcut's keys, as hints show them here (`entry.shortcutLabel`). */
+/** A shortcut's keys, as hints show them here (`entry.shortcutLabel`): the library's one keycap, `kbd`'s. */
 export function CommandKeys(props: { label: string }) {
-  return <Kbd label={props.label} />;
+  return <Kbd>{props.label}</Kbd>;
 }
 
 /** A section's heading: small capitals in the faint color. */

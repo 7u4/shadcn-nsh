@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- **One key cap.** A command row's shortcut is drawn in `kbd`'s `Kbd`, and `command` no longer
+  has a keycap of its own: `add command` brings `kbd`, and an app that imported `Kbd` from
+  `components/ui/command` imports it from `components/ui/kbd` (`<Kbd>⌘K</Kbd>`).
 - **A field's label follows the scheme.** `fieldFamilyLook()` built its `title` and `labelInRow`
   color when it was called, so a look kept in a `const` kept the scheme the page opened in (a black
   label on a dark page). They read the theme when drawn now, as the other parts did.
