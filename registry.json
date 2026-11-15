@@ -1059,6 +1059,20 @@
           "target": "components/ui/skeleton.tsx"
         }
       ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "A key of a shortcut: a small cap in the muted fill, alone or in a group.",
+      "registryDependencies": ["surface", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/kbd.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/kbd.tsx"
+        }
+      ]
     }
   ]
 }
