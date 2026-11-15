@@ -18,7 +18,11 @@ export {
   CommandKeys,
   CommandRow,
   commandClasses,
+  type CommandEntry,
+  type CommandGroup,
+  type CommandItem,
   type CommandProps,
+  type CommandRef,
 } from "./command";
 export * from "./context-menu";
 export * from "./data-table";
