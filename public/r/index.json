@@ -1154,6 +1154,19 @@
           "target": "components/ui/attachment.tsx"
         }
       ]
+    },
+    {
+      "name": "message-scroller",
+      "type": "registry:ui",
+      "title": "MessageScroller",
+      "description": "A conversation that keeps up with itself: new turns follow the newest message while you are at the end, and wait when you are not.",
+      "files": [
+        {
+          "path": "packages/ui/message-scroller.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/message-scroller.tsx"
+        }
+      ]
     }
   ]
 }

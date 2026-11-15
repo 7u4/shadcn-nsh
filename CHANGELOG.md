@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **`message-scroller`.** A conversation that scrolls and keeps up with itself: `MessageScroller`,
+  `MessageScrollerViewport`, `MessageScrollerContent`, `MessageScrollerItem` and
+  `MessageScrollerButton`, after shadcn/ui's message scroller, on `nsh`'s `Scroll`. New turns follow
+  the newest message while the reader is at the end and stay put when they have scrolled up;
+  `initialScroll` says where it opens; a button floats over the viewport while there is somewhere
+  to go. No provider or hooks (state lives inside), no scroll anchoring, no `content-visibility`.
 - **`attachment`.** A file or a picture a message or a composer carries: `Attachment`,
   `AttachmentGroup`, `AttachmentMedia`, `AttachmentContent`, `AttachmentTitle`,
   `AttachmentDescription`, `AttachmentActions`, `AttachmentAction` and `AttachmentTrigger`, after

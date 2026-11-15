@@ -86,6 +86,8 @@ Every page links its base element where `nsh/base` has one: behavior, keyboard s
 
 - /docs/components/attachment: A file or a picture carried by a message, with its name, its state and its actions. → styled on `nsh` View and Text (no base element)
 
+- /docs/components/message-scroller: A conversation that follows new turns while you are at the end, and waits when you are not. → styled on `nsh` Scroll, View and Text (no base element)
+
 ## Elsewhere
 
 - Base behavior and elements: https://nsh.dev/elements

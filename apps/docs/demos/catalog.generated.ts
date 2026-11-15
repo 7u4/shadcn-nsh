@@ -76,4 +76,5 @@ export const componentIds = [
   "bubble",
   "message",
   "attachment",
+  "message-scroller",
 ] as const;

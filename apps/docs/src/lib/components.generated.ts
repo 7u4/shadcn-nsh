@@ -258,6 +258,13 @@ export const components: ComponentDoc[] = [
       "One row of a conversation: the sender's avatar, who they are, the turn, and what is under it.",
   },
   {
+    slug: "message-scroller",
+    title: "Message scroller",
+    nshElement: "message-scroller",
+    description:
+      "A conversation that keeps up with itself: new turns follow the newest message while you are at the end, and wait when you are not.",
+  },
+  {
     slug: "meter",
     title: "Meter",
     nshElement: null,
