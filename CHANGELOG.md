@@ -8,6 +8,8 @@
   the keyboard on it. A step is `nsh/base`'s Link, so `href` / `openWith` work as everywhere else; the
   page is announced as the current one; a separator and the ellipsis are their marks (`›`, `…`) in a
   terminal, which draws no icons.
+- **`aspect-ratio`.** A box as wide as its column and as tall as its `ratio` says (`16 / 9`, a square,
+  CSS's `"16 / 9"`), its content clipped to it: pictures keep their shape on every screen.
 - **Hover, focus halo and a slider's thumb come from the theme.** `hovered()` reads the theme's
   `hover` token, and `focusRing()` the new `ring-halo` token; `finishes.json` gains a `handle`
   role, the slider's thumb, apart from the switch's `knob`. The default theme keeps its look
