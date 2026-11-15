@@ -92,7 +92,7 @@ export function CommandKeys(props: { label: string }) {
 export function CommandHeading(props: { group: CommandGroup }) {
   return (
     <Text style={{ fontSize: 11, fontWeight: "600", letterSpacing: 0.6, color: colors.faint }}>
-      {props.group.heading.toUpperCase()}
+      {props.group.heading.toLocaleUpperCase()}
     </Text>
   );
 }

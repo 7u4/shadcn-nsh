@@ -1268,7 +1268,7 @@ function PieScene() {
             data={parts()}
             accessibilityLabel={
               totalRevenue() > 0
-                ? `Revenue by ${breakdown().toLowerCase()}, ${money(totalRevenue())} in all; largest ${parts()[0].name} at ${percent(share(parts()[0]))}`
+                ? `Revenue by ${breakdown().toLocaleLowerCase()}, ${money(totalRevenue())} in all; largest ${parts()[0].name} at ${percent(share(parts()[0]))}`
                 : "Revenue: nothing this quarter"
             }
             accessibilityValue={{

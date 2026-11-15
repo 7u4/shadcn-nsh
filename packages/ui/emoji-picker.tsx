@@ -186,7 +186,7 @@ export function EmojiPreview(props: { entry: EmojiEntry | null; hint: string }) 
   );
 }
 
-const capitalized = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
+const capitalized = (s: string) => (s ? s[0].toLocaleUpperCase() + s.slice(1) : s);
 
 /**
  * The whole picker: tabs, search with the skin tone hand, the grid, the

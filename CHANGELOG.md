@@ -93,3 +93,7 @@ New, and only added:
   `SheetOpenChangeReason`, `PopoverOpenChangeReason`, `HoverCardOpenChangeReason`,
   `ContextMenuOpenChangeReason`, `ComboboxOpenChangeReason`, `TooltipOpenChangeReason`,
   `DatePickerOpenChangeReason`, `AlertDialogChangeReason`, `ComboboxSelectItem`, `DatePickerEntry`.
+- Text is upper- and lower-cased for its locale (`toLocaleUpperCase` / `toLocaleLowerCase`) rather
+  than the language-neutral way, so a heading keeps its letters where they have a locale of their
+  own (a command palette's headings, a popup's placement words, an emoji section's name, a color
+  picker's labels read aloud).

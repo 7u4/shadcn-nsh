@@ -301,7 +301,7 @@ export function ColorFields(props: ColorFieldsProps) {
             <ColorField
               colorSpace={f.space}
               channel={c.channel}
-              accessibilityLabel={`${props.name} ${c.name.toLowerCase()} value`}
+              accessibilityLabel={`${props.name} ${c.name.toLocaleLowerCase()} value`}
               style={joinedText()}
             />
           </>
@@ -344,7 +344,7 @@ export function ColorCopy(props: { name: string; text: () => string }) {
   let timer: ReturnType<typeof setTimeout> | undefined;
   return (
     <BaseButton
-      accessibilityLabel={copied() ? "Copied" : `Copy ${props.name.toLowerCase()}`}
+      accessibilityLabel={copied() ? "Copied" : `Copy ${props.name.toLocaleLowerCase()}`}
       onPress={() => {
         void Clipboard.writeText(props.text());
         copied.set(true);
@@ -370,7 +370,7 @@ export function ColorCopy(props: { name: string; text: () => string }) {
 export function ColorDropper(props: { name: string }) {
   return (
     <ColorEyeDropper
-      accessibilityLabel={`Pick ${props.name.toLowerCase()} from the screen`}
+      accessibilityLabel={`Pick ${props.name.toLocaleLowerCase()} from the screen`}
       {...iconButtonLook()}
       class="disabled:hidden"
     >
