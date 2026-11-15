@@ -112,6 +112,25 @@ function App() {
       </Split>
 
       <DemoCard>
+        <DemoSection title="Ghost">
+          <View style={{ gap: 10, flex: 1 }}>
+            <Input
+              placeholder="Search"
+              accessibilityLabel="Search"
+              {...inputLook({ variant: "ghost" })}
+            />
+            <Input
+              value="Untitled note"
+              onChange={({ value }) => notes.set(value)}
+              accessibilityLabel="Title"
+              {...inputLook({ variant: "ghost", style: { fontSize: 17, fontWeight: "600" } })}
+            />
+            <Input value="For comparison" accessibilityLabel="For comparison" {...inputLook()} />
+          </View>
+        </DemoSection>
+      </DemoCard>
+
+      <DemoCard>
         <DemoSection title="States">
           <View style={{ gap: 10, flex: 1 }}>
             <Input

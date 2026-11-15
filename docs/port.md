@@ -14,6 +14,14 @@ bun run port:new <id> --from <上游文件> [--symbols a,b,c] [--base <nsh/base 
 
 组件 id 不手写：脚本从 `registry.json` 经 `scripts/catalog.ts` 取集合，NSH 运行时从 `demos/catalog.generated.ts` 取。`render-cases.ts` 只写这个组件需要时的 `steps` / `selfReference` 覆盖；`App.tsx` 不再列 id。
 
+**没有上游声明的组件**（本库自己的，如 `pressable`）不给 `--from`：
+
+```sh
+bun run port:new pressable --base Button
+```
+
+它不写 `port-map.json`、不跑 `port:vendor`，`packages/ui/<id>.tsx` 从 `templates/own.tsx.tmpl` 起步：整份归本库，没有 `// @port` 区域。没有区域也就没有 `selfReference`（外壳必须由演示与 `<id>.ref.tsx` 的 look 展开画出同样的像素），其余流程、演示、文档页、registry 与上面一样。
+
 然后：
 
 1. 填完所有 `TODO(port)`（`port:check` 在移植目录里见到它就报错）

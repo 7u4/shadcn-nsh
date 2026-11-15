@@ -65,6 +65,20 @@
       ]
     },
     {
+      "name": "label",
+      "type": "registry:lib",
+      "title": "Label",
+      "description": "The name screen readers say of a control whose content is a text label.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "packages/ui/lib/label.ts",
+          "type": "registry:lib",
+          "target": "lib/label.ts"
+        }
+      ]
+    },
+    {
       "name": "switch-geometry",
       "type": "registry:lib",
       "title": "Switch geometry",
@@ -201,7 +215,7 @@
       "type": "registry:ui",
       "title": "Button",
       "description": "A button, an icon button, a round button, and a split button.",
-      "registryDependencies": ["press", "spinner", "theme"],
+      "registryDependencies": ["label", "press", "spinner", "theme"],
       "files": [
         {
           "path": "packages/ui/button.tsx",
@@ -243,7 +257,7 @@
       "type": "registry:ui",
       "title": "Toggle",
       "description": "A two-state button, bare or outlined, with a label or an icon.",
-      "registryDependencies": ["press", "theme"],
+      "registryDependencies": ["label", "press", "theme"],
       "files": [
         {
           "path": "packages/ui/toggle.tsx",
@@ -257,7 +271,7 @@
       "type": "registry:ui",
       "title": "Checkbox",
       "description": "A sunk box that fills in citrus, with a check or a dash springing in.",
-      "registryDependencies": ["icons", "surface", "theme"],
+      "registryDependencies": ["icons", "label", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/checkbox.tsx",
@@ -272,7 +286,7 @@
       "type": "registry:ui",
       "title": "Radio Group",
       "description": "A sunk ring that fills in citrus, with a dot growing in — alone or as a choice tile.",
-      "registryDependencies": ["checkbox", "press", "surface", "theme"],
+      "registryDependencies": ["checkbox", "label", "press", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/radio-group.tsx",
@@ -313,7 +327,7 @@
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
-      "description": "A sunk text field — single-line, multiline, masked, or invalid.",
+      "description": "A text field — sunk, ghost, multiline, masked, or invalid.",
       "registryDependencies": ["theme"],
       "files": [
         {
@@ -455,7 +469,15 @@
       "type": "registry:ui",
       "title": "Menu",
       "description": "A menu of items, separators and submenus on the shared menu look.",
-      "registryDependencies": ["button", "icons", "open-state", "overlay", "popup", "theme"],
+      "registryDependencies": [
+        "button",
+        "icons",
+        "label",
+        "open-state",
+        "overlay",
+        "popup",
+        "theme"
+      ],
       "files": [
         {
           "path": "packages/ui/menu.tsx",
@@ -575,7 +597,7 @@
       "type": "registry:ui",
       "title": "Tabs",
       "description": "A pill track or underlined row with a traveling indicator.",
-      "registryDependencies": ["icons", "surface", "theme"],
+      "registryDependencies": ["icons", "label", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/tabs.tsx",
@@ -590,7 +612,7 @@
       "type": "registry:ui",
       "title": "Segmented",
       "description": "A sunk track whose raised thumb springs to the selected segment.",
-      "registryDependencies": ["tabs", "theme"],
+      "registryDependencies": ["label", "tabs", "theme"],
       "files": [
         {
           "path": "packages/ui/segmented.tsx",
@@ -604,7 +626,7 @@
       "type": "registry:ui",
       "title": "Accordion",
       "description": "List rows that reveal panels with a turning chevron.",
-      "registryDependencies": ["icons", "surface", "theme"],
+      "registryDependencies": ["icons", "label", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/accordion.tsx",
@@ -619,7 +641,7 @@
       "type": "registry:ui",
       "title": "Collapsible",
       "description": "A disclosure row that reveals a panel beneath it.",
-      "registryDependencies": ["accordion", "open-state", "surface"],
+      "registryDependencies": ["accordion", "label", "open-state", "surface"],
       "files": [
         {
           "path": "packages/ui/collapsible.tsx",
@@ -648,7 +670,7 @@
       "type": "registry:ui",
       "title": "Link",
       "description": "A text link with underline motion, on the shared nav look.",
-      "registryDependencies": ["icons", "theme"],
+      "registryDependencies": ["icons", "label", "theme"],
       "files": [
         {
           "path": "packages/ui/link.tsx",
@@ -993,6 +1015,20 @@
           "path": "packages/ui/item.tsx",
           "type": "registry:ui",
           "target": "components/ui/item.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pressable",
+      "type": "registry:ui",
+      "title": "Pressable",
+      "description": "A region that takes presses and adds only the feedback: hover, the press's sink, the focus ring.",
+      "registryDependencies": ["label", "press", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/pressable.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/pressable.tsx"
         }
       ]
     }

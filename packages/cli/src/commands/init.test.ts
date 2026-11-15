@@ -13,7 +13,7 @@ const neutralTheme = source("packages/theme/themes/shadcn/theme.json");
 const neutralFinishes = source("packages/theme/themes/shadcn/finishes.json");
 
 const fixture = (): Fixture =>
-  makeFixture({ items: ["theme", "theme-shadcn", "press", "spinner", "button"] });
+  makeFixture({ items: ["theme", "theme-shadcn", "press", "spinner", "button", "label"] });
 
 let current: Fixture | null = null;
 

@@ -19,7 +19,7 @@ Styled copy-into-app components on [`nsh/base`](https://nsh.dev/elements): behav
 | Theme        | `@shadcn-nsh/theme` | Colors, finishes, radii from upstream      |
 | This package | `@shadcn-nsh/ui`    | One file per component; registry for `add` |
 
-Each file is a look (`// @port … // @port end`) plus a thin shell. A region is this library's code and may be edited; `port:check` lists upstream's changes to the declarations we route, and `bun run port:review` marks them read.
+Each file is a look plus a thin shell. The look started from the upstream gallery UI where the component has one (`// @port … // @port end`, ours to change, `port:check` lists upstream's changes to the declarations we route, and `bun run port:review` marks them read); where it has none the component is this library's own from the first line (`pressable`).
 
 ## Toolchain
 

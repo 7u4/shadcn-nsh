@@ -147,7 +147,7 @@ export const components: ComponentDoc[] = [
     slug: "input",
     title: "Input",
     nshElement: "input",
-    description: "A sunk text field — single-line, multiline, masked, or invalid.",
+    description: "A text field — sunk, ghost, multiline, masked, or invalid.",
   },
   {
     slug: "item",
@@ -203,6 +203,12 @@ export const components: ComponentDoc[] = [
     title: "Popover",
     nshElement: "popover",
     description: "A popup panel that grows from its trigger, on the shared menu surface.",
+  },
+  {
+    slug: "pressable",
+    title: "Pressable",
+    nshElement: "pressable",
+    description: "A region that takes presses and adds only their feedback.",
   },
   {
     slug: "progress",

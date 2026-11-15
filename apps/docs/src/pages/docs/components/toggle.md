@@ -57,6 +57,10 @@ A size is compact with a pointer (24 / 28 / 34 points) and roomier on a touch sc
 <Toggle disabled>Bold</Toggle>
 ```
 
+### Names for screen readers
+
+A string child is the toggle's name for screen readers, and `accessibilityLabel` wins when it should differ from the visible label. Children drawn as given (an icon and a label of your own) derive no name.
+
 ### The look alone
 
 The look is a function, for a pressable of your own.

@@ -3,6 +3,10 @@
  * skeletons, fills the region with `port:vendor`, and registers it.
  *
  *   bun run port:new <id> --from <upstream> [--symbols a,b,c] [--base <nsh/base>] [--family]
+ *   bun run port:new <id> --base <nsh/base>
+ *
+ * Without `--from` the component is the library's own (a pressable built on a `nsh/base` control,
+ * say): no upstream file to route or vendor, and the shell starts with no port region.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -24,7 +28,8 @@ const templatesDir = path.join(import.meta.dir, "templates");
 
 type Args = {
   id: string;
-  from: string;
+  /** The upstream file this comes from; absent when the component is this library's own. */
+  from?: string;
   symbols?: string[];
   base: string;
   family: boolean;
@@ -33,7 +38,7 @@ type Args = {
 function usage(message?: string): never {
   if (message) console.error(`port:new: ${message}`);
   console.error(
-    "usage: bun run port:new <id> --from <upstream> [--symbols a,b,c] [--base <Name>] [--family]",
+    "usage: bun run port:new <id> [--from <upstream>] [--symbols a,b,c] [--base <Name>] [--family]",
   );
   process.exit(1);
 }
@@ -56,7 +61,7 @@ function parseArgs(argv: string[]): Args {
   const id = positional[0];
   if (!id) usage("missing <id>");
   if (!/^[a-z][a-z0-9-]*$/.test(id)) usage(`id must be kebab-case, got ${id}`);
-  if (!from) usage("missing --from");
+  if (symbols && !from) usage("--symbols needs --from");
   if (positional.length > 1) usage(`unexpected args: ${positional.slice(1).join(" ")}`);
   const Id = toPascal(id);
   return { id, from, symbols, base: base ?? Id, family };
@@ -96,7 +101,7 @@ function writeNew(file: string, text: string) {
 }
 
 /** Route `symbols` (or the whole file) to `ui/<id>.tsx`. Errors if anything is already routed. */
-function updateMap(map: PortMap, args: Args, target: string): string[] {
+function updateMap(map: PortMap, args: Args & { from: string }, target: string): string[] {
   const upstreamPath = path.join(upstreamDir(map), args.from);
   if (!fs.existsSync(upstreamPath)) {
     usage(`upstream file not found: ${args.from}`);
@@ -280,28 +285,32 @@ function main() {
     Id,
     Base: args.base,
     basePath: args.base.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase(),
-    upstream: args.from,
+    upstream: args.from ?? "",
     lookFn: `${camel}Look`,
     labelFn: `${camel}Label`,
   };
 
-  updateMap(map, args, uiRel);
+  const from = args.from;
+  if (from) updateMap(map, { ...args, from }, uiRel);
+  else console.log(`own    ${uiRel} (no upstream)`);
 
-  const uiTemplate = args.family ? "family.tsx.tmpl" : "leaf.tsx.tmpl";
+  const uiTemplate = args.family ? "family.tsx.tmpl" : args.from ? "leaf.tsx.tmpl" : "own.tsx.tmpl";
   writeNew(targetPath(map, uiRel), render(readTemplate(uiTemplate), vars));
 
-  const vendor = spawnSync("bun", ["scripts/port/vendor.ts", args.id], {
-    cwd: repo,
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-  if (vendor.stdout) process.stdout.write(vendor.stdout);
-  if (vendor.stderr) process.stderr.write(vendor.stderr);
-  if (vendor.status !== 0) {
-    console.error("port:new: port:vendor failed");
-    process.exit(vendor.status ?? 1);
+  if (args.from) {
+    const vendor = spawnSync("bun", ["scripts/port/vendor.ts", args.id], {
+      cwd: repo,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+    if (vendor.stdout) process.stdout.write(vendor.stdout);
+    if (vendor.stderr) process.stderr.write(vendor.stderr);
+    if (vendor.status !== 0) {
+      console.error("port:new: port:vendor failed");
+      process.exit(vendor.status ?? 1);
+    }
+    suggestImports(map, args.from, targetPath(map, uiRel));
   }
-  suggestImports(map, args.from, targetPath(map, uiRel));
 
   const demoTemplate = args.family ? "demo.family.tsx.tmpl" : "demo.tsx.tmpl";
   const refTemplate = args.family ? "demo.family.ref.tsx.tmpl" : "demo.ref.tsx.tmpl";

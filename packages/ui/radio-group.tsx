@@ -20,6 +20,7 @@ import {
 } from "nsh/base";
 
 import { ChoiceLight, choiceScales, choiceSink, choiceWell, type ChoiceSize } from "./checkbox";
+import { labelOf } from "./lib/label";
 import { pressSink } from "./lib/press";
 import { controlSize } from "./lib/surface";
 
@@ -168,7 +169,8 @@ export type RadioProps = Omit<BaseRadioProps, "children"> & {
   indicator?: boolean;
   /** `sm` (0.8), `default` (1) or `lg` (1.25) times the page's control size. */
   size?: ChoiceSize;
-  /** A string is the label; anything else is drawn as given. */
+  /** A string is the label; anything else is drawn as given. A string label is also the
+   * radio's name for screen readers, unless `accessibilityLabel` says otherwise. */
   children?: string | JSX.Element;
 };
 
@@ -194,6 +196,7 @@ export function Radio(props: RadioProps) {
   return (
     <BaseRadio
       {...rest}
+      accessibilityLabel={labelOf(props.accessibilityLabel, props.children)}
       class={props.class ? `group ${props.class}` : "group"}
       style={[look?.style ?? null, props.style ?? null]}
       hoverStyle={[look?.hoverStyle ?? null, props.hoverStyle ?? null]}

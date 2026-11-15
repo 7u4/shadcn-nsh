@@ -3,7 +3,8 @@ import { afterEach, describe, expect, test } from "bun:test";
 import { captured, makeFixture, type Fixture } from "../testing/fixture";
 import { runAdd } from "./add";
 
-const fixture = (): Fixture => makeFixture({ items: ["theme", "press", "spinner", "button"] });
+const fixture = (): Fixture =>
+  makeFixture({ items: ["theme", "press", "spinner", "button", "label"] });
 
 let current: Fixture | null = null;
 

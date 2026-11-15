@@ -63,6 +63,10 @@ import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 </MenuSub>
 ```
 
+### Names for screen readers
+
+A string child is the row's label and its name for screen readers; `accessibilityLabel` wins when it should differ. Children drawn as given derive no name.
+
 ## API
 
 Looks are `menuItemLook`, `menuPopup`, `menuSeparator`, `MenuLabel`, `SubmenuRow` and `SubmenuBack` from the upstream menu look. Every prop of [`nsh/base` Menu](https://nsh.dev/elements/menu) on `MenuContent` passes through except open state and `trigger`.

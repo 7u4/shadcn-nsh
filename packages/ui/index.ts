@@ -75,6 +75,7 @@ export * from "./toggle";
 export * from "./toolbar";
 export * from "./tooltip";
 export * from "./tree";
+export * from "./pressable";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

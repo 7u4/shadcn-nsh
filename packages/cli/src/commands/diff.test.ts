@@ -4,7 +4,8 @@ import { captured, makeFixture, type Fixture } from "../testing/fixture";
 import { runAdd } from "./add";
 import { runDiff } from "./diff";
 
-const fixture = (): Fixture => makeFixture({ items: ["theme", "press", "spinner", "button"] });
+const fixture = (): Fixture =>
+  makeFixture({ items: ["theme", "press", "spinner", "button", "label"] });
 
 /** An app with `button` installed. */
 async function installed(): Promise<Fixture> {

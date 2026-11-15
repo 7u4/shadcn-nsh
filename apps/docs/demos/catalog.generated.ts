@@ -58,4 +58,5 @@ export const componentIds = [
   "card",
   "field",
   "item",
+  "pressable",
 ] as const;

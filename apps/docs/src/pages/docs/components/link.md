@@ -54,6 +54,10 @@ The page a link names is the one shown.
 </Link>
 ```
 
+### Names for screen readers
+
+A string child is the link's name for screen readers too, so `<Link href="/docs">Documentation</Link>` needs nothing else; `accessibilityLabel` wins when the name should differ from the text. Children drawn as given derive no name.
+
 ## API
 
 Uses `linkLook` and `LinkText`. Every prop of [`nsh/base` Link](https://nsh.dev/elements/link) passes through.

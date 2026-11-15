@@ -62,6 +62,19 @@
       ]
     },
     {
+      "name": "label",
+      "type": "registry:lib",
+      "title": "Label",
+      "description": "The name screen readers say of a control whose content is a text label.",
+      "files": [
+        {
+          "path": "packages/ui/lib/label.ts",
+          "type": "registry:lib",
+          "target": "lib/label.ts"
+        }
+      ]
+    },
+    {
       "name": "switch-geometry",
       "type": "registry:lib",
       "title": "Switch geometry",
@@ -291,7 +304,7 @@
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
-      "description": "A sunk text field — single-line, multiline, masked, or invalid.",
+      "description": "A text field — sunk, ghost, multiline, masked, or invalid.",
       "files": [
         {
           "path": "packages/ui/input.tsx",
@@ -882,6 +895,19 @@
           "path": "packages/ui/item.tsx",
           "type": "registry:ui",
           "target": "components/ui/item.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pressable",
+      "type": "registry:ui",
+      "title": "Pressable",
+      "description": "A region that takes presses and adds only the feedback: hover, the press's sink, the focus ring.",
+      "files": [
+        {
+          "path": "packages/ui/pressable.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/pressable.tsx"
         }
       ]
     }

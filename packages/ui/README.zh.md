@@ -10,6 +10,6 @@
 - 文档站：[`apps/docs`](../../apps/docs)
 - 原生冒烟：[`apps/gallery`](../../apps/gallery)
 
-每个文件 = look（`// @port` 区域）+ 薄外壳。区域归本库，可直接改；上游有变化时 `port:check` 列出待审阅项，`bun run port:review` 记下审阅。
+每个文件 = look + 薄外壳。有上游的组件，look 起于上游 gallery UI（`// @port` 区域归本库，可直接改；上游有变化时 `port:check` 列出待审阅项，`bun run port:review` 记下审阅）；没有上游的（`pressable`）整份归本库。
 
 工具链用 **NSH nightly**，与 `port-map.json` 基线提交对齐（见 [`docs/toolchain.md`](../../docs/toolchain.md)）。安装：`npx shadcn-nsh@latest add <id>`。

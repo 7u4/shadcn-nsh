@@ -5,6 +5,7 @@ import type { JSX, TextStyle, ViewStyle } from "nsh";
 import { platform, split, Text } from "nsh";
 import { Toggle as BaseToggle, type ToggleProps as BaseToggleProps } from "nsh/base";
 
+import { labelOf } from "./lib/label";
 import { pressSink, pressTransition } from "./lib/press";
 
 // @port look/tool.ts
@@ -188,7 +189,8 @@ export type ToggleProps = Omit<BaseToggleProps, "children"> & {
    * children say it here.
    */
   text?: boolean;
-  /** A string is the label, in `toggleLabel`'s type; anything else is drawn as given. */
+  /** A string is the label, in `toggleLabel`'s type; anything else is drawn as given. A string
+   * label is also the toggle's name for screen readers, unless `accessibilityLabel` says otherwise. */
   children?: string | JSX.Element;
 };
 
@@ -217,6 +219,7 @@ export function Toggle(props: ToggleProps) {
   return (
     <BaseToggle
       {...rest}
+      accessibilityLabel={labelOf(props.accessibilityLabel, props.children)}
       hitSlop={props.hitSlop ?? look.hitSlop}
       style={[look.style, props.style ?? null]}
       hoverStyle={[look.hoverStyle ?? null, props.hoverStyle ?? null]}
