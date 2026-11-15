@@ -64,4 +64,5 @@ export const componentIds = [
   "kbd",
   "label",
   "alert",
+  "empty",
 ] as const;

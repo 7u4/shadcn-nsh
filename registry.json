@@ -1101,6 +1101,20 @@
           "target": "components/ui/alert.tsx"
         }
       ]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "A centered block that says there is nothing here yet, and what to do about it.",
+      "registryDependencies": ["surface", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/empty.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/empty.tsx"
+        }
+      ]
     }
   ]
 }
