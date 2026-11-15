@@ -1,0 +1,72 @@
+---
+layout: ../../../layouts/Docs.astro
+title: Skeleton
+description: The shape of content that is still coming.
+component: true
+demo: skeleton
+---
+
+## Installation
+
+```sh
+npx shadcn-nsh@latest add skeleton
+```
+
+## Usage
+
+```tsx
+import { Skeleton } from "@/components/ui/skeleton";
+```
+
+```tsx
+<Skeleton style={{ width: 250, height: 14 }} />
+```
+
+## Examples
+
+### A line, an avatar, a button
+
+A skeleton has no size of its own: the box is the caller's `style`, as shadcn's `className` is. A
+line is as tall as the type it will hold and as wide as that text runs; an avatar or an icon is a
+square, round with `borderRadius` half its side.
+
+```tsx
+<Skeleton style={{ width: 250, height: 14 }} />
+<Skeleton style={{ width: 48, height: 48, borderRadius: 24 }} />
+```
+
+### A block of content
+
+Placeholders keep the layout of what is coming: a column with a `gap` where the rows will be, and
+a row for the parts that sit side by side.
+
+```tsx
+<View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+  <Skeleton style={{ width: 48, height: 48, borderRadius: 24 }} />
+  <View style={{ gap: 8 }}>
+    <Skeleton style={{ width: 250, height: 14 }} />
+    <Skeleton style={{ width: 200, height: 14 }} />
+  </View>
+</View>
+```
+
+### Motion
+
+The block breathes (an endless motion). When the user asks for less motion it stays still, and a
+terminal shows it still: nothing to play there.
+
+```tsx
+{/* Nothing to turn off: the skeleton follows the system's reduce-motion setting. */}
+<Skeleton style={{ width: 200, height: 14 }} />
+```
+
+## API
+
+Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through (`style`, `accessibilityLabel`, …); `style` goes over the look's.
+
+| Prop | Type        | Default |
+| ---- | ----------- | ------- |
+| —    | `ViewProps` |         |
+
+There is no axis: a skeleton is one look — the theme's `accent` fill, the theme's inset corners,
+the breathing. `skeletonLook()` is exported for a block the app draws (or animates) itself.

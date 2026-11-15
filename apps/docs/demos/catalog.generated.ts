@@ -60,4 +60,5 @@ export const componentIds = [
   "item",
   "pressable",
   "separator",
+  "skeleton",
 ] as const;

@@ -77,6 +77,7 @@ export * from "./tooltip";
 export * from "./tree";
 export * from "./pressable";
 export * from "./separator";
+export * from "./skeleton";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

@@ -923,6 +923,19 @@
           "target": "components/ui/separator.tsx"
         }
       ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "The shape of content that is still coming: a block in the theme’s accent fill that breathes.",
+      "files": [
+        {
+          "path": "packages/ui/skeleton.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/skeleton.tsx"
+        }
+      ]
     }
   ]
 }
