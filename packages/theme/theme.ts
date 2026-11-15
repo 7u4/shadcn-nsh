@@ -67,6 +67,7 @@ export type FinishRole =
   | "fill"
   | "knob"
   | "knobOn"
+  | "handle"
   | "pill"
   | "thumb"
   | "on"
@@ -298,7 +299,9 @@ export const tints = tokens({
  * shadow. `hover` and `pressed` are a raised control's states, `fill` a
  * slider's or a meter's run of the accent; `knob` a switch's knob on its
  * sunk track, `knobOn` the white one with an olive edge on the citrus.
- * `thumb` is a segmented control's or a tab strip's selected segment on
+ * `handle` is a slider's thumb, the knob's twin here; a theme whose thumb
+ * wears an edge the switch's knob does not (shadcn's `border-primary`) tells
+ * them apart. `thumb` is a segmented control's or a tab strip's selected segment on
  * its sunk track: the raised fill dark; white with a soft drop light, where
  * the raised fill is all but the track's color.
  * `on` is what stays on (a toggle, a chosen tool, a selected button): a
@@ -322,6 +325,7 @@ export const finish: Record<FinishRole, Finish> = {
   fill: themed("fill"),
   knob: themed("knob"),
   knobOn: themed("knobOn"),
+  handle: themed("handle"),
   pill: themed("pill"),
   thumb: themed("thumb"),
   on: themed("on"),
@@ -452,11 +456,12 @@ export function follow(
 }
 
 /**
- * A pressable under the pointer (`hoverStyle`): a whisper of the text color
- * over its surface, quieter than pressed and than selected. Leave it off a
- * disabled control and off a selected one, whose own fill shows.
+ * A pressable under the pointer (`hoverStyle`): the theme's `hover` (here a
+ * whisper of the text color over its surface, quieter than pressed and than
+ * selected; shadcn's `accent`). Leave it off a disabled control and off a
+ * selected one, whose own fill shows.
  */
-export const hovered = (): ViewStyle => ({ backgroundColor: alpha(colors.text, 0.05) });
+export const hovered = (): ViewStyle => ({ backgroundColor: token("hover") });
 
 /**
  * The resting fill of a ghost control (a bare button, an icon button): none,
@@ -468,14 +473,15 @@ export const ghostFill = () => (terminal ? token("secondary") : "transparent");
 
 /**
  * The keyboard focus (`focusVisibleStyle`: not after a click or a tap): the
- * edge turns the theme's muted olive `ring` and a 3-point halo of it lies
- * around the view (`offset` moves the halo out from the edge).
+ * edge turns the theme's muted olive `ring` and a 3-point halo of `ring-halo`
+ * (here a faint wash of the ring; shadcn's `ring/50`) lies around the view
+ * (`offset` moves the halo out from the edge).
  */
 export const focusRing = (offset = 0): ViewStyle => ({
   borderColor: token("ring"),
   outlineStyle: "solid",
   outlineWidth: 3,
-  outlineColor: alpha(token("ring"), 0.14),
+  outlineColor: token("ring-halo"),
   outlineOffset: offset,
 });
 // @port end

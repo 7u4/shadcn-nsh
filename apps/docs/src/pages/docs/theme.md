@@ -32,6 +32,7 @@ npx shadcn-nsh@latest add theme
 | `field` / `input`                                                                  | An input's well and its edge                               |
 | `line` / `border`                                                                  | Hairlines inside insets, and the edge of a card or control |
 | `hover` / `faint`                                                                  | The pointer's wash, and the quietest text                  |
+| `ring-halo`                                                                        | The keyboard focus's halo around the `ring` edge           |
 | `brand` / `brand-fill`                                                             | The accent as ink, and as a fill with `on-brand` on it     |
 | `track` / `knob`                                                                   | A switch's track when off, and its knob                    |
 | `scrollbar-thumb*`                                                                 | The scroll bars, opaque over the view                      |
@@ -70,7 +71,7 @@ A finish is light and depth: a gradient over the color, its shadows, its edge. `
 | `raised` / `hover` / `pressed` | A control at rest, under the pointer, pressed             |
 | `light` / `accent`             | A control on the citrus fill                              |
 | `track` / `fill`               | A rail, and the accent that runs in it                    |
-| `knob` / `knobOn`              | A switch's knob off, and on                               |
+| `knob` / `knobOn` / `handle`   | A switch's knob off, and on; a slider's thumb             |
 | `pill` / `thumb` / `on`        | A segmented control's track, its thumb, what stays chosen |
 | `chip`                         | A small raised label                                      |
 | `glass`                        | A control over a photo                                    |
@@ -111,7 +112,7 @@ const ring = focusRing(); // the keyboard focus outline
 const dim = alpha(colors.text, 0.4); // a color at 40%
 ```
 
-`focusRing(offset)` is the shared keyboard outline: the muted `ring` edge and a 3-point halo. `alpha(color, a)` is a `color-mix` of that color with transparency. `colors`, `finish` and `radius` are getters, not snapshots: read them where they are used.
+`focusRing(offset)` is the shared keyboard outline: the muted `ring` edge and a 3-point halo of `ring-halo`. `hovered()` is the pointer's fill, the `hover` token. `alpha(color, a)` is a `color-mix` of that color with transparency. `colors`, `finish` and `radius` are getters, not snapshots: read them where they are used.
 
 ## Restyling
 

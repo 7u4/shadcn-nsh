@@ -64,6 +64,12 @@
       "boxShadow": "0 1px 0 oklch(0.42761 0.11265 128.534 / 0.18)",
       "borderColor": "oklch(0.71963 0.15821 125.456)"
     },
+    "handle": {
+      "backgroundColor": "oklch(0.92199 0.00419 271.367)",
+      "backgroundImage": "linear-gradient(180deg, oklch(0.94816 0.00344 247.859) 0%, oklch(0.88185 0.00589 264.53) 100%)",
+      "boxShadow": "0 1px 1px oklch(0 0 0 / 0.45)",
+      "borderColor": "oklch(0.8324 0.00597 264.528)"
+    },
     "pill": {
       "backgroundColor": "oklch(0.32935 0.01092 271.072)",
       "backgroundImage": "linear-gradient(180deg, oklch(0.32935 0.01092 271.072) 0%, oklch(0.32935 0.01092 271.072) 100%)",
@@ -161,6 +167,12 @@
       "backgroundImage": "linear-gradient(180deg, oklch(1 0 0) 0%, oklch(0.97867 0.00945 119.575) 100%)",
       "boxShadow": "0 1px 0 oklch(0.42761 0.11265 128.534 / 0.18)",
       "borderColor": "oklch(0.72099 0.15728 124.776)"
+    },
+    "handle": {
+      "backgroundColor": "oklch(1 0 0)",
+      "backgroundImage": "linear-gradient(180deg, oklch(1 0 0) 0%, oklch(0.96424 0.00414 271.369) 100%)",
+      "boxShadow": "0 1px 0 oklch(0.1686 0.02256 263.693 / 0.08)",
+      "borderColor": "oklch(0.81386 0.003 264.54)"
     },
     "pill": {
       "backgroundColor": "oklch(0.96724 0.00414 271.369)",

@@ -56,6 +56,11 @@
       "boxShadow": "0 1px 3px 0 oklch(0 0 0 / 0.1), 0 1px 2px -1px oklch(0 0 0 / 0.1)",
       "borderColor": "transparent"
     },
+    "handle": {
+      "backgroundColor": "oklch(1 0 0)",
+      "boxShadow": "0 1px 3px 0 oklch(0 0 0 / 0.1), 0 1px 2px -1px oklch(0 0 0 / 0.1)",
+      "borderColor": "oklch(0.922 0 0)"
+    },
     "pill": {
       "backgroundColor": "oklch(0.269 0 0)",
       "boxShadow": "0 1px 2px 0 oklch(0 0 0 / 0.05)",
@@ -142,6 +147,11 @@
       "backgroundColor": "oklch(1 0 0)",
       "boxShadow": "0 1px 3px 0 oklch(0 0 0 / 0.1), 0 1px 2px -1px oklch(0 0 0 / 0.1)",
       "borderColor": "transparent"
+    },
+    "handle": {
+      "backgroundColor": "oklch(1 0 0)",
+      "boxShadow": "0 1px 3px 0 oklch(0 0 0 / 0.1), 0 1px 2px -1px oklch(0 0 0 / 0.1)",
+      "borderColor": "oklch(0.205 0 0)"
     },
     "pill": {
       "backgroundColor": "oklch(0.97 0 0)",

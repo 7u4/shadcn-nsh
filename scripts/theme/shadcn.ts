@@ -80,6 +80,9 @@ const RADIUS = 0.625 * 16;
 /** `--radius-md` (0.8) / `--radius-xl` (1.4), as the theme's lengths. */
 const radius = (times: number) => `${Math.round(RADIUS * times)}px`;
 
+/** Tailwind's `white` (`bg-white`), which shadcn names outright rather than through a token. */
+const WHITE = "oklch(1 0 0)";
+
 /** shadcn's Tailwind v4 shadows, its `rgb(0 0 0 / …)` written as the theme's `oklch()`. */
 const SHADOW = {
   xs: `0 1px 2px 0 ${oklchColor(0, 0, 0, 0.05)}`,
@@ -218,7 +221,10 @@ function section(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
     "scrollbar-thumb-hover": "color-mix(in srgb, var(--muted-foreground) 80%, var(--background))",
     field: o.field,
     line: o.line,
-    hover: "color-mix(in srgb, var(--foreground) 5%, transparent)",
+    // A pressable under the pointer: shadcn's `hover:bg-accent`, not an ink over the surface.
+    hover: "var(--accent)",
+    // The keyboard focus's halo: shadcn's `ring-ring/50`.
+    "ring-halo": "color-mix(in srgb, var(--ring) 50%, transparent)",
     faint: o.faint,
     brand: p.primary,
     track: o.track,
@@ -272,6 +278,9 @@ function finishes(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
     fill: fill(p.primary),
     knob: { backgroundColor: o.knob, boxShadow: SHADOW.sm, borderColor: "transparent" },
     knobOn: { backgroundColor: o.knobOn, boxShadow: SHADOW.sm, borderColor: "transparent" },
+    // A slider's thumb: white with a `primary` edge in both appearances (`slider.tsx`'s
+    // `border-primary bg-white shadow-sm`), where a switch's knob has no edge.
+    handle: { backgroundColor: WHITE, boxShadow: SHADOW.sm, borderColor: p.primary },
     pill: raised(o.raised),
     thumb: { backgroundColor: o.thumb, boxShadow: SHADOW.sm, borderColor: "transparent" },
     on: { backgroundColor: o.on, boxShadow: "none", borderColor: "transparent" },

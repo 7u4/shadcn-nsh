@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **Hover, focus halo and a slider's thumb come from the theme.** `hovered()` reads the theme's
+  `hover` token, and `focusRing()` the new `ring-halo` token; `finishes.json` gains a `handle`
+  role, the slider's thumb, apart from the switch's `knob`. The default theme keeps its look
+  (`ring-halo` is the ring at 14%, `handle` the knob); the shadcn theme hovers in `accent`, rings
+  focus at `ring/50` and draws the thumb white with a `primary` edge. An app with its own
+  `theme.json` and `finishes.json` adds `ring-halo` to both appearances and a `handle` finish
+  (a copy of its `knob` keeps the look).
 - **The listbox parts come from `lib/listbox`.** `select` and `combobox` no longer re-export the
   shared listbox look (`OptionRow`, `ListboxHeader`, `ListboxEmpty`, `listboxProps`,
   `listboxSearch`, `listboxFooter`, `clearButtonLook` and their option types), and each drops its

@@ -59,11 +59,11 @@ export function sliderLook(o: SliderLookOptions = {}) {
     },
     rangeClass: "rounded-full",
     // The keyboard's ring on the thumb that has the focus (`focus-visible:`:
-    // not after a press or a drag). An outline, which the knob's shadow in
+    // not after a press or a drag). An outline, which the handle's shadow in
     // `thumbStyle` leaves alone.
     thumbClass: `rounded-full ${fade} hover:brightness-105 active:brightness-95 focus-visible:outline-3 focus-visible:outline-ring/50 disabled:brightness-100`,
     get thumbStyle(): ViewStyle {
-      return { width: thumb, height: thumb, borderWidth: 1, ...finish.knob };
+      return { width: thumb, height: thumb, borderWidth: 1, ...finish.handle };
     },
   };
 }
