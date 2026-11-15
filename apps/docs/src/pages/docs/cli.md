@@ -28,7 +28,7 @@ shadcn-nsh@latest init [options]
 npx shadcn-nsh@latest init -c apps/web
 ```
 
-It writes `theme.json`, `lib/finishes.json` and `lib/theme.ts` into the app (under `packages/ui` in a monorepo), and a `tsconfig.json` when the app has none. Which theme those files hold is recorded in `nsh-ui.json` (`"theme": "theme"`, or `"theme-shadcn"` for `--theme shadcn`); `add` resolves a component's `theme` dependency to it, so taking a component later — `--overwrite` included — never writes the default theme back. `add theme` / `add theme-shadcn` switch it.
+It writes `theme.json`, `lib/finishes.json` and `lib/theme.ts` into the app (under `packages/ui` in a monorepo), and a `tsconfig.json` when the app has none. Those two data files are the theme the app is **built** with; which one they hold is recorded in `nsh-ui.json` (`"theme": "theme"`, or `"theme-shadcn"` for `--theme shadcn`), and `add` resolves a component's `theme` dependency to it, so taking a component later — `--overwrite` included — never writes the default theme back. `--theme shadcn` also writes `themes/shadcn/`, the same palette as a theme the app can switch to while it runs.
 
 ## add
 
@@ -56,6 +56,8 @@ npx shadcn-nsh@latest add button --overwrite
 ```
 
 A file the app lacks is written, one identical to the registry's is skipped, and one the app changed is kept unless `--overwrite`. Without `--overwrite`, a `theme.json` gains only the keys it lacks.
+
+Naming a theme (`add theme-shadcn`) installs **one more**: `themes/shadcn/`, a theme the app can switch to while it runs (`selectTheme`), with its own `theme.json`, `finishes.json` and `index.ts`. It writes nothing over the app's build-time theme, and `nsh-ui.json` stays as it is; that theme is `init --theme <name> --overwrite`.
 
 ## list
 
