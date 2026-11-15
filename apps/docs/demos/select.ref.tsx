@@ -6,7 +6,6 @@ import { mount, signal, Text, View } from "nsh";
 import { Button, Select, Switch } from "nsh/base";
 
 import { buttonLabel, buttonLook } from "@/packages/ui/button";
-import { listRow, RowLabel, sectionSurface } from "@/packages/ui/lib/surface";
 import {
   clearButtonLook,
   ListboxEmpty,
@@ -14,8 +13,9 @@ import {
   listboxProps,
   listboxSearch,
   OptionRow,
-  Picker,
-} from "@/packages/ui/select";
+} from "@/packages/ui/lib/listbox";
+import { listRow, RowLabel, sectionSurface } from "@/packages/ui/lib/surface";
+import { Picker } from "@/packages/ui/select";
 import { switchLook } from "@/packages/ui/switch";
 
 import { DemoPage } from "./kit";

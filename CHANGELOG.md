@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- **The listbox parts come from `lib/listbox`.** `select` and `combobox` no longer re-export the
+  shared listbox look (`OptionRow`, `ListboxHeader`, `ListboxEmpty`, `listboxProps`,
+  `listboxSearch`, `listboxFooter`, `clearButtonLook` and their option types), and each drops its
+  own copy of `Chevron`. An app that imported them from `components/ui/select` or
+  `components/ui/combobox` imports them from `lib/listbox`, which `add select` already installs.
+  `add combobox` no longer brings `icons` or `lucide` of its own.
+
 ## 0.6.1 — the app's theme, kept
 
 - **`add theme` is the app's theme.** In an app `init --theme shadcn` made, `add theme --overwrite`

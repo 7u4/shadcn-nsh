@@ -36,29 +36,7 @@ export * from "./radio-group";
 export * from "./resizable";
 export * from "./scrollbar";
 export * from "./segmented";
-export type {
-  PickerLookOptions,
-  PickerProps,
-  SelectContentProps,
-  SelectGroupProps,
-  SelectItemProps,
-  SelectLabelProps,
-  SelectProps,
-  SelectTriggerProps,
-  SelectValueProps,
-} from "./select";
-export {
-  pickerLook,
-  Picker,
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-} from "./select";
+export * from "./select";
 export * from "./sheet";
 export * from "./slider";
 export * from "./spinner";
@@ -87,6 +65,7 @@ export * from "./input-group";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {
+  Chevron,
   ListboxEmpty,
   ListboxHeader,
   OptionRow,

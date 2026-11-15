@@ -6,12 +6,9 @@ import type { JSX } from "nsh";
 import { mount, signal, Text, View } from "nsh";
 
 import { Button } from "@/packages/ui/button";
+import { ListboxEmpty, ListboxHeader, listboxSearch, OptionRow } from "@/packages/ui/lib/listbox";
 import { listRow, RowLabel, sectionSurface } from "@/packages/ui/lib/surface";
 import {
-  ListboxEmpty,
-  ListboxHeader,
-  listboxSearch,
-  OptionRow,
   Select,
   SelectContent,
   SelectGroup,

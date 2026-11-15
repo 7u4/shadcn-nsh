@@ -271,11 +271,7 @@
         "listboxPopup": "packages/ui/lib/listbox.tsx",
         "optionClass": "packages/ui/lib/listbox.tsx",
         "listboxProps": "packages/ui/lib/listbox.tsx",
-        "Chevron": [
-          "packages/ui/lib/listbox.tsx",
-          "packages/ui/select.tsx",
-          "packages/ui/combobox.tsx"
-        ],
+        "Chevron": "packages/ui/lib/listbox.tsx",
         "clearInset": ["packages/ui/lib/listbox.tsx", "packages/ui/select.tsx"],
         "ClearButtonOptions": "packages/ui/lib/listbox.tsx",
         "clearButtonLook": "packages/ui/lib/listbox.tsx",

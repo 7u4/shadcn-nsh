@@ -1,7 +1,7 @@
 // A select: the look (`pickerLook`, `Picker`) and `Select` that wears the shared listbox look.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { alpha, colors, finish, radius, terminal, TERMINAL_COLUMN } from "@shadcn-nsh/theme";
-import { ChevronRight, type IconNode } from "lucide";
+import type { IconNode } from "lucide";
 import type { JSX, ViewStyle } from "nsh";
 import { cleanup, context, platform, reduceMotion, signal, split, Text, View } from "nsh";
 import {
@@ -15,6 +15,7 @@ import {
 import { fieldSize } from "./input";
 import { Icon } from "./lib/icons";
 import {
+  Chevron,
   clearButtonLook,
   listboxProps,
   ListboxEmpty,
@@ -31,18 +32,6 @@ import {
 } from "./lib/open-state";
 import { controlSize } from "./lib/surface";
 
-export {
-  clearButtonLook,
-  listboxFooter,
-  listboxProps,
-  listboxSearch,
-  ListboxEmpty,
-  ListboxHeader,
-  OptionRow,
-  type ClearButtonOptions,
-  type ListboxPopupOptions,
-} from "./lib/listbox";
-
 // @port look/listbox.tsx
 const pointer = platform.desktop;
 
@@ -51,26 +40,6 @@ type Live<T> = T | (() => T);
 
 const read = <T,>(v: Live<T> | undefined): T | undefined =>
   typeof v === "function" ? (v as () => T)() : v;
-
-/**
- * The chevron of a trigger: its icon box takes only the room of its stroke
- * (half the box) in the row, so it turns about its own center; it points
- * down, and up while the list is open.
- */
-export function Chevron(props: { open: boolean; hidden?: boolean }) {
-  return (
-    <View
-      class="transition-transform duration-150 motion-reduce:transition-none"
-      style={{
-        display: props.hidden ? "none" : "flex",
-        marginHorizontal: -controlSize.check / 4,
-        transform: [{ rotate: props.open ? "-90deg" : "90deg" }],
-      }}
-    >
-      <Icon icon={ChevronRight} size={controlSize.check} tint={colors.muted} />
-    </View>
-  );
-}
 
 /** The clear button's inset from a trigger's end: centered where the chevron's lane is. The button is in the
  * select's view, outside the trigger, so its inset counts the trigger's 1-point border too. */
