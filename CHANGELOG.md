@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.0 — a theme says what it draws
 
 What the shadcn theme still had to work around, worked around in the library instead, so a theme
 says what it draws and nothing more.
