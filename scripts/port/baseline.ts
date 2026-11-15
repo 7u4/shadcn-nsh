@@ -4,8 +4,10 @@
  *   bun scripts/port/baseline.ts --update [--only <id,...>]   # copy the latest shots into baseline/
  *   bun scripts/port/baseline.ts [--only <id,...>]            # compare the latest shots with baseline/
  *
- * `--update` replaces `apps/docs/demos/baseline/` with every `*-pointer-*.png` in `shots/`
- * (demo and reference alike) and prints how many; commit them after looking at the sheet.
+ * `--update` copies every `*-pointer-*.png` in `shots/` (demo and reference alike) into
+ * `apps/docs/demos/baseline/` and prints how many; commit them after looking at the sheet. It
+ * replaces only the ids those shots belong to — a render of a few ids (`port:render --only`)
+ * leaves the other ids' pictures alone — and drops the pictures of an id the catalog no longer has.
  * Without it, every baseline image must be in `shots/` byte for byte, and a pointer shot the
  * baseline does not have is listed too. Any difference exits non-zero, so `port:render` fails
  * on a visual change until the change is reviewed and the baseline moved.
@@ -68,12 +70,23 @@ if (process.argv.includes("--update")) {
     console.error("baseline: no pointer shots in shots/; run `bun run port:render` first");
     process.exit(1);
   }
-  // A full update replaces the baseline; `--only` rewrites the pictures of those ids and leaves
-  // the rest of the folder as it is.
-  if (!only) fs.rmSync(baseline, { recursive: true, force: true });
+  // The ids the shots are of get exactly the shots' pictures; an id with no shot keeps its own,
+  // since a render of a few ids says nothing about the rest, and an id gone from the catalog loses its.
   fs.mkdirSync(baseline, { recursive: true });
+  const written = new Set(files.map(idOf));
+  const known = new Set(catalog().components.map((c) => c.id));
+  let dropped = 0;
+  for (const name of fs.readdirSync(baseline).filter(pointerShot)) {
+    if (written.has(idOf(name)) || !known.has(idOf(name))) {
+      fs.rmSync(path.join(baseline, name));
+      if (!written.has(idOf(name))) dropped += 1;
+    }
+  }
   for (const name of files) fs.copyFileSync(path.join(shots, name), path.join(baseline, name));
-  console.log(`baseline: wrote ${files.length} pointer shots to ${path.relative(repo, baseline)}`);
+  console.log(
+    `baseline: wrote ${files.length} pointer shots of ${written.size} ids to ${path.relative(repo, baseline)}` +
+      (dropped > 0 ? `, dropped ${dropped} of ids the catalog no longer has` : ""),
+  );
   process.exit(0);
 }
 

@@ -101,11 +101,25 @@ function moduleAt(file: string): Module {
   return { file, source, program, types, localTypes, imports, functions };
 }
 
-/** Whether the component has hand-written code after its last port region (a shell). */
+/**
+ * Whether the component has hand-written code after its last port region (a shell). Types after it
+ * (`export type { EmojiEntry }`, an alias, an interface) draw nothing, so they are not one.
+ */
 function hasShell(module: Module): boolean {
   const marker = module.source.lastIndexOf("// @port end");
   if (marker === -1) return true;
-  return (module.program.body as Node[]).some((node) => (node.start ?? 0) > marker);
+  return (module.program.body as Node[]).some(
+    (node) => (node.start ?? 0) > marker && !typeOnly(node),
+  );
+}
+
+/** A statement that leaves no code behind: a type, an interface, or an export of types only. */
+function typeOnly(node: Node): boolean {
+  if (node.type === "TSTypeAliasDeclaration" || node.type === "TSInterfaceDeclaration") return true;
+  if (node.type !== "ExportNamedDeclaration") return false;
+  if (node.exportKind === "type") return true;
+  const declaration = node.declaration as Node | null | undefined;
+  return declaration ? typeOnly(declaration) : false;
 }
 
 /** The type a type alias declares; an interface is its own (its members are read directly). */
