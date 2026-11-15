@@ -1,3 +1,5 @@
+/// <reference types="bun" />
+
 /**
  * The docs' page contract, checked:
  *
