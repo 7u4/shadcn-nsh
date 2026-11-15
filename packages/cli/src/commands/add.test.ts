@@ -4,7 +4,7 @@ import { captured, makeFixture, type Fixture } from "../testing/fixture";
 import { runAdd } from "./add";
 
 const fixture = (): Fixture =>
-  makeFixture({ items: ["theme", "press", "spinner", "button", "label"] });
+  makeFixture({ items: ["theme", "press", "spinner", "button", "label-of"] });
 
 let current: Fixture | null = null;
 

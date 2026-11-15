@@ -10,6 +10,12 @@ export const components: ComponentDoc[] = [
     description: "List rows that reveal panels with a turning chevron.",
   },
   {
+    slug: "alert",
+    title: "Alert",
+    nshElement: "alert",
+    description: "A notice of the whole page or form, read out when it appears.",
+  },
+  {
     slug: "alert-dialog",
     title: "Alert Dialog",
     nshElement: "alert-dialog",
@@ -32,6 +38,12 @@ export const components: ComponentDoc[] = [
     title: "Button",
     nshElement: "button",
     description: "A button, an icon button, a round button, and a split button.",
+  },
+  {
+    slug: "button-group",
+    title: "Button group",
+    nshElement: "button-group",
+    description: "Buttons joined into one control, in a row or a column.",
   },
   {
     slug: "calendar",
@@ -131,6 +143,12 @@ export const components: ComponentDoc[] = [
     description: "Tabs, search, skin tones and grid styled for nsh/base EmojiPicker.",
   },
   {
+    slug: "empty",
+    title: "Empty",
+    nshElement: "empty",
+    description: "A centered block that says there is nothing here yet, and what to do about it.",
+  },
+  {
     slug: "field",
     title: "Field",
     nshElement: "field",
@@ -155,6 +173,18 @@ export const components: ComponentDoc[] = [
     nshElement: "item",
     description:
       "A row of a list: what sits before its content, a title with a note, and controls after it.",
+  },
+  {
+    slug: "kbd",
+    title: "Kbd",
+    nshElement: "kbd",
+    description: "A key of a shortcut, alone or in a group.",
+  },
+  {
+    slug: "label",
+    title: "Label",
+    nshElement: "label",
+    description: "The visible name of a control, beside it or over a group of them.",
   },
   {
     slug: "link",
@@ -248,10 +278,22 @@ export const components: ComponentDoc[] = [
     description: "A list of choices from a field trigger, on the shared listbox look.",
   },
   {
+    slug: "separator",
+    title: "Separator",
+    nshElement: "separator",
+    description: "A hairline across the content, or down a row.",
+  },
+  {
     slug: "sheet",
     title: "Sheet",
     nshElement: "sheet",
     description: "A panel that slides in from an edge of the screen over a scrim.",
+  },
+  {
+    slug: "skeleton",
+    title: "Skeleton",
+    nshElement: "skeleton",
+    description: "The shape of content that is still coming.",
   },
   {
     slug: "slider",

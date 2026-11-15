@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Pressable",
   "description": "A region that takes presses and adds only the feedback: hover, the press's sink, the focus ring.",
-  "registryDependencies": ["label", "press", "theme"],
+  "registryDependencies": ["label-of", "press", "theme"],
   "files": [
     {
       "path": "packages/ui/pressable.tsx",

@@ -1,0 +1,133 @@
+---
+layout: ../../../layouts/Docs.astro
+title: Alert
+description: A notice of the whole page or form, read out when it appears.
+component: true
+demo: alert
+---
+
+## Installation
+
+```sh
+npx shadcn-nsh@latest add alert
+```
+
+## Usage
+
+```tsx
+import { AlertCircle } from "lucide";
+
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+```
+
+```tsx
+<Alert>
+  <Icon icon={AlertCircle} size={ALERT_ICON} tint={colors.text} />
+  <AlertTitle>Heads up</AlertTitle>
+  <AlertDescription>You can add components to your app with the CLI.</AlertDescription>
+</Alert>
+```
+
+## Examples
+
+### With an icon and a note
+
+The icon comes first, drawn at `ALERT_ICON` (16 points) in the notice's ink — the terminal draws
+no icons, and there the notice is its text. The title and the note line up in the column beside
+it, the note a step quieter than the title.
+
+```tsx
+<Alert>
+  <Icon icon={CheckCircle2} size={ALERT_ICON} tint={colors.text} />
+  <AlertTitle>Changes saved</AlertTitle>
+  <AlertDescription>Your changes have been saved.</AlertDescription>
+</Alert>
+```
+
+### A title and no note
+
+An icon and a title are a notice of one line.
+
+```tsx
+<Alert>
+  <Icon icon={CheckCircle2} size={ALERT_ICON} tint={colors.text} />
+  <AlertTitle>A title and an icon, and no note at all.</AlertTitle>
+</Alert>
+```
+
+### Destructive
+
+`variant="destructive"` puts the whole notice in the danger tone: the title and the icon on it,
+the note at nine tenths. The parts under the root wear it without being told — the root hands the
+variant down.
+
+```tsx
+<Alert variant="destructive">
+  <Icon icon={AlertCircle} size={ALERT_ICON} tint={colors.danger} />
+  <AlertTitle>Unable to process your payment.</AlertTitle>
+  <AlertDescription>Please verify your billing information and try again.</AlertDescription>
+</Alert>
+```
+
+### A note of the app's own
+
+`AlertDescription` is a frame, not a sentence: a string is drawn in the note's type and ink, and
+anything else is laid out as given — a column of lines, a link, a row of buttons. What the app puts
+there carries its own ink.
+
+```tsx
+<Alert>
+  <Icon icon={AlertCircle} size={ALERT_ICON} tint={colors.text} />
+  <AlertTitle>Three checks failed</AlertTitle>
+  <AlertDescription>
+    <View style={{ gap: 4 }}>
+      <Text style={{ color: colors.muted }}>· The card's number is not valid</Text>
+      <Text style={{ color: colors.muted }}>· The card has expired</Text>
+    </View>
+  </AlertDescription>
+</Alert>
+```
+
+### The icon's column
+
+shadcn moves the text into the icon's column only when there is an icon (`has-[>svg]`). A view has
+no such selector and a child cannot be asked what it is, so the text keeps that gutter either way:
+an alert without an icon starts 12 points in from its padding. Write the icon first — it is what
+takes the leading column.
+
+### How it differs from the other alerts
+
+Three things are called an alert here, and this is the quiet one:
+
+- **this `Alert`** is a notice drawn on the page or in a form, in the app's own surface, read out by
+  its `role="alert"`. It takes no presses and asks nothing: the page stays usable under it.
+- **`nsh/base`'s `AlertDialog`** is the platform's own alert or action sheet
+  (`AlertDialog.show(options)`): a system box over the app that asks for an answer and resolves with
+  the action chosen. It looks like the operating system, not like the app.
+- **this library's `alert-dialog`** is the same question — a confirmation card — drawn by the app on
+  `nsh/base`'s `Dialog`: a sheet or a card that covers the page and takes its focus.
+
+So: a notice that can wait belongs here; a question that must be answered before anything else is
+an `alert-dialog`, or `nsh/base`'s `AlertDialog` where the platform's own box is wanted.
+
+## API
+
+Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `Alert` and
+`AlertDescription`, and every prop of [`nsh` Text](https://nsh.dev/elements/text) on `AlertTitle`;
+`style` goes over the look's on each. The root is `role="alert"`, so a notice is read out when it
+appears.
+
+| Prop      | Type                         | Default   |
+| --------- | ---------------------------- | --------- |
+| `variant` | `"default" \| "destructive"` | `default` |
+
+| Part               | Renders | Look                                                                                      |
+| ------------------ | ------- | ----------------------------------------------------------------------------------------- |
+| `Alert`            | `View`  | `alertLook().root()`                                                                      |
+| `AlertTitle`       | `Text`  | `alertLook().title(variant)`                                                              |
+| `AlertDescription` | `View`  | `alertLook().descriptionFrame()`, its string child `alertLook().descriptionText(variant)` |
+
+The surface is the card's, with one hairline edge and the theme's inset corners, padded 16 by 12;
+the icon's column is as wide as the icon, the text's takes the rest, a gap of 12 between them.
+`alertLook()` is exported for a notice the app draws itself, and `ALERT_ICON` is the size its icon
+is drawn at.

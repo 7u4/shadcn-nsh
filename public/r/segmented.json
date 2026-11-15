@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Segmented",
   "description": "A sunk track whose raised thumb springs to the selected segment.",
-  "registryDependencies": ["label", "tabs", "theme"],
+  "registryDependencies": ["label-of", "tabs", "theme"],
   "files": [
     {
       "path": "packages/ui/segmented.tsx",

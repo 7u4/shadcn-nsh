@@ -4,7 +4,7 @@ import { captured, makeFixture, type Fixture } from "../testing/fixture";
 import { runView } from "./view";
 
 const fixture = (): Fixture =>
-  makeFixture({ items: ["theme", "press", "spinner", "button", "label"] });
+  makeFixture({ items: ["theme", "press", "spinner", "button", "label-of"] });
 
 let current: Fixture | null = null;
 
@@ -22,7 +22,7 @@ describe("view", () => {
 
     expect(out.result).toBe(0);
     expect(out.text).toContain("button (registry:ui)");
-    expect(out.text).toContain("  depends on: label, press, spinner, theme");
+    expect(out.text).toContain("  depends on: label-of, press, spinner, theme");
     expect(out.text).toContain("file components/ui/button.tsx");
     expect(out.text).toContain("file lib/label.ts");
     expect(out.text).toContain("file lib/press.ts");

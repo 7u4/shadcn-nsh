@@ -65,7 +65,7 @@
       ]
     },
     {
-      "name": "label",
+      "name": "label-of",
       "type": "registry:lib",
       "title": "Label",
       "description": "The name screen readers say of a control whose content is a text label.",
@@ -215,7 +215,7 @@
       "type": "registry:ui",
       "title": "Button",
       "description": "A button, an icon button, a round button, and a split button.",
-      "registryDependencies": ["label", "press", "spinner", "theme"],
+      "registryDependencies": ["label-of", "press", "spinner", "theme"],
       "files": [
         {
           "path": "packages/ui/button.tsx",
@@ -257,7 +257,7 @@
       "type": "registry:ui",
       "title": "Toggle",
       "description": "A two-state button, bare or outlined, with a label or an icon.",
-      "registryDependencies": ["label", "press", "theme"],
+      "registryDependencies": ["label-of", "press", "theme"],
       "files": [
         {
           "path": "packages/ui/toggle.tsx",
@@ -271,7 +271,7 @@
       "type": "registry:ui",
       "title": "Checkbox",
       "description": "A sunk box that fills in citrus, with a check or a dash springing in.",
-      "registryDependencies": ["icons", "label", "surface", "theme"],
+      "registryDependencies": ["icons", "label-of", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/checkbox.tsx",
@@ -286,7 +286,7 @@
       "type": "registry:ui",
       "title": "Radio Group",
       "description": "A sunk ring that fills in citrus, with a dot growing in — alone or as a choice tile.",
-      "registryDependencies": ["checkbox", "label", "press", "surface", "theme"],
+      "registryDependencies": ["checkbox", "label-of", "press", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/radio-group.tsx",
@@ -472,7 +472,7 @@
       "registryDependencies": [
         "button",
         "icons",
-        "label",
+        "label-of",
         "open-state",
         "overlay",
         "popup",
@@ -597,7 +597,7 @@
       "type": "registry:ui",
       "title": "Tabs",
       "description": "A pill track or underlined row with a traveling indicator.",
-      "registryDependencies": ["icons", "label", "surface", "theme"],
+      "registryDependencies": ["icons", "label-of", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/tabs.tsx",
@@ -612,7 +612,7 @@
       "type": "registry:ui",
       "title": "Segmented",
       "description": "A sunk track whose raised thumb springs to the selected segment.",
-      "registryDependencies": ["label", "tabs", "theme"],
+      "registryDependencies": ["label-of", "tabs", "theme"],
       "files": [
         {
           "path": "packages/ui/segmented.tsx",
@@ -626,7 +626,7 @@
       "type": "registry:ui",
       "title": "Accordion",
       "description": "List rows that reveal panels with a turning chevron.",
-      "registryDependencies": ["icons", "label", "surface", "theme"],
+      "registryDependencies": ["icons", "label-of", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/accordion.tsx",
@@ -641,7 +641,7 @@
       "type": "registry:ui",
       "title": "Collapsible",
       "description": "A disclosure row that reveals a panel beneath it.",
-      "registryDependencies": ["accordion", "label", "open-state", "surface"],
+      "registryDependencies": ["accordion", "label-of", "open-state", "surface"],
       "files": [
         {
           "path": "packages/ui/collapsible.tsx",
@@ -670,7 +670,7 @@
       "type": "registry:ui",
       "title": "Link",
       "description": "A text link with underline motion, on the shared nav look.",
-      "registryDependencies": ["icons", "label", "theme"],
+      "registryDependencies": ["icons", "label-of", "theme"],
       "files": [
         {
           "path": "packages/ui/link.tsx",
@@ -1023,12 +1023,110 @@
       "type": "registry:ui",
       "title": "Pressable",
       "description": "A region that takes presses and adds only the feedback: hover, the press's sink, the focus ring.",
-      "registryDependencies": ["label", "press", "theme"],
+      "registryDependencies": ["label-of", "press", "theme"],
       "files": [
         {
           "path": "packages/ui/pressable.tsx",
           "type": "registry:ui",
           "target": "components/ui/pressable.tsx"
+        }
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "A hairline across the content, or down a row.",
+      "registryDependencies": ["theme"],
+      "files": [
+        {
+          "path": "packages/ui/separator.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/separator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "The shape of content that is still coming: a block in the theme’s accent fill that breathes.",
+      "registryDependencies": ["theme"],
+      "files": [
+        {
+          "path": "packages/ui/skeleton.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/skeleton.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "A key of a shortcut: a small cap in the muted fill, alone or in a group.",
+      "registryDependencies": ["surface", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/kbd.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/kbd.tsx"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "The visible name of a control: a row whose text is the control labels’ own type.",
+      "registryDependencies": ["surface", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/label.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "A notice of the whole page or form, read out when it appears.",
+      "registryDependencies": ["surface", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/alert.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/alert.tsx"
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "A centered block that says there is nothing here yet, and what to do about it.",
+      "registryDependencies": ["surface", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/empty.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/empty.tsx"
+        }
+      ]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "ButtonGroup",
+      "description": "Buttons joined into one control, in a row or a column.",
+      "registryDependencies": ["separator", "surface", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/button-group.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/button-group.tsx"
         }
       ]
     }

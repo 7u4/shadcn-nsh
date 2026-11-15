@@ -3,7 +3,15 @@
   "type": "registry:ui",
   "title": "Menu",
   "description": "A menu of items, separators and submenus on the shared menu look.",
-  "registryDependencies": ["button", "icons", "label", "open-state", "overlay", "popup", "theme"],
+  "registryDependencies": [
+    "button",
+    "icons",
+    "label-of",
+    "open-state",
+    "overlay",
+    "popup",
+    "theme"
+  ],
   "files": [
     {
       "path": "packages/ui/menu.tsx",

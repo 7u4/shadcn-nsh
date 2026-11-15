@@ -62,7 +62,7 @@
       ]
     },
     {
-      "name": "label",
+      "name": "label-of",
       "type": "registry:lib",
       "title": "Label",
       "description": "The name screen readers say of a control whose content is a text label.",
@@ -908,6 +908,97 @@
           "path": "packages/ui/pressable.tsx",
           "type": "registry:ui",
           "target": "components/ui/pressable.tsx"
+        }
+      ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "A hairline across the content, or down a row.",
+      "files": [
+        {
+          "path": "packages/ui/separator.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/separator.tsx"
+        }
+      ]
+    },
+    {
+      "name": "skeleton",
+      "type": "registry:ui",
+      "title": "Skeleton",
+      "description": "The shape of content that is still coming: a block in the theme’s accent fill that breathes.",
+      "files": [
+        {
+          "path": "packages/ui/skeleton.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/skeleton.tsx"
+        }
+      ]
+    },
+    {
+      "name": "kbd",
+      "type": "registry:ui",
+      "title": "Kbd",
+      "description": "A key of a shortcut: a small cap in the muted fill, alone or in a group.",
+      "files": [
+        {
+          "path": "packages/ui/kbd.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/kbd.tsx"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "The visible name of a control: a row whose text is the control labels’ own type.",
+      "files": [
+        {
+          "path": "packages/ui/label.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/label.tsx"
+        }
+      ]
+    },
+    {
+      "name": "alert",
+      "type": "registry:ui",
+      "title": "Alert",
+      "description": "A notice of the whole page or form, read out when it appears.",
+      "files": [
+        {
+          "path": "packages/ui/alert.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/alert.tsx"
+        }
+      ]
+    },
+    {
+      "name": "empty",
+      "type": "registry:ui",
+      "title": "Empty",
+      "description": "A centered block that says there is nothing here yet, and what to do about it.",
+      "files": [
+        {
+          "path": "packages/ui/empty.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/empty.tsx"
+        }
+      ]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "ButtonGroup",
+      "description": "Buttons joined into one control, in a row or a column.",
+      "files": [
+        {
+          "path": "packages/ui/button-group.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/button-group.tsx"
         }
       ]
     }

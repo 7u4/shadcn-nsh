@@ -10,7 +10,16 @@ export * from "./checkbox";
 export * from "./collapsible";
 export * from "./color-picker";
 export * from "./combobox";
-export * from "./command";
+// `command`'s own keycap keeps its name inside the module: `kbd.tsx`'s `Kbd` is the package's one.
+export {
+  Command,
+  CommandEmpty,
+  CommandHeading,
+  CommandKeys,
+  CommandRow,
+  commandClasses,
+  type CommandProps,
+} from "./command";
 export * from "./context-menu";
 export * from "./data-table";
 export * from "./date-picker";
@@ -76,6 +85,13 @@ export * from "./toolbar";
 export * from "./tooltip";
 export * from "./tree";
 export * from "./pressable";
+export * from "./separator";
+export * from "./skeleton";
+export * from "./kbd";
+export * from "./label";
+export * from "./alert";
+export * from "./empty";
+export * from "./button-group";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

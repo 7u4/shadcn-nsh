@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Tabs",
   "description": "A pill track or underlined row with a traveling indicator.",
-  "registryDependencies": ["icons", "label", "surface", "theme"],
+  "registryDependencies": ["icons", "label-of", "surface", "theme"],
   "files": [
     {
       "path": "packages/ui/tabs.tsx",

@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Collapsible",
   "description": "A disclosure row that reveals a panel beneath it.",
-  "registryDependencies": ["accordion", "label", "open-state", "surface"],
+  "registryDependencies": ["accordion", "label-of", "open-state", "surface"],
   "files": [
     {
       "path": "packages/ui/collapsible.tsx",

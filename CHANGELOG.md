@@ -1,5 +1,34 @@
 # Changelog
 
+## Unreleased — seven components shadcn has and we did not
+
+Seven components, each the library's own: none comes from upstream's gallery, so none carries a
+port region, and each is one file the registry copies into the app.
+
+| Item           | What it is                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `separator`    | A hairline across the content or down a row, hidden from a reader unless `decorative={false}`.                   |
+| `skeleton`     | The shape of content that is still coming: an `accent` block that breathes.                                      |
+| `kbd`          | A key of a shortcut (`Kbd`, one cap; `KbdGroup`, a row of them).                                                 |
+| `label`        | The visible name of a control — text, not its accessible name.                                                   |
+| `alert`        | A notice of the page or form (`Alert`, `AlertTitle`, `AlertDescription`), in `default` or `destructive`.         |
+| `empty`        | A centered empty state (`Empty`, `EmptyHeader`, `EmptyMedia`, `EmptyTitle`, `EmptyDescription`, `EmptyContent`). |
+| `button-group` | Buttons joined into one control (`ButtonGroup`, `ButtonGroupText`, `ButtonGroupSeparator`).                      |
+
+For them the scaffolding grew a flag, `bun run port:new <id> --view`, which starts a component from
+nsh's own `View` and `Text` instead of from a `nsh/base` symbol.
+
+Two names moved to make room for shadcn's:
+
+- the registry's `label` library item is now `label-of` (its file stays `lib/label.ts`), so `label`
+  is the name of the component, as in shadcn; `add label` copies the component, not the rule;
+- `packages/ui/index.ts` names `command`'s exports one by one, since the palette's own keycap is also
+  called `Kbd`: the package's `Kbd` is the component's, and the palette's stays inside the module.
+
+Where nsh has no selector to copy shadcn's CSS, the deviation is in the component's page: `alert`
+keeps the icon's column when there is no icon (`has-[>svg]`), `button-group` joins its buttons with a
+style each one wears (a child selector), and `label` takes `disabled` itself (a `peer-disabled`).
+
 ## 0.3.0 — the unified API
 
 `variant`, `size` and `tone` are now written the way shadcn writes them, and `kind` is gone. **This

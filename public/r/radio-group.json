@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Radio Group",
   "description": "A sunk ring that fills in citrus, with a dot growing in — alone or as a choice tile.",
-  "registryDependencies": ["checkbox", "label", "press", "surface", "theme"],
+  "registryDependencies": ["checkbox", "label-of", "press", "surface", "theme"],
   "files": [
     {
       "path": "packages/ui/radio-group.tsx",

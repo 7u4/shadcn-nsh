@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Accordion",
   "description": "List rows that reveal panels with a turning chevron.",
-  "registryDependencies": ["icons", "label", "surface", "theme"],
+  "registryDependencies": ["icons", "label-of", "surface", "theme"],
   "files": [
     {
       "path": "packages/ui/accordion.tsx",

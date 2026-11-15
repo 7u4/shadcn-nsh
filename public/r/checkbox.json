@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Checkbox",
   "description": "A sunk box that fills in citrus, with a check or a dash springing in.",
-  "registryDependencies": ["icons", "label", "surface", "theme"],
+  "registryDependencies": ["icons", "label-of", "surface", "theme"],
   "files": [
     {
       "path": "packages/ui/checkbox.tsx",

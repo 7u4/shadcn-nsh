@@ -6,8 +6,11 @@
 
 ```sh
 bun run port:new <id> --from <上游文件> [--symbols a,b,c] [--base <nsh/base 符号>] [--family]
+bun run port:new <id> --view [--family]
 # 例：bun run port:new toggle --from look/tool.ts --symbols toggleLook,toggleLabel,toggleGlyph,toggleSizes --base Toggle
 # 例：bun run port:new popover --from look/overlay.ts --symbols popoverLook,PopoverLookOptions --base Popover --family
+# 例：bun run port:new separator --view
+# 例：bun run port:new alert --view --family
 ```
 
 脚手架依次：在 `port-map.json` 加路由（已有路由时报错）→ 建 `packages/ui/<id>.tsx`（文件头、空区域、外壳骨架；`--family` 生成 Root / Trigger / Content / Close 与 `use<Id>()`）→ `port:vendor <id>` 只把空区域填成初稿（不覆盖已有代码）并列出缺的 import → 建 `demos/<id>.tsx` 与 `<id>.ref.tsx` → 建文档页骨架 → 加 registry 条目 → 在 `packages/ui/index.ts` 导出它 → 重新生成 `demos/catalog.generated.ts`。
@@ -21,6 +24,15 @@ bun run port:new pressable --base Button
 ```
 
 它不写 `port-map.json`、不跑 `port:vendor`，`packages/ui/<id>.tsx` 从 `templates/own.tsx.tmpl` 起步：整份归本库，没有 `// @port` 区域。没有区域也就没有 `selfReference`（外壳必须由演示与 `<id>.ref.tsx` 的 look 展开画出同样的像素），其余流程、演示、文档页、registry 与上面一样。
+
+**只排版和上色的组件**（本库自己的，`nsh/base` 里没有对应的控件：分隔线、占位块、按键示意）用 `--view`：外壳画在 `nsh` 自己的 `View` / `Text` 上，`--base` 与 `--from` 都不给。
+
+```sh
+bun run port:new separator --view
+bun run port:new alert --view --family   # 有零件（Title / Description…）时
+```
+
+它同样不写 `port-map.json`、不跑 `port:vendor`，组件从 `templates/view.tsx.tmpl`（单部件）或 `templates/view.family.tsx.tmpl`（零件家族）起步，演示与参照页分别取 `view` 版模板，文档页的“透传”一句写的是 `nsh` 的 View 而不是某个 `nsh/base` 控件。其余与上面一样。
 
 然后：
 
