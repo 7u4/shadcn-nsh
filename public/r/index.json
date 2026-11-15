@@ -910,6 +910,19 @@
           "target": "components/ui/pressable.tsx"
         }
       ]
+    },
+    {
+      "name": "separator",
+      "type": "registry:ui",
+      "title": "Separator",
+      "description": "A hairline across the content, or down a row.",
+      "files": [
+        {
+          "path": "packages/ui/separator.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/separator.tsx"
+        }
+      ]
     }
   ]
 }
