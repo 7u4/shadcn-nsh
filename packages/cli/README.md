@@ -50,6 +50,10 @@ shadcn-nsh add button --overwrite
   [`packages/theme/README.md`](../theme/README.md#more-than-one-theme)). It does not touch the
   app's build-time theme, and `nsh-ui.json` stays as it is. To make a theme the build-time one,
   re-run `init --theme <name> --overwrite`.
+- **This library's own theme is one of them**: `add theme-default` installs it into
+  `themes/default/` (its `theme.json` and `finishes.json` are the ones an app is built with, and
+  an `index.ts` exports `defaultTheme`). An app built with `init --theme shadcn` lists both and
+  switches between them; `selectTheme(null)` still means its build-time theme.
 - `theme` as a dependency still resolves to the item in `nsh-ui.json`, so `add button`,
   `add button --overwrite` and `add --all --overwrite` never write the default theme back.
 - `--dry-run` prints the same lines as `would write …` / `would overwrite …` and writes nothing —

@@ -47,6 +47,9 @@ shadcn-nsh add button --overwrite
 - 点名一个主题（`add theme-shadcn`）就是**多装一套**：它的文件落在 `themes/<name>/`，应用运行时可以切过去
   （`selectTheme`，见 [`packages/theme/README.zh.md`](../theme/README.zh.md#一套以上主题)）。它不动应用的构建时主题，
   `nsh-ui.json` 也保持原样。要让某套成为构建时主题，用 `init --theme <name> --overwrite`。
+- **本库自己的那套也是其中一员**：`add theme-default` 把它装进 `themes/default/`（里面的 `theme.json` 与
+  `finishes.json` 就是应用"本来会构建成"的那份，另有导出 `defaultTheme` 的 `index.ts`）。用
+  `init --theme shadcn` 构建的应用两项都列、来回切；`selectTheme(null)` 仍指它的构建时主题。
 - `theme` 这个依赖仍按 `nsh-ui.json` 里的条目解析，所以 `add button`、`add button --overwrite`、
   `add --all --overwrite` 都不会把默认主题写回来。
 - `--dry-run` 用 `would write …` / `would overwrite …` 打印同样的行，一个字节都不写——

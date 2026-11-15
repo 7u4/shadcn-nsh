@@ -90,8 +90,10 @@ flowchart TD
 | **构建时主题** | `nsh.json` 的 `theme` 指向的 `theme.json`，以及 `lib/finishes.json`                     | `init --theme <name>`（`nsh-ui.json` 的 `theme` 也记这一个）；换就是重跑 `init --theme <name> --overwrite` |
 | **AppTheme**   | 应用装进 `themes/<name>/` 的一套 `{ id, label, theme, finishes }`，一个 `index.ts` 导出 | registry 的 `theme-<name>` 条目，`add theme-<name>` 多装一套                                               |
 
-- 颜色、圆角、焦点环、悬停经 `token()` 读，`setTheme` 一换就跟；质感（渐变与阴影）**不是 token**，所以留在 `finishes.json`，由 `theme.ts` 的一个信号按当前主题取。两者拼成 `selectTheme(theme)`；`selectTheme(null)` 回到构建时主题。
+- 颜色、圆角、焦点环、悬停经 `token()` 读，`setTheme` 一换就跟；质感（渐变、阴影，以及按下缩到几成 —— `finishes.json` 顶层的 `press.scale`）**不是 token**，所以留在 `finishes.json`，由 `theme.ts` 的一个信号按当前主题取。两者拼成 `selectTheme(theme)`；`selectTheme(null)` 回到构建时主题。平面主题（shadcn）把 `press.scale` 写成 `1`：按下不缩放。
+- 圆角一律经 `radius.*`：`card`（卡）/ `inset`（卡内的面、菜单）/ `control`（控件）/ `popover`（对话框这类浮起的面），没有写死的数值。
 - `theme` 条目仍是构建时那套的三个文件（`theme.json`、`lib/finishes.json`、`lib/theme.ts`）；`theme-<name>` 只装 `themes/<name>/`，不碰它们。组件条目的 `theme` 依赖按 `nsh-ui.json` 解析，所以装主题不会把默认主题写回来。
+- **构建时主题也能当"多装的一套"**：`theme-default` 装 `themes/default/`，里面是构建时那两个 JSON 的副本（`scripts/theme/themes.test.ts` 保证逐字节相同）加一个导出 `defaultTheme` 的 `index.ts`。构建时用 shadcn 的应用这样就能两边切。
 - 应用的清单与持久化都是应用的：库只给 `selectTheme` / `currentTheme`，不写清单、不存 `id`（示例见 [`packages/theme/README.md`](../packages/theme/README.md)）。
 - 质感在 JSX 里读（见下）；把 `finish.*` 存进模块级常量，运行时切换就不会跟着变。
 
@@ -125,4 +127,4 @@ Port Region 是**来源标注**，不是只读区：可以直接修改；`port:v
 _Adapters_: GitHub Pages 上的 `public/r`、本地 `registry:serve`、CLI 测试的夹具 registry
 
 **渲染用例表**（`apps/docs/demos/render-cases.ts`）：哪些页、怎么定身、怎么比较，只在这里定义
-_Adapters_: web 指针（`port:render`）、iOS 触屏（`port:render:touch`）、外观切换检查
+_Adapters_: web 指针（`port:render`）、iOS 触屏（`port:render:touch`）、shadcn 主题（`port:render:theme`）、外观切换检查

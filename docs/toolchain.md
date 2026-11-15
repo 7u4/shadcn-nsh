@@ -96,6 +96,8 @@ TypeScript 为 **7.1**（Astro content mapper 所需）。它不提供 JS 解析
 
 ## 渲染比对的两半
 
+`port:render:theme` 是第三趟：同一批页在 **shadcn 主题**下画一遍，组件对参照页成对比较，不进基线（`scripts/port/render-theme.ts` 把演示复制到 `apps/docs/demos-themed/`，每页在 `mount` 前 `selectTheme(shadcn)`；跑完整份复制删掉，截图留 `apps/docs/demos/shots-theme/`）。页面仍是自己的入口，所以它和构建时那一趟画的是同一个应用，差别只有主题。
+
 `port:render` 用无头浏览器（Chrome / Edge / Chromium），它始终只量到精细指针：在 `--target web` 上强制不了触屏，所以这一半只跑指针。触屏那一半 `port:render:touch` 用 `nsh test render-touch.test.tsx --target ios`，在 iOS 模拟器上打开同一批演示与参照页（`open(…, { platform: "ios" })`），亮 / 暗各一组，截图落在同一个 `shots/`。
 
 `port:render` **让浏览器用 CPU 光栅化，并打开“减少动态效果”**：`scripts/port/render.ts` 自己找 Chrome / Edge / Chromium（`NSH_BROWSER`、`CHROME_PATH` 优先），写一个带 `--disable-gpu --force-prefers-reduced-motion` 的包装脚本交给 `--browser`。GPU 上 Chrome 偶尔把圆弧的抗锯齿画低一级（1/255）：`status: pointer, dark` 的圆点圆角因此约每六次跑差一次，同一页开两次也会差；换成 CPU 后逐字节相同（Windows 上起不了脚本，照旧用 CLI 自己的浏览器；找不到浏览器时脚本也那样跑并说明）。`--target web` 不替页面模拟“减少动态效果”，而运行时的 `.nsh-reduce` 只在媒体查询为真时关掉过渡与关键帧；不传这个 flag，无限循环的动画（`spinner`）就按墙钟转，两次跑停在不同的角度。
