@@ -70,14 +70,14 @@ New, and only added:
 Behaviour, appearance and the `nsh/base` props underneath are unchanged: every component still draws
 the same pixels as its look spread on the base control, which the render check compares.
 
-
 ## Unreleased
 
 New, and only added:
 
 - Every type the shells' props, refs and callbacks name comes from `nsh/base`, and each component
-  file now re-exports the ones it uses, so a call site imports them from its own copy: `command`
-  exports `CommandItem`, `CommandEntry`, `CommandGroup` and `CommandRef`, `text-view` exports
+  file now re-exports the ones it uses — `dialog` alone keeps its own to `nsh/base` — so a call site
+  imports them from its own copy: `command` exports `CommandItem`, `CommandEntry`, `CommandGroup`
+  and `CommandRef`, `text-view` exports
   `TextViewImage`, `TextViewClasses` and `TextViewRef`, `dock-area` exports `DockAreaRef`,
   `DockAreaLayout`, `DockRegion`, `DockNode`, `DockPlacement`, `DockPanel`, `DockPanelOptions`,
   `DockTarget`, `DockDropIndicator` and `DockInfo` (a tab is `DockTabValue`, since `DockTab` is the
@@ -95,4 +95,3 @@ Fixed:
   than the language-neutral way, so a heading keeps its letters where they have a locale of their
   own (a command palette's headings, a popup's placement words, an emoji section's name, a color
   picker's labels read aloud).
-
