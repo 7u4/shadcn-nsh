@@ -1,0 +1,162 @@
+// A button group: buttons joined into one control, in a row or a column. This library's own
+// (drawn on `nsh`'s View and Text, with the `group` role), so there is no port region. Yours to
+// change.
+//
+// shadcn joins the buttons with child selectors (`[&>*:not(:first-child)]:rounded-l-none`); a view
+// styles itself and not its children, so here the join is a style each button wears
+// (`buttonGroupLook().item(...)`), and the page says so.
+import { colors, radius, TERMINAL_COLUMN, terminal } from "@shadcn-nsh/theme";
+import type { TextStyle, ViewProps, ViewStyle } from "nsh";
+import { context, split, Text, token, View } from "nsh";
+
+import { density } from "./lib/surface";
+import { Separator } from "./separator";
+
+/** Which way a group runs: `horizontal`, a row (the default); `vertical`, a column. */
+export type ButtonGroupOrientation = "horizontal" | "vertical";
+
+/** Where a thing sits in its group: at an edge, or between two others. */
+export type ButtonGroupPosition = "first" | "middle" | "last";
+
+/** A group's parts as the styles they wear: spread each one. */
+export interface ButtonGroupLook {
+  /** The group: its children touching, in a row or a column, as narrow as they are. */
+  root(orientation: ButtonGroupOrientation): ViewStyle;
+  /**
+   * The corners and the edge a button gives up to be joined to the one beside it: its own outer
+   * side keeps the corners, the sides that touch are squared and lose their edge.
+   */
+  item(orientation: ButtonGroupOrientation, position: ButtonGroupPosition): ViewStyle;
+  /** A word inside the group: the muted fill behind the control's corners. */
+  textFrame(): ViewStyle;
+  /** That word's type. */
+  text(): TextStyle;
+}
+
+/**
+ * The group the parts under a `ButtonGroup` sit in: the join is the buttons' own, but the
+ * separator turns with the group, so the root hands its orientation down.
+ */
+const OrientationContext = context<ButtonGroupOrientation>("horizontal");
+
+/**
+ * A button group's look, after shadcn/ui's `ButtonGroup`: the children touching (`gap: 0`) in a
+ * row or a column, as narrow as its children and as tall as the tallest, so a row of buttons
+ * reads as one control. `item` is the join: the corners on the sides that touch are squared and
+ * their edge dropped, the outer sides keeping the corners and the edge they came with.
+ */
+export function buttonGroupLook(): ButtonGroupLook {
+  return {
+    root: (orientation: ButtonGroupOrientation): ViewStyle => ({
+      flexDirection: orientation === "vertical" ? "column" : "row",
+      alignItems: "stretch",
+      alignSelf: "flex-start",
+      flexShrink: 0,
+      gap: 0,
+    }),
+    item: (orientation: ButtonGroupOrientation, position: ButtonGroupPosition): ViewStyle => {
+      const before = position !== "first";
+      const after = position !== "last";
+      const horizontal = orientation === "horizontal";
+      return {
+        ...(before
+          ? horizontal
+            ? { borderTopLeftRadius: 0, borderBottomLeftRadius: 0, borderLeftWidth: 0 }
+            : { borderTopLeftRadius: 0, borderTopRightRadius: 0, borderTopWidth: 0 }
+          : {}),
+        ...(after
+          ? horizontal
+            ? { borderTopRightRadius: 0, borderBottomRightRadius: 0, borderRightWidth: 0 }
+            : { borderBottomLeftRadius: 0, borderBottomRightRadius: 0, borderBottomWidth: 0 }
+          : {}),
+      };
+    },
+    textFrame: (): ViewStyle => ({
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      paddingHorizontal: terminal ? TERMINAL_COLUMN : 12,
+      backgroundColor: token("muted"),
+      borderWidth: terminal ? 0 : 1,
+      borderColor: colors.border,
+      borderRadius: terminal ? 0 : radius.control,
+    }),
+    text: (): TextStyle => ({
+      fontSize: density.body,
+      fontWeight: "500",
+      color: colors.text,
+      numberOfLines: 1,
+    }),
+  };
+}
+
+/** A group's props: a set of buttons that do one job, read as one (`role="group"`). */
+export type ButtonGroupProps = ViewProps & {
+  /** Default `horizontal`: a row. `vertical` stacks the buttons into a column. */
+  orientation?: ButtonGroupOrientation;
+};
+
+/** A word inside a group (`Path:`, `100%`), on the muted fill. */
+export type ButtonGroupTextProps = ViewProps;
+
+/** The divider inside a group: a hairline across the column or down the row, the group's to hide from a reader. */
+export type ButtonGroupSeparatorProps = Omit<ViewProps, "children">;
+
+/**
+ * Buttons joined into one control, after shadcn/ui's `ButtonGroup`: `role="group"` so a reader
+ * hears them as a set, the children touching, in a row or a column, and as narrow as they are.
+ *
+ * shadcn squares the corners that touch with a child selector; a view styles itself and not its
+ * children, so each button wears the join itself — `buttonGroupLook().item(orientation, position)`
+ * on its `style`, `first` at the leading edge and `last` at the trailing one.
+ */
+export function ButtonGroup(props: ButtonGroupProps) {
+  const [, rest] = split(props, ["orientation", "style"]);
+  const orientation = () => props.orientation ?? "horizontal";
+  return (
+    <OrientationContext.Provider value={orientation()}>
+      <View
+        {...rest}
+        role="group"
+        style={[buttonGroupLook().root(orientation()), props.style ?? null]}
+      >
+        {props.children}
+      </View>
+    </OrientationContext.Provider>
+  );
+}
+
+/**
+ * A word inside a group — a path, a unit, a count — on the muted fill with a hairline edge, as
+ * tall as the buttons beside it. Join it as a button would be joined
+ * (`buttonGroupLook().item(...)`).
+ */
+export function ButtonGroupText(props: ButtonGroupTextProps) {
+  const [, rest] = split(props, ["style", "children"]);
+  return (
+    <View {...rest} style={[buttonGroupLook().textFrame(), props.style ?? null]}>
+      {typeof props.children === "string" ? (
+        <Text style={buttonGroupLook().text()}>{props.children}</Text>
+      ) : (
+        props.children
+      )}
+    </View>
+  );
+}
+
+/**
+ * The divider inside a group: a hairline down a row (or across a column), turned by the group's
+ * own orientation, the whole way across it.
+ */
+export function ButtonGroupSeparator(props: ButtonGroupSeparatorProps) {
+  const [, rest] = split(props, ["style"]);
+  const vertical = () => OrientationContext() === "vertical";
+  return (
+    <Separator
+      {...rest}
+      orientation={vertical() ? "horizontal" : "vertical"}
+      style={props.style ?? null}
+    />
+  );
+}

@@ -1115,6 +1115,20 @@
           "target": "components/ui/empty.tsx"
         }
       ]
+    },
+    {
+      "name": "button-group",
+      "type": "registry:ui",
+      "title": "ButtonGroup",
+      "description": "Buttons joined into one control, in a row or a column.",
+      "registryDependencies": ["separator", "surface", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/button-group.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/button-group.tsx"
+        }
+      ]
     }
   ]
 }
