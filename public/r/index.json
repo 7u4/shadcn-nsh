@@ -29,22 +29,22 @@
       "name": "theme-shadcn",
       "type": "registry:theme",
       "title": "Theme: shadcn neutral",
-      "description": "shadcn's neutral palette and flat finishes, in the same three files as the default theme (theme.json, lib/finishes.json, lib/theme.ts).",
+      "description": "shadcn's neutral palette and flat finishes as one more theme, installed into themes/shadcn/ (theme.json, finishes.json, index.ts) for `selectTheme` to switch to while the app runs.",
       "files": [
         {
           "path": "packages/theme/themes/shadcn/theme.json",
           "type": "registry:file",
-          "target": "theme.json"
+          "target": "themes/shadcn/theme.json"
         },
         {
           "path": "packages/theme/themes/shadcn/finishes.json",
-          "type": "registry:lib",
-          "target": "lib/finishes.json"
+          "type": "registry:file",
+          "target": "themes/shadcn/finishes.json"
         },
         {
-          "path": "packages/theme/theme.ts",
+          "path": "packages/theme/themes/shadcn/index.ts",
           "type": "registry:lib",
-          "target": "lib/theme.ts"
+          "target": "themes/shadcn/index.ts"
         }
       ]
     },
