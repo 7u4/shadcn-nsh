@@ -22,10 +22,20 @@ import { repo } from "./lib";
 import { compareWithinTolerance } from "./pixels";
 
 /** One screenshot pair: the demo and its reference page (the reference is absent for a self-reference). */
-type Pair = { pass: string; scheme: string; ours: string; reference: string; self?: string };
+type Pair = {
+  pass: string;
+  scheme: string;
+  ours: string;
+  reference: string;
+  /** The directory its pictures are in: the build-time theme's shots, or the theme's own. */
+  dir: string;
+  self?: string;
+};
 
 const demos = catalog().paths.demos;
 const shots = path.join(demos, "shots");
+/** `port:render:theme`'s pictures: the same pages, drawn under the shadcn theme. */
+const themeShots = path.join(demos, "shots-theme");
 if (!fs.existsSync(shots)) {
   console.error(
     `port:sheet: no shots at ${path.relative(repo, shots)}; run \`bun run port:render\` first`,
@@ -41,6 +51,7 @@ const pairsOf = (id: string, self?: string): Pair[] => {
       scheme,
       ours: `${id}-pointer-${scheme}.png`,
       reference: `${id}-pointer-${scheme}.ref.png`,
+      dir: shots,
       self,
     });
   }
@@ -50,21 +61,35 @@ const pairsOf = (id: string, self?: string): Pair[] => {
       scheme,
       ours: `${id}-touch-${scheme}.png`,
       reference: `${id}-touch-${scheme}.ref.png`,
+      dir: shots,
       self,
     });
+  }
+  // The theme's pass, where it has run: a fifth and sixth cell, each pair beside its reference.
+  for (const scheme of schemes) {
+    const ours = `${id}-shadcn-${scheme}.png`;
+    if (fs.existsSync(path.join(themeShots, ours))) {
+      pairs.push({
+        pass: "shadcn",
+        scheme,
+        ours,
+        reference: `${id}-shadcn-${scheme}.ref.png`,
+        dir: themeShots,
+      });
+    }
   }
   return pairs;
 };
 
-const read = (name: string) => {
-  const file = path.join(shots, name);
+const read = (name: string, dir = shots) => {
+  const file = path.join(dir, name);
   return fs.existsSync(file) ? fs.readFileSync(file) : null;
 };
 
 /** Identical, or the same picture within the antialiasing budget (`pixels.ts`). */
 const same = (a: Buffer, b: Buffer, name: string) => {
   if (a.length === b.length && a.equals(b)) return true;
-  const id = name.replace(/-touch-[a-z]+(\.ref)?\.png$/, "");
+  const id = name.replace(/-[a-z]+-[a-z]+(\.ref)?\.png$/, "");
   const tolerance = cases.find((c) => c.id === id)?.tolerance ?? antialiasing;
   return compareWithinTolerance(a, b, tolerance).ok;
 };
@@ -74,9 +99,9 @@ const same = (a: Buffer, b: Buffer, name: string) => {
  * reference page, so its one shot only has to be there.
  */
 function state(pair: Pair): "same" | "differs" | "missing" {
-  const ours = read(pair.ours);
+  const ours = read(pair.ours, pair.dir);
   if (pair.self) return ours ? "same" : "missing";
-  const reference = read(pair.reference);
+  const reference = read(pair.reference, pair.dir);
   if (!ours || !reference) return "missing";
   return same(ours, reference, pair.ours) ? "same" : "differs";
 }
@@ -89,8 +114,8 @@ const escape = (s: string) =>
     .replaceAll('"', "&quot;");
 
 const cell = (pair: Pair, label: string) => {
-  const ours = read(pair.ours);
-  const reference = pair.self ? null : read(pair.reference);
+  const ours = read(pair.ours, pair.dir);
+  const reference = pair.self ? null : read(pair.reference, pair.dir);
   const status = state(pair);
   const image = (name: string, file: Buffer | null, side: string) =>
     file
@@ -139,11 +164,15 @@ for (const { id, selfReference } of cases) {
   rows.push(`<section class="row ${status}" id="${escape(id)}">
   <header><h2><a href="#${escape(id)}">${escape(id)}</a></h2><span class="status">${status}</span><p class="note">${escape(note)}</p></header>
   <div class="cells">
-   ${cell(pairs[0], "pointer · light")}
-   ${cell(pairs[1], "pointer · dark")}
-   ${cell(pairs[2], "touch · light")}
-   ${cell(pairs[3], "touch · dark")}
-   ${hasSwitched ? cell({ pass: "appearance", scheme: "light→dark", ours: switched, reference: switchedReference }, "appearance · light→dark") : ""}
+   ${cell(pairs[0]!, "pointer · light")}
+   ${cell(pairs[1]!, "pointer · dark")}
+   ${cell(pairs[2]!, "touch · light")}
+   ${cell(pairs[3]!, "touch · dark")}
+   ${hasSwitched ? cell({ pass: "appearance", scheme: "light→dark", ours: switched, reference: switchedReference, dir: shots }, "appearance · light→dark") : ""}
+   ${pairs
+     .filter((pair) => pair.pass === "shadcn")
+     .map((pair) => cell(pair, `shadcn · ${pair.scheme}`))
+     .join("\n   ")}
   </div>
  </section>`);
 }

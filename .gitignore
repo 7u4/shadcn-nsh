@@ -163,4 +163,6 @@ bun.lockb
 
 # Render check screenshots (bun run port:render) and the audit's (scripts/audit)
 **/demos/shots/
+**/demos/shots-theme/
+**/demos-themed/
 **/demos/shots-audit/
