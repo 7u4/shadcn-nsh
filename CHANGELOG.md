@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.1 — the app's theme, kept
 
 - **`add theme` is the app's theme.** In an app `init --theme shadcn` made, `add theme --overwrite`
   wrote the library's default colors into `theme.json` and `lib/finishes.json`. A named `theme` now
