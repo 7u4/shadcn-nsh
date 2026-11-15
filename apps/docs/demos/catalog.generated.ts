@@ -70,4 +70,5 @@ export const componentIds = [
   "breadcrumb",
   "aspect-ratio",
   "textarea",
+  "drawer",
 ] as const;

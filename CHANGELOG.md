@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **`drawer`.** A panel from the bottom edge with the parts a card's panel wears around it:
+  `Drawer`, `DrawerTrigger`, `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerDescription`,
+  `DrawerFooter`, `DrawerClose`. Against `sheet` it is the phone's panel: bottom by default, a
+  100-point grabber at its top edge (`drawerGrabber`), `closeOnSwipe` on by default, its actions
+  stacked. The panel is `sheet`'s (`sheetPanel(side)`), the scrim is `lib/overlay`'s and the title
+  and text are `dialog`'s (`dialogTitle`, `dialogText`), so `add drawer` brings `dialog` with it.
 - **`textarea`.** A field of several lines: `nsh/base`'s Input with `multiline` on, in the look of
   `input.tsx` (`inputLook`, reused, not copied) — the same fill, edge, text and placeholder, the
   focus edge while it has the keys, 50% while disabled, and `invalid` for the danger edge. It sits

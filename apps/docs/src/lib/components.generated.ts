@@ -143,6 +143,12 @@ export const components: ComponentDoc[] = [
     description: "Dockable workspace chrome for tabs, splits, and edge docks.",
   },
   {
+    slug: "drawer",
+    title: "Drawer",
+    nshElement: "drawer",
+    description: "A panel from the bottom edge, with a grabber, that a swipe closes.",
+  },
+  {
     slug: "editor",
     title: "Editor",
     nshElement: "rich-editor",

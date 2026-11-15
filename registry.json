@@ -1201,6 +1201,20 @@
           "target": "components/ui/textarea.tsx"
         }
       ]
+    },
+    {
+      "name": "drawer",
+      "type": "registry:ui",
+      "title": "Drawer",
+      "description": "A panel from the bottom edge, with a grabber, that a swipe closes.",
+      "registryDependencies": ["button", "dialog", "open-state", "overlay", "sheet", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/drawer.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/drawer.tsx"
+        }
+      ]
     }
   ]
 }
