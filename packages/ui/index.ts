@@ -64,6 +64,9 @@ export * from "./button-group";
 export * from "./input-group";
 export * from "./breadcrumb";
 export * from "./aspect-ratio";
+export * from "./textarea";
+export * from "./drawer";
+export * from "./menubar";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

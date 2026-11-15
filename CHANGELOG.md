@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- **`menubar`.** A row of menus: `Menubar`, `MenubarMenu`, `MenubarTrigger`, `MenubarContent`, and
+  the menu's rows under the bar's names (`MenubarItem`, `MenubarCheckboxItem`, `MenubarRadioItem`,
+  `MenubarLabel`, `MenubarSeparator`, `MenubarShortcut`, `MenubarGroup`, `MenubarSub`,
+  `MenubarSubTrigger`, `MenubarSubContent`). The bar is 36 points high with a pointer (50 on a touch
+  screen) inside a 1-point edge, its triggers 26 (40) tall, the trigger of the open menu on the
+  neutral `accent` fill. Rows, submenus and the popup are `menu`'s looks, so `add menubar` brings
+  `menu` with it.
+- **`drawer`.** A panel from the bottom edge with the parts a card's panel wears around it:
+  `Drawer`, `DrawerTrigger`, `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerDescription`,
+  `DrawerFooter`, `DrawerClose`. Against `sheet` it is the phone's panel: bottom by default, a
+  100-point grabber at its top edge (`drawerGrabber`), `closeOnSwipe` on by default, its actions
+  stacked. The panel is `sheet`'s (`sheetPanel(side)`), the scrim is `lib/overlay`'s and the title
+  and text are `dialog`'s (`dialogTitle`, `dialogText`), so `add drawer` brings `dialog` with it.
+- **`textarea`.** A field of several lines: `nsh/base`'s Input with `multiline` on, in the look of
+  `input.tsx` (`inputLook`, reused, not copied) — the same fill, edge, text and placeholder, the
+  focus edge while it has the keys, 50% while disabled, and `invalid` for the danger edge. It sits
+  as tall as a one-line input at least; a box that follows its text keeps `onContentSizeChange`'s
+  height plus the look's padding (shadcn's `field-sizing-content`, written out in the page).
 - **`breadcrumb`.** A trail from the app's root to the page it shows: `Breadcrumb` and its parts
   (`List`, `Item`, `Link`, `Page`, `Separator`, `Ellipsis`), the steps small and muted with a chevron
   between them, a step's link taking the text color under the pointer and the theme's focus ring with

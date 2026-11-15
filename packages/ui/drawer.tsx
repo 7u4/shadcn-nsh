@@ -1,0 +1,254 @@
+// A drawer: a sheet that comes from the bottom edge (unless the app says otherwise) with a wide
+// grabber at its top, close on a swipe, and the parts of a card's panel around it — its header, its
+// footer, a title and a description. The panel is `sheet.tsx`'s (`sheetPanel`) and the title and
+// text are `dialog.tsx`'s (`dialogTitle`, `dialogText`): this file is the shell, and the grabber.
+// This library's own: nothing here comes from upstream, so there is no port region. Yours to change.
+import { colors } from "@shadcn-nsh/theme";
+import type { JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
+import { context, split, Text, View } from "nsh";
+import {
+  Sheet as BaseSheet,
+  type OpenChangeReason,
+  type SheetProps as BaseSheetProps,
+} from "nsh/base";
+
+import { Button, type ButtonVariant } from "./button";
+import { dialogText, dialogTitle } from "./dialog";
+import { createOpenState, type OpenState } from "./lib/open-state";
+import { backdrop } from "./lib/overlay";
+import { sheetPanel, type SheetSide } from "./sheet";
+
+/**
+ * The pill at the top of a bottom drawer (a view's `style`): 100 by 8 points, fully round, in the
+ * muted fill — wider and heavier than a sheet's grabber, since a drawer is dragged from it. Spread
+ * it on a view of your own when the app draws the drawer from the look.
+ */
+export function drawerGrabber(): ViewStyle {
+  return {
+    width: 100,
+    height: 8,
+    borderRadius: 4,
+    alignSelf: "center",
+    backgroundColor: colors.mutedFill,
+  };
+}
+
+/**
+ * The block holding a drawer's title and description, inside the panel's padding: a column, 2 points
+ * apart, each part as wide as the drawer (shadcn's `gap-0.5`).
+ */
+export function drawerHeader(): ViewStyle {
+  return { gap: 2 };
+}
+
+/**
+ * The block holding a drawer's actions, inside the panel's padding: a column, 8 points apart, each
+ * action as wide as the drawer — a drawer's actions stack, so a finger reaches the one under another
+ * (shadcn's footer).
+ */
+export function drawerFooter(): ViewStyle {
+  return { gap: 8, paddingTop: 4 };
+}
+
+/** The root: it owns whether the drawer is open, and nothing of how it looks. */
+export type DrawerProps = {
+  /** Controlled; leave it out and the root keeps the state (`defaultOpen`). */
+  open?: boolean | null;
+  defaultOpen?: boolean;
+  children?: JSX.Element;
+  onOpenChange?: (event: { open: boolean; reason: DrawerOpenChangeReason }) => void;
+  onOpen?: () => void;
+  onClose?: () => void;
+  onCancel?: () => void;
+};
+
+/**
+ * The panel. Every prop of `nsh/base`'s Sheet passes through but the ones the root owns;
+ * `popupStyle` and `backdropStyle` go over the look's. Defaults: `side` `"bottom"` and
+ * `closeOnSwipe` on (a drawer closes when it is dragged down, a sheet does not), so a drawer on a
+ * phone is dismissed the way a bottom panel is.
+ */
+export type DrawerContentProps = Omit<
+  BaseSheetProps,
+  "open" | "onOpenChange" | "onOpen" | "onClose" | "onCancel"
+> & {
+  /** The edge it comes from (default `"bottom"`). The grabber shows at the bottom one alone. */
+  side?: SheetSide;
+  children?: JSX.Element;
+};
+
+/** What opens the drawer: a string is a `Button`'s label, anything else a pressable of its own. */
+export type DrawerTriggerProps = {
+  children?: string | JSX.Element;
+  /** The button's variant, for a string child (default `secondary`). */
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  style?: StyleProp<ViewStyle>;
+};
+
+/** What closes the drawer: as `DrawerTrigger`; `onPress` runs before it closes. */
+export type DrawerCloseProps = DrawerTriggerProps & {
+  onPress?: () => void;
+};
+
+/** The block of a drawer's heading: its title and its description. */
+export type DrawerHeaderProps = {
+  children?: JSX.Element;
+  style?: StyleProp<ViewStyle>;
+};
+
+/** The block of a drawer's actions, a column as wide as the drawer. */
+export type DrawerFooterProps = {
+  children?: JSX.Element;
+  style?: StyleProp<ViewStyle>;
+};
+
+/** A drawer's title text. */
+export type DrawerTitleProps = {
+  children?: string | JSX.Element;
+  style?: StyleProp<TextStyle>;
+};
+
+/** A drawer's description, the line under its title. */
+export type DrawerDescriptionProps = DrawerTitleProps;
+
+type DrawerContextValue = OpenState & Pick<DrawerProps, "onOpen" | "onClose" | "onCancel">;
+
+const DrawerContext = context<DrawerContextValue | null>(null);
+
+function useDrawer() {
+  const ctx = DrawerContext();
+  if (!ctx) throw new Error("Drawer parts must be used within <Drawer>");
+  return ctx;
+}
+
+/** The root of a drawer's parts. */
+export function Drawer(props: DrawerProps) {
+  const state = createOpenState<OpenChangeReason>(props);
+  return (
+    <DrawerContext.Provider
+      value={{
+        ...state,
+        get onOpen() {
+          return props.onOpen;
+        },
+        get onClose() {
+          return props.onClose;
+        },
+        get onCancel() {
+          return props.onCancel;
+        },
+      }}
+    >
+      {props.children}
+    </DrawerContext.Provider>
+  );
+}
+
+/** A button of the panel, or its trigger: a `Button` for a string, else a pressable view. */
+function Action(props: DrawerTriggerProps & { onPress: () => void }) {
+  if (typeof props.children === "string") {
+    return (
+      <Button
+        variant={props.variant ?? "secondary"}
+        disabled={props.disabled}
+        style={props.style}
+        onPress={props.onPress}
+      >
+        {props.children}
+      </Button>
+    );
+  }
+  return (
+    <View
+      accessible
+      role="button"
+      accessibilityState={{ disabled: props.disabled }}
+      onPress={props.disabled ? undefined : props.onPress}
+      style={props.style}
+    >
+      {props.children}
+    </View>
+  );
+}
+
+/** Opens the drawer. */
+export function DrawerTrigger(props: DrawerTriggerProps) {
+  const ctx = useDrawer();
+  return (
+    <Action {...props} onPress={() => ctx.setOpen(true)}>
+      {props.children}
+    </Action>
+  );
+}
+
+/** Closes the drawer, after its own `onPress`. */
+export function DrawerClose(props: DrawerCloseProps) {
+  const ctx = useDrawer();
+  return (
+    <Action
+      {...props}
+      onPress={() => {
+        props.onPress?.();
+        ctx.setOpen(false, "closePress");
+      }}
+    >
+      {props.children}
+    </Action>
+  );
+}
+
+/** The panel that slides in from `side`, over the theme's scrim, a grabber at its top edge. */
+export function DrawerContent(props: DrawerContentProps) {
+  const ctx = useDrawer();
+  const [, rest] = split(props, [
+    "side",
+    "children",
+    "popupStyle",
+    "backdropStyle",
+    "closeOnSwipe",
+  ]);
+  const side = () => props.side ?? "bottom";
+  return (
+    <BaseSheet
+      {...rest}
+      side={side()}
+      open={ctx.open()}
+      closeOnSwipe={props.closeOnSwipe ?? true}
+      onOpenChange={({ open, reason }) => ctx.setOpen(open, reason)}
+      onOpen={ctx.onOpen}
+      onClose={ctx.onClose}
+      onCancel={ctx.onCancel}
+      backdropStyle={[backdrop(), props.backdropStyle ?? null]}
+      popupStyle={[sheetPanel(side()), props.popupStyle ?? null]}
+    >
+      {side() === "bottom" ? <View style={drawerGrabber()} /> : null}
+      {props.children}
+    </BaseSheet>
+  );
+}
+
+/** The heading block of the panel: its title and its description. */
+export function DrawerHeader(props: DrawerHeaderProps) {
+  return <View style={[drawerHeader(), props.style ?? null]}>{props.children}</View>;
+}
+
+/** The actions of the panel, one under the other, each as wide as the drawer. */
+export function DrawerFooter(props: DrawerFooterProps) {
+  return <View style={[drawerFooter(), props.style ?? null]}>{props.children}</View>;
+}
+
+/** The drawer's title; a string takes `dialogTitle`'s type. */
+export function DrawerTitle(props: DrawerTitleProps) {
+  if (typeof props.children !== "string") return props.children;
+  return <Text style={[dialogTitle(), props.style ?? null]}>{props.children}</Text>;
+}
+
+/** The drawer's description; a string takes `dialogText`'s type, the muted line under the title. */
+export function DrawerDescription(props: DrawerDescriptionProps) {
+  if (typeof props.children !== "string") return props.children;
+  return <Text style={[dialogText(), props.style ?? null]}>{props.children}</Text>;
+}
+
+/** Why a drawer closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type DrawerOpenChangeReason = OpenChangeReason;

@@ -143,6 +143,12 @@ export const components: ComponentDoc[] = [
     description: "Dockable workspace chrome for tabs, splits, and edge docks.",
   },
   {
+    slug: "drawer",
+    title: "Drawer",
+    nshElement: "drawer",
+    description: "A panel from the bottom edge, with a grabber, that a swipe closes.",
+  },
+  {
     slug: "editor",
     title: "Editor",
     nshElement: "rich-editor",
@@ -216,6 +222,12 @@ export const components: ComponentDoc[] = [
     title: "Menu",
     nshElement: "menu",
     description: "A menu of items, separators and submenus on the shared menu look.",
+  },
+  {
+    slug: "menubar",
+    title: "Menubar",
+    nshElement: "menubar",
+    description: "A row of menus whose triggers stand in one bar, as a desktop app's menu bar.",
   },
   {
     slug: "meter",
@@ -361,6 +373,12 @@ export const components: ComponentDoc[] = [
     title: "TextView",
     nshElement: "text-view",
     description: "Brand-colored links and a pulsing streaming caret.",
+  },
+  {
+    slug: "textarea",
+    title: "Textarea",
+    nshElement: "textarea",
+    description: "A field of several lines, in the look of the input.",
   },
   {
     slug: "time-field",

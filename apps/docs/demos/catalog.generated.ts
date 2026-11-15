@@ -69,4 +69,7 @@ export const componentIds = [
   "input-group",
   "breadcrumb",
   "aspect-ratio",
+  "textarea",
+  "drawer",
+  "menubar",
 ] as const;
