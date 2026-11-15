@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **`attachment`.** A file or a picture a message or a composer carries: `Attachment`,
+  `AttachmentGroup`, `AttachmentMedia`, `AttachmentContent`, `AttachmentTitle`,
+  `AttachmentDescription`, `AttachmentActions`, `AttachmentAction` and `AttachmentTrigger`, after
+  shadcn/ui's attachment. Five states (`idle`, `uploading`, `processing`, `error`, `done`), three
+  sizes, a horizontal frame and a vertical one for pictures, and a trigger that opens the file from
+  anywhere on the frame. `add attachment` brings `button`.
 - **`message`.** One row of a conversation: `MessageGroup`, `Message`, `MessageAvatar`,
   `MessageContent`, `MessageHeader` and `MessageFooter`, after shadcn/ui's message. The row mirrors
   for `align="end"`, so the bubbles inside follow the message; the avatar is this library's

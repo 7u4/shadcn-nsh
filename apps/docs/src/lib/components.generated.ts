@@ -28,6 +28,13 @@ export const components: ComponentDoc[] = [
     description: "A box as wide as its column and as tall as its ratio says.",
   },
   {
+    slug: "attachment",
+    title: "Attachment",
+    nshElement: "attachment",
+    description:
+      "A file, a picture or a link carried by a message: its media, its name, how it is doing, and what can be done to it.",
+  },
+  {
     slug: "avatar",
     title: "Avatar",
     nshElement: "avatar",

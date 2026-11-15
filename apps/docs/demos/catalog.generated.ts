@@ -75,4 +75,5 @@ export const componentIds = [
   "marker",
   "bubble",
   "message",
+  "attachment",
 ] as const;

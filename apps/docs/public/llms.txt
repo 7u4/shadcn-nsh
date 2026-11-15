@@ -84,6 +84,8 @@ Every page links its base element where `nsh/base` has one: behavior, keyboard s
 
 - /docs/components/message: One row of a conversation: avatar, sender, turn and what is under it. → styled on `nsh` View and Text (no base element)
 
+- /docs/components/attachment: A file or a picture carried by a message, with its name, its state and its actions. → styled on `nsh` View and Text (no base element)
+
 ## Elsewhere
 
 - Base behavior and elements: https://nsh.dev/elements
