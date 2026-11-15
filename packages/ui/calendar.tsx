@@ -184,7 +184,8 @@ export function CalendarItem(props: CalendarItemProps) {
     return (
       <View
         style={{
-          minWidth: (7 * cell) / (kind === "month" ? 3 : 5),
+          width: (7 * cell) / (kind === "month" ? 3 : 5),
+          minWidth: 0,
           paddingTop: weekGap,
           paddingHorizontal: 2,
         }}
@@ -208,7 +209,8 @@ export function CalendarItem(props: CalendarItemProps) {
       </View>
     );
   }
-  // A day, as wide as its column (the calendar's columns share its width), a week's gap over it. The band spans a
+  // A day, as wide as its column (the calendar's columns share its width; a column narrower than a cell, as on a
+  // narrow phone, narrows the square with it), a week's gap over it. The band spans a
   // range's middle days and reaches from its ends' middles (a range of one day has none), rounded where a week
   // starts or ends. The square takes the quiet fill under the pointer and for today, `primary` for the selected
   // date and a range's ends (`aria-selected`, which ranks over the hover; a range's middle days keep the band). A
@@ -218,7 +220,7 @@ export function CalendarItem(props: CalendarItemProps) {
   const column = () =>
     props.item.date ? columnOf(props.item.date, props.firstDayOfWeek ?? 0) : -1;
   return (
-    <View style={{ minWidth: cell, paddingTop: weekGap }}>
+    <View style={{ minWidth: 0, paddingTop: weekGap }}>
       <View style={{ height: cell, alignItems: "center", justifyContent: "center" }}>
         <View
           class={
@@ -239,6 +241,7 @@ export function CalendarItem(props: CalendarItemProps) {
           }
           style={{
             width: cell,
+            maxWidth: "100%",
             height: cell,
             borderRadius: cellRadius(),
             alignItems: "center",

@@ -7,6 +7,8 @@ Fixed:
 - `PopoverContent` and `HoverCardContent` follow a `placement`, and `SheetContent` a `side`, that
   changes after mount; each read it once and kept the first value. `MenuContent`'s entrance now comes
   in from the current `placement` too.
+- `Calendar` fits a width narrower than its days (seven 42-point cells on a phone): the days, and the
+  month and year views, narrow with their columns instead of running past the calendar's edge.
 
 ## 0.5.0 — themes at run time
 
