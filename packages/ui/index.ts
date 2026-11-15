@@ -76,6 +76,7 @@ export * from "./toolbar";
 export * from "./tooltip";
 export * from "./tree";
 export * from "./pressable";
+export * from "./input-group";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

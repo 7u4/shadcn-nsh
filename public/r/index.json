@@ -910,6 +910,19 @@
           "target": "components/ui/pressable.tsx"
         }
       ]
+    },
+    {
+      "name": "input-group",
+      "type": "registry:ui",
+      "title": "InputGroup",
+      "description": "A field's frame around an input and what sits beside it — an icon, a unit, a button.",
+      "files": [
+        {
+          "path": "packages/ui/input-group.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/input-group.tsx"
+        }
+      ]
     }
   ]
 }

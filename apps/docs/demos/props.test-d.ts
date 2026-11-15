@@ -127,6 +127,8 @@ import type {
   EditorProps,
   HoverCardContentProps,
   IconButtonProps,
+  InputGroupInputProps,
+  InputGroupTextareaProps,
   IconProps,
   InputProps,
   LinkProps,
@@ -337,6 +339,12 @@ type _hoverCardContent = Assert<
 >;
 /** `InputProps`. */
 type _input = Assert<KeepsBase<BaseInputProps, InputProps, never>>;
+/** `InputGroupInputProps` — the group holds the control's `ref`, to put the keys in it from an addon. */
+type _inputGroupInput = Assert<KeepsBase<BaseInputProps, InputGroupInputProps, "ref">>;
+/** `InputGroupTextareaProps` — as `InputGroupInputProps`, and `multiline` is the part's own. */
+type _inputGroupTextarea = Assert<
+  KeepsBase<BaseInputProps, InputGroupTextareaProps, "multiline" | "ref">
+>;
 /** `LinkProps`. */
 type _link = Assert<KeepsBase<BaseLinkProps, LinkProps, never>>;
 /** `MenuContentProps` — the root holds the trigger and the open state. */

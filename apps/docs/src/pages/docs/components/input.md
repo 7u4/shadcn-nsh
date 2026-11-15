@@ -52,6 +52,8 @@ No fill and no edge until the keys are in it, with the text, the placeholder and
 <Input variant="ghost" value="Untitled note" style={{ fontSize: 17, fontWeight: "600" }} />
 ```
 
+A ghost input is the field itself: it keeps its own focus edge and ring, so it is not what a frame you draw around it wants. For an input in a frame of your own — a search field with a magnifier, a composer with a send button — use [`InputGroup`](./input-group) instead: the group draws the frame and the input in it draws nothing, so the focus ring follows the group's radius.
+
 ### The look alone
 
 ```tsx

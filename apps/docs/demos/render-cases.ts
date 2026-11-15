@@ -45,7 +45,12 @@ export type Case = {
    * lands a frame after the rest (a menu's popup and its shadow).
    */
   extraSettle?: number;
-  /** Steps taken in both pages before the screenshot (opening a dialog). */
+  /**
+   * Steps taken in both pages before the screenshot (opening a dialog). Not a step that puts the
+   * keys in a field — `type`, or a press on what focuses one: on the iOS simulator the host is gone
+   * by the next step ("the host left"), so `render-touch` and `appearance-touch` fail on that page.
+   * A field's focus appearance is the gallery's to hold apart: a class's report, not a picture.
+   */
   steps?: (app: App) => Promise<void>;
   /**
    * The reference page draws the component itself, because the component is upstream's own

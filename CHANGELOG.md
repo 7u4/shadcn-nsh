@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+- `InputGroup` (`input-group`), a field's frame around a control and what sits beside it, after
+  shadcn's InputGroup: `InputGroup`, `InputGroupInput`, `InputGroupTextarea`, `InputGroupAddon`
+  (`align`: `inline-start` / `inline-end` / `block-start` / `block-end`), `InputGroupText`, and
+  `InputGroupButton` (`size`: `xs` / `sm` / `icon-xs` / `icon-sm`, taken from this library's scale;
+  `variant` is a button's, `ghost` unless set). The group draws the field — its fill, its edge, the
+  focus edge and ring while a control in it has the keys, the danger tone while `invalid`, flat on
+  the quieter edge and dimmed while `disabled` — and the control in it draws none of that, so a
+  group has one frame. The radius you write on it (`style={{ borderRadius: 22 }}`) is the radius its
+  focus ring follows, which a `variant="ghost"` `Input` in a `View` of your own cannot do: the ghost
+  input keeps its own focus edge and ring, and a group is what replaces it.
+- The `input` page says as much under its ghost variant and points at `InputGroup`; both pages are
+  in the docs with the examples above.
+
 ## 0.3.0 — the unified API
 
 `variant`, `size` and `tone` are now written the way shadcn writes them, and `kind` is gone. **This
