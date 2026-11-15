@@ -95,6 +95,21 @@ no such selector and a child cannot be asked what it is, so the text keeps that 
 an alert without an icon starts 12 points in from its padding. Write the icon first — it is what
 takes the leading column.
 
+### How it differs from the other alerts
+
+Three things are called an alert here, and this is the quiet one:
+
+- **this `Alert`** is a notice drawn on the page or in a form, in the app's own surface, read out by
+  its `role="alert"`. It takes no presses and asks nothing: the page stays usable under it.
+- **`nsh/base`'s `AlertDialog`** is the platform's own alert or action sheet
+  (`AlertDialog.show(options)`): a system box over the app that asks for an answer and resolves with
+  the action chosen. It looks like the operating system, not like the app.
+- **this library's `alert-dialog`** is the same question — a confirmation card — drawn by the app on
+  `nsh/base`'s `Dialog`: a sheet or a card that covers the page and takes its focus.
+
+So: a notice that can wait belongs here; a question that must be answered before anything else is
+an `alert-dialog`, or `nsh/base`'s `AlertDialog` where the platform's own box is wanted.
+
 ## API
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `Alert` and

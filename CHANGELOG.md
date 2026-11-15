@@ -5,15 +5,15 @@
 Seven components, each the library's own: none comes from upstream's gallery, so none carries a
 port region, and each is one file the registry copies into the app.
 
-| Item           | What it is                                                              |
-| -------------- | ----------------------------------------------------------------------- |
-| `separator`    | A hairline across the content or down a row, hidden from a reader unless `decorative={false}`. |
-| `skeleton`     | The shape of content that is still coming: an `accent` block that breathes. |
-| `kbd`          | A key of a shortcut (`Kbd`, one cap; `KbdGroup`, a row of them).        |
-| `label`        | The visible name of a control — text, not its accessible name.          |
-| `alert`        | A notice of the page or form (`Alert`, `AlertTitle`, `AlertDescription`), in `default` or `destructive`. |
+| Item           | What it is                                                                                                       |
+| -------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `separator`    | A hairline across the content or down a row, hidden from a reader unless `decorative={false}`.                   |
+| `skeleton`     | The shape of content that is still coming: an `accent` block that breathes.                                      |
+| `kbd`          | A key of a shortcut (`Kbd`, one cap; `KbdGroup`, a row of them).                                                 |
+| `label`        | The visible name of a control — text, not its accessible name.                                                   |
+| `alert`        | A notice of the page or form (`Alert`, `AlertTitle`, `AlertDescription`), in `default` or `destructive`.         |
 | `empty`        | A centered empty state (`Empty`, `EmptyHeader`, `EmptyMedia`, `EmptyTitle`, `EmptyDescription`, `EmptyContent`). |
-| `button-group` | Buttons joined into one control (`ButtonGroup`, `ButtonGroupText`, `ButtonGroupSeparator`). |
+| `button-group` | Buttons joined into one control (`ButtonGroup`, `ButtonGroupText`, `ButtonGroupSeparator`).                      |
 
 For them the scaffolding grew a flag, `bun run port:new <id> --view`, which starts a component from
 nsh's own `View` and `Text` instead of from a `nsh/base` symbol.
