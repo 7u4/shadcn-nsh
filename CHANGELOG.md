@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- **`message-scroller`.** A conversation that scrolls and keeps up with itself: `MessageScroller`,
+  `MessageScrollerViewport`, `MessageScrollerContent`, `MessageScrollerItem` and
+  `MessageScrollerButton`, after shadcn/ui's message scroller, on `nsh`'s `Scroll`. New turns follow
+  the newest message while the reader is at the end and stay put when they have scrolled up;
+  `initialScroll` says where it opens; a button floats over the viewport while there is somewhere
+  to go. No provider or hooks (state lives inside), no scroll anchoring, no `content-visibility`.
+- **`attachment`.** A file or a picture a message or a composer carries: `Attachment`,
+  `AttachmentGroup`, `AttachmentMedia`, `AttachmentContent`, `AttachmentTitle`,
+  `AttachmentDescription`, `AttachmentActions`, `AttachmentAction` and `AttachmentTrigger`, after
+  shadcn/ui's attachment. Five states (`idle`, `uploading`, `processing`, `error`, `done`), three
+  sizes, a horizontal frame and a vertical one for pictures, and a trigger that opens the file from
+  anywhere on the frame. `add attachment` brings `button`.
+- **`message`.** One row of a conversation: `MessageGroup`, `Message`, `MessageAvatar`,
+  `MessageContent`, `MessageHeader` and `MessageFooter`, after shadcn/ui's message. The row mirrors
+  for `align="end"`, so the bubbles inside follow the message; the avatar is this library's
+  `Avatar` at 32 points (36 on a touch screen), `name` giving it initials on an identity hue, and
+  the header and footer are small and medium in the muted ink. `add message` brings `avatar`.
+- **`bubble`.** The framed surface of one turn of a conversation: `BubbleGroup`, `Bubble`,
+  `BubbleContent` and `BubbleReactions`, after shadcn/ui's bubble. Seven fills (`default`,
+  `secondary`, `muted`, `tinted`, `outline`, `ghost`, `destructive`), `align` on the sender's side,
+  a bubble as wide as it holds (80% of the column at most, all of it when `ghost`), and a reaction
+  pill that hangs off either edge. `onPress` on the content makes a turn act, where shadcn/ui's
+  `asChild` would.
+- **`marker`.** One line in a conversation that is not a message: `Marker`, `MarkerIcon` and
+  `MarkerContent` — inline, with a hairline under it (`variant="border"`), or the label between two
+  rules (`variant="separator"`). The line is in the muted ink at the body's size, its icon 16 points;
+  `onPress` makes a marker act (underlined, the hand over it), where shadcn/ui's `asChild` would.
 - **`menubar`.** A row of menus: `Menubar`, `MenubarMenu`, `MenubarTrigger`, `MenubarContent`, and
   the menu's rows under the bar's names (`MenubarItem`, `MenubarCheckboxItem`, `MenubarRadioItem`,
   `MenubarLabel`, `MenubarSeparator`, `MenubarShortcut`, `MenubarGroup`, `MenubarSub`,

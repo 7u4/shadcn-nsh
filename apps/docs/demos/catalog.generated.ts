@@ -72,4 +72,9 @@ export const componentIds = [
   "textarea",
   "drawer",
   "menubar",
+  "marker",
+  "bubble",
+  "message",
+  "attachment",
+  "message-scroller",
 ] as const;

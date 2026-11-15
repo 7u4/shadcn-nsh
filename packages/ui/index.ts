@@ -67,6 +67,11 @@ export * from "./aspect-ratio";
 export * from "./textarea";
 export * from "./drawer";
 export * from "./menubar";
+export * from "./marker";
+export * from "./bubble";
+export * from "./message";
+export * from "./attachment";
+export * from "./message-scroller";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

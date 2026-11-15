@@ -1102,6 +1102,71 @@
           "target": "components/ui/menubar.tsx"
         }
       ]
+    },
+    {
+      "name": "marker",
+      "type": "registry:ui",
+      "title": "Marker",
+      "description": "A line in a conversation that is not a message: a status, a note, or a labeled separator.",
+      "files": [
+        {
+          "path": "packages/ui/marker.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/marker.tsx"
+        }
+      ]
+    },
+    {
+      "name": "bubble",
+      "type": "registry:ui",
+      "title": "Bubble",
+      "description": "The framed surface of one turn of a conversation, and the reactions that hang off it.",
+      "files": [
+        {
+          "path": "packages/ui/bubble.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/bubble.tsx"
+        }
+      ]
+    },
+    {
+      "name": "message",
+      "type": "registry:ui",
+      "title": "Message",
+      "description": "One row of a conversation: the sender's avatar, who they are, the turn, and what is under it.",
+      "files": [
+        {
+          "path": "packages/ui/message.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/message.tsx"
+        }
+      ]
+    },
+    {
+      "name": "attachment",
+      "type": "registry:ui",
+      "title": "Attachment",
+      "description": "A file, a picture or a link carried by a message: its media, its name, how it is doing, and what can be done to it.",
+      "files": [
+        {
+          "path": "packages/ui/attachment.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/attachment.tsx"
+        }
+      ]
+    },
+    {
+      "name": "message-scroller",
+      "type": "registry:ui",
+      "title": "MessageScroller",
+      "description": "A conversation that keeps up with itself: new turns follow the newest message while you are at the end, and wait when you are not.",
+      "files": [
+        {
+          "path": "packages/ui/message-scroller.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/message-scroller.tsx"
+        }
+      ]
     }
   ]
 }
