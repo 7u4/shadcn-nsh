@@ -55,7 +55,9 @@ npx shadcn-nsh@latest add button --dry-run
 npx shadcn-nsh@latest add button --overwrite
 ```
 
-A file the app lacks is written, one identical to the registry's is skipped, and one the app changed is kept unless `--overwrite`. Without `--overwrite`, a `theme.json` gains only the keys it lacks.
+A file the app lacks is written, one identical to the registry's is skipped, and one the app changed is kept unless `--overwrite`. Without `--overwrite`, a `theme.json` gains only the keys it lacks. `theme` — named, or the dependency every component has — is the theme `nsh-ui.json` records, so in an app on `theme-shadcn`, `add theme --overwrite` writes shadcn's colors back, not the default ones.
+
+The packages the items import (`lucide`) are installed with the app's own package manager, unless its `package.json` already declares them at a version in range: an exact `"lucide": "1.66.0"` is left as written.
 
 Naming a theme (`add theme-shadcn`) installs **one more**: `themes/shadcn/`, a theme the app can switch to while it runs (`selectTheme`), with its own `theme.json`, `finishes.json` and `index.ts`. It writes nothing over the app's build-time theme, and `nsh-ui.json` stays as it is; that theme is `init --theme <name> --overwrite`.
 

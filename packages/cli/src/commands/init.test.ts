@@ -157,6 +157,16 @@ describe("the app's theme", () => {
     expect(current.read("theme.json")).toBe(neutralTheme);
     expect(recordedTheme(current)).toBe("theme-shadcn");
 
+    // `theme` named is the app's build-time theme, as the dependency is: `--overwrite` restores
+    // the shadcn colors, never the library's default ones.
+    current.write("theme.json", neutralTheme.replace(/oklch\([^)]*\)/, "oklch(0.5 0.2 30)"));
+    await captured(() =>
+      runAdd(["theme"], { cwd: current!.app, registry: current!.url, overwrite: true }),
+    );
+    expect(current.read("theme.json")).toBe(neutralTheme);
+    expect(current.read("lib/finishes.json")).toBe(neutralFinishes);
+    expect(current.exists("lib/theme.ts")).toBe(true);
+
     await captured(() =>
       runInit({ cwd: current!.app, registry: current!.url, theme: "default", overwrite: true }),
     );

@@ -5,7 +5,14 @@ import path from "node:path";
 
 import { captured } from "../testing/fixture";
 import type { RegistryItem } from "../types";
-import { dependenciesOf, ensurePackageJson, installDependencies, projectOf } from "./deps";
+import {
+  dependenciesOf,
+  ensurePackageJson,
+  installDependencies,
+  missingFrom,
+  projectOf,
+  satisfies,
+} from "./deps";
 
 const roots: string[] = [];
 
@@ -131,5 +138,53 @@ describe("installDependencies", () => {
   test("nothing to install when no item declares a package", async () => {
     const root = tree({ "package.json": "{}" });
     expect(await installDependencies(root, [item("tabs")], { dryRun: true })).toBeNull();
+  });
+
+  test("an app that pins the package in range keeps its pin: nothing runs", async () => {
+    const root = tree({ "bun.lock": "", "package.json": '{"dependencies":{"lucide":"1.66.0"}}' });
+    const out = await captured(() =>
+      installDependencies(root, [item("tabs", ["lucide@^1.66.0"])], { dryRun: true }),
+    );
+    expect(out.result).toBeNull();
+    expect(out.lines).toEqual(["keep lucide (package.json has it in range)"]);
+  });
+});
+
+describe("satisfies", () => {
+  test("a caret range takes its own version and later ones of the same major", () => {
+    for (const ok of [
+      "1.66.0",
+      "^1.66.0",
+      "~1.68.2",
+      "1.70.1",
+      ">=1.66.0",
+      "workspace:*",
+      "latest",
+    ]) {
+      expect(satisfies(ok, "lucide@^1.66.0")).toBe(true);
+    }
+    for (const no of ["1.50.0", "^1.65.9", "2.0.0", "0.9.0"]) {
+      expect(satisfies(no, "lucide@^1.66.0")).toBe(false);
+    }
+  });
+
+  test("a caret on 0.x holds its minor", () => {
+    expect(satisfies("0.4.2", "x@^0.4.0")).toBe(true);
+    expect(satisfies("0.5.0", "x@^0.4.0")).toBe(false);
+  });
+});
+
+describe("missingFrom", () => {
+  test("drops what package.json declares in range, in any dependency field", async () => {
+    const root = tree({
+      "package.json": JSON.stringify({
+        dependencies: { lucide: "1.66.0" },
+        devDependencies: { old: "1.0.0" },
+      }),
+    });
+    expect(await missingFrom(root, ["lucide@^1.66.0", "old@^2.0.0", "new@^1.0.0"])).toEqual([
+      "old@^2.0.0",
+      "new@^1.0.0",
+    ]);
   });
 });

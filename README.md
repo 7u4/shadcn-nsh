@@ -60,7 +60,8 @@ bun run shadcn-nsh -- init -c /path/to/app --theme shadcn
 field is on `theme`, so an older app needs nothing), and `add` resolves a component's `theme`
 dependency to the one recorded. An app on the neutral theme therefore stays on it: `add button
 --overwrite` and `add --all --overwrite` write components, not the default theme back. `add
-theme-shadcn` and `add theme` switch themes, files and record alike.
+theme` is the recorded theme too, and `add theme-shadcn` installs one more theme to switch to
+while the app runs; changing the build-time theme is `init --theme <name> --overwrite`.
 
 ## Develop in this repo
 

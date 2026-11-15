@@ -54,8 +54,13 @@ shadcn-nsh add button --overwrite
   `themes/default/` (its `theme.json` and `finishes.json` are the ones an app is built with, and
   an `index.ts` exports `defaultTheme`). An app built with `init --theme shadcn` lists both and
   switches between them; `selectTheme(null)` still means its build-time theme.
-- `theme` as a dependency still resolves to the item in `nsh-ui.json`, so `add button`,
-  `add button --overwrite` and `add --all --overwrite` never write the default theme back.
+- `theme`, named or as a dependency, is the theme in `nsh-ui.json`: in an app on `theme-shadcn`
+  it writes shadcn's data at the build-time paths, the roles module and `themes/shadcn/`, so
+  `add theme --overwrite`, `add button --overwrite` and `add --all --overwrite` never write the
+  default theme back.
+- The packages the items import (`lucide`) are installed with the app's package manager, except
+  one `package.json` already declares in range: an exact `"lucide": "1.66.0"` stays as written
+  (`keep lucide (package.json has it in range)`), and only an older one is raised.
 - `--dry-run` prints the same lines as `would write …` / `would overwrite …` and writes nothing —
   not even `nsh-ui.json` or the theme `init` would install first.
 

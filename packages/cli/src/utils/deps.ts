@@ -62,6 +62,51 @@ export function dependenciesOf(items: RegistryItem[]): string[] {
   return [...packages.values()];
 }
 
+/** A version's numbers (`1.66.0` → `[1, 66, 0]`), from the first one a spec writes; null for none. */
+function versionOf(spec: string): [number, number, number] | null {
+  const match = /(\d+)\.(\d+)\.(\d+)/.exec(spec);
+  return match ? [Number(match[1]), Number(match[2]), Number(match[3])] : null;
+}
+
+/**
+ * Whether the app's spec for a package already answers the registry's: the lowest version it
+ * allows is in the registry's range (`^1.66.0` takes `1.66.0`, `^1.70.0`, `~1.68.2`, not `1.50.0`
+ * or `2.0.0`). A spec with no version to read (`workspace:*`, `latest`, a git URL) is the app's
+ * own choice, and is kept.
+ */
+export function satisfies(declared: string, wanted: string): boolean {
+  const have = versionOf(declared);
+  const need = versionOf(wanted);
+  if (have == null || need == null) return true;
+  const caret = wanted.slice(wanted.indexOf("@", 1) + 1).startsWith("^");
+  const [a, b, c] = need;
+  const [x, y, z] = have;
+  const atLeast = x > a || (x === a && (y > b || (y === b && z >= c)));
+  if (!atLeast) return false;
+  if (!caret) return true;
+  return a > 0 ? x === a : b > 0 ? x === 0 && y === b : x === 0 && y === 0 && z === c;
+}
+
+/**
+ * The entries the app has not got: a package its `package.json` already declares (in any of its
+ * dependency fields) at a version in the registry's range is left as written, so `add` never turns
+ * an exact `1.66.0` into `^1.66.0`. One declared older than the range is installed at the range.
+ */
+export async function missingFrom(root: string, entries: string[]): Promise<string[]> {
+  let manifest: Record<string, Record<string, string> | undefined> = {};
+  try {
+    manifest = JSON.parse(await fs.readFile(path.join(root, "package.json"), "utf8"));
+  } catch {
+    return entries;
+  }
+  const fields = ["dependencies", "devDependencies", "optionalDependencies", "peerDependencies"];
+  return entries.filter((entry) => {
+    const name = declaredPackage(entry);
+    const declared = fields.map((field) => manifest[field]?.[name]).find((v) => v != null);
+    return declared == null || !satisfies(declared, entry);
+  });
+}
+
 /** A name a `package.json` can hold, from the directory's (`My App` → `my-app`). */
 function packageName(dir: string): string {
   const name = path
@@ -106,17 +151,21 @@ export type DependencyOptions = {
  * `package.json` either). A failure names the command to run by hand, and returns `ok: false`:
  * the files are written, but the app cannot type check without the package.
  *
- * Returns null when the items declare no package.
+ * Returns null when the items declare no package, or the app already has every one in range.
  */
 export async function installDependencies(
   dir: string,
   items: RegistryItem[],
   opts: DependencyOptions = {},
 ): Promise<DependencyInstall | null> {
-  const dependencies = dependenciesOf(items);
-  if (dependencies.length === 0) return null;
+  const declared = dependenciesOf(items);
+  if (declared.length === 0) return null;
 
   const { root, manager } = await projectOf(dir);
+  const dependencies = await missingFrom(root, declared);
+  const kept = declared.filter((entry) => !dependencies.includes(entry)).map(declaredPackage);
+  if (kept.length > 0) console.log(`keep ${kept.join(" ")} (package.json has it in range)`);
+  if (dependencies.length === 0) return null;
   const command = [manager, "add", ...dependencies];
   const shown = command.join(" ");
   const install: DependencyInstall = { manager, root, command: shown, ok: true };

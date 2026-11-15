@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **`add theme` is the app's theme.** In an app `init --theme shadcn` made, `add theme --overwrite`
+  wrote the library's default colors into `theme.json` and `lib/finishes.json`. A named `theme` now
+  resolves as the dependency does, to the theme `nsh-ui.json` records: shadcn's data at the
+  build-time paths, the roles module and `themes/shadcn/`.
+- **A pinned package stays pinned.** `add` ran `bun add lucide@^1.66.0` every time, turning an
+  app's exact `1.66.0` into `^1.66.0` in `package.json` and the lock file. A package the app
+  already declares at a version in range is left as written (`keep lucide …`); one older than the
+  range is still raised.
 - **One key cap.** A command row's shortcut is drawn in `kbd`'s `Kbd`, and `command` no longer
   has a keycap of its own: `add command` brings `kbd`, and an app that imported `Kbd` from
   `components/ui/command` imports it from `components/ui/kbd` (`<Kbd>⌘K</Kbd>`).

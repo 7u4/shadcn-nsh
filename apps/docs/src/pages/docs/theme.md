@@ -20,7 +20,7 @@ The theme is the upstream gallery's: a graphite page (paper in light appearance)
 npx shadcn-nsh@latest add theme
 ```
 
-`add theme` writes `theme.json`, `lib/finishes.json` and `lib/theme.ts`. `init` writes the same files and also points each `nsh.json` at `theme.json`. In a monorepo they live under `packages/ui`. Every component depends on it.
+`add theme` writes `theme.json`, `lib/finishes.json` and `lib/theme.ts`, the data of the theme `nsh-ui.json` records (`theme-shadcn` writes shadcn's). `init` writes the same files and also points each `nsh.json` at `theme.json`. In a monorepo they live under `packages/ui`. Every component depends on it.
 
 ## Colors
 
