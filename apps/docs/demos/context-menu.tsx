@@ -78,11 +78,17 @@ function App() {
             >
               {pinned() ? "Pinned" : "Pin"}
             </ContextMenuItem>
-            <ContextMenuItem onSelect={() => last.set("Cut")}>Cut</ContextMenuItem>
-            <ContextMenuItem onSelect={() => last.set("Copy")}>Copy</ContextMenuItem>
-            <ContextMenuItem disabled>Paste</ContextMenuItem>
+            <ContextMenuItem inset onSelect={() => last.set("Cut")}>
+              Cut
+            </ContextMenuItem>
+            <ContextMenuItem inset onSelect={() => last.set("Copy")}>
+              Copy
+            </ContextMenuItem>
+            <ContextMenuItem inset disabled>
+              Paste
+            </ContextMenuItem>
             <ContextMenuSeparator />
-            <ContextMenuItem variant="destructive" onSelect={() => last.set("Delete")}>
+            <ContextMenuItem inset variant="destructive" onSelect={() => last.set("Delete")}>
               Delete
             </ContextMenuItem>
           </ContextMenuContent>

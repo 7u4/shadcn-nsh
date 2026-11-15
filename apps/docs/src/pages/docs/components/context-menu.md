@@ -72,6 +72,20 @@ Any view can be the trigger; the menu opens at the pointer on a secondary click 
 </ContextMenuItem>
 ```
 
+### A checkable row and its neighbours
+
+A checkable row keeps its mark's room whether it is checked or not, so its label stays put as it
+is toggled. `inset` gives the plain rows of the same menu that room too, and their labels line up
+with it — as shadcn's `inset`. `ContextMenuLabel` and `ContextMenuSubTrigger` take it as well.
+
+```tsx
+<ContextMenuItem checked={pinned()} closeOnSelect={false} onSelect={() => setPinned(!pinned())}>
+  Pin
+</ContextMenuItem>
+<ContextMenuItem inset onSelect={() => cut()}>Cut</ContextMenuItem>
+<ContextMenuItem inset onSelect={() => copy()}>Copy</ContextMenuItem>
+```
+
 ### Open change
 
 ```tsx

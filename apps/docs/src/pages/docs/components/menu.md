@@ -71,15 +71,15 @@ A string child is the row's label and its name for screen readers; `accessibilit
 
 Looks are `menuItemLook`, `menuPopup`, `menuSeparator`, `MenuLabel`, `SubmenuRow` and `SubmenuBack` from the upstream menu look. Every prop of [`nsh/base` Menu](https://nsh.dev/elements/menu) on `MenuContent` passes through except open state and `trigger`.
 
-| Part                          | Notes                                      |
-| ----------------------------- | ------------------------------------------ |
-| `Menu`                        | Open state + trigger slot                  |
-| `MenuTrigger`                 | Registers the trigger; string → Button     |
-| `MenuContent`                 | Popup / sheet; defaults bottom / start / 4 |
-| `MenuItem`                    | String → `menuItemLabel`; `variant`        |
-| `MenuCheckboxItem`            | Checkable row                              |
-| `MenuRadioItem`               | One of a group                             |
-| `MenuLabel`                   | Group title (`text`)                       |
-| `MenuSeparator`               | Hairline                                   |
-| `MenuShortcut`                | Trailing note                              |
-| `MenuSub` / Trigger / Content | Nested submenu                             |
+| Part                          | Notes                                                                                 |
+| ----------------------------- | ------------------------------------------------------------------------------------- |
+| `Menu`                        | Open state + trigger slot                                                             |
+| `MenuTrigger`                 | Registers the trigger; string → Button                                                |
+| `MenuContent`                 | Popup / sheet; defaults bottom / start / 4                                            |
+| `MenuItem`                    | String → `menuItemLabel`; `variant`; `inset` lines a plain row up with checkable ones |
+| `MenuCheckboxItem`            | Checkable row                                                                         |
+| `MenuRadioItem`               | One of a group                                                                        |
+| `MenuLabel`                   | Group title (`text`, `inset`)                                                         |
+| `MenuSeparator`               | Hairline                                                                              |
+| `MenuShortcut`                | Trailing note                                                                         |
+| `MenuSub` / Trigger / Content | Nested submenu; the trigger takes `inset`                                             |

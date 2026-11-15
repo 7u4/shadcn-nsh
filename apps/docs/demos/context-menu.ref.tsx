@@ -27,8 +27,9 @@ function Item(props: {
   disabled?: boolean;
   closeOnSelect?: boolean;
   variant?: "default" | "destructive";
+  inset?: boolean;
 }) {
-  const look = menuItemLook();
+  const look = menuItemLook({ inset: props.inset });
   const checkable = props.checked !== undefined;
   return (
     <MenuItem
@@ -118,11 +119,11 @@ function App() {
               last.set(pinned() ? "Pinned" : "Unpinned");
             }}
           />
-          <Item label="Cut" onSelect={() => last.set("Cut")} />
-          <Item label="Copy" onSelect={() => last.set("Copy")} />
-          <Item label="Paste" disabled />
+          <Item inset label="Cut" onSelect={() => last.set("Cut")} />
+          <Item inset label="Copy" onSelect={() => last.set("Copy")} />
+          <Item inset label="Paste" disabled />
           <MenuSeparator style={menuSeparator()} />
-          <Item label="Delete" variant="destructive" onSelect={() => last.set("Delete")} />
+          <Item inset label="Delete" variant="destructive" onSelect={() => last.set("Delete")} />
         </ContextMenu>
       </Split>
     </DemoPage>

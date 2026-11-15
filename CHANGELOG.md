@@ -30,6 +30,13 @@ says what it draws and nothing more.
 - `scripts/theme/generate-shadcn.ts` may leave a finish role's keys out (the default file's order
   first), which is how this theme's `fill` is one color and its `track` has no shade.
 
+Added:
+
+- `MenuItem`, `MenuLabel` and `MenuSubTrigger` (and their `ContextMenu…` names) take `inset`, as
+  shadcn's: a plain row's label starts past a checkable row's mark, so the rows of one menu line
+  up. A checkable row keeps its mark's room either way, so its label does not move as it is
+  toggled.
+
 Fixed:
 
 - `PopoverContent` and `HoverCardContent` follow a `placement`, and `SheetContent` a `side`, that
