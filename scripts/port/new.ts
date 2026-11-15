@@ -4,9 +4,12 @@
  *
  *   bun run port:new <id> --from <upstream> [--symbols a,b,c] [--base <nsh/base>] [--family]
  *   bun run port:new <id> --base <nsh/base>
+ *   bun run port:new <id> --view [--family]
  *
  * Without `--from` the component is the library's own (a pressable built on a `nsh/base` control,
- * say): no upstream file to route or vendor, and the shell starts with no port region.
+ * say): no upstream file to route or vendor, and the shell starts with no port region. `--view`
+ * is the same, drawn on `nsh`'s own elements (`View` / `Text`) instead of a `nsh/base` control:
+ * a separator, a skeleton, a label — a component that only lays out and styles.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -33,12 +36,14 @@ type Args = {
   symbols?: string[];
   base: string;
   family: boolean;
+  /** Drawn on `nsh`'s own elements (`View` / `Text`), not on a `nsh/base` control. */
+  view: boolean;
 };
 
 function usage(message?: string): never {
   if (message) console.error(`port:new: ${message}`);
   console.error(
-    "usage: bun run port:new <id> [--from <upstream>] [--symbols a,b,c] [--base <Name>] [--family]",
+    "usage: bun run port:new <id> [--from <upstream>] [--symbols a,b,c] [--base <Name>] [--view] [--family]",
   );
   process.exit(1);
 }
@@ -49,11 +54,13 @@ function parseArgs(argv: string[]): Args {
   let symbols: string[] | undefined;
   let base: string | undefined;
   let family = false;
+  let view = false;
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--from") from = argv[++i];
     else if (arg === "--symbols") symbols = (argv[++i] ?? "").split(",").filter(Boolean);
     else if (arg === "--base") base = argv[++i];
+    else if (arg === "--view") view = true;
     else if (arg === "--family") family = true;
     else if (arg.startsWith("-")) usage(`unknown flag ${arg}`);
     else positional.push(arg);
@@ -62,9 +69,11 @@ function parseArgs(argv: string[]): Args {
   if (!id) usage("missing <id>");
   if (!/^[a-z][a-z0-9-]*$/.test(id)) usage(`id must be kebab-case, got ${id}`);
   if (symbols && !from) usage("--symbols needs --from");
+  if (view && from) usage("--view draws on `nsh`'s own elements: leave --from out");
+  if (view && base) usage("--view draws on `nsh`'s own elements: leave --base out");
   if (positional.length > 1) usage(`unexpected args: ${positional.slice(1).join(" ")}`);
   const Id = toPascal(id);
-  return { id, from, symbols, base: base ?? Id, family };
+  return { id, from, symbols, base: base ?? Id, family, view };
 }
 
 function toPascal(id: string): string {
@@ -284,17 +293,33 @@ function main() {
     id: args.id,
     Id,
     Base: args.base,
-    basePath: args.base.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase(),
     upstream: args.from ?? "",
     lookFn: `${camel}Look`,
     labelFn: `${camel}Label`,
+    textFn: `${camel}Text`,
+    // The look spread onto `nsh`'s elements: a leaf view's style, a family's root part.
+    lookRef: `${camel}Look()${args.family ? ".root" : ""}`,
+    // What a component passes through: a `nsh/base` control, or `nsh`'s own view.
+    passThrough: args.view
+      ? "Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through. Style props go over the look's."
+      : `Every prop of [\`nsh/base\` ${args.base}](https://nsh.dev/elements/${args.base
+          .replace(/([a-z])([A-Z])/g, "$1-$2")
+          .toLowerCase()}) passes through. Style props go over the look's.`,
   };
 
   const from = args.from;
   if (from) updateMap(map, { ...args, from }, uiRel);
   else console.log(`own    ${uiRel} (no upstream)`);
 
-  const uiTemplate = args.family ? "family.tsx.tmpl" : args.from ? "leaf.tsx.tmpl" : "own.tsx.tmpl";
+  const uiTemplate = args.view
+    ? args.family
+      ? "view.family.tsx.tmpl"
+      : "view.tsx.tmpl"
+    : args.family
+      ? "family.tsx.tmpl"
+      : args.from
+        ? "leaf.tsx.tmpl"
+        : "own.tsx.tmpl";
   writeNew(targetPath(map, uiRel), render(readTemplate(uiTemplate), vars));
 
   if (args.from) {
@@ -312,8 +337,16 @@ function main() {
     suggestImports(map, args.from, targetPath(map, uiRel));
   }
 
-  const demoTemplate = args.family ? "demo.family.tsx.tmpl" : "demo.tsx.tmpl";
-  const refTemplate = args.family ? "demo.family.ref.tsx.tmpl" : "demo.ref.tsx.tmpl";
+  const demoTemplate = args.view
+    ? "demo.view.tsx.tmpl"
+    : args.family
+      ? "demo.family.tsx.tmpl"
+      : "demo.tsx.tmpl";
+  const refTemplate = args.view
+    ? "demo.view.ref.tsx.tmpl"
+    : args.family
+      ? "demo.family.ref.tsx.tmpl"
+      : "demo.ref.tsx.tmpl";
   writeNew(path.join(paths.demos, `${args.id}.tsx`), render(readTemplate(demoTemplate), vars));
   writeNew(path.join(paths.demos, `${args.id}.ref.tsx`), render(readTemplate(refTemplate), vars));
   writeNew(path.join(paths.pages, `${args.id}.md`), render(readTemplate("docs.md.tmpl"), vars));
