@@ -49,7 +49,7 @@ function App() {
         <DemoSection title="Default media" axis="block">
           <Empty>
             <EmptyHeader>
-              <EmptyMedia>
+              <EmptyMedia variant="default">
                 <Icon icon={Search} size={32} tint={ui().faint} />
               </EmptyMedia>
               <EmptyTitle>Nothing matched that search</EmptyTitle>

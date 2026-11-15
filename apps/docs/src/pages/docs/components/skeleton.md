@@ -56,8 +56,10 @@ The block breathes (an endless motion). When the user asks for less motion it st
 terminal shows it still: nothing to play there.
 
 ```tsx
-{/* Nothing to turn off: the skeleton follows the system's reduce-motion setting. */}
-<Skeleton style={{ width: 200, height: 14 }} />
+{
+  /* Nothing to turn off: the skeleton follows the system's reduce-motion setting. */
+}
+<Skeleton style={{ width: 200, height: 14 }} />;
 ```
 
 ## API

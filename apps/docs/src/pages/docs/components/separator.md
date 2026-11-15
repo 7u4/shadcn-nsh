@@ -63,10 +63,10 @@ boundary between groups); give it an `accessibilityLabel` saying what it divides
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through (`style`, `role`,
 `accessibilityLabel`, …); `style` goes over the look's.
 
-| Prop          | Type                                | Default        |
-| ------------- | ----------------------------------- | -------------- |
-| `orientation` | `"horizontal" \| "vertical"`        | `"horizontal"` |
-| `decorative`  | `boolean`                           | `true`         |
+| Prop          | Type                         | Default        |
+| ------------- | ---------------------------- | -------------- |
+| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` |
+| `decorative`  | `boolean`                    | `true`         |
 
 The line is one point of the theme's edge color (`colors.border`, `theme.json`'s `border`), with
 no other look: a corner is the caller's `style`, and so is its room. `separatorLook(orientation)`

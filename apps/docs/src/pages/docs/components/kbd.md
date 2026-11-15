@@ -82,10 +82,10 @@ and no edge.
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on both parts (`style`, `accessibilityLabel`, …); `style` goes over the look's.
 
-| Part       | Renders | Look                |
-| ---------- | ------- | ------------------- |
-| `Kbd`      | `View`  | `kbdLook().kbd`     |
-| `KbdGroup` | `View`  | `kbdLook().group`   |
+| Part       | Renders | Look              |
+| ---------- | ------- | ----------------- |
+| `Kbd`      | `View`  | `kbdLook().kbd`   |
+| `KbdGroup` | `View`  | `kbdLook().group` |
 
 | Prop       | Type                    | Default |
 | ---------- | ----------------------- | ------- |

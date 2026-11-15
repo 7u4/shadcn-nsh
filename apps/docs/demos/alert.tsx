@@ -19,7 +19,7 @@ function App() {
 
       <DemoCard>
         <DemoSection title="Default" axis="block">
-          <Alert>
+          <Alert variant="default">
             <Icon icon={CheckCircle2} size={ALERT_ICON} tint={ui().text} />
             <AlertTitle>Changes saved</AlertTitle>
             <AlertDescription>Your changes have been saved.</AlertDescription>
