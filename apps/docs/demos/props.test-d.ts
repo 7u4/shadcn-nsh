@@ -89,6 +89,20 @@ import type {
   TreeProps as BaseTreeProps,
 } from "nsh/base";
 
+import type { AlertDialogRole } from "@/packages/ui/alert-dialog";
+import type { CommandEntry, CommandGroup, CommandItem, CommandRef } from "@/packages/ui/command";
+import type {
+  DockAreaLayout,
+  DockAreaRef,
+  DockDropIndicator,
+  DockInfo,
+  DockNode,
+  DockPanel,
+  DockPanelOptions,
+  DockPlacement,
+  DockTabValue,
+  DockTarget,
+} from "@/packages/ui/dock-area";
 import type {
   FieldLegendVariant,
   FieldOrientation,
@@ -179,6 +193,8 @@ import type {
   TooltipContentProps,
   TreeProps,
 } from "@/packages/ui/index";
+import type { MenuOpenChangeReason } from "@/packages/ui/menu";
+import type { TextViewClasses, TextViewImage, TextViewRef } from "@/packages/ui/text-view";
 
 type Assert<T extends true> = T;
 
@@ -470,6 +486,54 @@ type _tooltipContent = Assert<KeepsBase<BaseTooltipProps, TooltipContentProps, n
 /** `TreeProps`. */
 type _tree = Assert<KeepsBase<BaseTreeProps, TreeProps, never>>;
 
+/**
+ * `#10`: the `nsh/base` types a shell's props, ref and callbacks name are exported by the
+ * component's own file, so a call site names them from its copy and never imports `nsh/base`. The
+ * tab is `DockTabValue` because `DockTab` is the component the tab is drawn with.
+ */
+const _dockAreaLayout: DockAreaLayout = {
+  center: { type: "tabs", panels: ["readme"], activeIndex: 0 },
+  left: { layout: { type: "tabs", panels: ["files"] }, size: 200, open: true },
+};
+const _dockNode: DockNode = { type: "split", axis: "horizontal", children: [], sizes: [null] };
+const _dockPanel: DockPanel = { id: "readme" };
+const _dockPanelOptions: DockPanelOptions = { id: "readme", visible: true };
+const _dockTabValue: DockTabValue = {
+  panel: "readme",
+  group: 1,
+  index: 0,
+  active: true,
+  closable: true,
+  zoomed: false,
+};
+const _dockTarget: DockTarget = { group: 1, side: "left", index: 0 };
+const _dockDropIndicator: DockDropIndicator = { group: 1, side: "left", index: null };
+const _dockInfo: DockInfo = { placement: "left", open: true, size: 200, collapsible: true };
+const _dockPlacement: DockPlacement = "center";
+/** The refs, named where a call site takes one (`ref={…}`). */
+const _dockAreaRef: DockAreaRef | null = null;
+
+/** A palette's rows, sections and ref. */
+const _commandItem: CommandItem = { id: "open", label: "Open", keywords: ["o"] };
+const _commandEntry: CommandEntry = {
+  id: "open",
+  label: "Open",
+  keywords: [],
+  disabled: false,
+  checked: false,
+};
+const _commandGroup: CommandGroup = { heading: "File" };
+const _commandRef: CommandRef | null = null;
+
+/** A text view's images and classes. */
+const _textViewImage: TextViewImage = { src: "https://example.com/a.png", alt: "A", width: "50%" };
+const _textViewClasses: TextViewClasses = { link: "text-brand" };
+const _textViewRef: TextViewRef | null = null;
+
+/** The same treatment where the base's name is taken here: the reasons, the roles. */
+const _menuReason: MenuOpenChangeReason = "cancel";
+const _alertDialogRole: AlertDialogRole = "destructive";
+
 type Row = { id: number; name: string };
 
 /**
@@ -537,6 +601,25 @@ const _menuItemDanger: MenuItemProps = { danger: true };
 const _iconName: IconProps = { name: "chevron" };
 
 export {
+  _alertDialogRole,
+  _commandEntry,
+  _commandGroup,
+  _commandItem,
+  _commandRef,
+  _dockAreaLayout,
+  _dockAreaRef,
+  _dockDropIndicator,
+  _dockInfo,
+  _dockNode,
+  _dockPanel,
+  _dockPanelOptions,
+  _dockPlacement,
+  _dockTabValue,
+  _dockTarget,
+  _menuReason,
+  _textViewClasses,
+  _textViewImage,
+  _textViewRef,
   _fieldLegendVariant,
   _fieldOrientation,
   _inputDefault,

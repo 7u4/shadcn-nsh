@@ -92,7 +92,7 @@ export type SheetProps = {
   open?: boolean | null;
   defaultOpen?: boolean;
   children?: JSX.Element;
-  onOpenChange?: (event: { open: boolean; reason: OpenChangeReason }) => void;
+  onOpenChange?: (event: { open: boolean; reason: SheetOpenChangeReason }) => void;
   onOpen?: () => void;
   onClose?: () => void;
   onCancel?: () => void;
@@ -229,3 +229,6 @@ export function SheetContent(props: SheetContentProps) {
     </BaseSheet>
   );
 }
+
+/** Why a sheet closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type SheetOpenChangeReason = OpenChangeReason;

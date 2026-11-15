@@ -198,3 +198,6 @@ export function DiffView(props: DiffViewProps) {
     />
   );
 }
+
+/** The styles of a diff's parts, from `nsh/base`. */
+export type { DiffViewStyles };

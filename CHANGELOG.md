@@ -117,3 +117,29 @@ New, and only added:
 
 Behaviour, appearance and the `nsh/base` props underneath are unchanged: every component still draws
 the same pixels as its look spread on the base control, which the render check compares.
+
+## Unreleased
+
+New, and only added:
+
+- Every type the shells' props, refs and callbacks name comes from `nsh/base`, and each component
+  file now re-exports the ones it uses — `dialog` alone keeps its own to `nsh/base` — so a call site
+  imports them from its own copy: `command` exports `CommandItem`, `CommandEntry`, `CommandGroup`
+  and `CommandRef`, `text-view` exports
+  `TextViewImage`, `TextViewClasses` and `TextViewRef`, `dock-area` exports `DockAreaRef`,
+  `DockAreaLayout`, `DockRegion`, `DockNode`, `DockPlacement`, `DockPanel`, `DockPanelOptions`,
+  `DockTarget`, `DockDropIndicator` and `DockInfo` (a tab is `DockTabValue`, since `DockTab` is the
+  component), and the rest of the library the same (`CalendarEntry`, `DataTableClasses`,
+  `DiffViewStyles`, `EmojiEntry` and its neighbours, `PaginationItemState`, `ScrollbarTheme`,
+  `TreeEntry`, `AlertDialogRole`, `ColorChannel` / `ColorFormat` / `ColorSpace`). Where `nsh/base`'s
+  name is taken here, the export is prefixed by the component: `MenuOpenChangeReason`,
+  `SheetOpenChangeReason`, `PopoverOpenChangeReason`, `HoverCardOpenChangeReason`,
+  `ContextMenuOpenChangeReason`, `ComboboxOpenChangeReason`, `TooltipOpenChangeReason`,
+  `DatePickerOpenChangeReason`, `AlertDialogChangeReason`, `ComboboxSelectItem`, `DatePickerEntry`.
+
+Fixed:
+
+- Text is upper- and lower-cased for its locale (`toLocaleUpperCase` / `toLocaleLowerCase`) rather
+  than the language-neutral way, so a heading keeps its letters where they have a locale of their
+  own (a command palette's headings, a popup's placement words, an emoji section's name, a color
+  picker's labels read aloud).

@@ -251,7 +251,7 @@ export type MenuProps = {
   open?: boolean | null;
   defaultOpen?: boolean;
   children?: JSX.Element;
-  onOpenChange?: (event: { open: boolean; reason: OpenChangeReason }) => void;
+  onOpenChange?: (event: { open: boolean; reason: MenuOpenChangeReason }) => void;
   onOpen?: () => void;
   onClose?: () => void;
   onCancel?: () => void;
@@ -596,3 +596,6 @@ export function MenuSubContent(props: MenuSubContentProps) {
     </BaseSubmenu>
   );
 }
+
+/** Why a menu closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type MenuOpenChangeReason = OpenChangeReason;

@@ -82,3 +82,6 @@ export function Pagination(props: PaginationProps) {
     />
   );
 }
+
+/** What a page of the pager is (`current`, `disabled`…), from `nsh/base`. */
+export type { PaginationItemState };

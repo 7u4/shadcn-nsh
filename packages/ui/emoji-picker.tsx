@@ -186,7 +186,7 @@ export function EmojiPreview(props: { entry: EmojiEntry | null; hint: string }) 
   );
 }
 
-const capitalized = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : s);
+const capitalized = (s: string) => (s ? s[0].toLocaleUpperCase() + s.slice(1) : s);
 
 /**
  * The whole picker: tabs, search with the skin tone hand, the grid, the
@@ -264,3 +264,21 @@ export function EmojiPanel(props: {
   );
 }
 // @port end
+
+/** An emoji as the picker hands it over (`onSelect`, `renderItem`), from `nsh/base`. */
+export type { EmojiEntry };
+
+/** A section of the picker's tabs, from `nsh/base`. */
+export type { EmojiGroup };
+
+/** A section's id, from `nsh/base`. */
+export type { EmojiGroupId };
+
+/** The app's names for the sections, from `nsh/base`. */
+export type { EmojiGroupLabels };
+
+/** The picker's ref, from `nsh/base`. */
+export type { EmojiPickerRef };
+
+/** A skin tone of the picker, from `nsh/base`. */
+export type { EmojiSkinTone };

@@ -120,7 +120,7 @@ export type DatePickerProps = {
   placeholder?: string;
   children?: JSX.Element;
   onChange?: (event: { value: DatePickerValue }) => void;
-  onOpenChange?: (event: { open: boolean; reason: OpenChangeReason }) => void;
+  onOpenChange?: (event: { open: boolean; reason: DatePickerOpenChangeReason }) => void;
   onOpen?: () => void;
   onClose?: () => void;
   onCancel?: () => void;
@@ -328,3 +328,12 @@ export function DatePickerContent(props: DatePickerContentProps) {
     </View>
   );
 }
+
+/** A day as the date picker hands it over: `nsh/base`'s `CalendarEntry`, under this part's name. */
+export type DatePickerEntry = CalendarEntry;
+
+/** A chosen day, or `null` for none (`value`, `onChange`), from `nsh/base`. */
+export type { DatePickerValue };
+
+/** Why the date picker's list closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type DatePickerOpenChangeReason = OpenChangeReason;

@@ -187,7 +187,7 @@ function App() {
                     max={12}
                     vertical
                     onChange={(value) => bands[i].set(value as number)}
-                    onChangeEnd={log(name.toLowerCase())}
+                    onChangeEnd={log(name.toLocaleLowerCase())}
                     accessibilityLabel={name}
                   />
                   <Text

@@ -158,3 +158,6 @@ export function Tree(props: TreeProps) {
     />
   );
 }
+
+/** A row of a tree (`renderRow`, `onSelect`), from `nsh/base`. */
+export type { TreeEntry };
