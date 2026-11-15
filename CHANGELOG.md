@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- **`message`.** One row of a conversation: `MessageGroup`, `Message`, `MessageAvatar`,
+  `MessageContent`, `MessageHeader` and `MessageFooter`, after shadcn/ui's message. The row mirrors
+  for `align="end"`, so the bubbles inside follow the message; the avatar is this library's
+  `Avatar` at 32 points (36 on a touch screen), `name` giving it initials on an identity hue, and
+  the header and footer are small and medium in the muted ink. `add message` brings `avatar`.
 - **`bubble`.** The framed surface of one turn of a conversation: `BubbleGroup`, `Bubble`,
   `BubbleContent` and `BubbleReactions`, after shadcn/ui's bubble. Seven fills (`default`,
   `secondary`, `muted`, `tinted`, `outline`, `ghost`, `destructive`), `align` on the sender's side,

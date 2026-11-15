@@ -69,6 +69,7 @@ export * from "./drawer";
 export * from "./menubar";
 export * from "./marker";
 export * from "./bubble";
+export * from "./message";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

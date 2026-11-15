@@ -1128,6 +1128,19 @@
           "target": "components/ui/bubble.tsx"
         }
       ]
+    },
+    {
+      "name": "message",
+      "type": "registry:ui",
+      "title": "Message",
+      "description": "One row of a conversation: the sender's avatar, who they are, the turn, and what is under it.",
+      "files": [
+        {
+          "path": "packages/ui/message.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/message.tsx"
+        }
+      ]
     }
   ]
 }

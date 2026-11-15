@@ -74,4 +74,5 @@ export const componentIds = [
   "menubar",
   "marker",
   "bubble",
+  "message",
 ] as const;

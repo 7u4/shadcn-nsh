@@ -82,6 +82,8 @@ Every page links its base element where `nsh/base` has one: behavior, keyboard s
 
 - /docs/components/bubble: The framed surface of one turn of a conversation, with the reactions that hang off its edge. → styled on `nsh` View and Text (no base element)
 
+- /docs/components/message: One row of a conversation: avatar, sender, turn and what is under it. → styled on `nsh` View and Text (no base element)
+
 ## Elsewhere
 
 - Base behavior and elements: https://nsh.dev/elements

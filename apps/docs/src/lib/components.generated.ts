@@ -244,6 +244,13 @@ export const components: ComponentDoc[] = [
     description: "A row of menus whose triggers stand in one bar, as a desktop app's menu bar.",
   },
   {
+    slug: "message",
+    title: "Message",
+    nshElement: "message",
+    description:
+      "One row of a conversation: the sender's avatar, who they are, the turn, and what is under it.",
+  },
+  {
     slug: "meter",
     title: "Meter",
     nshElement: null,
