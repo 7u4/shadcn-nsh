@@ -41,11 +41,9 @@ export interface MenubarLook {
 }
 
 /**
- * A menubar's look, after shadcn/ui's: the bar a row of triggers inside a 1-point edge, the card's
- * fill and the theme's control corners; a trigger as tall as a menu row, its label the menu's type,
- * `menuItemSize`'s corners and 8 points either side. A trigger takes the neutral `accent` fill while
- * its menu is open and under the pointer (`menuHighlight`), the theme's focus ring with the keyboard
- * on it, and dims to 50% while disabled.
+ * A menubar's look, after shadcn/ui's: a 36-point bar (50 on a touch screen) around its triggers,
+ * inside a 1-point edge, in the card's fill, at the theme's control corners; a trigger as tall as a
+ * menu row (`menuItemSize`), its name in the menu's type, its corners and 8 points either side.
  */
 export function menubarLook(): MenubarLook {
   return {
