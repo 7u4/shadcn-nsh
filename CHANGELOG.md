@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — seven components shadcn has and we did not
+## 0.4.0 — seven components shadcn has, input groups, base types
 
 Seven components, each the library's own: none comes from upstream's gallery, so none carries a
 port region, and each is one file the registry copies into the app.
@@ -21,14 +21,17 @@ nsh's own `View` and `Text` instead of from a `nsh/base` symbol.
 Two names moved to make room for shadcn's:
 
 - the registry's `label` library item is now `label-of` (its file stays `lib/label.ts`), so `label`
-  is the name of the component, as in shadcn; `add label` copies the component, not the rule;
+  is the name of the component, as in shadcn; `add label` copies the component, not the rule. **To
+  migrate**: nothing to delete. The components that use the rule depend on `label-of`, so
+  `add <id> --overwrite` writes the same `lib/label.ts` again; `add label` now adds `label.tsx`
+  beside it. There is no `label` alias for the old item;
 - `packages/ui/index.ts` names `command`'s exports one by one, since the palette's own keycap is also
   called `Kbd`: the package's `Kbd` is the component's, and the palette's stays inside the module.
 
 Where nsh has no selector to copy shadcn's CSS, the deviation is in the component's page: `alert`
 keeps the icon's column when there is no icon (`has-[>svg]`), `button-group` joins its buttons with a
 style each one wears (a child selector), and `label` takes `disabled` itself (a `peer-disabled`).
-Also unreleased:
+Also new:
 
 - `InputGroup` (`input-group`), a field's frame around a control and what sits beside it, after
   shadcn's InputGroup: `InputGroup`, `InputGroupInput`, `InputGroupTextarea`, `InputGroupAddon`
@@ -48,7 +51,7 @@ Also unreleased:
   region's role and its state come from (`role`, not React Native's `accessibilityRole`; a region
   is not an on / off control — that is `Switch`). No component code changed.
 
-Also unreleased, base types and casing (MyAid #10, #11):
+Base types, from each component's own file:
 
 - Every type the shells' props, refs and callbacks name comes from `nsh/base`, and each component
   file now re-exports the ones it uses — `dialog` alone keeps its own to `nsh/base` — so a call site
