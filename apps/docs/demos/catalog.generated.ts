@@ -73,4 +73,5 @@ export const componentIds = [
   "drawer",
   "menubar",
   "marker",
+  "bubble",
 ] as const;

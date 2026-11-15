@@ -1115,6 +1115,19 @@
           "target": "components/ui/marker.tsx"
         }
       ]
+    },
+    {
+      "name": "bubble",
+      "type": "registry:ui",
+      "title": "Bubble",
+      "description": "The framed surface of one turn of a conversation, and the reactions that hang off it.",
+      "files": [
+        {
+          "path": "packages/ui/bubble.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/bubble.tsx"
+        }
+      ]
     }
   ]
 }

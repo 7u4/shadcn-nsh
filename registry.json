@@ -1244,6 +1244,20 @@
         }
       ],
       "dependencies": ["lucide@^1.66.0"]
+    },
+    {
+      "name": "bubble",
+      "type": "registry:ui",
+      "title": "Bubble",
+      "description": "The framed surface of one turn of a conversation, and the reactions that hang off it.",
+      "registryDependencies": ["surface", "theme"],
+      "files": [
+        {
+          "path": "packages/ui/bubble.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/bubble.tsx"
+        }
+      ]
     }
   ]
 }

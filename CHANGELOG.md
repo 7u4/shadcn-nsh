@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **`bubble`.** The framed surface of one turn of a conversation: `BubbleGroup`, `Bubble`,
+  `BubbleContent` and `BubbleReactions`, after shadcn/ui's bubble. Seven fills (`default`,
+  `secondary`, `muted`, `tinted`, `outline`, `ghost`, `destructive`), `align` on the sender's side,
+  a bubble as wide as it holds (80% of the column at most, all of it when `ghost`), and a reaction
+  pill that hangs off either edge. `onPress` on the content makes a turn act, where shadcn/ui's
+  `asChild` would.
 - **`marker`.** One line in a conversation that is not a message: `Marker`, `MarkerIcon` and
   `MarkerContent` — inline, with a hairline under it (`variant="border"`), or the label between two
   rules (`variant="separator"`). The line is in the muted ink at the body's size, its icon 16 points;

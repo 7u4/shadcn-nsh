@@ -46,6 +46,13 @@ export const components: ComponentDoc[] = [
     description: "The trail from where the app starts to the page it shows.",
   },
   {
+    slug: "bubble",
+    title: "Bubble",
+    nshElement: "bubble",
+    description:
+      "The framed surface of one turn of a conversation, and the reactions that hang off it.",
+  },
+  {
     slug: "button",
     title: "Button",
     nshElement: "button",

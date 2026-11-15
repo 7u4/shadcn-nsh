@@ -80,6 +80,8 @@ Every page links its base element where `nsh/base` has one: behavior, keyboard s
 
 - /docs/components/marker: One line in a conversation that is not a message: a status, a note, a labeled separator. → styled on `nsh` View and Text (no base element)
 
+- /docs/components/bubble: The framed surface of one turn of a conversation, with the reactions that hang off its edge. → styled on `nsh` View and Text (no base element)
+
 ## Elsewhere
 
 - Base behavior and elements: https://nsh.dev/elements
