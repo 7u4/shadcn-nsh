@@ -120,6 +120,16 @@ for (const component of cat.components) {
   const meta = readPageMeta(source);
   const found = headings(source);
 
+  // Astro parses the frontmatter as YAML, and a value it cannot read fails the site's build.
+  const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(source)?.[1];
+  try {
+    if (frontmatter !== undefined) Bun.YAML.parse(frontmatter);
+  } catch (error) {
+    fail(
+      `${where}: frontmatter is not YAML (${(error as Error).message}); quote a value with ": "`,
+    );
+  }
+
   for (const section of required) {
     if (!found.includes(section)) fail(`${where}: missing "## ${section}"`);
   }

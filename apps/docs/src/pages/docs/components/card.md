@@ -1,7 +1,7 @@
 ---
 layout: ../../../layouts/Docs.astro
 title: Card
-description: A flat surface that groups related content: a header with its action, a body and a footer.
+description: "A flat surface that groups related content: a header with its action, a body and a footer."
 component: true
 demo: card
 ---

@@ -1,7 +1,7 @@
 ---
 layout: ../../../layouts/Docs.astro
 title: Item
-description: A row of a list: what sits before its content, a title with a note, and controls after it.
+description: "A row of a list: what sits before its content, a title with a note, and controls after it."
 component: true
 demo: item
 ---

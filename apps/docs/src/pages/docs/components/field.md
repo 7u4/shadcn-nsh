@@ -1,7 +1,7 @@
 ---
 layout: ../../../layouts/Docs.astro
 title: Field
-description: A set of fields under a legend: a label, its control, a description and errors that are read out.
+description: "A set of fields under a legend: a label, its control, a description and errors that are read out."
 component: true
 demo: field
 ---
