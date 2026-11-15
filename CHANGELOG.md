@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- **`marker`.** One line in a conversation that is not a message: `Marker`, `MarkerIcon` and
+  `MarkerContent` — inline, with a hairline under it (`variant="border"`), or the label between two
+  rules (`variant="separator"`). The line is in the muted ink at the body's size, its icon 16 points;
+  `onPress` makes a marker act (underlined, the hand over it), where shadcn/ui's `asChild` would.
 - **`menubar`.** A row of menus: `Menubar`, `MenubarMenu`, `MenubarTrigger`, `MenubarContent`, and
   the menu's rows under the bar's names (`MenubarItem`, `MenubarCheckboxItem`, `MenubarRadioItem`,
   `MenubarLabel`, `MenubarSeparator`, `MenubarShortcut`, `MenubarGroup`, `MenubarSub`,

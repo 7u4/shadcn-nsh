@@ -67,6 +67,7 @@ export * from "./aspect-ratio";
 export * from "./textarea";
 export * from "./drawer";
 export * from "./menubar";
+export * from "./marker";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

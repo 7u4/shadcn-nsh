@@ -72,4 +72,5 @@ export const componentIds = [
   "textarea",
   "drawer",
   "menubar",
+  "marker",
 ] as const;

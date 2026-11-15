@@ -1102,6 +1102,19 @@
           "target": "components/ui/menubar.tsx"
         }
       ]
+    },
+    {
+      "name": "marker",
+      "type": "registry:ui",
+      "title": "Marker",
+      "description": "A line in a conversation that is not a message: a status, a note, or a labeled separator.",
+      "files": [
+        {
+          "path": "packages/ui/marker.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/marker.tsx"
+        }
+      ]
     }
   ]
 }

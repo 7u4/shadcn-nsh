@@ -218,6 +218,13 @@ export const components: ComponentDoc[] = [
     description: "A text link with underline motion, on the shared nav look.",
   },
   {
+    slug: "marker",
+    title: "Marker",
+    nshElement: "marker",
+    description:
+      "A line in a conversation that is not a message: a status, a note, a labeled separator.",
+  },
+  {
     slug: "menu",
     title: "Menu",
     nshElement: "menu",

@@ -78,6 +78,8 @@ Every page links its base element where `nsh/base` has one: behavior, keyboard s
 - /docs/components/breadcrumb: The trail from the app's root to the page it shows, its steps parted by a chevron. → styled on `nsh` View and Text (no base element)
 - /docs/components/aspect-ratio: A box as wide as its column, as tall as its ratio says. → styled on `nsh` View (no base element)
 
+- /docs/components/marker: One line in a conversation that is not a message: a status, a note, a labeled separator. → styled on `nsh` View and Text (no base element)
+
 ## Elsewhere
 
 - Base behavior and elements: https://nsh.dev/elements
