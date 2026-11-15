@@ -39,6 +39,12 @@ function App() {
               Please verify your billing information and try again.
             </AlertDescription>
           </Alert>
+          <Alert variant="destructive">
+            <Icon icon={AlertCircle} size={ALERT_ICON} tint={ui().danger} />
+            <AlertDescription>
+              The connection was lost before the reply finished. Check the network and try again.
+            </AlertDescription>
+          </Alert>
         </DemoSection>
 
         <DemoSection title="A note of the app's own" axis="block">

@@ -9,6 +9,8 @@ Fixed:
   in from the current `placement` too.
 - `Calendar` fits a width narrower than its days (seven 42-point cells on a phone): the days, and the
   month and year views, narrow with their columns instead of running past the calendar's edge.
+- `AlertDescription` has no row of its own, as shadcn's `col-start-2`: with no `AlertTitle` it sits
+  beside the icon instead of leaving the icon alone on the first line.
 
 ## 0.5.0 — themes at run time
 

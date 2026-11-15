@@ -69,6 +69,21 @@ variant down.
 </Alert>
 ```
 
+### A note and no title
+
+As shadcn's, the note has a column and no row of its own: with no title it sits beside the icon,
+and a long sentence wraps there. Put an error that needs more than one line in the note, not in
+the title, which keeps to one line.
+
+```tsx
+<Alert variant="destructive">
+  <Icon icon={AlertCircle} size={ALERT_ICON} tint={colors.danger} />
+  <AlertDescription>
+    The connection was lost before the reply finished. Check the network and try again.
+  </AlertDescription>
+</Alert>
+```
+
 ### A note of the app's own
 
 `AlertDescription` is a frame, not a sentence: a string is drawn in the note's type and ink, and

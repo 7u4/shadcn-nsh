@@ -56,6 +56,14 @@ function App() {
               </Text>
             </View>
           </Frame>
+          <Frame variant="destructive">
+            <Icon icon={AlertCircle} size={ALERT_ICON} tint={ui().danger} />
+            <View style={[alertLook().descriptionFrame()]}>
+              <Text style={[alertLook().descriptionText("destructive")]}>
+                The connection was lost before the reply finished. Check the network and try again.
+              </Text>
+            </View>
+          </Frame>
         </DemoSection>
 
         <DemoSection title="A note of the app's own" axis="block">
