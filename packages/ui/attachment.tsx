@@ -24,39 +24,17 @@ export type AttachmentOrientation = "horizontal" | "vertical";
  * draws inside it, faded until the attachment is done or idle. */
 export type AttachmentMediaVariant = "icon" | "image";
 
-/** The gaps and sizes of an attachment, by `size`. */
+/** The gaps and sizes of an attachment, by `size`. Its corners are not here: a theme is read where
+ * the frame is drawn (`corners`), never into a module's constant. */
 const sizes = {
-  default: {
-    gap: 8,
-    padX: 10,
-    padY: 8,
-    media: 40,
-    glyph: 16,
-    title: density.body,
-    radius: radius.card,
-    minWidth: 160,
-  },
-  sm: {
-    gap: 10,
-    padX: 8,
-    padY: 6,
-    media: 32,
-    glyph: 16,
-    title: density.note,
-    radius: radius.card,
-    minWidth: 0,
-  },
-  xs: {
-    gap: 6,
-    padX: 6,
-    padY: 4,
-    media: 28,
-    glyph: 14,
-    title: density.note,
-    radius: radius.inset,
-    minWidth: 0,
-  },
+  default: { gap: 8, padX: 10, padY: 8, media: 40, glyph: 16, title: density.body, minWidth: 160 },
+  sm: { gap: 10, padX: 8, padY: 6, media: 32, glyph: 16, title: density.note, minWidth: 0 },
+  xs: { gap: 6, padX: 6, padY: 4, media: 28, glyph: 14, title: density.note, minWidth: 0 },
 } as const;
+
+/** The frame's corners at a size: a card's, and the inset's at `xs`. Read where the frame is
+ * drawn — `radius` is the theme's. */
+const corners = (size: AttachmentSize): number => (size === "xs" ? radius.inset : radius.card);
 
 /** The width of a vertical attachment, and of the row that groups attachments. */
 const verticalWidth = 120;
@@ -139,7 +117,7 @@ export function attachmentLook(): AttachmentLook {
       minWidth: sizes[size].minWidth,
       maxWidth: "100%",
       minHeight: 0,
-      borderRadius: sizes[size].radius,
+      borderRadius: corners(size),
       borderCurve: "continuous",
       borderWidth: 1,
       borderStyle: state === "idle" ? "dashed" : "solid",
