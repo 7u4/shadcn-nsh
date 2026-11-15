@@ -49,10 +49,33 @@
       ]
     },
     {
+      "name": "theme-default",
+      "type": "registry:theme",
+      "title": "Theme: NSH Gallery UI",
+      "description": "The library's own theme (the build-time one) as one more theme, installed into themes/default/ (theme.json, finishes.json, index.ts) — what an app built on another theme switches back to with `selectTheme` while it runs.",
+      "files": [
+        {
+          "path": "packages/theme/themes/default/theme.json",
+          "type": "registry:file",
+          "target": "themes/default/theme.json"
+        },
+        {
+          "path": "packages/theme/themes/default/finishes.json",
+          "type": "registry:file",
+          "target": "themes/default/finishes.json"
+        },
+        {
+          "path": "packages/theme/themes/default/index.ts",
+          "type": "registry:lib",
+          "target": "themes/default/index.ts"
+        }
+      ]
+    },
+    {
       "name": "press",
       "type": "registry:lib",
       "title": "Press",
-      "description": "A press's feedback: the sink and its ease.",
+      "description": "A press's feedback: the theme's sink and its ease.",
       "files": [
         {
           "path": "packages/ui/lib/press.ts",

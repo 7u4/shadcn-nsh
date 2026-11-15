@@ -1,6 +1,6 @@
 // A slider: the look (`sliderLook` and its companions) and the `Slider` that wears it.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
-import { alpha, colors, finish } from "@shadcn-nsh/theme";
+import { alpha, colors, fillStyle, finish, insetEdge } from "@shadcn-nsh/theme";
 import type { JSX, TextStyle, ViewStyle } from "nsh";
 import { platform, split, Text } from "nsh";
 import { Slider as BaseSlider, type SliderProps as BaseSliderProps } from "nsh/base";
@@ -54,7 +54,7 @@ export function sliderLook(o: SliderLookOptions = {}) {
     get indicatorStyle(): ViewStyle {
       return {
         backgroundColor: colors.track,
-        boxShadow: `inset 0 0 0 1px ${finish.track.borderColor}, ${finish.track.boxShadow}`,
+        boxShadow: insetEdge(finish.track.borderColor, finish.track.boxShadow),
       };
     },
     rangeClass: "rounded-full",
@@ -72,13 +72,17 @@ export function sliderLook(o: SliderLookOptions = {}) {
  * A `Slider`'s fill (`rangeStyle`): the accent's run along the rail, a
  * little lighter at the top, edged a shade deeper. `from` and `to` are where
  * the fill starts and ends along the track, from 0 to 1 (unused: the run is
- * one color along its length, kept for the callers).
+ * one color along its length, kept for the callers). A theme may give the
+ * fill as a gradient, as one color under it, or as a color alone.
  */
 export function sliderFill(_from: number, _to: number, vertical = false): ViewStyle {
+  const fill = fillStyle();
   return {
-    backgroundImage: vertical
-      ? finish.fill.backgroundImage?.replace("180deg", "90deg")
-      : finish.fill.backgroundImage,
+    // A vertical rail turns the theme's gradient a quarter turn; a theme that gives one color has
+    // none to turn.
+    ...(vertical && fill.backgroundImage
+      ? { backgroundImage: fill.backgroundImage.replace("180deg", "90deg") }
+      : fill),
     borderWidth: 1,
     borderColor: finish.fill.borderColor,
   };

@@ -1,5 +1,13 @@
 // A small capsule label. From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
-import { colors, terminal, TERMINAL_ROW, toneColor, toneTint, type Tone } from "@shadcn-nsh/theme";
+import {
+  colors,
+  radius,
+  terminal,
+  TERMINAL_ROW,
+  toneColor,
+  toneTint,
+  type Tone,
+} from "@shadcn-nsh/theme";
 import { token, View, Text } from "nsh";
 
 // @port index.tsx
@@ -38,7 +46,7 @@ export function Badge(props: BadgeProps) {
       style={{
         paddingHorizontal: terminal ? 0 : 8,
         height: terminal ? TERMINAL_ROW : 20,
-        borderRadius: 10,
+        borderRadius: radius.inset,
         justifyContent: "center",
         backgroundColor: outline
           ? "transparent"

@@ -30,6 +30,7 @@
     "port:check": "bun scripts/port/check.ts",
     "port:review": "bun scripts/port/review.ts",
     "port:render": "bun scripts/port/render.ts",
+    "port:render:theme": "bun scripts/port/render-theme.ts",
     "port:render:touch": "bun scripts/port/render-touch.ts",
     "port:new": "bun scripts/port/new.ts",
     "port:bump": "bun scripts/port/bump.ts",

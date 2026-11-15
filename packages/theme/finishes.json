@@ -1,4 +1,7 @@
 {
+  "press": {
+    "scale": 0.97
+  },
   "dark": {
     "card": {
       "backgroundImage": "linear-gradient(180deg, oklch(0.25145 0.01219 264.328) 0%, oklch(0.25145 0.01219 264.328) 100%)",

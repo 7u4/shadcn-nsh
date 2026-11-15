@@ -12,6 +12,9 @@
  * - **themes at run time**: `init`, `add theme-shadcn`, then a page that lists the themes, stores
  *   the one chosen and calls `selectTheme`: one more theme must not change the app's build-time
  *   one, and what it imports must type check;
+ * - **the default theme as one more**: `init --theme shadcn`, `add theme-default`, then a page
+ *   that lists both and switches between them: the library's own theme installs into
+ *   `themes/default/` without touching the build-time one;
  * - **one at a time**: a fresh app per `registry:ui` item, `add <item>` and `nsh check`: an
  *   import no item delivers (a missing `registryDependencies` entry or lib file), or a file the
  *   transform points at the wrong place, shows up only when the item is installed alone.
@@ -453,6 +456,69 @@ mount(Page);
 `;
 
 /**
+ * The page an app built on another theme writes for the library's own: both are listed, each one
+ * selects itself, and the id stored at launch brings the same one back (a `null` id: the
+ * build-time theme).
+ */
+const TWO_THEMES_PAGE = `// Written by scripts/install-test.ts; this app is temporary.
+import { mount, Storage, Text, View } from "nsh";
+
+import { currentTheme, selectTheme, type AppTheme } from "./lib/theme";
+import { defaultTheme } from "./themes/default";
+import { shadcn } from "./themes/shadcn";
+
+const themes: AppTheme[] = [defaultTheme, shadcn];
+
+async function stored() {
+  const id = await Storage.getItem("theme");
+  selectTheme(themes.find((theme) => theme.id === id) ?? null);
+}
+
+function Page() {
+  return (
+    <View>
+      <Text>{currentTheme() ?? "build-time"}</Text>
+      {themes.map((theme) => (
+        <View onPress={() => selectTheme(theme)}>
+          <Text>{theme.label}</Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+stored();
+mount(Page);
+`;
+
+/**
+ * The library's own theme as one more, from the app's side: on an app built with shadcn's,
+ * `add theme-default` must leave the build-time theme alone, write `themes/default/`, and a page
+ * that lists both and switches between them must type check.
+ */
+async function installSecondTheme(template: string, dir: string, nsh: string) {
+  await copyApp(template, dir);
+  const before = await fs.readFile(path.join(dir, "theme.json"), "utf8");
+  await step("add theme-default", "bun", [cli, "add", "theme-default"], dir);
+  const after = await fs.readFile(path.join(dir, "theme.json"), "utf8");
+  if (after !== before) {
+    throw new StepFailure("theme", "      add theme-default rewrote the build-time theme.json");
+  }
+  const source = await fs.readFile(
+    path.join(repo, "packages/theme/themes/default/theme.json"),
+    "utf8",
+  );
+  const installed = await fs
+    .readFile(path.join(dir, "themes/default/theme.json"), "utf8")
+    .catch(() => null);
+  if (installed !== source) {
+    throw new StepFailure("theme", "      add theme-default wrote no themes/default/theme.json");
+  }
+  await fs.writeFile(path.join(dir, "Themes.tsx"), TWO_THEMES_PAGE);
+  await step("nsh check", nsh, ["check", "."], dir);
+}
+
+/**
  * One more theme, from the app's side: `add theme-shadcn` must leave the build-time `theme.json`
  * and `lib/finishes.json` as `init` wrote them, add `themes/shadcn/`, and the page that lists it
  * must type check.
@@ -712,6 +778,26 @@ async function main(): Promise<number> {
       }
       const label = "init, add theme-shadcn, nsh check";
       console.log(`  ✓ ${label} ${seconds(performance.now() - startedTheme)}\n`);
+    }
+
+    if (opts.filter == null) {
+      console.log("the default theme, on top of another build-time theme");
+      const startedSecond = performance.now();
+      try {
+        const secondTemplate = path.join(tmp, "template-shadcn-default");
+        await scaffold(secondTemplate, registry, nsh, "shadcn");
+        await installSecondTheme(secondTemplate, path.join(tmp, "second"), nsh);
+      } catch (thrown) {
+        const failure = failureOf(thrown);
+        console.error(`  ✗ ${failure.step} ${seconds(performance.now() - startedSecond)}`);
+        console.error(failure.detail);
+        console.error(
+          "\ninstall test: the library's own theme does not install beside shadcn's, or the page that switches does not type check",
+        );
+        return 1;
+      }
+      const label = "init --theme shadcn, add theme-default, nsh check";
+      console.log(`  ✓ ${label} ${seconds(performance.now() - startedSecond)}\n`);
     }
 
     const each = `each item in its own app (${items.length} item${items.length === 1 ? "" : "s"}`;

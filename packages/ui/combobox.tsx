@@ -138,7 +138,8 @@ export function ComboToggle(props: { open: boolean; id?: string }) {
         height: 24,
         alignItems: "center",
         justifyContent: "center",
-        borderRadius: 6,
+        // A step inside a control's corners (`radius-control`).
+        borderRadius: radius.control - 1,
       }}
       hoverStyle={{ backgroundColor: colors.track }}
     >

@@ -4,18 +4,18 @@
 
 Brand look for the copy-into-app layer: this library's own, started from the upstream gallery UI theme. **Every color is `oklch()`** — tokens, the stops of a gradient, the colors of a shadow — with alpha as `oklch(… / a)`. NSH reads `oklch()` wherever a color is a string (`references/nsh/website/docs/styling.md#colors`), so one file holds one form of color and a value reads as the lightness and the hue it is.
 
-| File             | Role                                                                      |
-| ---------------- | ------------------------------------------------------------------------- |
-| `theme.json`     | Colors, radii, cssVars                                                    |
-| `finishes.json`  | Surface finishes: gradients and shadows                                   |
-| `theme.ts`       | Readers: `colors`, `finish`, `focusRing`, `selectTheme`, …                |
-| `themes/<name>/` | Other themes, one `AppTheme` each; `themes/shadcn/` is shadcn's `neutral` |
+| File             | Role                                                                                                               |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `theme.json`     | Colors, radii, cssVars                                                                                             |
+| `finishes.json`  | Surface finishes: gradients, shadows, and how far a press sinks                                                    |
+| `theme.ts`       | Readers: `colors`, `finish`, `focusRing`, `selectTheme`, `fillStyle`, …                                            |
+| `themes/<name>/` | Other themes, one `AppTheme` each: `shadcn/` (shadcn's `neutral`), and `default/` (this one, to install beside it) |
 
 Consumed by [`@shadcn-nsh/ui`](../ui) and shipped as registry item `theme` (the app's build-time theme), and as `theme-<name>` for the others. After edits: `bun scripts/theme/to-oklch.ts` (keeps every color of the two files canonical), then `bun run registry:build` and commit `public/r`.
 
 The two files are this library's own (`"owned"` in [`port-map.json`](../../port-map.json)): `port:vendor` no longer refills them and `port:check` does not compare them with upstream, so they are edited here like any other source ([`docs/port.md`](../../docs/port.md#主题文件)). The look still follows the upstream gallery UI theme; what changed is who owns the data.
 
-`themes/<name>/{theme,finishes}.json` are generated — `bun scripts/theme/generate-shadcn.ts` — from shadcn's own `oklch()` palette, never edited by hand; the `index.ts` beside them is written once, by hand, and names the theme. `bun scripts/theme/to-oklch.ts` converts and normalizes the default files the same way, and all of them are idempotent: the form is the file's own.
+`themes/shadcn/{theme,finishes}.json` are generated — `bun scripts/theme/generate-shadcn.ts` — from shadcn's own `oklch()` palette, never edited by hand; the `index.ts` beside them is written once, by hand, and names the theme. `themes/default/` is the exception: its two JSON files are copies of the two at the top (byte for byte, held by `scripts/theme/themes.test.ts`), because the build-time theme is installable as one more theme and a registry item ships files, not a path into this package. `bun scripts/theme/to-oklch.ts` converts and normalizes the default files the same way, and all of them are idempotent: the form is the file's own.
 
 Values are written at a fixed precision (L and C five decimals, H three, alpha three), which is what makes the conversion lossless: every sRGB color lands back on its own 8-bit channels, so storing the theme as `oklch()` moves no pixel.
 
@@ -33,7 +33,7 @@ export const shadcn: AppTheme = {
 };
 ```
 
-`selectTheme(theme)` switches the running app to it: the tokens first (`nsh`'s `setTheme`, so colors, radii, the focus ring and `nsh/base` follow), then the finishes — gradients and shadows, which no token holds, read through `finish`'s getters. Every component on screen redraws with both on the next frame, and the appearance (light / dark / system) stays the app's: it applies to whichever theme is in use. `selectTheme(null)` goes back to the build-time theme. A theme `setTheme` refuses (a color NSH does not know) throws `TypeError` and leaves both as they were.
+`selectTheme(theme)` switches the running app to it: the tokens first (`nsh`'s `setTheme`, so colors, radii, the focus ring and `nsh/base` follow), then the finishes — gradients and shadows, which no token holds, read through `finish`'s getters, and `press.scale`, which says how far a pressed control sinks (`1`: not at all, as shadcn draws it). Every component on screen redraws with both on the next frame, and the appearance (light / dark / system) stays the app's: it applies to whichever theme is in use. `selectTheme(null)` goes back to the build-time theme. A theme `setTheme` refuses (a color NSH does not know) throws `TypeError` and leaves both as they were.
 
 `currentTheme()` is the `id` in use, and `null` while the app is on its build-time theme — the runtime cannot read `nsh-ui.json`. Reading it subscribes, so a list can mark the current row.
 
@@ -63,10 +63,12 @@ export async function chooseTheme(theme: AppTheme | null) {
 }
 ```
 
+**This library's own theme is one of them.** An app built on another theme — `init --theme shadcn` — can install the build-time one beside it with `shadcn-nsh add theme-default`: `themes/default/` holds the same `theme.json` and `finishes.json` the app would have been built with, and an `index.ts` exporting `defaultTheme`. Listing both is then all it takes to switch back and forth; `selectTheme(null)` still means "the theme this app was built with", whichever one that is.
+
 Rules: [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md). Toolchain / baseline: [`docs/toolchain.md`](../../docs/toolchain.md).
 
 ```sh
 bun run test:unit   # the oklch round trip, the theme contract among other unit tests
 ```
 
-Replace `theme.json` + `finishes.json` together to rebrand; keep the keys the upstream theme declares so finishes resolve. To add a theme to the app's list, copy a `themes/<name>/` directory into this package as it is (its two JSON files and the `index.ts` that names it) and add a `theme-<name>` item to `registry.json`.
+Replace `theme.json` + `finishes.json` together to rebrand; keep the keys the upstream theme declares so finishes resolve. To add a theme to the app's list, copy a `themes/<name>/` directory into this package as it is (its two JSON files and the `index.ts` that names it) and add a `theme-<name>` item to `registry.json` — `theme-default` is that item for `themes/default/`.

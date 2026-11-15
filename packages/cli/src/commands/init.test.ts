@@ -14,7 +14,9 @@ const neutralTheme = source("packages/theme/themes/shadcn/theme.json");
 const neutralFinishes = source("packages/theme/themes/shadcn/finishes.json");
 
 const fixture = (): Fixture =>
-  makeFixture({ items: ["theme", "theme-shadcn", "press", "spinner", "button", "label-of"] });
+  makeFixture({
+    items: ["theme", "theme-default", "theme-shadcn", "press", "spinner", "button", "label-of"],
+  });
 
 let current: Fixture | null = null;
 
@@ -186,6 +188,25 @@ describe("the app's theme", () => {
       runAdd(["theme-shadcn"], { cwd: current!.app, registry: current!.url }),
     );
     expect(again.lines).toContain("skip themes/shadcn/theme.json (identical)");
+  });
+
+  test("add theme-default installs the library's own theme as one more theme", async () => {
+    // An app built on another theme: the one it was built with is not on disk as a theme yet.
+    current = await neutral();
+    const before = current.read("theme.json");
+
+    const out = await captured(() =>
+      runAdd(["theme-default"], { cwd: current!.app, registry: current!.url }),
+    );
+
+    expect(out.lines).toContain("write themes/default/index.ts");
+    expect(current.read("themes/default/theme.json")).toBe(defaultTheme);
+    expect(current.read("themes/default/finishes.json")).toBe(defaultFinishes);
+    // The roles module it imports is the app's, two directories up from `themes/default/`.
+    expect(current.read("themes/default/index.ts")).toContain('from "../../lib/theme"');
+    // The build-time theme is the app's, and adding one more does not touch it.
+    expect(current.read("theme.json")).toBe(before);
+    expect(recordedTheme(current)).toBe("theme-shadcn");
   });
 
   test("add theme in a default app keeps the app's own colors", async () => {

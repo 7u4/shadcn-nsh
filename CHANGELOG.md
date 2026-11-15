@@ -2,6 +2,34 @@
 
 ## Unreleased
 
+What the shadcn theme still had to work around, worked around in the library instead, so a theme
+says what it draws and nothing more.
+
+- **A press sinks as far as the theme says.** `finishes.json` gains a top-level `press.scale`
+  (`0.97` here; `1` draws no press at all). `pressSink` reads it when a control is pressed, so
+  `selectTheme` turns every sink off and back on — a flat theme's buttons now change color on
+  press and nothing else.
+- **A fill can be one color.** `finish.fill` is readable as `backgroundColor` as well as
+  `backgroundImage`; `slider` and `progress` draw the theme's gradient where it gives one and its
+  color alone where it does not. `themes/shadcn/finishes.json`'s runs and bars are a single color
+  now, not a two-stop gradient of it.
+- **A rail's edge no longer depends on the theme's shade.** `insetEdge()` joins a rail's 1-point
+  line to its `boxShadow`, skipping either where the theme gives none; shadcn's `track` says
+  `boxShadow: none` instead of `inset 0 0 0 1px transparent`.
+- **Corners come from the theme.** A dialog takes the new `radius-popover` token (16 here, 14 in
+  shadcn); the toolbar, badge, plot tooltip, popup surface, toast's close button, a tab's count and
+  a combobox's toggle take `radius.inset` / `radius.card` / `radius.control`. The build-time theme
+  draws the same pixels as before.
+- **This library's own theme installs as one more theme.** `add theme-default` writes
+  `themes/default/{theme.json,finishes.json,index.ts}`, the `AppTheme` exported as `defaultTheme`:
+  an app built with `init --theme shadcn` lists both and switches between them. The `theme` item
+  (the build-time theme) and `init --theme default` are unchanged, and no old id is aliased.
+- `bun run port:render:theme` is the shadcn theme's render check: every demo and its reference
+  page drawn with `selectTheme(shadcn)`, compared pair by pair, 112 of 112 identical, and not part
+  of the committed baseline. `port:sheet` shows the pictures as two more columns.
+- `scripts/theme/generate-shadcn.ts` may leave a finish role's keys out (the default file's order
+  first), which is how this theme's `fill` is one color and its `track` has no shade.
+
 Fixed:
 
 - `PopoverContent` and `HoverCardContent` follow a `placement`, and `SheetContent` a `side`, that
