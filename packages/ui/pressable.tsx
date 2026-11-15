@@ -1,7 +1,7 @@
 // A pressable: a region that owns its look and gets only the feedback of a press — the sink, the
 // pointer's hover and the keyboard's ring. This library's own: nothing here comes from upstream,
 // so there is no port region. Yours to change.
-import { focusRing, hovered, radius } from "@shadcn-nsh/theme";
+import { colors, focusRing, hovered, radius } from "@shadcn-nsh/theme";
 import type { JSX, ViewStyle } from "nsh";
 import { split, Text } from "nsh";
 import { Button as BaseButton, type ButtonProps as BaseButtonProps } from "nsh/base";
@@ -61,7 +61,7 @@ export function pressableLook(o?: PressableLookOptions) {
  * A pressable region in the feedback of `pressableLook`: a whole row, a picture, a paragraph —
  * `nsh/base`'s Button, which owns presses, the disabled state and the role, with nothing drawn
  * on it. Every base prop passes through (`role`, `selected`, `hitSlop`, `onPress`…); the style
- * props go over the look's. A string child is plain text and, unless `accessibilityLabel` says
+ * props go over the look's. A string child is text in the theme's text color and, unless `accessibilityLabel` says
  * otherwise, the region's name for screen readers; children drawn as given derive no name, so an
  * icon alone needs one.
  */
@@ -89,7 +89,11 @@ export function Pressable(props: PressableProps) {
       activeStyle={[look.activeStyle ?? null, props.activeStyle ?? null]}
       focusVisibleStyle={[look.focusVisibleStyle, props.focusVisibleStyle ?? null]}
     >
-      {typeof props.children === "string" ? <Text>{props.children}</Text> : props.children}
+      {typeof props.children === "string" ? (
+        <Text style={{ color: colors.text }}>{props.children}</Text>
+      ) : (
+        props.children
+      )}
     </BaseButton>
   );
 }

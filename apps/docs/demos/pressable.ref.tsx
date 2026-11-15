@@ -1,3 +1,4 @@
+import { colors } from "@shadcn-nsh/theme";
 // The reference of `pressable.tsx`: the same scene as upstream would write it, `pressableLook`
 // spread on `nsh/base`'s Button. The render check requires the two to draw the same pixels.
 import { Bell } from "lucide";
@@ -96,7 +97,7 @@ function App() {
 
           {/* A stretch of text: a string child is the region's name for screen readers too. */}
           <Button onPress={() => press("The paragraph")} {...pressableLook()}>
-            <Text>
+            <Text style={{ color: colors.text }}>
               A region can be a paragraph of its own: the text keeps the page's type, and the
               pressable adds only what a press looks like.
             </Text>
