@@ -88,6 +88,7 @@ export * from "./pressable";
 export * from "./separator";
 export * from "./skeleton";
 export * from "./kbd";
+export * from "./label";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

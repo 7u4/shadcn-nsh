@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Toggle",
   "description": "A two-state button, bare or outlined, with a label or an icon.",
-  "registryDependencies": ["label", "press", "theme"],
+  "registryDependencies": ["label-of", "press", "theme"],
   "files": [
     {
       "path": "packages/ui/toggle.tsx",

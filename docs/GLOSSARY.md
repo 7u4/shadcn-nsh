@@ -63,6 +63,14 @@ _Avoid_: shadcn registry id（`dropdown-menu`）
 轴名与取值都用 shadcn 的（[`specs/api-unify.md`](specs/api-unify.md) §4）。`variant` 取 `default` / `secondary` / `outline` / `ghost` / `destructive`；每个组件只收其中一个**子集**，子集写在自己的文档页 API 一节（`Button` 暂无 `outline` / `link` 的 look）。`size` 只表示**刻度**：`sm` / `default` / `lg`，图标按钮另有 `icon*`；精确像素叫 `side` / `width` / `height`，不叫 `size`。按钮之外的取值也照 shadcn：`legend` / `label`（`FieldLegend`）与 `muted` / `icon` / `image`（`Item`、`ItemMedia`）。本库特有的变体值只有两个，各自写在组件页上：`line`（`TabsList` 的下划线轨道）与 `tile`（`Radio` 的卡片式）。`kind` 不再出现。每个导出的 `*Variant` / `*Size` 联合由 `packages/cli/src/api-vocabulary.test.ts` 固定，加一个值要同时改它。
 _Avoid_: `kind`, `primary` / `accent` / `danger`, `small` / `regular` / `large`, 把像素尺寸叫 `size`
 
+**Label**:
+`Label`（`packages/ui/label.tsx`）：控件旁**可见**的名字，一段文字，不参与无障碍。nsh 没有 `htmlFor` / `labelledBy`，所以它不给旁边的控件命名——控件的名字是它自己的 `accessibilityLabel`。
+_Avoid_: 用它给控件命名、把它当成 `labelOf`
+
+**Accessible Name（无障碍名）**:
+屏幕阅读器念出的控件名字。`lib/label.ts` 的 `labelOf(调用方的 accessibilityLabel, children)` 是外壳共享的一条规则：调用方给了就用它，否则用字符串 child；与可见的 `Label` 是两件事，只是词碰巧同形。
+_Avoid_: 把 `Label` 组件当作无障碍名、在每个外壳里重写一遍这条规则
+
 **Behavior Authority**:
 控件行为、a11y 与可转发能力以 `nsh/base` 为准；外壳透传 base 的全部 props。
 _Avoid_: 重写行为, 缩减 props

@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Button",
   "description": "A button, an icon button, a round button, and a split button.",
-  "registryDependencies": ["label", "press", "spinner", "theme"],
+  "registryDependencies": ["label-of", "press", "spinner", "theme"],
   "files": [
     {
       "path": "packages/ui/button.tsx",

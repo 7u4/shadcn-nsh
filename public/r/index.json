@@ -62,7 +62,7 @@
       ]
     },
     {
-      "name": "label",
+      "name": "label-of",
       "type": "registry:lib",
       "title": "Label",
       "description": "The name screen readers say of a control whose content is a text label.",
@@ -947,6 +947,19 @@
           "path": "packages/ui/kbd.tsx",
           "type": "registry:ui",
           "target": "components/ui/kbd.tsx"
+        }
+      ]
+    },
+    {
+      "name": "label",
+      "type": "registry:ui",
+      "title": "Label",
+      "description": "The visible name of a control: a row whose text is the control labels’ own type.",
+      "files": [
+        {
+          "path": "packages/ui/label.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/label.tsx"
         }
       ]
     }

@@ -3,7 +3,7 @@
   "type": "registry:ui",
   "title": "Link",
   "description": "A text link with underline motion, on the shared nav look.",
-  "registryDependencies": ["icons", "label", "theme"],
+  "registryDependencies": ["icons", "label-of", "theme"],
   "files": [
     {
       "path": "packages/ui/link.tsx",
