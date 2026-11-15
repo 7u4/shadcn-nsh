@@ -211,20 +211,20 @@ export function SheetClose(props: SheetCloseProps) {
 export function SheetContent(props: SheetContentProps) {
   const ctx = useSheet();
   const [, rest] = split(props, ["side", "children", "popupStyle", "backdropStyle"]);
-  const side = props.side ?? "bottom";
+  const side = () => props.side ?? "bottom";
   return (
     <BaseSheet
       {...rest}
-      side={side}
+      side={side()}
       open={ctx.open()}
       onOpenChange={({ open, reason }) => ctx.setOpen(open, reason)}
       onOpen={ctx.onOpen}
       onClose={ctx.onClose}
       onCancel={ctx.onCancel}
       backdropStyle={[backdrop(), props.backdropStyle ?? null]}
-      popupStyle={[sheetPanel(side), props.popupStyle ?? null]}
+      popupStyle={[sheetPanel(side()), props.popupStyle ?? null]}
     >
-      {side === "bottom" ? <View style={sheetGrabber()} /> : null}
+      {side() === "bottom" ? <View style={sheetGrabber()} /> : null}
       {props.children}
     </BaseSheet>
   );

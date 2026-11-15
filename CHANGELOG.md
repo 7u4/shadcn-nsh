@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+Fixed:
+
+- `PopoverContent` and `HoverCardContent` follow a `placement`, and `SheetContent` a `side`, that
+  changes after mount; each read it once and kept the first value. `MenuContent`'s entrance now comes
+  in from the current `placement` too.
+
 ## 0.5.0 — themes at run time
 
 An app can carry more than one theme and switch between them while it runs, without a relaunch;

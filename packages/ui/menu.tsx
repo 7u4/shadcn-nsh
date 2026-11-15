@@ -419,8 +419,11 @@ export function MenuContent(props: MenuContentProps) {
     "align",
     "offset",
   ]);
-  const side = (props.placement ?? "bottom") as PopupSide;
-  const chrome = menuPopup({ side });
+  const chrome = menuPopup({
+    get side() {
+      return (props.placement ?? "bottom") as PopupSide;
+    },
+  });
   return (
     <BaseMenu
       {...rest}
