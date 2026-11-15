@@ -50,6 +50,10 @@ jobs:
       - name: Port check
         run: bun run port:check
 
+      # What apps install: public/r must be what registry.json builds.
+      - name: Registry check
+        run: bun run registry:build --check
+
       - name: Type check the demos
         run: nsh check apps/docs/demos
 
