@@ -9,6 +9,9 @@
  * - **the neutral theme**: `init --theme shadcn`, `add --all`, `nsh check`, then `add …
  *   --overwrite`: the theme the app installed must still be the theme it has, and must be the
  *   one in `packages/theme/themes/shadcn/theme.json`;
+ * - **themes at run time**: `init`, `add theme-shadcn`, then a page that lists the themes, stores
+ *   the one chosen and calls `selectTheme`: one more theme must not change the app's build-time
+ *   one, and what it imports must type check;
  * - **one at a time**: a fresh app per `registry:ui` item, `add <item>` and `nsh check`: an
  *   import no item delivers (a missing `registryDependencies` entry or lib file), or a file the
  *   transform points at the wrong place, shows up only when the item is installed alone.
@@ -417,6 +420,71 @@ async function installNeutralTheme(template: string, dir: string, items: Item[],
   }
 }
 
+/**
+ * The page the docs describe: the app lists the themes it installed, stores the id of the one
+ * chosen, and calls `selectTheme` with what it finds there at launch (`null`: the build-time one).
+ */
+const THEMES_PAGE = `// Written by scripts/install-test.ts; this app is temporary.
+import { mount, Storage, Text, View } from "nsh";
+
+import { currentTheme, selectTheme } from "./lib/theme";
+import { shadcn } from "./themes/shadcn";
+
+const themes = [shadcn];
+
+async function stored() {
+  const id = await Storage.getItem("theme");
+  selectTheme(themes.find((theme) => theme.id === id) ?? null);
+}
+
+function Page() {
+  return (
+    <View>
+      <Text>{currentTheme() ?? "build-time"}</Text>
+      <View onPress={() => selectTheme(shadcn)}>
+        <Text>shadcn</Text>
+      </View>
+    </View>
+  );
+}
+
+stored();
+mount(Page);
+`;
+
+/**
+ * One more theme, from the app's side: `add theme-shadcn` must leave the build-time `theme.json`
+ * and `lib/finishes.json` as `init` wrote them, add `themes/shadcn/`, and the page that lists it
+ * must type check.
+ */
+async function installAnotherTheme(template: string, dir: string, nsh: string) {
+  await copyApp(template, dir);
+  const before = await fs.readFile(path.join(dir, "theme.json"), "utf8");
+  const finishes = await fs.readFile(path.join(dir, "lib/finishes.json"), "utf8");
+  await step("add theme-shadcn", "bun", [cli, "add", "theme-shadcn"], dir);
+  for (const [name, want] of [
+    ["theme.json", before],
+    ["lib/finishes.json", finishes],
+  ] as const) {
+    const now = await fs.readFile(path.join(dir, name), "utf8");
+    if (now !== want) {
+      throw new StepFailure("theme", `      add theme-shadcn rewrote the build-time ${name}`);
+    }
+  }
+  const source = await fs.readFile(
+    path.join(repo, "packages/theme/themes/shadcn/theme.json"),
+    "utf8",
+  );
+  const installed = await fs
+    .readFile(path.join(dir, "themes/shadcn/theme.json"), "utf8")
+    .catch(() => null);
+  if (installed !== source) {
+    throw new StepFailure("theme", "      add theme-shadcn wrote no themes/shadcn/theme.json");
+  }
+  await fs.writeFile(path.join(dir, "Themes.tsx"), THEMES_PAGE);
+  await step("nsh check", nsh, ["check", "."], dir);
+}
+
 async function installOneItem(template: string, dir: string, item: Item, nsh: string) {
   await copyApp(template, dir);
   // `nsh check` below fails when the item imports a package `add` did not install (`lucide`).
@@ -624,6 +692,26 @@ async function main(): Promise<number> {
       }
       const label = "init --theme shadcn, add --all, nsh check, add --overwrite keeps it";
       console.log(`  ✓ ${label} ${seconds(performance.now() - startedNeutral)}\n`);
+    }
+
+    if (opts.filter == null) {
+      console.log("one more theme, at run time");
+      const startedTheme = performance.now();
+      try {
+        const themeTemplate = path.join(tmp, "template-default");
+        await scaffold(themeTemplate, registry, nsh);
+        await installAnotherTheme(themeTemplate, path.join(tmp, "themes"), nsh);
+      } catch (thrown) {
+        const failure = failureOf(thrown);
+        console.error(`  ✗ ${failure.step} ${seconds(performance.now() - startedTheme)}`);
+        console.error(failure.detail);
+        console.error(
+          "\ninstall test: a second theme is not installed beside the build-time one, or the page that switches does not type check",
+        );
+        return 1;
+      }
+      const label = "init, add theme-shadcn, nsh check";
+      console.log(`  ✓ ${label} ${seconds(performance.now() - startedTheme)}\n`);
     }
 
     const each = `each item in its own app (${items.length} item${items.length === 1 ? "" : "s"}`;

@@ -26,7 +26,8 @@ bunx shadcn-nsh@latest add button
 每个命令都接受 `-c, --cwd <dir>`（默认：当前目录）。`init`、`add`、`list`、`view`、`diff`
 另接受 `--registry <url>`（含 `{name}` 的模板）；省略时 `add`、`list`、`view`、`diff` 用
 `nsh-ui.json` 里的，`init` 用公共 registry。`init` 还接受 `--overwrite`、`-y`（接受，当前不弹确认）与 `--theme <name>`：
-`default`（本库自己的主题）或 `shadcn`（shadcn 的 neutral 配色与平面 finish）。
+`default`（本库自己的主题）或 `shadcn`（shadcn 的 neutral 配色与平面 finish）—— 这是应用**构建时**的主题：
+`theme.json`、`lib/finishes.json`，以及 `nsh.json` 指向的那份。
 
 ## add
 
@@ -43,10 +44,10 @@ shadcn-nsh add button --overwrite
 - `theme.json` 按 key 合并：应用保留自己的颜色，补上缺的 token；改过颜色的主题原样保留
   （`kept theme.json (the app's colors stay)`）。
 - `--all`（`-a`）加全部 `registry:ui` 条目（含依赖）。
-- 点名一个主题（`add theme-shadcn`，`add theme` 是换回默认）就是换主题：文件写到应用里，
-  `nsh-ui.json` 的 `theme` 记下新的那个。点名应用已有的主题只是普通的 `add`：不加 `--overwrite`
-  就保留应用的配色。
-- 此后 `theme` 这个依赖按应用的主题解析，所以 `add button`、`add button --overwrite`、
+- 点名一个主题（`add theme-shadcn`）就是**多装一套**：它的文件落在 `themes/<name>/`，应用运行时可以切过去
+  （`selectTheme`，见 [`packages/theme/README.zh.md`](../theme/README.zh.md#一套以上主题)）。它不动应用的构建时主题，
+  `nsh-ui.json` 也保持原样。要让某套成为构建时主题，用 `init --theme <name> --overwrite`。
+- `theme` 这个依赖仍按 `nsh-ui.json` 里的条目解析，所以 `add button`、`add button --overwrite`、
   `add --all --overwrite` 都不会把默认主题写回来。
 - `--dry-run` 用 `would write …` / `would overwrite …` 打印同样的行，一个字节都不写——
   包括 `init` 会先写的 `nsh-ui.json` 与主题。
@@ -93,8 +94,9 @@ shadcn-nsh diff || echo "run shadcn-nsh add <item> --overwrite"
 }
 ```
 
-`theme` 是应用装的 `registry:theme` 条目（`theme`，或 `theme-shadcn`）；文件里没有它就是
-`theme`。
+`theme` 是应用**构建时**主题来自的 `registry:theme` 条目（`theme`，或 `init --theme shadcn` 之后的
+`theme-shadcn`）；文件里没有它就是 `theme`。之后加的主题（`add theme-shadcn`）不改这里：它在
+`themes/shadcn/`，由应用自己列出来。
 
 monorepo（`apps/*` + `packages/ui`）里它位于 `packages/ui`，`add -c apps/web` 装到那里。
 

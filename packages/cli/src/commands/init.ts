@@ -3,12 +3,59 @@ import path from "node:path";
 
 import { Command } from "commander";
 
-import { DEFAULT_CONFIG, themeItem, type NshUiConfig } from "../types";
+import {
+  DEFAULT_CONFIG,
+  DEFAULT_THEME,
+  themeItem,
+  type NshUiConfig,
+  type RegistryItem,
+} from "../types";
 import { findNshJson, readJson, writeConfig, writeJson } from "../utils/config";
 import { installDependencies } from "../utils/deps";
 import { installItems } from "../utils/install";
 import { resolveTree } from "../utils/registry";
 import { resolveWorkspace, themePathForApp } from "../utils/workspace";
+
+/** `theme.json` and `finishes.json`: the two data files a theme is. */
+const THEME_DATA = new Set(["theme.json", "finishes.json"]);
+
+/** A theme item's look without its data: the roles module (`lib/theme.ts`), which every app has once. */
+function rolesOnly(item: RegistryItem): RegistryItem {
+  return {
+    ...item,
+    files: item.files.filter((file) => !THEME_DATA.has(path.posix.basename(file.path))),
+  };
+}
+
+/** A theme item's data at the app's build-time paths: `theme.json`, and `finishes.json` in the lib alias. */
+function atBuildTime(item: RegistryItem, config: NshUiConfig): RegistryItem {
+  const lib = config.aliases.lib.replace(/^\.\//, "");
+  return {
+    ...item,
+    files: item.files.flatMap((file) => {
+      const name = path.posix.basename(file.path);
+      if (name === "theme.json") return [{ ...file, target: "theme.json" }];
+      if (name === "finishes.json") return [{ ...file, target: path.posix.join(lib, name) }];
+      return [];
+    }),
+  };
+}
+
+/**
+ * What `init` installs for its theme: the app's build-time theme (the default theme item's three
+ * files) or, for another theme, the roles module (`lib/theme.ts`, from the default theme item), that
+ * theme in `themes/<name>/` for `selectTheme` to switch to, and its data at the build-time paths
+ * `nsh.json` points at. `--overwrite` is what replaces colors the app has already changed.
+ */
+async function themeItems(config: NshUiConfig, registry?: string): Promise<RegistryItem[]> {
+  const chosen = await resolveTree(config, [config.theme], registry);
+  if (config.theme === DEFAULT_THEME) return chosen;
+
+  const theme = chosen.at(-1);
+  if (theme == null) throw new Error(`The registry has no item ${config.theme}.`);
+  const base = await resolveTree(config, [DEFAULT_THEME], registry);
+  return [...base.map(rolesOnly), ...chosen, atBuildTime(theme, config)];
+}
 
 export async function runInit(opts: {
   cwd: string;
@@ -41,7 +88,7 @@ export async function runInit(opts: {
   await writeConfig(ws.uiRoot, config);
   console.log(`write ${path.relative(cwd, path.join(ws.uiRoot, "nsh-ui.json")) || "nsh-ui.json"}`);
 
-  const items = await resolveTree(config, [config.theme], opts.registry);
+  const items = await themeItems(config, opts.registry);
   await installItems(ws.uiRoot, config, items, { overwrite: opts.overwrite });
   await installDependencies(ws.uiRoot, items);
 
