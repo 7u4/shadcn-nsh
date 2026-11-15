@@ -1,5 +1,28 @@
 # Changelog
 
+## Unreleased — themes at run time
+
+An app can carry more than one theme and switch between them while it runs, without a relaunch;
+the appearance (light / dark / system) stays the app's own and applies to whichever theme is in use.
+
+- `@shadcn-nsh/theme` exports `AppTheme` (`{ id, label, theme, finishes }`), `selectTheme(theme)`
+  and `currentTheme()`. `selectTheme` sets the tokens first (`nsh`'s `setTheme`), then the finishes,
+  which are now read through a signal instead of the module's import, so every component on screen
+  redraws with both on the next frame. `selectTheme(null)` goes back to the build-time theme; a
+  theme `setTheme` refuses throws `TypeError` and leaves the app as it was. `packages/theme/README.md`
+  has the list-and-persist example.
+- `theme-shadcn` now installs **one more theme**: `themes/shadcn/{theme.json,finishes.json,index.ts}`,
+  the last exporting the `AppTheme` the app lists. It no longer replaces the build-time `theme.json`
+  and `lib/finishes.json`. `init --theme shadcn` still makes shadcn the build-time theme (and writes
+  `themes/shadcn/` beside it).
+
+**To migrate**: an app that switched themes with `add theme-shadcn` now gets a second theme instead.
+To make one the theme the app is built with, re-run `init --theme shadcn --overwrite` (the same
+semantics as 0.4.0, colours the app changed included); to keep switching at run time, list
+`themes/shadcn/index.ts` and call `selectTheme`, as `packages/theme/README.md` shows. Nothing needs
+deleting: an app installed before this release keeps its files as they are, and gains
+`themes/shadcn/` the next time it takes the item.
+
 ## 0.4.1
 
 Fixed:

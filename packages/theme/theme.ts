@@ -1,6 +1,6 @@
 // The theme's roles, finishes, radii, focus and motion, read from `theme.json` and `finishes.json`.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
-import type { AnimatedValue, Tokens, ViewStyle } from "nsh";
+import type { AnimatedValue, Theme, Tokens, ViewStyle } from "nsh";
 import {
   colorScheme,
   createAnimatedValue,
@@ -8,6 +8,8 @@ import {
   effect,
   platform,
   reduceMotion,
+  setTheme,
+  signal,
   token,
 } from "nsh";
 
@@ -42,17 +44,83 @@ export const wholeRows = (points: number) =>
 /** Whether the shared example UI shows its dark palette (reactive: reading it subscribes). */
 export const isDark = () => colorScheme() !== "light";
 
+/** A surface's finish: a gradient over its color and its shadows. */
+export interface Finish {
+  backgroundColor?: string;
+  backgroundImage?: string;
+  boxShadow: string;
+  borderColor?: string;
+  backdropFilter?: string;
+}
+
+/** The finishes' roles: the keys of `finishes.json`'s two appearances. */
+export type FinishRole =
+  | "card"
+  | "inset"
+  | "field"
+  | "raised"
+  | "hover"
+  | "pressed"
+  | "light"
+  | "accent"
+  | "track"
+  | "fill"
+  | "knob"
+  | "knobOn"
+  | "pill"
+  | "thumb"
+  | "on"
+  | "chip"
+  | "glass"
+  | "menu"
+  | "groove";
+
+/** What a theme's `finishes.json` holds: its finishes, one set per appearance. */
+export interface Finishes {
+  dark: Record<FinishRole, Finish>;
+  light: Record<FinishRole, Finish>;
+}
+
 /**
- * An object with `dark`'s keys whose getters read `dark` or `light` by the
- * appearance shown, for the finishes below: shadows and gradients are no
- * design tokens, so they stay here while every color is the theme's.
+ * One theme an app can switch to while it runs (`selectTheme`): the id an
+ * app stores to bring it back, the name a list of them shows, and the
+ * content of the two files a theme is.
  */
-function themed<T extends object>(dark: T, light: T): T {
-  const out = {} as T;
-  for (const key of Object.keys(dark) as (keyof T)[]) {
+export interface AppTheme {
+  /** The id an app stores and compares: `"shadcn"`. */
+  id: string;
+  /** The name a list of themes shows: `"shadcn neutral"`. */
+  label: string;
+  /** `theme.json`'s content: the tokens `setTheme` takes. */
+  theme: Theme;
+  /** `finishes.json`'s content. */
+  finishes: Finishes;
+}
+
+/** The build-time finishes: `finishes.json` beside this file (the app's `nsh-ui.json` names the theme they belong to). */
+const builtIn: Finishes = finishes;
+
+/** The theme `selectTheme` put in; `null` while the app shows its build-time one. */
+const selected = signal<AppTheme | null>(null);
+
+/** The finishes in use: the selected theme's, else the build-time ones. Reactive: reading it subscribes. */
+const finishesOf = (): Finishes => selected()?.finishes ?? builtIn;
+
+/**
+ * An object whose getters read one finish role of the finishes in use, in
+ * the appearance shown: shadows and gradients are no design tokens, so they
+ * stay here while every color is the theme's. Reading one subscribes to the
+ * appearance and to the theme `selectTheme` put in.
+ */
+function themed(role: FinishRole): Finish {
+  const out = {} as Finish;
+  for (const key of Object.keys(builtIn.dark[role]) as (keyof Finish)[]) {
     Object.defineProperty(out, key, {
       enumerable: true,
-      get: () => (isDark() ? dark : light)[key],
+      get: () => {
+        const finishes = finishesOf();
+        return (isDark() ? finishes.dark : finishes.light)[role][key];
+      },
     });
   }
   return out;
@@ -200,15 +268,6 @@ export const tints = tokens({
   down: "down-tint",
 });
 
-/** A surface's finish: a gradient over its color and its shadows. */
-export interface Finish {
-  backgroundColor?: string;
-  backgroundImage?: string;
-  boxShadow: string;
-  borderColor?: string;
-  backdropFilter?: string;
-}
-
 /**
  * Light and depth, kept quiet: one-color edges (corners join cleanly), a
  * hard 1-point drop under what stands up and a 1-point inner shade in what
@@ -227,30 +286,52 @@ export interface Finish {
  * neutral with an edge. `groove` is a hairline's lip of light under it, a
  * menu's separator cut into the surface.
  */
-export const finish = themed<
-  Record<
-    | "card"
-    | "inset"
-    | "field"
-    | "raised"
-    | "hover"
-    | "pressed"
-    | "light"
-    | "accent"
-    | "track"
-    | "fill"
-    | "knob"
-    | "knobOn"
-    | "pill"
-    | "thumb"
-    | "on"
-    | "chip"
-    | "glass"
-    | "menu"
-    | "groove",
-    Finish
-  >
->(finishes.dark, finishes.light);
+export const finish: Record<FinishRole, Finish> = {
+  card: themed("card"),
+  inset: themed("inset"),
+  field: themed("field"),
+  raised: themed("raised"),
+  hover: themed("hover"),
+  pressed: themed("pressed"),
+  light: themed("light"),
+  accent: themed("accent"),
+  track: themed("track"),
+  fill: themed("fill"),
+  knob: themed("knob"),
+  knobOn: themed("knobOn"),
+  pill: themed("pill"),
+  thumb: themed("thumb"),
+  on: themed("on"),
+  chip: themed("chip"),
+  glass: themed("glass"),
+  menu: themed("menu"),
+  groove: themed("groove"),
+};
+
+/**
+ * Switch the app to `theme` while it runs: the tokens first (`setTheme`),
+ * then its finishes, so every component on screen redraws with both on the
+ * next frame. `null` goes back to the theme the app was built with
+ * (`nsh.json`'s `theme.json`, and `finishes.json` beside this file).
+ *
+ * A theme NSH refuses to read (a color it does not know) throws
+ * `TypeError` and leaves the app as it was: the finishes follow the tokens
+ * only once they are in.
+ */
+export function selectTheme(theme: AppTheme | null): void {
+  setTheme(theme?.theme ?? null);
+  selected.set(theme);
+}
+
+/**
+ * The `id` of the theme the app shows (`selectTheme`), or `null` while it
+ * shows its build-time one — the runtime cannot read `nsh-ui.json`. Reactive:
+ * reading it subscribes.
+ */
+export function currentTheme(): string | null {
+  const theme = selected();
+  return theme === null ? null : theme.id;
+}
 
 export type Tone = "neutral" | "accent" | "info" | "warn" | "danger" | "up" | "down";
 

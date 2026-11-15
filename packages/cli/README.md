@@ -27,7 +27,8 @@ Every command takes `-c, --cwd <dir>` (default: the current directory). `init`, 
 `view` and `diff` also take `--registry <url>`, a template with `{name}` in it; without it, `add`,
 `list`, `view` and `diff` use the one in `nsh-ui.json`, and `init` uses the public registry.
 `init` also takes `--overwrite`, `-y` (accepted; nothing prompts today) and `--theme <name>`,
-`default` (the library's own) or `shadcn` (shadcn's neutral palette and flat finishes).
+`default` (the library's own) or `shadcn` (shadcn's neutral palette and flat finishes) — the theme
+the app is **built** with: `theme.json`, `lib/finishes.json`, and what `nsh.json` points at.
 
 ## add
 
@@ -44,10 +45,12 @@ shadcn-nsh add button --overwrite
 - `theme.json` is merged by key: the app keeps its colors and gains the tokens it lacks. A
   recolored theme is kept as it is (`kept theme.json (the app's colors stay)`).
 - `--all` (`-a`) adds every `registry:ui` item the catalog lists, dependencies included.
-- Naming a theme (`add theme-shadcn`, or `add theme` to go back) switches the app's theme: its
-  files are written where they differ and `nsh-ui.json`'s `theme` records the new one. Naming the
-  theme the app already has is a plain `add`: its colors stay unless `--overwrite`.
-- After that, `theme` as a dependency resolves to the theme the app has, so `add button`,
+- Naming a theme (`add theme-shadcn`) installs **one more theme**: its files land in
+  `themes/<name>/` and can be switched to while the app runs (`selectTheme`, see
+  [`packages/theme/README.md`](../theme/README.md#more-than-one-theme)). It does not touch the
+  app's build-time theme, and `nsh-ui.json` stays as it is. To make a theme the build-time one,
+  re-run `init --theme <name> --overwrite`.
+- `theme` as a dependency still resolves to the item in `nsh-ui.json`, so `add button`,
   `add button --overwrite` and `add --all --overwrite` never write the default theme back.
 - `--dry-run` prints the same lines as `would write …` / `would overwrite …` and writes nothing —
   not even `nsh-ui.json` or the theme `init` would install first.
@@ -96,8 +99,9 @@ recolored theme is the app's own, and only `add --overwrite` replaces it.
 }
 ```
 
-`theme` is the `registry:theme` item the app installed (`theme`, or `theme-shadcn`); a file
-without it is on `theme`.
+`theme` is the `registry:theme` item the app's **build-time** theme came from (`theme`, or
+`theme-shadcn` after `init --theme shadcn`); a file without it is on `theme`. A theme added later
+(`add theme-shadcn`) changes nothing here: it lives in `themes/shadcn/`, and the app lists it.
 
 In a monorepo (`apps/*` + `packages/ui`) it lives in `packages/ui` and `add -c apps/web`
 installs there.

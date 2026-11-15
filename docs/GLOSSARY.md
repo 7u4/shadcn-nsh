@@ -78,3 +78,7 @@ _Avoid_: 重写行为, 缩减 props
 **Theme Source**:
 `theme.json`（shadcn 的 `cssVars` 格式，含上游的扩展键）与 `finishes.json`（渐变与阴影），颜色以 oklch 存储、归本库所有（起点取自上游）；`theme.ts` 读取它们。
 _Avoid_: neutral 映射, `custom-*` 键
+
+**Build-time Theme / AppTheme**:
+**构建时主题**是 `nsh.json` 指向的 `theme.json` 与 `lib/finishes.json`，由 `init --theme <name>` 定；**AppTheme**（`{ id, label, theme, finishes }`）是运行时可切的一套，装在 `themes/<name>/`，`selectTheme` 切过去、`selectTheme(null)` 回构建时那套、`currentTheme()` 读当前 `id`（还在构建时主题上时为 `null`）。应用清单里的构建时主题就是 `null`。质感（渐变、阴影）不是 token，所以随 `AppTheme` 走。
+_Avoid_: 把 `add theme-<x>` 当成换构建时主题、把主题叫“皮肤”、把 finish 当 token

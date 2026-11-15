@@ -24,7 +24,7 @@ _Avoid_: 发布组件 npm 包、旧 registry id 的别名
 
 - `registry.json`：**Catalog** 的真源，其 `registry:ui` 条目就是组件集合
 - `port-map.json`：**Port Map**，上游每个声明的来源去向表与已审阅的上游提交；目标不一定是组件——`demo.ts` 的 `Stage` / `Split` / `Inspector` / `Panel` / `Log` / `Segmented` 等去向 `apps/docs/demos/stage.tsx`（演示适配层，不进 registry）
-- `packages/theme/`：**Theme Source**（两个 JSON，oklch，归本库）与 `theme.ts`（角色读取）；`themes/<name>/` 是其他主题的数据，经 `theme-<name>` 条目分发；不放组件
+- `packages/theme/`：**Theme Source**（两个 JSON，oklch，归本库）与 `theme.ts`（角色读取，以及运行时的 `selectTheme` / `currentTheme`）；`themes/<name>/` 是其它主题，一套一个 `AppTheme`（`theme.json`、`finishes.json`、`index.ts`），经 `theme-<name>` 条目分发；不放组件
 - `packages/ui/<id>.tsx`：一个**组件** = look（源自上游的部分以 **Port Region** 标注来源）+ **Shell**；一个 registry 条目一个文件
 - `packages/ui/lib/`：没有所属控件的上游部分（以上游文件名命名）与多个外壳共用的接线；作为 `registry:lib` 条目分发
 - `apps/docs/demos/`：每个组件的 `<id>.tsx` 与 **Reference Page** `<id>.ref.tsx`、渲染比对用例与基线截图；`kit.tsx` 是演示外框，`stage.tsx` 是演示适配层（`Stage` / `Inspector` / `Split` / `Panel` / `Log` / `Segmented` / `Chips` / `desktop` / `wide` / `ui()`，见 [`port.md`](port.md#演示)），`photos.ts` 是照片页用的图（上游 `photos.ts`，原样搬运），都不进 registry；`shots/` 是渲染比对的截图，`shots-audit/` 是诊断脚本的，两者都不提交
@@ -72,7 +72,7 @@ flowchart TD
 ```
 
 - `packages/ui/lib` 不 import `packages/ui/<id>`；组件之间可以 import（`./button`），依赖写进该条目的 `registryDependencies`
-- `packages/theme` 不 import `packages/ui`
+- `packages/theme` 不 import `packages/ui`；反过来，组件只经 `@shadcn-nsh/theme` 的角色取外观（`colors`、`finish`、`radius`），不直接读两个 JSON，也不读 `themes/<name>/`
 - `packages/*` 不 import `apps/*`、`scripts/*` 或 `references/*`；运行时代码只认 `@shadcn-nsh/theme`、`nsh`、`nsh/base`、`lucide`（图标库，应用经 registry 的 `dependencies` 安装）与相对路径
 - 只有 `scripts/port`（抽取与变化提醒）与 `scripts/audit`（对照诊断截图）读 `references/nsh`；`apps/docs` 的构建不需要子模块
 - 组件集合只从 `scripts/catalog.ts`（脚本）或 `catalog.generated.ts`（NSH 运行时）取；不自己读 `registry.json` 过滤，也不 `readdir` 演示或文档目录来推导
@@ -80,6 +80,20 @@ flowchart TD
 - registry JSON 的形状只在 `packages/cli/src/utils/registry-schema.ts` 校验；读到的 JSON 经它变成类型，不用 `as` 断言
 - `scripts/*` 可以 import `apps/docs/demos/render-cases.ts`（渲染用例与特例）与 `apps/docs/scripts/player-options.ts`（演示包的 `?idiom=` / `?theme=`：文档站与审计用同一份），不 import `apps/docs` 的其他代码
 - 每个组件的特例（渲染前的 steps、`selfReference`）只写在 `render-cases.ts`，按 id 覆盖；`packages/ui/index.ts` 手写，由检查保证它导出每个组件
+
+## Themes
+
+两件事，名字不混用：
+
+| 词             | 是什么                                                                                  | 谁定                                                                                                       |
+| -------------- | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| **构建时主题** | `nsh.json` 的 `theme` 指向的 `theme.json`，以及 `lib/finishes.json`                     | `init --theme <name>`（`nsh-ui.json` 的 `theme` 也记这一个）；换就是重跑 `init --theme <name> --overwrite` |
+| **AppTheme**   | 应用装进 `themes/<name>/` 的一套 `{ id, label, theme, finishes }`，一个 `index.ts` 导出 | registry 的 `theme-<name>` 条目，`add theme-<name>` 多装一套                                               |
+
+- 颜色、圆角、焦点环、悬停经 `token()` 读，`setTheme` 一换就跟；质感（渐变与阴影）**不是 token**，所以留在 `finishes.json`，由 `theme.ts` 的一个信号按当前主题取。两者拼成 `selectTheme(theme)`；`selectTheme(null)` 回到构建时主题。
+- `theme` 条目仍是构建时那套的三个文件（`theme.json`、`lib/finishes.json`、`lib/theme.ts`）；`theme-<name>` 只装 `themes/<name>/`，不碰它们。组件条目的 `theme` 依赖按 `nsh-ui.json` 解析，所以装主题不会把默认主题写回来。
+- 应用的清单与持久化都是应用的：库只给 `selectTheme` / `currentTheme`，不写清单、不存 `id`（示例见 [`packages/theme/README.md`](../packages/theme/README.md)）。
+- 质感在 JSX 里读（见下）；把 `finish.*` 存进模块级常量，运行时切换就不会跟着变。
 
 ## Rules
 
@@ -103,7 +117,7 @@ Port Region 是**来源标注**，不是只读区：可以直接修改；`port:v
 3. 没有所属控件的，进 `packages/ui/lib/<上游文件名>`
 4. 主题相关的进 `packages/theme`
 
-**外观随外观模式变化**：颜色与依赖 props 的 look 在 JSX 里读，不在组件体里读一次存下（web 上是 CSS 变量看不出来，原生上会冻结）。
+**外观随外观模式变化**：颜色与依赖 props 的 look 在 JSX 里读，不在组件体里读一次存下（web 上是 CSS 变量看不出来，原生上会冻结）。这一条同样管主题：`finish` 的 getter 读的是当前主题（`selectTheme`）与当前外观，组件若把质感值存进模块级常量、或读进变量后不再读，运行时切换就不会跟着变。
 
 ## Seams
 
