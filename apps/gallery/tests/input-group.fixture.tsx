@@ -1,5 +1,6 @@
-import { mount, signal, Text } from "nsh";
+import { mount, signal, Text, type InputRef } from "nsh";
 
+import { Button } from "../../../packages/ui";
 import {
   InputGroup,
   InputGroupAddon,
@@ -8,6 +9,7 @@ import {
   inputGroupControlLook,
   inputGroupLook,
   InputGroupText,
+  InputGroupTextarea,
 } from "../../../packages/ui";
 
 // The group's look and the control's, as words a test can hold apart: the group draws the edge
@@ -36,6 +38,12 @@ const resting = inputGroupLook();
 
 function App() {
   const query = signal("");
+  const draft = signal("");
+  // The app's own refs on the controls: a shortcut or a request focuses them from code.
+  // eslint-disable-next-line no-unassigned-vars
+  let search: InputRef | undefined;
+  // eslint-disable-next-line no-unassigned-vars
+  let composer: InputRef | undefined;
   return (
     <>
       <InputGroup style={{ borderRadius: 22 }}>
@@ -43,6 +51,7 @@ function App() {
           <InputGroupText>Q</InputGroupText>
         </InputGroupAddon>
         <InputGroupInput
+          ref={search}
           testID="search"
           value={query()}
           onChange={({ value }) => query.set(value)}
@@ -59,6 +68,21 @@ function App() {
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
+      <InputGroup>
+        <InputGroupTextarea
+          ref={composer}
+          value={draft()}
+          onChange={({ value }) => draft.set(value)}
+          placeholder="Draft"
+        />
+      </InputGroup>
+      <Button testID="find" onPress={() => search?.focus()}>
+        Find
+      </Button>
+      <Button testID="compose" onPress={() => composer?.focus()}>
+        Compose
+      </Button>
+      <Text>{`draft=${draft() || "—"}`}</Text>
       <Text>{`frame ${frame}`}</Text>
       <Text>{`inside ${inside}`}</Text>
       <Text>{`value=${query() || "—"}`}</Text>

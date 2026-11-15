@@ -29,3 +29,13 @@ test("the control in a group takes text, and a button beside it clears it", asyn
   await app.press("id:clear");
   await app.waitFor("text:value=—");
 });
+
+test("a ref on a group's control focuses it from code", async () => {
+  const app = await open("./input-group.fixture.tsx");
+  await app.press("id:find");
+  await app.keyboard.press("k");
+  await app.waitFor("text:value=k");
+  await app.press("id:compose");
+  await app.keyboard.press("d");
+  await app.waitFor("text:draft=d");
+});

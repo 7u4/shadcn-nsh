@@ -156,6 +156,19 @@ A frame of your own around an input is a group. Do not wrap a `variant="ghost"` 
 </InputGroup>;
 ```
 
+### Focus from code
+
+A ref on the control focuses it from code — a shortcut, a request to focus a draft. The ref is the control's, not the group's.
+
+```tsx
+let search: InputRef | undefined;
+
+<InputGroup>
+  <InputGroupInput ref={search} placeholder="Search" />
+</InputGroup>
+<Button onPress={() => search?.focus()}>Find</Button>
+```
+
 ### The look alone
 
 `inputGroupLook` is the frame's props and `inputGroupControlLook` the control's, for a `nsh/base` control of your own; `inputGroupAddonLook` and `inputGroupTextLook` are the addon's and its text's. This is what the reference page draws, and what `InputGroup` wraps.
@@ -175,7 +188,7 @@ A frame of your own around an input is a group. Do not wrap a `variant="ghost"` 
 | `invalid` | `boolean`   |         | Edged in the danger tone, its focus edge too.                        |
 | `style`   | `ViewStyle` |         | Over the look's: the radius, the padding and the width of the group. |
 
-`InputGroupInput` and `InputGroupTextarea` take every prop of [`nsh/base` Input](https://nsh.dev/elements/input) but `ref` (the group holds it, to put the keys in the control from an addon): `value`, `onChange`, `placeholder`, `keyboardType`, `maxLength`, `readonly`, `disabled` and the rest. `InputGroupTextarea` is the multiline one. Their `style` goes over the look's.
+`InputGroupInput` and `InputGroupTextarea` take every prop of [`nsh/base` Input](https://nsh.dev/elements/input), `ref` included: `value`, `onChange`, `placeholder`, `keyboardType`, `maxLength`, `readonly`, `disabled` and the rest. `InputGroupTextarea` is the multiline one. Their `style` goes over the look's. A `ref` is the control's `InputRef`, as shadcn's controls forward theirs: `ref.focus()` puts the keys in it from code (a shortcut, a request to focus a draft).
 
 | Part               | Props                                                                                                                                                                         |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

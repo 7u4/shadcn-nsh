@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+Fixed:
+
+- `InputGroupInput` and `InputGroupTextarea` take a `ref`, the control's `InputRef`, as shadcn's
+  forward theirs: `ref.focus()` puts the keys in the control from code (MyAid #14). The group still
+  holds the control too, for an addon's press.
+
 ## 0.4.0 — seven components shadcn has, input groups, base types
 
 Seven components, each the library's own: none comes from upstream's gallery, so none carries a
