@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — themes at run time
+## 0.5.0 — themes at run time
 
 An app can carry more than one theme and switch between them while it runs, without a relaunch;
 the appearance (light / dark / system) stays the app's own and applies to whichever theme is in use.
