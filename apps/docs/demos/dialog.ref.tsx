@@ -111,7 +111,7 @@ function App() {
             Open as a page sheet
           </Button>
           <Button
-            variant="default"
+            variant="secondary"
             onPress={() => lightbox.set(true)}
             style={wide() ? undefined : { flex: 1, alignSelf: "stretch" }}
           >
