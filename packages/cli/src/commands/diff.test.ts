@@ -5,7 +5,7 @@ import { runAdd } from "./add";
 import { runDiff } from "./diff";
 
 const fixture = (): Fixture =>
-  makeFixture({ items: ["theme", "press", "spinner", "button", "label"] });
+  makeFixture({ items: ["theme", "press", "spinner", "button", "label-of"] });
 
 /** An app with `button` installed. */
 async function installed(): Promise<Fixture> {
