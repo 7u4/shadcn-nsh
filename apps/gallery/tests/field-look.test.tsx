@@ -8,7 +8,10 @@ test("a stored field look's labels follow the scheme", async () => {
   for (const scheme of ["light", "dark"] as const) {
     await app.setColorScheme(scheme);
     await app.wait(50);
-    const ink = app.texts().find((t) => t.startsWith("ink:"))?.slice(4);
+    const ink = app
+      .texts()
+      .find((t) => t.startsWith("ink:"))
+      ?.slice(4);
     expect(app.spanStyle("text:Title").color).toBe(ink);
     expect(app.spanStyle("text:In a row").color).toBe(ink);
     seen.push(String(ink));
