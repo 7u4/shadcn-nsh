@@ -77,6 +77,7 @@ export type FinishRole =
 
 /** What a theme's `finishes.json` holds: its finishes, one set per appearance. */
 export interface Finishes {
+  press: Press;
   dark: Record<FinishRole, Finish>;
   light: Record<FinishRole, Finish>;
 }
@@ -97,6 +98,15 @@ export interface AppTheme {
   finishes: Finishes;
 }
 
+/** How far a press sinks a control in a theme, in both appearances. */
+export interface Press {
+  /**
+   * The scale a pressed control lands on: `0.97` for the default theme, where a press is a small
+   * sink; `1` for a theme whose surfaces are flat and draw no press of their own (shadcn's).
+   */
+  scale: number;
+}
+
 /** The build-time finishes: `finishes.json` beside this file (the app's `nsh-ui.json` names the theme they belong to). */
 const builtIn: Finishes = finishes;
 
@@ -107,6 +117,15 @@ const selected = signal<AppTheme | null>(null);
 const finishesOf = (): Finishes => selected()?.finishes ?? builtIn;
 
 /**
+ * Finishes a role may hold beyond the build-time file's keys. `fill` is the one: a theme may draw
+ * its runs as a gradient (the build-time one) or as a single color with no gradient at all
+ * (shadcn's flat fills), and a reader has to see the color the second kind states.
+ */
+const FINISH_EXTRA: Partial<Record<FinishRole, (keyof Finish)[]>> = {
+  fill: ["backgroundColor"],
+};
+
+/**
  * An object whose getters read one finish role of the finishes in use, in
  * the appearance shown: shadows and gradients are no design tokens, so they
  * stay here while every color is the theme's. Reading one subscribes to the
@@ -114,7 +133,11 @@ const finishesOf = (): Finishes => selected()?.finishes ?? builtIn;
  */
 function themed(role: FinishRole): Finish {
   const out = {} as Finish;
-  for (const key of Object.keys(builtIn.dark[role]) as (keyof Finish)[]) {
+  const keys = [
+    ...(Object.keys(builtIn.dark[role]) as (keyof Finish)[]),
+    ...(FINISH_EXTRA[role] ?? []).filter((key) => !(key in builtIn.dark[role])),
+  ];
+  for (const key of keys) {
     Object.defineProperty(out, key, {
       enumerable: true,
       get: () => {
@@ -309,6 +332,18 @@ export const finish: Record<FinishRole, Finish> = {
 };
 
 /**
+ * How far a press sinks a control, as the theme in use says (`finishes.json`'s `press.scale`):
+ * `0.97` where a press is a small sink, `1` where the theme draws none. A control that sinks
+ * deeper than that names its own scale (`pressSink(0.9)`); a theme of `1` turns every sink off.
+ * Reactive: reading it follows `selectTheme`.
+ */
+export const press = {
+  get scale() {
+    return finishesOf().press.scale;
+  },
+};
+
+/**
  * Switch the app to `theme` while it runs: the tokens first (`setTheme`),
  * then its finishes, so every component on screen redraws with both on the
  * next frame. `null` goes back to the theme the app was built with
@@ -353,7 +388,7 @@ export const solidTint = (tone: Tone, base: string = colors.surface) =>
  * the system font with tabular numbers instead. */
 export const mono = "monospace";
 
-/** Corner radii (`theme.json`'s `radius-card`, `radius`, `radius-control`). */
+/** Corner radii (`theme.json`'s `radius-card`, `radius`, `radius-control`, `radius-popover`). */
 export const radius = {
   get card() {
     return token("radius-card");
@@ -363,6 +398,10 @@ export const radius = {
   },
   get control() {
     return token("radius-control");
+  },
+  /** A dialog's corners: the floating tier's own, bigger than a card's. */
+  get popover() {
+    return token("radius-popover");
   },
 };
 
@@ -440,3 +479,35 @@ export const focusRing = (offset = 0): ViewStyle => ({
   outlineOffset: offset,
 });
 // @port end
+
+/*
+ * Below: this library's own, with no upstream origin.
+ */
+
+/**
+ * A theme's fill for a run, a bar or a slider's range: its gradient where it gives one, else its
+ * color. A theme may state both (a color under the gradient), as the build-time one does; the
+ * gradient is what draws then, so what a theme that states one color alone says is a fill too.
+ */
+export function fillStyle(): ViewStyle {
+  return finish.fill.backgroundImage === undefined
+    ? { backgroundColor: finish.fill.backgroundColor }
+    : { backgroundImage: finish.fill.backgroundImage };
+}
+
+/**
+ * A rail's edge: a `width`-point inset line of `borderColor` inside the theme's `boxShadow`,
+ * whichever of the two the theme gives. `finishes.json` may write `boxShadow: "none"` or leave
+ * the color out, and a rail that joined the absent one after a comma would void the whole
+ * declaration (`none, inset …` is not a shadow).
+ */
+export function insetEdge(
+  borderColor: string | undefined,
+  boxShadow: string | undefined,
+  width = 1,
+): string {
+  const line = borderColor ? `inset 0 0 0 ${width}px ${borderColor}` : undefined;
+  const shade = boxShadow && boxShadow !== "none" ? boxShadow : undefined;
+  const parts = [line, shade].filter((part) => part !== undefined);
+  return parts.length === 0 ? "none" : parts.join(", ");
+}

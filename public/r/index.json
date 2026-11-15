@@ -52,7 +52,7 @@
       "name": "press",
       "type": "registry:lib",
       "title": "Press",
-      "description": "A press's feedback: the sink and its ease.",
+      "description": "A press's feedback: the theme's sink and its ease.",
       "files": [
         {
           "path": "packages/ui/lib/press.ts",

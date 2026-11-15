@@ -163,6 +163,8 @@ const themeLevel = (light: ReturnType<typeof palette>): Record<string, string> =
   radius: radius(0.8),
   "radius-card": radius(1.4),
   "radius-control": radius(0.8),
+  // A dialog's corners: shadcn's `rounded-xl`, the same step as a card's (`--radius-xl`).
+  "radius-popover": radius(1.4),
   // The main action: shadcn's `primary`, which differs by appearance, so the token names it.
   "brand-fill": "var(--primary)",
   "on-brand": "var(--primary-foreground)",
@@ -237,10 +239,10 @@ function section(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
   };
 }
 
-/** A flat fill: one colour, and a two-stop gradient of it for what draws `backgroundImage` alone. */
+/** A flat fill: one colour, no gradient (`bg-primary`), for what draws its fill and for what draws a gradient.
+ * A theme of this shape needs no two-stop gradient to say "one colour". */
 const fill = (color: string) => ({
   backgroundColor: color,
-  backgroundImage: `linear-gradient(180deg, ${color} 0%, ${color} 100%)`,
   boxShadow: "none",
   borderColor: "transparent",
 });
@@ -264,9 +266,9 @@ function finishes(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
     pressed: { backgroundColor: o.pressed, boxShadow: "none", borderColor: "transparent" },
     light: { backgroundColor: p.primary, boxShadow: "none", borderColor: "transparent" },
     accent: { backgroundColor: p.primary, boxShadow: "none", borderColor: "transparent" },
-    // A rail composes `boxShadow` after a comma (`slider.tsx:58`), where `none` voids the whole
-    // declaration: a transparent inset ring says "flat" and stays valid.
-    track: { boxShadow: "inset 0 0 0 1px transparent", borderColor: p.border },
+    // A rail has no lip of its own (shadcn draws the track flat): the edge comes from the theme's
+    // `border`, and `theme.ts`'s `insetEdge` keeps this `none` from voiding it.
+    track: { boxShadow: "none", borderColor: p.border },
     fill: fill(p.primary),
     knob: { backgroundColor: o.knob, boxShadow: SHADOW.sm, borderColor: "transparent" },
     knobOn: { backgroundColor: o.knobOn, boxShadow: SHADOW.sm, borderColor: "transparent" },
@@ -285,7 +287,8 @@ function finishes(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
   };
 }
 
-/** A file's value for every key of the default file, in the default file's order. */
+/** A file's value for every key of the default file, in the default file's order: sections, which must
+ * declare every key. */
 const ordered = <T>(keys: Record<string, string>, values: Record<string, T>): Record<string, T> =>
   Object.fromEntries(
     Object.keys(keys).map((key) => {
@@ -296,9 +299,30 @@ const ordered = <T>(keys: Record<string, string>, values: Record<string, T>): Re
   );
 
 /**
+ * A finish role's value in the default file's key order, leaving out what the theme does not
+ * state: a role says only what it means (this theme's `fill` is one colour, with no gradient). A
+ * key the default file does not have follows, alone: `fill`'s color.
+ */
+const orderedFinish = (keys: Record<string, unknown>, values: Record<string, unknown>) => {
+  const order = [
+    ...Object.keys(keys),
+    ...Object.keys(values)
+      .filter((key) => !(key in keys))
+      .sort(),
+  ];
+  return Object.fromEntries(
+    order.flatMap((key) => {
+      const value = values[key];
+      return value === undefined ? [] : [[key, value]];
+    }),
+  );
+};
+
+/**
  * Both theme files, in the key order of the default ones (so the two diff side by side).
  *
- * `defaults` are the default files' keys: `theme`, `light`, `dark` and the finishes' two.
+ * `defaults` are the default files' keys: `theme`, `light`, `dark` and the finishes' two
+ * appearances, each role's keys included.
  */
 export function themeFiles(defaults: {
   theme: Record<string, string>;
@@ -321,8 +345,11 @@ export function themeFiles(defaults: {
       },
     },
     finishes: {
-      dark: ordered(defaults.darkFinishes, finishes(dark, ownDark)),
-      light: ordered(defaults.lightFinishes, finishes(light, ownLight)),
+      // A flat theme draws no press of its own: its surfaces change colour under the finger, they
+      // do not sink (`press.scale` of 1, which `pressSink` reads as "no sink").
+      press: { scale: 1 },
+      dark: orderedFinish(defaults.darkFinishes, finishes(dark, ownDark)),
+      light: orderedFinish(defaults.lightFinishes, finishes(light, ownLight)),
     },
   };
 }

@@ -62,9 +62,10 @@ export function toastActionLabel(): TextStyle {
   return buttonLabel("default", toastAction);
 }
 
-/** A toast's close button (its cross): a circle 24 points across, bare
- * until the pointer is over it, sinking to 90% while pressed (none with
- * reduced motion); keyboard focus `focusRing()`. */
+/** A toast's close button (its cross): a circle 24 points across (the theme's
+ * `radius-card` corners, half its side in the default theme), bare until the
+ * pointer is over it, sinking to 90% while pressed (none with reduced
+ * motion); keyboard focus `focusRing()`. */
 export function toastCloseLook() {
   return {
     style: {
@@ -72,7 +73,7 @@ export function toastCloseLook() {
       height: 24,
       alignItems: "center",
       justifyContent: "center",
-      borderRadius: 12,
+      borderRadius: radius.card,
       ...pressTransition("background-color"),
     } as ViewStyle,
     get hoverStyle(): ViewStyle {

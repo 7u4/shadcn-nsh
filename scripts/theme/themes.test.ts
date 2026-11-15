@@ -10,7 +10,11 @@ const read = (file: string) => JSON.parse(readFileSync(join(theme, file), "utf8"
 type Vars = Record<string, string>;
 type ThemeFile = { cssVars: { theme: Vars; light: Vars; dark: Vars } };
 type Finish = { boxShadow?: string };
-type FinishesFile = { light: Record<string, Finish>; dark: Record<string, Finish> };
+type FinishesFile = {
+  press: { scale: number };
+  light: Record<string, Finish>;
+  dark: Record<string, Finish>;
+};
 
 const defaults = read("theme.json") as ThemeFile;
 const defaultFinishes = read("finishes.json") as FinishesFile;
@@ -67,6 +71,14 @@ describe("themes/", () => {
         }
       });
 
+      test("says how far a press sinks, in both appearances", () => {
+        // A control reads it where it is pressed (`pressSink`): 1 is a theme that draws no press
+        // (a flat one), below that the scale a control lands on.
+        expect(typeof finishes.press.scale).toBe("number");
+        expect(finishes.press.scale).toBeGreaterThan(0);
+        expect(finishes.press.scale).toBeLessThanOrEqual(1);
+      });
+
       test("gives every token and every finish a value", () => {
         for (const section of ["theme", "light", "dark"] as const) {
           for (const [key, value] of Object.entries(themeFile.cssVars[section])) {
@@ -83,6 +95,12 @@ describe("themes/", () => {
       });
     });
   }
+});
+
+describe("the default theme", () => {
+  test("says how far a press sinks, and says it as the scale a control lands on", () => {
+    expect(defaultFinishes.press.scale).toBe(0.97);
+  });
 });
 
 describe("colors", () => {

@@ -1,6 +1,6 @@
 // Plot marks: shared look helpers for `nsh/base/plot`.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
-import { alpha, chart, colors, finish, mono, terminal } from "@shadcn-nsh/theme";
+import { alpha, chart, colors, finish, mono, radius, terminal } from "@shadcn-nsh/theme";
 import { Text, token, View } from "nsh";
 import type { TextStyle, ViewStyle } from "nsh";
 
@@ -100,11 +100,11 @@ export const plotAxisText = (): TextStyle => ({
   fontVariant: ["tabular-nums"],
 });
 
-/** A floating tooltip's card: the menu's surface, 10-point corners. */
+/** A floating tooltip's card: the menu's surface, the theme's `radius` corners. */
 export const plotTooltip = (): ViewStyle => ({
   ...finish.menu,
   borderWidth: 1,
-  borderRadius: 10,
+  borderRadius: radius.inset,
   paddingHorizontal: 10,
   paddingVertical: 8,
   gap: 6,
