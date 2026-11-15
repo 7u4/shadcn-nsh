@@ -75,7 +75,8 @@ square tile with a surface's edge for an icon, `image` a square frame that clips
 ### Variants
 
 `default` draws no surface, for rows split by a separator. `outline` edges the row, for one that
-stands alone. `muted` puts it on the well a section's content sits in.
+stands alone. `muted` puts it on a muted fill (`colors.mutedFill`, shadcn's `bg-muted`): a well
+that reads on a card and on the page, in either appearance, and is still lighter than an edge.
 
 ```tsx
 <Item variant="outline">
@@ -161,4 +162,5 @@ texts. `style` goes over the look's.
 
 An icon's tile is `controlSize.control + 12` square and an image's frame `controlSize.row - 8`,
 both of the theme's control corners, so both grow on a touch screen. `itemLook()` is exported for a
-row the app draws itself: the same look without the parts.
+row the app draws itself: the same look without the parts. `muted`'s fill is the theme's `muted`
+token (`colors.mutedFill`); `default` and `outline` draw what they always did.
