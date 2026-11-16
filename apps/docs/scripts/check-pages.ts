@@ -252,6 +252,13 @@ for (const component of cat.components) {
     if (old.has(section)) fail(`${where}: old section "## ${section}"`);
   }
 
+  if (nshFiles) {
+    for (const link of source.matchAll(/nsh\.dev\/elements\/([a-z-]+)/g)) {
+      if (!nshFiles.includes(link[1]!))
+        fail(`${where}: nsh.dev/elements/${link[1]} is no NSH element`);
+    }
+  }
+
   if (meta.demo && meta.demo !== component.id) {
     fail(`${where}: demo "${meta.demo}" is not "${component.id}"`);
   }
@@ -288,6 +295,22 @@ for (const component of cat.components) {
         }
       }
     }
+  }
+}
+
+// llms.txt is written by hand: every component has its line, and no line names one that is gone.
+const llmsFile = path.join(repo, "apps/docs/public/llms.txt");
+const listed = new Set(
+  [...fs.readFileSync(llmsFile, "utf8").matchAll(/^- \/docs\/components\/([a-z-]+):/gm)].map(
+    (match) => match[1]!,
+  ),
+);
+for (const component of cat.components) {
+  if (!listed.has(component.id)) fail(`apps/docs/public/llms.txt: no line for "${component.id}"`);
+}
+for (const id of listed) {
+  if (id !== "coverage" && !byId.has(id)) {
+    fail(`apps/docs/public/llms.txt: "${id}" is no component`);
   }
 }
 
