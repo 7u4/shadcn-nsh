@@ -1,14 +1,15 @@
 /**
- * Builds the docs' component list from the catalog, the pages and the two tables, and writes
+ * Builds the docs' component list from the catalog, the pages and the official tables, and writes
  * `src/lib/components.generated.ts`.
  *
  *   bun run docs:components
  *
  * Every component is one entry: the page's frontmatter title and description when it has them,
- * the registry's otherwise, plus its kind (`src/lib/kinds.ts`) and the official components it
- * stands in for (`src/lib/official.ts`). The order is by kind, then title: the order the sidebar,
- * the index and the coverage page list them in. `check:pages` fails when the checked-in file no
- * longer matches this plan.
+ * the registry's otherwise, plus its kind and the official components it stands in for. Both come
+ * from `src/lib/official.ts`: the rows there are the one table, and the kind is derived from them
+ * (`src/lib/kinds.ts`). The order is by kind, then title — the order the sidebar and the index
+ * list them in, titles being what those lists show. `check:pages` fails when the checked-in file
+ * no longer matches this plan.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -16,7 +17,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { catalog } from "../../../scripts/catalog";
 import type { ComponentDoc } from "../src/lib/components.types";
-import { KIND_OF, KINDS } from "../src/lib/kinds";
+import { KINDS, kindOf } from "../src/lib/kinds";
 import { nshElementOf, shadcnOf } from "../src/lib/official";
 
 const docs = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -54,15 +55,11 @@ export function readPageMeta(source: string): PageMeta {
 export function componentPlan(): ComponentDoc[] {
   const plan: ComponentDoc[] = [];
   for (const { id, item, page } of catalog().components) {
-    const kind = KIND_OF[id];
-    if (!kind) {
-      throw new Error(`${id}: no kind in apps/docs/src/lib/kinds.ts; add it before generating.`);
-    }
     const meta = readPageMeta(fs.readFileSync(page, "utf8"));
     plan.push({
       slug: id,
       title: meta.title ?? item.title ?? id,
-      kind,
+      kind: kindOf(id),
       shadcn: shadcnOf(id) ?? null,
       nshElement: nshElementOf(id) ?? null,
       description: meta.description ?? item.description ?? "",
