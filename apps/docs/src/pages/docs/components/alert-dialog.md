@@ -142,8 +142,9 @@ const open = signal(false);
 ## API
 
 `AlertDialog` owns the open state and the text its parts registered; `AlertDialogContent` calls
-[`nsh/base` `AlertDialog.show`](https://nsh.dev/elements/alert-dialog) when it opens. One box at a
-time: the first `open` shows it, and a second `show` waits until it resolved.
+[`nsh/base` `AlertDialog.show`](https://nsh.dev/elements/alert-dialog) when it opens. The box stays
+one while it is up: a part that renders again with the alert still open — a page whose layout
+rebuilds its children does — stacks nothing, and the answer belongs to the app that asked.
 
 | Part                     | Props                                                                                      |
 | ------------------------ | ------------------------------------------------------------------------------------------ |

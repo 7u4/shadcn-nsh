@@ -9,7 +9,7 @@
 //
 // This library's own: nothing here comes from upstream, so there is no port region. Yours to change.
 import type { JSX, StyleProp, ViewStyle } from "nsh";
-import { cleanup, context, effect, signal, View } from "nsh";
+import { cleanup, context, effect, signal, untracked, View } from "nsh";
 import {
   AlertDialog as BaseAlertDialog,
   type AlertDialogOptions,
@@ -124,6 +124,23 @@ function useAlertDialog() {
   return ctx;
 }
 
+/**
+ * The box the platform is showing, if one is: `nsh/base` shows one at a time, and the answer it
+ * resolves with belongs to the app, not to the part that asked for it.
+ */
+const onScreen = signal<string | null>(null);
+
+/** What makes a box "the same alert": everything it shows and how it closes. */
+const boxKey = (options: AlertDialogOptions) =>
+  JSON.stringify([
+    options.title,
+    options.description,
+    options.presentation,
+    options.closeOnEscape,
+    options.closeOnBackdropPress,
+    (options.actions ?? []).map((action) => [action.id, action.label, action.role]),
+  ]);
+
 const sameAction = (a: AlertAction, b: AlertAction) =>
   a.id === b.id && a.label === b.label && a.role === b.role;
 
@@ -205,15 +222,15 @@ export function AlertDialogTrigger(props: AlertDialogTriggerProps) {
 
 /**
  * Shows the system's alert while the root is open, from what the parts registered, and reports
- * what it resolved with. It draws nothing itself: the platform draws the box. One `show` at a
- * time per part — a second while the first is on screen would stack two boxes.
+ * what it resolved with. It draws nothing itself: the platform draws the box. A box that is
+ * already on screen is not shown twice — the same alert (its title, message and buttons) stays
+ * one box, so a page that renders these parts again while it is open stacks nothing.
  */
 export function AlertDialogContent(props: AlertDialogContentProps) {
   const ctx = useAlertDialog();
-  let showing = false;
+  const showing = signal(false);
   effect(() => {
-    if (!ctx.open() || showing) return;
-    showing = true;
+    if (!ctx.open() || untracked(showing)) return;
     const options: AlertDialogOptions = {
       title: ctx.title(),
       description: ctx.description(),
@@ -222,13 +239,21 @@ export function AlertDialogContent(props: AlertDialogContentProps) {
       closeOnEscape: props.closeOnEscape,
       closeOnBackdropPress: props.closeOnBackdropPress,
     };
+    // A page can render these parts again with the alert already open — a stage that rebuilds its
+    // children on every change does — and that part must not stack a second box on the first.
+    const key = boxKey(options);
+    if (untracked(onScreen) === key) return;
+    onScreen.set(key);
+    showing.set(true);
     BaseAlertDialog.show(options)
       .then(({ action }) => {
-        showing = false;
+        showing.set(false);
+        if (untracked(onScreen) === key) onScreen.set(null);
         ctx.settle(action ?? null);
       })
       .catch(() => {
-        showing = false;
+        showing.set(false);
+        if (untracked(onScreen) === key) onScreen.set(null);
         // `nsh/base` rejects an alert without actions only — the app's bug. Close it as a
         // dismissal rather than leave the app open on a box that never showed.
         ctx.settle(null);

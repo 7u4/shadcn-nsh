@@ -31,6 +31,8 @@ type App = {
   onDialog(handler: (dialog: { buttons: string[] }) => string | null): void;
   /** Resolves once a view matching `selector` is on screen (its timeout bounds the wait). */
   waitFor(selector: string, options?: { timeout?: number } | null): Promise<void>;
+  /** The texts on screen now, in order. */
+  texts(): string[];
   wait(ms: number): Promise<void>;
 };
 
@@ -90,6 +92,9 @@ export const photosReady = async (app: App) => {
  */
 export const antialiasing = { pixels: 6, delta: 6 } as const;
 
+/** Whether the alert-dialog page shows what its destructive button resolves with. */
+const answered = (app: App) => app.texts().includes('{ action: "delete" }');
+
 /** What a component does that the others do not. Keys must be catalog ids. */
 type Override = Omit<Case, "id">;
 
@@ -123,12 +128,15 @@ const overrides: Record<string, Override> = {
     },
   },
   "alert-dialog": {
-    // The system's box is answered the moment it is shown, so the shot holds the page and the line
-    // both pages resolved with — the destructive button's `id`, which only reaches it through the
-    // alert (the demo through `onAction`, the reference page through `show`).
+    // No shot can hold the system's box: it is answered the moment it is shown, and a dialog a
+    // step shows is a dialog that step also answers. What both pages then draw is the line
+    // `AlertDialog.show` resolved with — the destructive button's `id`, which only reaches them
+    // through the alert (the demo's `onAction`, the reference page's `show`). So the step checks
+    // that line: it, not the picture, is what proves the box showed and resolved.
     steps: async (app) => {
       app.onDialog(() => "Delete");
       await app.press("Delete…");
+      if (!answered(app)) throw new Error("the alert did not resolve with the destructive action");
     },
   },
   sheet: { steps: (app) => app.press('side="bottom"') },

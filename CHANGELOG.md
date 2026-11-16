@@ -17,7 +17,8 @@
   closed without one). `AlertDialogCancel` is new: an action with `role="cancel"` whose `id` is
   `"cancel"` unless the app names another. `add alert-dialog` no longer brings `dialog`, `overlay`
   or `theme`; it brings `button` and `open-state`. A confirmation card with content of the app's
-  own, in the app's look, stays `dialog`.
+  own, in the app's look, stays `dialog`. The box stays one while it is up: a part that renders
+  again with the alert still open (a page whose layout rebuilds its children) stacks nothing.
 - **`message-scroller`.** A conversation that scrolls and keeps up with itself: `MessageScroller`,
   `MessageScrollerViewport`, `MessageScrollerContent`, `MessageScrollerItem` and
   `MessageScrollerButton`, after shadcn/ui's message scroller, on `nsh`'s `Scroll`. New turns follow
