@@ -89,6 +89,20 @@
       ]
     },
     {
+      "name": "merge-classes",
+      "type": "registry:lib",
+      "title": "Merge classes",
+      "description": "How a component's default part classes meet an app's classes.",
+      "registryDependencies": [],
+      "files": [
+        {
+          "path": "packages/ui/lib/classes.ts",
+          "type": "registry:lib",
+          "target": "lib/classes.ts"
+        }
+      ]
+    },
+    {
       "name": "label-of",
       "type": "registry:lib",
       "title": "Label",
@@ -799,7 +813,7 @@
       "type": "registry:ui",
       "title": "DataTable",
       "description": "A card-styled spreadsheet with sorting, selection, and resize.",
-      "registryDependencies": ["theme"],
+      "registryDependencies": ["merge-classes", "theme"],
       "files": [
         {
           "path": "packages/ui/data-table.tsx",
@@ -928,7 +942,7 @@
       "type": "registry:ui",
       "title": "TextView",
       "description": "Brand links and a streaming caret for Markdown documents.",
-      "registryDependencies": [],
+      "registryDependencies": ["merge-classes"],
       "files": [
         {
           "path": "packages/ui/text-view.tsx",
@@ -971,7 +985,7 @@
       "type": "registry:ui",
       "title": "Code Editor",
       "description": "A code editor on the field's well, with line numbers and diagnostics.",
-      "registryDependencies": ["theme"],
+      "registryDependencies": ["merge-classes", "theme"],
       "files": [
         {
           "path": "packages/ui/code-editor.tsx",

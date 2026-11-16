@@ -9,6 +9,8 @@ import {
   type EditorProps as BaseEditorProps,
 } from "nsh/base";
 
+import { mergeClasses } from "./lib/classes";
+
 /**
  * A code editor's parts, as classes: line numbers and fold markers muted, the lines with a caret
  * and their numbers in the text color, the caret's line a faint `muted` band behind the text,
@@ -56,23 +58,6 @@ export function codeEditorFrame(): ViewStyle {
     borderCurve: "continuous",
     ...finish.field,
   };
-}
-
-/** A part's classes: an app's go after ours, and `null` drops ours. */
-function mergeClasses(base: EditorClasses, consumer?: EditorClasses | null): EditorClasses {
-  if (consumer == null) return base;
-  const merged: EditorClasses = { ...base };
-  for (const key of Object.keys(consumer) as (keyof EditorClasses)[]) {
-    const next = consumer[key];
-    if (next === undefined) continue;
-    if (next === null) {
-      delete merged[key];
-      continue;
-    }
-    const prior = merged[key];
-    merged[key] = prior ? `${prior} ${next}` : next;
-  }
-  return merged;
 }
 
 /**

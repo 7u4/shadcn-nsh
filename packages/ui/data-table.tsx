@@ -8,6 +8,8 @@ import {
   type DataTableProps as BaseDataTableProps,
 } from "nsh/base";
 
+import { mergeClasses } from "./lib/classes";
+
 // @port data-table.ts
 /** Extra room for this UI layer's cell padding and title/button gap. */
 export const dataTableFitPadding = 16;
@@ -44,26 +46,6 @@ export const dataTableClasses: DataTableClasses = {
   fixedEdge: "bg-border",
 };
 // @port end
-
-/** A part class: drop it on `null`, append the consumer after the default. */
-function mergeClasses(
-  base: DataTableClasses,
-  consumer?: DataTableClasses | null,
-): DataTableClasses {
-  if (consumer == null) return base;
-  const merged: DataTableClasses = { ...base };
-  for (const key of Object.keys(consumer) as (keyof DataTableClasses)[]) {
-    const next = consumer[key];
-    if (next === undefined) continue;
-    if (next === null) {
-      delete merged[key];
-      continue;
-    }
-    const prior = merged[key];
-    merged[key] = prior ? `${prior} ${next}` : next;
-  }
-  return merged;
-}
 
 /**
  * `nsh/base` DataTable with `dataTableClasses` by default. Sorting, selection,

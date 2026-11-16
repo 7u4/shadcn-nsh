@@ -19,6 +19,10 @@
   through — text, language, folding, search, the editing keys, diagnostics; an app's `classes` go
   over ours and its `style` over the frame. Syntax highlighting is NSH's own colors. `add
   code-editor` brings `theme`.
+- **`merge-classes`.** How a shell's default part classes meet an app's `classes` — a string goes
+  after ours, `null` drops ours — is one rule in `lib/classes.ts` (`mergeClasses`) rather than a
+  private copy in each of `data-table`, `text-view` and `code-editor`; `add` of any of the three
+  brings it.
 - **`editor` is the rich editor only — a breaking change.** `Editor` and `EditorProps` moved to
   `code-editor` as `CodeEditor` and `CodeEditorProps`; `editor` keeps `RichEditor`,
   `richEditorClasses` and `RichEditorProps`, with no alias left behind. An app importing `Editor`

@@ -85,6 +85,19 @@
       ]
     },
     {
+      "name": "merge-classes",
+      "type": "registry:lib",
+      "title": "Merge classes",
+      "description": "How a component's default part classes meet an app's classes.",
+      "files": [
+        {
+          "path": "packages/ui/lib/classes.ts",
+          "type": "registry:lib",
+          "target": "lib/classes.ts"
+        }
+      ]
+    },
+    {
       "name": "label-of",
       "type": "registry:lib",
       "title": "Label",
