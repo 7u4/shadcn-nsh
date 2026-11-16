@@ -1,6 +1,7 @@
 // The reference of `radio-group.tsx`: the same scene as upstream writes it, `RadioRing` and
 // `choiceTileLook` spread on `nsh/base`'s Radio. The render check requires the two to draw the
 // same pixels.
+import { colors } from "@shadcn-nsh/theme";
 import { mount, signal, Text, View } from "nsh";
 import { Radio, RadioGroup } from "nsh/base";
 
@@ -115,7 +116,7 @@ function App() {
                 {...choiceTileLook(() => cycle() === c)}
               >
                 <RadioRing on={cycle() === c} />
-                <Text>{c}</Text>
+                <Text style={{ color: colors.text }}>{c}</Text>
               </Radio>
             ))}
           </View>

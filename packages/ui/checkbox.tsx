@@ -246,7 +246,12 @@ export function Checkbox(props: CheckboxProps) {
         )
       }
     >
-      {typeof props.children === "string" ? <Text>{props.children}</Text> : props.children}
+      {typeof props.children === "string" ? (
+        // The page's ink, read here so it follows the appearance: a bare Text is nsh's black.
+        <Text style={{ color: colors.text }}>{props.children}</Text>
+      ) : (
+        props.children
+      )}
     </BaseCheckbox>
   );
 }
