@@ -99,6 +99,7 @@ bun run check:docs     # astro sync + tsc
 nsh check apps/docs/demos  # the demos app
 bun run docs:demos     # package the previews
 bun run check:palette  # the first frame of a switched demo is the chosen theme (Chrome)
+bun run check:first-frame  # every demo's first frame inside its budget (Chrome)
 vp check               # format, lint, tool types
 ```
 
