@@ -124,5 +124,6 @@ export const KIND_OF: Record<string, ComponentKindId> = {
 
   "diff-view": "text",
   editor: "text",
+  terminal: "text",
   "text-view": "text",
 };

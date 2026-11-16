@@ -73,6 +73,7 @@ Every page links the base element it is built on where `nsh/base` has one, and t
 - /docs/components/dock-area: Dockable workspace chrome: tabs, splits, and edge docks. → https://nsh.dev/elements/dock
 - /docs/components/diff-view: Up/down tints for additions and deletions, with hunk actions. → https://nsh.dev/elements/diff-view
 - /docs/components/text-view: Brand links and a streaming caret for Markdown documents. → https://nsh.dev/elements/text-view
+- /docs/components/terminal: A program's output on the theme's field surface, the keys typed back to it. → https://nsh.dev/elements/terminal
 - /docs/components/emoji-picker: Gallery look for nsh/base EmojiPicker: tabs, search, tones and preview. → https://nsh.dev/elements/emoji-picker
 - /docs/components/editor: Rich document typography and code editor pass-through. → https://nsh.dev/elements/rich-editor
 - /docs/components/color-picker: Area, sliders, joined fields, swatches, and popover trigger. → https://nsh.dev/elements/color-picker
