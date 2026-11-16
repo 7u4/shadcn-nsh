@@ -1,7 +1,7 @@
 // shadcn/ui's bubble page has no example in this repo, so this page is the library's own: a short
 // conversation, every fill a bubble can wear, reactions hanging off either edge, and a quick reply
 // that acts. Pressing the quick reply writes to the log beside it.
-import { mount, signal, Text } from "nsh";
+import { mount, signal, Text, View } from "nsh";
 
 import { Bubble, BubbleContent, BubbleGroup, BubbleReactions } from "@/packages/ui/bubble";
 
@@ -73,36 +73,39 @@ function App() {
           </DemoSection>
 
           <DemoSection title="Reactions" axis="block">
-            <Bubble variant="muted" align="end">
-              <BubbleContent>I don't need tests, I know my code works.</BubbleContent>
-              <BubbleReactions
-                align="start"
-                role="image"
-                accessibilityLabel="Reactions: thumbs up, surprised"
-              >
-                👍 😮
-              </BubbleReactions>
-            </Bubble>
-            <Bubble variant="default" align="end">
-              <BubbleContent>Tests passed on the first try. All 142 of them.</BubbleContent>
-              <BubbleReactions
-                side="top"
-                align="start"
-                role="image"
-                accessibilityLabel="Reactions: party popper, clapping hands"
-              >
-                🎉 👏
-              </BubbleReactions>
-            </Bubble>
-            <Bubble variant="muted">
-              <BubbleContent>Bold. Fine, I'll add some tests.</BubbleContent>
-              <BubbleReactions
-                role="image"
-                accessibilityLabel="Reactions: eyes, rocket, and 2 more"
-              >
-                👀 🚀 +2
-              </BubbleReactions>
-            </Bubble>
+            {/* Reactions hang off the edge, so the rows leave room for them (shadcn/ui's gap-12). */}
+            <View style={{ gap: 48, paddingBottom: 24 }}>
+              <Bubble variant="muted" align="end">
+                <BubbleContent>I don't need tests, I know my code works.</BubbleContent>
+                <BubbleReactions
+                  align="start"
+                  role="image"
+                  accessibilityLabel="Reactions: thumbs up, surprised"
+                >
+                  👍 😮
+                </BubbleReactions>
+              </Bubble>
+              <Bubble variant="default" align="end">
+                <BubbleContent>Tests passed on the first try. All 142 of them.</BubbleContent>
+                <BubbleReactions
+                  side="top"
+                  align="start"
+                  role="image"
+                  accessibilityLabel="Reactions: party popper, clapping hands"
+                >
+                  🎉 👏
+                </BubbleReactions>
+              </Bubble>
+              <Bubble variant="muted">
+                <BubbleContent>Bold. Fine, I'll add some tests.</BubbleContent>
+                <BubbleReactions
+                  role="image"
+                  accessibilityLabel="Reactions: eyes, rocket, and 2 more"
+                >
+                  👀 🚀 +2
+                </BubbleReactions>
+              </Bubble>
+            </View>
           </DemoSection>
 
           <DemoSection title="A quick reply" axis="block">

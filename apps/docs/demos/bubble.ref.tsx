@@ -119,22 +119,25 @@ function App() {
           </DemoSection>
 
           <DemoSection title="Reactions" axis="block">
-            <Bubbles variant="muted" align="end">
-              <Turn variant="muted">I don't need tests, I know my code works.</Turn>
-              <Reactions align="start" label="Reactions: thumbs up, surprised">
-                👍 😮
-              </Reactions>
-            </Bubbles>
-            <Bubbles variant="default" align="end">
-              <Turn variant="default">Tests passed on the first try. All 142 of them.</Turn>
-              <Reactions side="top" align="start" label="Reactions: party popper, clapping hands">
-                🎉 👏
-              </Reactions>
-            </Bubbles>
-            <Bubbles variant="muted">
-              <Turn variant="muted">Bold. Fine, I'll add some tests.</Turn>
-              <Reactions label="Reactions: eyes, rocket, and 2 more">👀 🚀 +2</Reactions>
-            </Bubbles>
+            {/* Reactions hang off the edge, so the rows leave room for them (shadcn/ui's gap-12). */}
+            <View style={{ gap: 48, paddingBottom: 24 }}>
+              <Bubbles variant="muted" align="end">
+                <Turn variant="muted">I don't need tests, I know my code works.</Turn>
+                <Reactions align="start" label="Reactions: thumbs up, surprised">
+                  👍 😮
+                </Reactions>
+              </Bubbles>
+              <Bubbles variant="default" align="end">
+                <Turn variant="default">Tests passed on the first try. All 142 of them.</Turn>
+                <Reactions side="top" align="start" label="Reactions: party popper, clapping hands">
+                  🎉 👏
+                </Reactions>
+              </Bubbles>
+              <Bubbles variant="muted">
+                <Turn variant="muted">Bold. Fine, I'll add some tests.</Turn>
+                <Reactions label="Reactions: eyes, rocket, and 2 more">👀 🚀 +2</Reactions>
+              </Bubbles>
+            </View>
           </DemoSection>
 
           <DemoSection title="A quick reply" axis="block">
