@@ -1,23 +1,21 @@
-// The reference of `alert-dialog.tsx`: the same scene with the card's look (`dialogCard`,
-// `dialogTitle`, `dialogText`, `backdrop`) spread on `nsh/base`'s Dialog, the way the official
-// example (`references/nsh/website/demos/el-alert-dialog.tsx`) writes it. It differs from the
-// component page only in the parts it names.
+// The reference of `alert-dialog.tsx`: the same scene with `nsh/base`'s `AlertDialog.show` called
+// where the component's parts would be, the way the official example
+// (`references/nsh/website/demos/el-alert-dialog.tsx`) writes it: the box is the system's, so there
+// is no look to expand — its options are the page's own. It differs from the component page only in
+// the parts it names.
 import { colors } from "@shadcn-nsh/theme";
-import type { JSX } from "nsh";
 import { mount, signal, Text, View } from "nsh";
-import { Dialog } from "nsh/base";
+import { AlertDialog as BaseAlertDialog, type AlertDialogOptions } from "nsh/base";
 
-import { Button, type ButtonVariant } from "@/packages/ui/button";
-import { dialogCard, dialogText, dialogTitle } from "@/packages/ui/dialog";
-import { backdrop } from "@/packages/ui/lib/overlay";
+import { Button } from "@/packages/ui/button";
 import { controlSize, listRow, RowDivider, sectionSurface } from "@/packages/ui/lib/surface";
 
 import { DemoPage } from "./kit";
-import { desktop, Panel, Split, wide } from "./stage";
+import { desktop, Panel, Split, ui, wide } from "./stage";
 
 type Role = "cancel" | "destructive" | undefined;
 
-/** One alert: what it asks, the actions it offers, and whether a press outside it dismisses it. */
+/** One alert: what it asks, the buttons it offers, and whether a press outside it dismisses it. */
 type Alert = {
   id: string;
   label: string;
@@ -26,6 +24,7 @@ type Alert = {
   description: string;
   danger?: boolean;
   dismissable?: boolean;
+  presentation?: "alert" | "actionSheet";
   actions: { id: string; label: string; role?: Role }[];
 };
 
@@ -62,6 +61,7 @@ const alerts: Alert[] = [
     title: "Share the photo",
     description: "Every label comes from the app.",
     dismissable: true,
+    presentation: "actionSheet",
     actions: [
       { id: "copy", label: "Copy link" },
       { id: "save", label: "Save" },
@@ -71,27 +71,23 @@ const alerts: Alert[] = [
   },
 ];
 
-/** The button an action's role takes (`AlertDialogAction`). */
-const actionVariant = (role?: Role): ButtonVariant =>
-  role === "destructive" ? "destructive" : role === "cancel" ? "secondary" : "default";
-
-/** The row of a card's actions, as `AlertDialogFooter` lays it. */
-const footer = {
-  flexDirection: "row" as const,
-  gap: 8,
-  paddingTop: 4,
-  justifyContent: desktop ? ("flex-end" as const) : undefined,
-  flexWrap: "wrap" as const,
-};
+/** What the component's parts register, as `AlertDialogOptions`: the same box, written out. */
+const options = (alert: Alert): AlertDialogOptions => ({
+  title: alert.title,
+  description: alert.description,
+  actions: alert.actions.map((action) => ({
+    id: action.id,
+    label: action.label,
+    role: action.role,
+  })),
+  presentation: alert.presentation,
+  closeOnEscape: alert.dismissable,
+  closeOnBackdropPress: alert.dismissable,
+});
 
 function App() {
   const answer = signal("–");
   const shown = signal(0);
-  const open = signal<string | null>(null);
-  const show = (id: string) => {
-    shown.update((n) => n + 1);
-    open.set(id);
-  };
   const hint = desktop
     ? "Escape or a click outside the action sheet closes it with { action: null }."
     : "A tap outside the action sheet closes it with { action: null }.";
@@ -101,6 +97,10 @@ function App() {
         ? "{ action: null } (closed without an action)"
         : `{ action: ${JSON.stringify(action)} }`,
     );
+  const show = (alert: Alert) => {
+    shown.update((n) => n + 1);
+    BaseAlertDialog.show(options(alert)).then(({ action }) => chose(action ?? null));
+  };
 
   return (
     <DemoPage title="Alert Dialog">
@@ -141,7 +141,7 @@ function App() {
                   <Text style={{ flex: 1, fontSize: 13, color: colors.muted }}>{alert.detail}</Text>
                   <Button
                     variant={alert.danger ? "destructive" : "secondary"}
-                    onPress={() => show(alert.id)}
+                    onPress={() => show(alert)}
                   >
                     {alert.label}
                   </Button>
@@ -154,7 +154,7 @@ function App() {
         <If when={!wide()}>
           <View style={sectionSurface({ padded: true })}>
             {alerts.map((alert, i) => (
-              <View role="button" onPress={() => show(alert.id)} {...listRow({ first: i === 0 })}>
+              <View role="button" onPress={() => show(alert)} {...listRow({ first: i === 0 })}>
                 <If when={i > 0}>
                   <RowDivider show />
                 </If>
@@ -177,41 +177,6 @@ function App() {
           </View>
         </If>
       </Split>
-
-      {alerts.map((alert) => (
-        <Dialog
-          open={open() === alert.id}
-          animation="fade"
-          closeOnEscape={alert.dismissable}
-          closeOnBackdropPress={alert.dismissable}
-          backdropStyle={backdrop()}
-          style={dialogCard(desktop ? 360 : 320)}
-          onOpenChange={({ open: next }) => {
-            if (next) return;
-            open.set(null);
-            chose(null);
-          }}
-        >
-          <View style={{ gap: 4 }}>
-            <Text style={dialogTitle()}>{alert.title}</Text>
-            <Text style={dialogText()}>{alert.description}</Text>
-          </View>
-          <View style={footer}>
-            {alert.actions.map((action) => (
-              <Button
-                variant={actionVariant(action.role)}
-                onPress={() => {
-                  open.set(null);
-                  chose(action.id);
-                }}
-                style={desktop ? undefined : { flex: 1 }}
-              >
-                {action.label}
-              </Button>
-            ))}
-          </View>
-        </Dialog>
-      ))}
     </DemoPage>
   );
 }

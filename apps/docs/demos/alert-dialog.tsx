@@ -1,7 +1,7 @@
 // The official alert dialog scene (`references/nsh/website/demos/el-alert-dialog.tsx`) with this
-// library's parts: three alerts, each listed with what it is about and a button that shows it
-// (a card per alert on a phone), and an inspector holding what the last one resolved with.
-import type { JSX } from "nsh";
+// library's parts: three alerts — a warning, one with Escape, one as an action sheet — each listed
+// with what it is about and opened by its own row or button, and an inspector holding what the last
+// one resolved with. The parts register the text; `AlertDialogContent` shows the system's alert.
 import { mount, signal, Text, View } from "nsh";
 
 import {
@@ -12,6 +12,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from "@/packages/ui/alert-dialog";
 import { Button } from "@/packages/ui/button";
 import { controlSize, listRow, RowDivider, sectionSurface } from "@/packages/ui/lib/surface";
@@ -21,7 +22,7 @@ import { desktop, Panel, Split, ui, wide } from "./stage";
 
 type Role = "cancel" | "destructive" | undefined;
 
-/** One alert: what it asks, the actions it offers, and whether a press outside it dismisses it. */
+/** One alert: what it asks, the buttons it offers, and whether a press outside it dismisses it. */
 type Alert = {
   id: string;
   label: string;
@@ -30,6 +31,7 @@ type Alert = {
   description: string;
   danger?: boolean;
   dismissable?: boolean;
+  presentation?: "alert" | "actionSheet";
   actions: { id: string; label: string; role?: Role }[];
 };
 
@@ -66,6 +68,7 @@ const alerts: Alert[] = [
     title: "Share the photo",
     description: "Every label comes from the app.",
     dismissable: true,
+    presentation: "actionSheet",
     actions: [
       { id: "copy", label: "Copy link" },
       { id: "save", label: "Save" },
@@ -78,8 +81,9 @@ const alerts: Alert[] = [
 function App() {
   const answer = signal("–");
   const shown = signal(0);
+  // The app's own copy of the open state: the component reports every change, the app follows.
   const open = signal<string | null>(null);
-  const show = (id: string) => {
+  const opened = (id: string) => {
     shown.update((n) => n + 1);
     open.set(id);
   };
@@ -130,22 +134,30 @@ function App() {
                   }}
                 >
                   <Text style={{ flex: 1, fontSize: 13, color: ui().muted }}>{alert.detail}</Text>
-                  <Button
-                    variant={alert.danger ? "destructive" : "secondary"}
-                    onPress={() => show(alert.id)}
+                  <AlertDialog
+                    open={open() === alert.id}
+                    onOpenChange={({ open: next }) => {
+                      if (next) opened(alert.id);
+                      else if (open() === alert.id) open.set(null);
+                    }}
+                    onAction={({ action }) => chose(action)}
                   >
-                    {alert.label}
-                  </Button>
+                    <AlertDialogTrigger variant={alert.danger ? "destructive" : "secondary"}>
+                      {alert.label}
+                    </AlertDialogTrigger>
+                    <TheAlert alert={alert} />
+                  </AlertDialog>
                 </View>
               </>
             ))}
           </View>
         </If>
-        {/* A phone: a row of the list per alert, its name and what it is about. */}
+        {/* A phone: a row of the list per alert, its name and what it is about. The app opens the
+            alert itself here, so a controlled `open` is what shows it. */}
         <If when={!wide()}>
           <View style={sectionSurface({ padded: true })}>
             {alerts.map((alert, i) => (
-              <View role="button" onPress={() => show(alert.id)} {...listRow({ first: i === 0 })}>
+              <View role="button" onPress={() => opened(alert.id)} {...listRow({ first: i === 0 })}>
                 <If when={i > 0}>
                   <RowDivider show />
                 </If>
@@ -163,43 +175,45 @@ function App() {
                     {alert.detail}
                   </Text>
                 </View>
+                <AlertDialog
+                  open={open() === alert.id}
+                  onOpenChange={({ open: next }) => {
+                    if (next) opened(alert.id);
+                    else if (open() === alert.id) open.set(null);
+                  }}
+                  onAction={({ action }) => chose(action)}
+                >
+                  <TheAlert alert={alert} />
+                </AlertDialog>
               </View>
             ))}
           </View>
         </If>
       </Split>
-
-      {alerts.map((alert) => (
-        <AlertDialog
-          open={open() === alert.id}
-          onOpenChange={({ open: next }) => {
-            if (!next) open.set(null);
-          }}
-          onAction={({ action }) => chose(action)}
-        >
-          <AlertDialogContent
-            closeOnEscape={alert.dismissable}
-            closeOnBackdropPress={alert.dismissable}
-          >
-            <AlertDialogHeader>
-              <AlertDialogTitle>{alert.title}</AlertDialogTitle>
-              <AlertDialogDescription>{alert.description}</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              {alert.actions.map((action) => (
-                <AlertDialogAction
-                  id={action.id}
-                  role={action.role}
-                  style={desktop ? undefined : { flex: 1 }}
-                >
-                  {action.label}
-                </AlertDialogAction>
-              ))}
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      ))}
     </DemoPage>
+  );
+}
+
+/** One alert's box, from its parts: the title and message the system draws, and its buttons. */
+function TheAlert(props: { alert: Alert }) {
+  return (
+    <AlertDialogContent
+      presentation={props.alert.presentation}
+      closeOnEscape={props.alert.dismissable}
+      closeOnBackdropPress={props.alert.dismissable}
+    >
+      <AlertDialogHeader>
+        <AlertDialogTitle>{props.alert.title}</AlertDialogTitle>
+        <AlertDialogDescription>{props.alert.description}</AlertDialogDescription>
+      </AlertDialogHeader>
+      <AlertDialogFooter>
+        {props.alert.actions.map((action) => (
+          <AlertDialogAction id={action.id} role={action.role}>
+            {action.label}
+          </AlertDialogAction>
+        ))}
+      </AlertDialogFooter>
+    </AlertDialogContent>
   );
 }
 

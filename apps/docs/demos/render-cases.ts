@@ -22,8 +22,17 @@ type App = {
   /** The pointer over what `selector` names: a hover's fill or ink. Desktops and the web only,
    * so it rejects on a phone. */
   hover(selector: string): Promise<void>;
+  /**
+   * Answers the dialogs the page shows from now on (`AlertDialog.show`): `handler` returns the
+   * text of the button to press, or `null` to close it without one. A shot cannot hold one: the
+   * step that shows a dialog is also the one that answers it, so the alert-dialog page shows the
+   * line it resolved with.
+   */
+  onDialog(handler: (dialog: { buttons: string[] }) => string | null): void;
   /** Resolves once a view matching `selector` is on screen (its timeout bounds the wait). */
   waitFor(selector: string, options?: { timeout?: number } | null): Promise<void>;
+  /** The texts on screen now, in order. */
+  texts(): string[];
   wait(ms: number): Promise<void>;
 };
 
@@ -83,6 +92,9 @@ export const photosReady = async (app: App) => {
  */
 export const antialiasing = { pixels: 6, delta: 6 } as const;
 
+/** Whether the alert-dialog page shows what its destructive button resolves with. */
+const answered = (app: App) => app.texts().includes('{ action: "delete" }');
+
 /** What a component does that the others do not. Keys must be catalog ids. */
 type Override = Omit<Case, "id">;
 
@@ -115,7 +127,18 @@ const overrides: Record<string, Override> = {
       await app.wait(160);
     },
   },
-  "alert-dialog": { steps: (app) => app.press("Delete…") },
+  "alert-dialog": {
+    // No shot can hold the system's box: it is answered the moment it is shown, and a dialog a
+    // step shows is a dialog that step also answers. What both pages then draw is the line
+    // `AlertDialog.show` resolved with — the destructive button's `id`, which only reaches them
+    // through the alert (the demo's `onAction`, the reference page's `show`). So the step checks
+    // that line: it, not the picture, is what proves the box showed and resolved.
+    steps: async (app) => {
+      app.onDialog(() => "Delete");
+      await app.press("Delete…");
+      if (!answered(app)) throw new Error("the alert did not resolve with the destructive action");
+    },
+  },
   sheet: { steps: (app) => app.press('side="bottom"') },
   // The drawer over everything: a scrim hides the page, so the shot is the open drawer itself.
   drawer: { steps: (app) => app.press("Share…") },

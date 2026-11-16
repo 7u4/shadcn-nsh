@@ -12,6 +12,23 @@
   screen), the open one on the `accent` fill at half with its chevron turned. No viewport (so no
   bar-wide panel and no size animation), no indicator arrow, no `asChild`. `add navigation-menu`
   brings `popup`, `icons`, `label-of`, `press` and `theme`.
+- **`alert-dialog` is the platform's alert now — a breaking change.** `AlertDialogContent` shows
+  `nsh/base`'s `AlertDialog.show` instead of drawing a card on `Dialog`: the box is the system's
+  (UIAlertController on iOS, NSAlert on macOS, NSH's drawing of the same box on the web, the
+  platform dialog on Android), so it does not follow the theme, it shows plain text only (no views,
+  icons or fields), and an Android alert takes at most three buttons. The parts keep their names but
+  their children are strings: `AlertDialogTitle` and `AlertDialogDescription` register the title and
+  the message, `AlertDialogAction` registers a button's `id` / label / `role`, and `AlertDialogHeader`
+  and `AlertDialogFooter` draw nothing. `AlertDialogContent` takes what `AlertDialogOptions` has
+  besides the content — `presentation`, `closeOnEscape`, `closeOnBackdropPress` — and loses `width`,
+  `animation`, `style`, `backdropStyle` and `closeOnSwipe`; `AlertDialogAction` loses `disabled` and
+  `style`; the root loses `onOpen`, `onClose` and `onCancel`, and `AlertDialogChangeReason` is now
+  `"triggerPress" | "select" | "cancel"` (`"select"` when a button was chosen, `"cancel"` when it
+  closed without one). `AlertDialogCancel` is new: an action with `role="cancel"` whose `id` is
+  `"cancel"` unless the app names another. `add alert-dialog` no longer brings `dialog`, `overlay`
+  or `theme`; it brings `button` and `open-state`. A confirmation card with content of the app's
+  own, in the app's look, stays `dialog`. The box stays one while it is up: a part that renders
+  again with the alert still open (a page whose layout rebuilds its children) stacks nothing.
 - **`message-scroller`.** A conversation that scrolls and keeps up with itself: `MessageScroller`,
   `MessageScrollerViewport`, `MessageScrollerContent`, `MessageScrollerItem` and
   `MessageScrollerButton`, after shadcn/ui's message scroller, on `nsh`'s `Scroll`. New turns follow

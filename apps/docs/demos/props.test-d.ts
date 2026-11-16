@@ -25,6 +25,7 @@ import type {
   AccordionPanelProps as BaseAccordionPanelProps,
   AccordionProps as BaseAccordionProps,
   AccordionTriggerProps as BaseAccordionTriggerProps,
+  AlertDialogOptions as BaseAlertDialogOptions,
   AvatarProps as BaseAvatarProps,
   ButtonProps as BaseButtonProps,
   CalendarProps as BaseCalendarProps,
@@ -221,13 +222,10 @@ type _accordionHeader = Assert<KeepsBase<BaseAccordionHeaderProps, AccordionHead
 type _accordionTrigger = Assert<KeepsBase<BaseAccordionTriggerProps, AccordionTriggerProps, never>>;
 /** `AccordionPanelProps`. */
 type _accordionPanel = Assert<KeepsBase<BaseAccordionPanelProps, AccordionPanelProps, never>>;
-/** `AlertDialogContentProps` — the root holds the open state. */
+/** `AlertDialogContentProps` — the root holds the open state, and the parts fill what the box
+ * shows: the title, the message and the buttons. */
 type _alertDialogContent = Assert<
-  KeepsBase<
-    BaseDialogProps,
-    AlertDialogContentProps,
-    "onCancel" | "onClose" | "onOpen" | "onOpenChange" | "open"
-  >
+  KeepsBase<BaseAlertDialogOptions, AlertDialogContentProps, "title" | "description" | "actions">
 >;
 /** `AvatarProps`. */
 type _avatar = Assert<KeepsBase<BaseAvatarProps, AvatarProps, never>>;
