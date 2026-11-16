@@ -78,7 +78,7 @@ flowchart TD
 - 组件集合只从 `scripts/catalog.ts`（脚本）或 `catalog.generated.ts`（NSH 运行时）取；不自己读 `registry.json` 过滤，也不 `readdir` 演示或文档目录来推导
 - `scripts/*` 可以把 `packages/cli/src/*` 当库 import（构建、serve、registry 形状校验）：它是工具，不是应用代码；CLI 本身仍只经 Registry 拿组件
 - registry JSON 的形状只在 `packages/cli/src/utils/registry-schema.ts` 校验；读到的 JSON 经它变成类型，不用 `as` 断言
-- `scripts/*` 可以 import `apps/docs/demos/render-cases.ts`（渲染用例与特例）与 `apps/docs/scripts/player-options.ts`（演示包的 `?idiom=` / `?theme=`：文档站与审计用同一份），不 import `apps/docs` 的其他代码
+- `scripts/*` 可以 import `apps/docs/demos/render-cases.ts`（渲染用例与特例）、`apps/docs/demos/palettes.ts`（可切换的主题清单：站点与主题渲染检查读同一份）与 `apps/docs/scripts/player-options.ts`（演示包的 `?idiom=` / `?theme=`：文档站与审计用同一份），不 import `apps/docs` 的其他代码
 - 每个组件的特例（渲染前的 steps、`selfReference`）只写在 `render-cases.ts`，按 id 覆盖；`packages/ui/index.ts` 手写，由检查保证它导出每个组件
 
 ## Themes

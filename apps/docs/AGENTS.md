@@ -85,6 +85,7 @@ Adding a component: add or extend the official row if one of theirs answers it (
 - `apps/docs/demos/<slug>.ref.tsx` is the same page written the upstream way, the look expanded on `nsh/base` controls. `bun run port:render` requires the two screenshots to match; don't change one without the other.
 - `bun run docs:demos` packages each demo with `nsh package --target web` into `public/demos/<slug>/` (gitignored) for the iframe. The demo `demo:` must name an existing `demos/<slug>.tsx`.
 - The demo page uses `demos/kit.tsx` (`DemoPage` / `DemoCard` / `DemoSection`). Colors are read in JSX so they follow the appearance.
+- The demos' **theme** is a palette (`demos/palettes.ts`: `default`, the build-time theme, or `shadcn`). The site keeps the choice in the demo app's storage — `nsh:<demos/nsh.json's id>:palette` in localStorage, written by `src/components/PaletteSwitch.astro` — and every page imports `demos/apply-palette.ts`, which reads it before it mounts and loads that theme's files on demand. `src/lib/palette.ts` builds the key from `nsh.json` and the list, so neither side names a palette or an app id of its own. A running app reads its storage once: the switch loads the panels again (`reloadDemos` in `demo-client.ts`). `bun run check:palette` proves the first frame a visitor sees is already the chosen theme's.
 
 ## Theme
 
@@ -97,6 +98,7 @@ bun run check:pages    # pages ↔ registry ↔ demos, sections, import names, g
 bun run check:docs     # astro sync + tsc
 nsh check apps/docs/demos  # the demos app
 bun run docs:demos     # package the previews
+bun run check:palette  # the first frame of a switched demo is the chosen theme (Chrome)
 vp check               # format, lint, tool types
 ```
 

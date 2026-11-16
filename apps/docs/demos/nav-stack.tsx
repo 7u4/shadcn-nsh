@@ -1,3 +1,4 @@
+import "./apply-palette";
 import { colors } from "@shadcn-nsh/theme";
 // A settings app on a navigation stack: a list of rows on the first page, a second page whose rows
 // push a third, and the header that follows — the back button while there is a page below, the

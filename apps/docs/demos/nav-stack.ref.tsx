@@ -1,3 +1,4 @@
+import "./apply-palette";
 import { colors } from "@shadcn-nsh/theme";
 // The reference of `nav-stack.tsx`: the same settings app as `nsh/base` writes it — its `NavStack`
 // and `NavPage`, and the page's header drawn by hand from `navPageLook()`'s words. The render check

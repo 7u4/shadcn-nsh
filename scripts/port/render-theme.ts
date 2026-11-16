@@ -1,75 +1,42 @@
 /**
- * The render check under the shadcn theme: every demo, and its reference page beside it, drawn
- * with `themes/shadcn/` selected — the theme the registry installs — and the two compared, so a
- * component drawn by hand still draws what its theme says.
+ * The render check under the themes the demos can switch to: every demo, and its reference page
+ * beside it, drawn with the theme its palette names (`apps/docs/demos/palettes.ts`) — shadcn's,
+ * the theme the registry installs — and the two compared, so a component drawn by hand still draws
+ * what its theme says.
  *
  *   bun scripts/port/render-theme.ts [--only <id,...>] [--filter <name>]
  *
- * The pages are copies of the demos one directory over (`apps/docs/demos-themed/`), each with
- * `selectTheme(shadcn)` before it mounts: the app's own theme is the build-time one, so the
- * theme comes from the same switch an app makes at run time, not from a second `nsh.json`. A page
- * stays its own entry, as in the build-time check, so the two draw the same app.
+ * The test opens each page with the palette in its storage, as the site's switch leaves it, and the
+ * page reads it before it mounts (`apply-palette.ts`): the theme arrives the way an app gets it,
+ * not from a second `nsh.json` or a copy of the demos with a `selectTheme` added. `default` is the
+ * build-time theme, whose check is `render.ts`.
  *
  * Nothing is kept as a baseline — the build-time theme's pictures are (`render.ts`) — so this
  * pass is reviewed by eye (`port:sheet`) and by what it reports: a component and its reference
  * page differ under a theme exactly when a shell overrides what the theme says.
  *
- * The copies are removed after the run; the pictures stay in `demos/shots-theme/`.
+ * The pictures stay in `demos/shots-theme/`.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+import { PALETTES } from "../../apps/docs/demos/palettes";
 import { cases } from "../../apps/docs/demos/render-cases";
 import { catalog } from "../catalog";
 import { repo } from "./lib";
 import { comparePairs, onlyIds, softwareBrowser } from "./render-shared";
 
 const demos = catalog().paths.demos;
-const themed = path.join(path.dirname(demos), "demos-themed");
-const shots = path.join(themed, "shots-theme");
-const kept = path.join(demos, "shots-theme");
+const shots = path.join(demos, "shots-theme");
 const only = onlyIds();
+/** The themes to check: the build-time one is `render.ts`'s. */
+const palettes = PALETTES.filter((palette) => palette.id !== "default");
 const chosen = cases.filter(({ id }) => !only || only.includes(id));
 
-/** The two imports a copied page gains: the theme, and how to put it on. */
-const HEAD = `import { selectTheme } from "@shadcn-nsh/theme";
-import { shadcn } from "@shadcn-nsh/theme-shadcn";
-
-`;
-
-/** Whether a source is a page: its last statement mounts one (every demo and reference page). */
-const isPage = (source: string) =>
-  /^mount\(/m.test(source.trimEnd().split("\n").at(-1)?.trim() ?? "");
-
-/** A page, with the theme put on before it mounts: the first render is already the theme's. */
-function withTheme(source: string): string {
-  const at = source.lastIndexOf("\nmount(");
-  const call = at < 0 ? "" : source.slice(at + 1);
-  const body = at < 0 ? source : source.slice(0, at + 1);
-  return `${HEAD}${body}// The shadcn theme, on before the first render: the theme the registry installs.\nselectTheme(shadcn);\n\n${call}`;
-}
-
-/** The demos' files, as a second app: the pages ask for the theme, everything else is copied. */
-function copy() {
-  fs.rmSync(themed, { recursive: true, force: true });
-  fs.mkdirSync(themed, { recursive: true });
-  fs.mkdirSync(shots, { recursive: true });
-  for (const name of fs.readdirSync(demos)) {
-    const from = path.join(demos, name);
-    if (!fs.statSync(from).isFile()) continue;
-    if (!/\.(tsx?|json)$/.test(name)) continue;
-    const source = fs.readFileSync(from, "utf8");
-    const text = name.endsWith(".tsx") && isPage(source) ? withTheme(source) : source;
-    fs.writeFileSync(path.join(themed, name), text);
-  }
-  // The types host `nsh check` generated for the demos: the pages' imports of `nsh` resolve it.
-  const host = path.join(demos, ".nsh");
-  if (fs.existsSync(host)) fs.symlinkSync(host, path.join(themed, ".nsh"));
-}
-
-// An installed CLI finds its runtimes next to `bin/nsh`, so nothing sets `NSH_RUNTIME` here; a
-// caller that sets it still gets it through `process.env`.
+// The runtime `nsh test` runs with is the installed CLI's (`docs/toolchain.md`); it finds its
+// runtimes next to `bin/nsh`, so nothing sets `NSH_RUNTIME` here; a caller that sets it still gets
+// it through `process.env`.
 const env = { ...process.env };
 
 /** The arguments `nsh test` takes: everything but our own (`--only <ids>`). */
@@ -92,12 +59,13 @@ function run(filter?: string): number {
       ...(browserScript.script ? ["--browser", browserScript.script] : []),
       ...(filter ? ["--filter", filter] : passthrough),
     ],
-    { cwd: themed, stdio: "inherit", env },
+    { cwd: demos, stdio: "inherit", env },
   );
   return result.status ?? 1;
 }
 
-copy();
+fs.rmSync(shots, { recursive: true, force: true });
+fs.mkdirSync(shots, { recursive: true });
 let status = 0;
 try {
   if (only) {
@@ -112,27 +80,28 @@ try {
   browserScript.done();
 }
 
-const differs =
-  status === 0
-    ? comparePairs({
-        pass: "theme",
-        shots,
-        name: (id, scheme) => `${id}-shadcn-${scheme}`,
-        only,
-      })
-    : 0;
+let differs = 0;
+if (status === 0) {
+  for (const palette of palettes) {
+    differs += comparePairs({
+      pass: "theme",
+      shots,
+      name: (id, scheme) => `${id}-${palette.id}-${scheme}`,
+      only,
+    });
+  }
+}
 
-// The pictures stay where the other check's do, for a look by eye; the app does not.
-fs.rmSync(kept, { recursive: true, force: true });
-if (fs.existsSync(shots)) fs.renameSync(shots, kept);
-fs.rmSync(themed, { recursive: true, force: true });
-console.log(`screenshots: ${path.relative(repo, kept)}`);
+console.log(`screenshots: ${path.relative(repo, shots)}`);
 console.log("one page of them all: bun run port:sheet");
 
-const pairs = chosen.filter(({ selfReference }) => !selfReference).length * 2;
+const pairs = chosen.filter(({ selfReference }) => !selfReference).length * 2 * palettes.length;
 if (differs > 0) {
-  console.error(`theme: ${differs} of ${pairs} pages differ from their reference under the theme`);
+  console.error(`theme: ${differs} of ${pairs} pages differ from their reference under a theme`);
   process.exit(1);
 }
-if (status === 0) console.log(`theme: ${pairs} pairs match under the shadcn theme`);
+if (status === 0) {
+  const themes = palettes.map((palette) => palette.id).join(", ");
+  console.log(`theme: ${pairs} pairs match under ${themes}`);
+}
 process.exit(status);

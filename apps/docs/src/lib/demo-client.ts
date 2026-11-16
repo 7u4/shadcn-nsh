@@ -92,6 +92,22 @@ function themeDemos(root: ParentNode) {
 }
 
 /**
+ * Loads every demo panel again, at the size and idiom it has, in the page's theme — for a choice an
+ * app can only read when it starts (the demos' palette: nsh's storage is loaded once, and it has no
+ * change event). The frame keeps its size, so the page does not move.
+ */
+export function reloadDemos(root: ParentNode = document) {
+  for (const frame of root.querySelectorAll<HTMLIFrameElement>(DEMO_FRAME)) {
+    const src = frame.dataset.playerSrc;
+    if (!src) continue;
+    // The document that runs from here on has not loaded yet: not a theme change, a new load.
+    delete frame.dataset.loaded;
+    delete frame.dataset.theme;
+    frame.setAttribute("src", withTheme(src, siteTheme()));
+  }
+}
+
+/**
  * The Phone / Desktop switch of a demo panel: the frame's size, the idiom the app runs with (it
  * reloads: an idiom is fixed when an app starts), and the frame's width, the stage's up to the
  * layout's (never scaled: the app shows at its real size).

@@ -10,6 +10,7 @@
       "@": "../../..",
       "@shadcn-nsh/theme": "../../../packages/theme/index.ts",
       "@shadcn-nsh/ui": "../../../packages/ui/index.ts",
+      "@shadcn-nsh/theme-default": "../../../packages/theme/themes/default/index.ts",
       "@shadcn-nsh/theme-shadcn": "../../../packages/theme/themes/shadcn/index.ts"
     }
   }
