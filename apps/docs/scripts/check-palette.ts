@@ -318,6 +318,8 @@ async function run(palette: PaletteId, scheme: string): Promise<Frame[]> {
     }
   } finally {
     browser.kill();
+    // Chrome writes to its profile while it shuts down: remove the profile once it has exited.
+    await browser.exited;
     fs.rmSync(profile, { recursive: true, force: true });
   }
 }
