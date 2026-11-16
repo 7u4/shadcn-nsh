@@ -8,8 +8,10 @@
  * - a `demo:` names the page's own demo;
  * - every name a fenced snippet imports from `@/components/ui/<id>` is
  *   exported by that component's file;
- * - every component page has a kind, and the kinds table names no component
- *   that does not have a page;
+ * - every component page has a kind, and the kinds table names nothing that
+ *   is neither a page nor a planned one;
+ * - the official tables in `src/lib/official.ts` name only pages that exist,
+ *   and say why when they serve nothing;
  * - `components.generated.ts` is what `bun run docs:components` would write.
  *
  * The component set itself (page, demo and reference page exist, no orphans) is
@@ -22,7 +24,8 @@ import path from "node:path";
 
 import { catalog } from "../../../scripts/catalog";
 import { components } from "../src/lib/components.generated";
-import { KIND_OF, KINDS } from "../src/lib/kinds";
+import { KIND_OF, KINDS, type ComponentKindId } from "../src/lib/kinds";
+import { NSH_ELEMENTS, SHADCN_UI, type OfficialEntry } from "../src/lib/official";
 import { componentPlan, isCurrent, readPageMeta } from "./build-components";
 
 const cat = catalog();
@@ -118,17 +121,56 @@ try {
 
 const byId = new Map(cat.components.map((component) => [component.id, component]));
 
-// Kinds: exactly one per page, and nothing in the table without a page.
+// Kinds: exactly one per page, and nothing in the table that is neither a page nor planned.
+const plannedSlugs = new Set(
+  [...SHADCN_UI, ...NSH_ELEMENTS]
+    .filter((entry) => entry.status === "planned")
+    .flatMap((entry) => entry.ours),
+);
+
 for (const component of cat.components) {
-  if (!KIND_OF[component.id]) {
+  const kind = KIND_OF[component.id];
+  if (!kind) {
     fail(`apps/docs/src/pages/docs/components/${component.id}.md: no kind in src/lib/kinds.ts`);
   }
 }
 
 for (const [slug, kind] of Object.entries(KIND_OF)) {
   if (!KINDS.includes(kind)) fail(`src/lib/kinds.ts: "${slug}" is "${kind}", which is not a kind`);
-  if (byId.has(slug)) continue;
-  fail(`src/lib/kinds.ts: "${slug}" is not a component page`);
+  if (byId.has(slug) || plannedSlugs.has(slug)) continue;
+  fail(`src/lib/kinds.ts: "${slug}" is not a component page and not a planned one`);
+}
+
+// The official tables: every row names pages that exist, and says why when it serves none.
+const tables: { label: string; entries: readonly OfficialEntry[] }[] = [
+  { label: "src/lib/official.ts SHADCN_UI", entries: SHADCN_UI },
+  { label: "src/lib/official.ts NSH_ELEMENTS", entries: NSH_ELEMENTS },
+];
+
+for (const { label, entries } of tables) {
+  const ids = new Set<string>();
+  const servedBy = new Map<string, string>();
+  for (const entry of entries) {
+    if (ids.has(entry.id)) fail(`${label}: "${entry.id}" is listed twice`);
+    ids.add(entry.id);
+    for (const slug of entry.ours) {
+      const owner = servedBy.get(slug);
+      if (owner) fail(`${label}: "${slug}" is served by "${owner}" and by "${entry.id}"`);
+      servedBy.set(slug, entry.id);
+      if (!KIND_OF[slug]) {
+        fail(`${label} "${entry.id}": "${slug}" has no kind in src/lib/kinds.ts`);
+      }
+      if (!byId.has(slug) && entry.status !== "planned") {
+        fail(`${label} "${entry.id}": no docs page "${slug}"`);
+      }
+    }
+    if (entry.ours.some((slug) => byId.has(slug))) continue;
+    if (!entry.status) {
+      fail(`${label} "${entry.id}": nothing serves it; give it a status and a note`);
+    } else if (!entry.note) {
+      fail(`${label} "${entry.id}": say why in a note`);
+    }
+  }
 }
 
 let importCount = 0;
@@ -204,4 +246,6 @@ if (problems.length > 0) {
   process.exit(1);
 }
 
-console.log(`check:pages ok — ${cat.components.length} components, ${importCount} imported names`);
+console.log(
+  `check:pages ok — ${cat.components.length} components, ${importCount} imported names; ${SHADCN_UI.length} shadcn/ui and ${NSH_ELEMENTS.length} NSH answered for`,
+);

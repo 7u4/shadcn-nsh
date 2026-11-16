@@ -40,7 +40,10 @@ export const KINDS: readonly ComponentKindId[] = [
   "text",
 ];
 
-/** Every component's kind, by registry id. */
+/**
+ * Every component's kind, by registry id. `navigation-menu` and `sidebar` are planned: they are
+ * listed here so their pages land grouped and linked when they exist (`src/lib/official.ts`).
+ */
 export const KIND_OF: Record<string, ComponentKindId> = {
   button: "actions",
   "button-group": "actions",
@@ -85,7 +88,9 @@ export const KIND_OF: Record<string, ComponentKindId> = {
   "context-menu": "navigation",
   menu: "navigation",
   menubar: "navigation",
+  "navigation-menu": "navigation",
   pagination: "navigation",
+  sidebar: "navigation",
   tabs: "navigation",
   tree: "navigation",
 

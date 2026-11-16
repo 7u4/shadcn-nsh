@@ -1,13 +1,14 @@
 /**
- * Builds the docs' component list from the catalog and the pages, and writes
+ * Builds the docs' component list from the catalog, the pages and the two tables, and writes
  * `src/lib/components.generated.ts`.
  *
  *   bun run docs:components
  *
  * Every component is one entry: the page's frontmatter title and description when it has them,
- * the registry's otherwise, plus its kind (`src/lib/kinds.ts`). The order is by kind, then title:
- * the order the sidebar and the index list the set in. `check:pages` fails when the checked-in
- * file no longer matches this plan.
+ * the registry's otherwise, plus its kind (`src/lib/kinds.ts`) and the official components it
+ * stands in for (`src/lib/official.ts`). The order is by kind, then title: the order the sidebar,
+ * the index and the coverage page list them in. `check:pages` fails when the checked-in file no
+ * longer matches this plan.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -16,7 +17,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { catalog } from "../../../scripts/catalog";
 import type { ComponentDoc } from "../src/lib/components.types";
 import { KIND_OF, KINDS } from "../src/lib/kinds";
-import { NSH_ELEMENTS } from "../src/lib/nsh-elements";
+import { nshElementOf, shadcnOf } from "../src/lib/official";
 
 const docs = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repo = path.resolve(docs, "../..");
@@ -62,7 +63,8 @@ export function componentPlan(): ComponentDoc[] {
       slug: id,
       title: meta.title ?? item.title ?? id,
       kind,
-      nshElement: id in NSH_ELEMENTS ? (NSH_ELEMENTS[id] ?? null) : id,
+      shadcn: shadcnOf(id) ?? null,
+      nshElement: nshElementOf(id) ?? null,
       description: meta.description ?? item.description ?? "",
     });
   }
@@ -81,6 +83,7 @@ export function renderComponents(plan: ComponentDoc[]): string {
     slug: ${JSON.stringify(entry.slug)},
     title: ${JSON.stringify(entry.title)},
     kind: ${JSON.stringify(entry.kind)},
+    shadcn: ${entry.shadcn === null ? "null" : JSON.stringify(entry.shadcn)},
     nshElement: ${entry.nshElement === null ? "null" : JSON.stringify(entry.nshElement)},
     description: ${JSON.stringify(entry.description)},
   },`,
