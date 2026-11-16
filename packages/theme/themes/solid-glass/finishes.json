@@ -1,0 +1,189 @@
+{
+  "press": {
+    "scale": 1
+  },
+  "dark": {
+    "card": {
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.16), inset 0 0 0 1px oklch(1 0 0 / 0.04), 0 1px 2px oklch(0 0 0 / 0.1), 0 12px 32px -14px oklch(0 0 0 / 0.6)"
+    },
+    "inset": {
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.04)"
+    },
+    "field": {
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.15)"
+    },
+    "raised": {
+      "backgroundColor": "oklch(1 0 0 / 0.07)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 1px 2px oklch(0 0 0 / 0.1)",
+      "borderColor": "oklch(1 0 0 / 0.06)"
+    },
+    "hover": {
+      "backgroundColor": "oklch(1 0 0 / 0.08)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 1px 2px oklch(0 0 0 / 0.1)",
+      "borderColor": "oklch(1 0 0 / 0.06)"
+    },
+    "pressed": {
+      "backgroundColor": "oklch(1 0 0 / 0.11)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11)",
+      "borderColor": "oklch(1 0 0 / 0.06)"
+    },
+    "light": {
+      "backgroundColor": "oklch(0.94 0 0 / 0.86)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0), inset 0 -1px 0 oklch(0 0 0 / 0.099)",
+      "borderColor": "oklch(0.967 0 0 / 0.667)"
+    },
+    "accent": {
+      "backgroundColor": "oklch(0.94 0 0 / 0.86)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0), inset 0 -1px 0 oklch(0 0 0 / 0.099), inset 0 0 0 1px oklch(0 0 0 / 0.07), 0 1px 2px oklch(0 0 0 / 0.1), 0 8px 18px -9px oklch(0 0 0 / 0.6)",
+      "borderColor": "oklch(0.967 0 0 / 0.667)"
+    },
+    "track": {
+      "boxShadow": "inset 0 1px 1.5px oklch(0 0 0 / 0.38), inset 0 -1px 0 oklch(1 0 0 / 0.09)",
+      "borderColor": "transparent"
+    },
+    "fill": {
+      "backgroundColor": "oklch(0.94 0 0 / 0.86)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0), inset 0 -1px 0 oklch(0 0 0 / 0.099)",
+      "borderColor": "transparent"
+    },
+    "knob": {
+      "backgroundColor": "oklch(0.97 0 0)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0 0 0 / 0.55)",
+      "borderColor": "transparent"
+    },
+    "knobOn": {
+      "backgroundColor": "oklch(0.97 0 0)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0 0 0 / 0.55)",
+      "borderColor": "transparent"
+    },
+    "handle": {
+      "backgroundColor": "oklch(0.97 0 0)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0 0 0 / 0.55)",
+      "borderColor": "transparent"
+    },
+    "pill": {
+      "backgroundColor": "oklch(1 0 0 / 0.07)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 1px 2px oklch(0 0 0 / 0.1)",
+      "borderColor": "oklch(1 0 0 / 0.06)"
+    },
+    "thumb": {
+      "backgroundColor": "oklch(1 0 0 / 0.07)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 1px 2px oklch(0 0 0 / 0.1)",
+      "borderColor": "oklch(1 0 0 / 0.06)"
+    },
+    "on": {
+      "backgroundColor": "oklch(1 0 0 / 0.07)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11)",
+      "borderColor": "oklch(1 0 0 / 0.06)"
+    },
+    "chip": {
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), inset 0 0 0 1px oklch(1 0 0 / 0.06)"
+    },
+    "glass": {
+      "backgroundColor": "oklch(1 0 0 / 0.07)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 0 0 1px oklch(1 0 0 / 0.06), 0 1px 2px oklch(0 0 0 / 0.1)",
+      "borderColor": "oklch(1 0 0 / 0.06)",
+      "backdropFilter": "blur(14px)"
+    },
+    "menu": {
+      "backgroundColor": "oklch(0.21779 0 0)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.16), inset 0 -1px 0 oklch(0 0 0 / 0), 0 24px 60px -18px oklch(0 0 0 / 0.6), 0 6px 16px -6px oklch(0 0 0 / 0.22)",
+      "borderColor": "oklch(1 0 0 / 0.06)"
+    },
+    "groove": {
+      "boxShadow": "0 1px 0 oklch(1 0 0 / 0.04)"
+    }
+  },
+  "light": {
+    "card": {
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 0 0 1px oklch(1 0 0 / 0.35), 0 1px 2px oklch(0.25 0.03 265 / 0.06), 0 12px 32px -14px oklch(0.3 0.06 265 / 0.28)"
+    },
+    "inset": {
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.35)"
+    },
+    "field": {
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0)"
+    },
+    "raised": {
+      "backgroundColor": "oklch(1 0 0 / 0.55)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 1px 2px oklch(0.25 0.03 265 / 0.06)",
+      "borderColor": "oklch(0.38 0.03 265 / 0.1)"
+    },
+    "hover": {
+      "backgroundColor": "oklch(0.3 0.02 265 / 0.1)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 1px 2px oklch(0.25 0.03 265 / 0.06)",
+      "borderColor": "oklch(0.38 0.03 265 / 0.1)"
+    },
+    "pressed": {
+      "backgroundColor": "oklch(0.3 0.02 265 / 0.26)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8)",
+      "borderColor": "oklch(0.38 0.03 265 / 0.1)"
+    },
+    "light": {
+      "backgroundColor": "oklch(0.2 0 0 / 0.88)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.3), inset 0 -1px 0 oklch(0 0 0 / 0.203)",
+      "borderColor": "oklch(0.2 0 0 / 0.685)"
+    },
+    "accent": {
+      "backgroundColor": "oklch(0.2 0 0 / 0.88)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.3), inset 0 -1px 0 oklch(0 0 0 / 0.203), inset 0 0 0 1px oklch(1 0 0 / 0.07), 0 1px 2px oklch(0.25 0.03 265 / 0.06), 0 8px 18px -9px oklch(0.3 0.06 265 / 0.28)",
+      "borderColor": "oklch(0.2 0 0 / 0.685)"
+    },
+    "track": {
+      "boxShadow": "inset 0 1px 1.5px oklch(0.3 0.06 265 / 0.14), inset 0 -1px 0 oklch(1 0 0 / 0.85)",
+      "borderColor": "transparent"
+    },
+    "fill": {
+      "backgroundColor": "oklch(0.2 0 0 / 0.88)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.3), inset 0 -1px 0 oklch(0 0 0 / 0.203)",
+      "borderColor": "transparent"
+    },
+    "knob": {
+      "backgroundColor": "oklch(1 0 0)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0.3 0.06 265 / 0.3)",
+      "borderColor": "transparent"
+    },
+    "knobOn": {
+      "backgroundColor": "oklch(1 0 0)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0.3 0.06 265 / 0.3)",
+      "borderColor": "transparent"
+    },
+    "handle": {
+      "backgroundColor": "oklch(1 0 0)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0.3 0.06 265 / 0.3)",
+      "borderColor": "transparent"
+    },
+    "pill": {
+      "backgroundColor": "oklch(1 0 0 / 0.55)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 1px 2px oklch(0.25 0.03 265 / 0.06)",
+      "borderColor": "oklch(0.38 0.03 265 / 0.1)"
+    },
+    "thumb": {
+      "backgroundColor": "oklch(1 0 0 / 0.55)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 1px 2px oklch(0.25 0.03 265 / 0.06)",
+      "borderColor": "oklch(0.38 0.03 265 / 0.1)"
+    },
+    "on": {
+      "backgroundColor": "oklch(0.3 0.02 265 / 0.09)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.85)",
+      "borderColor": "oklch(0.3 0.02 265 / 0.13)"
+    },
+    "chip": {
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), inset 0 0 0 1px oklch(0.38 0.03 265 / 0.1)"
+    },
+    "glass": {
+      "backgroundColor": "oklch(1 0 0 / 0.55)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 0 0 1px oklch(0.38 0.03 265 / 0.1), 0 1px 2px oklch(0.25 0.03 265 / 0.06)",
+      "borderColor": "oklch(0.38 0.03 265 / 0.1)",
+      "backdropFilter": "blur(14px) saturate(180%)"
+    },
+    "menu": {
+      "backgroundColor": "oklch(0.98192 0.00286 264.542)",
+      "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0.38 0.03 265 / 0.16), 0 24px 60px -18px oklch(0.3 0.06 265 / 0.28), 0 6px 16px -6px oklch(0.25 0.03 265 / 0.14)",
+      "borderColor": "oklch(0.38 0.03 265 / 0.22)"
+    },
+    "groove": {
+      "boxShadow": "0 1px 0 oklch(1 0 0 / 0.35)"
+    }
+  }
+}

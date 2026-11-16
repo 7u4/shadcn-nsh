@@ -28,6 +28,12 @@ export const PALETTES = [
     description:
       "shadcn's neutral palette: near-black and near-white fills, flat finishes, 8-point controls.",
   },
+  {
+    id: "solid-glass",
+    label: "Solid Glass",
+    description:
+      "Panes of thick smoky glass: a rim of light on each top edge, a hairline round it, a shadow underneath.",
+  },
 ] as const;
 
 export type Palette = (typeof PALETTES)[number];

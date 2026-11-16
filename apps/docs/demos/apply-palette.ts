@@ -31,6 +31,7 @@ type ThemeModule = { default: AppTheme };
 const themes: Record<PaletteId, () => Promise<ThemeModule>> = {
   default: () => import("@shadcn-nsh/theme-default"),
   shadcn: () => import("@shadcn-nsh/theme-shadcn"),
+  "solid-glass": () => import("@shadcn-nsh/theme-solid-glass"),
 };
 
 /** The element an app draws into, in the document around it (`#app` of the player page): the one
