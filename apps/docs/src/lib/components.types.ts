@@ -5,7 +5,7 @@ export type ComponentDoc = {
   /** The registry item's name, which is the page's file name. */
   slug: string;
   title: string;
-  /** The kind it is grouped under, from `kinds.ts`; exactly one per component. */
+  /** The kind it is grouped under, derived in `kinds.ts` from the rows in `official.ts`. */
   kind: ComponentKindId;
   /** The shadcn/ui page it stands in for, when one does (a rename, e.g. menu). */
   shadcn: string | null;

@@ -8,8 +8,8 @@
  * - a `demo:` names the page's own demo;
  * - every name a fenced snippet imports from `@/components/ui/<id>` is
  *   exported by that component's file;
- * - every component page has a kind, and the kinds table names nothing that
- *   is neither a page nor a planned one;
+ * - a page's kind is derived from the official tables, so there is no
+ *   hand-kept list of kinds to fall out of step;
  * - the official tables in `src/lib/official.ts` cover every file of
  *   `references/shadcn-ui`'s ui directory and every `references/nsh` element,
  *   name only pages that exist, and say why when they serve nothing;
@@ -25,7 +25,6 @@ import path from "node:path";
 
 import { catalog } from "../../../scripts/catalog";
 import { components } from "../src/lib/components.generated";
-import { KIND_OF, KINDS, type ComponentKindId } from "../src/lib/kinds";
 import { NSH_ELEMENTS, SHADCN_UI, type OfficialEntry } from "../src/lib/official";
 import { componentPlan, isCurrent, readPageMeta } from "./build-components";
 
@@ -122,25 +121,9 @@ try {
 
 const byId = new Map(cat.components.map((component) => [component.id, component]));
 
-// Kinds: exactly one per page, and nothing in the table that is neither a page nor planned.
-const plannedSlugs = new Set(
-  [...SHADCN_UI, ...NSH_ELEMENTS]
-    .filter((entry) => entry.status === "planned")
-    .flatMap((entry) => entry.ours),
-);
-
-for (const component of cat.components) {
-  const kind = KIND_OF[component.id];
-  if (!kind) {
-    fail(`apps/docs/src/pages/docs/components/${component.id}.md: no kind in src/lib/kinds.ts`);
-  }
-}
-
-for (const [slug, kind] of Object.entries(KIND_OF)) {
-  if (!KINDS.includes(kind)) fail(`src/lib/kinds.ts: "${slug}" is "${kind}", which is not a kind`);
-  if (byId.has(slug) || plannedSlugs.has(slug)) continue;
-  fail(`src/lib/kinds.ts: "${slug}" is not a component page and not a planned one`);
-}
+// Kinds are derived from the official rows, so a page with no kind cannot happen: every page is
+// either in a row's `ours` or it is ours. Nothing to keep in step here; the generated list above
+// is checked instead.
 
 // The official tables: every row names pages that exist, and says why when it serves none.
 const tables: { label: string; entries: readonly OfficialEntry[] }[] = [
@@ -158,9 +141,6 @@ for (const { label, entries } of tables) {
       const owner = servedBy.get(slug);
       if (owner) fail(`${label}: "${slug}" is served by "${owner}" and by "${entry.id}"`);
       servedBy.set(slug, entry.id);
-      if (!KIND_OF[slug]) {
-        fail(`${label} "${entry.id}": "${slug}" has no kind in src/lib/kinds.ts`);
-      }
       if (!byId.has(slug) && entry.status !== "planned") {
         fail(`${label} "${entry.id}": no docs page "${slug}"`);
       }

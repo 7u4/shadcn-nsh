@@ -65,10 +65,11 @@ const nshPrimitiveRows = rows(NSH_ELEMENTS.filter((entry) => entry.group === "pr
   </p>
   <p>
     This page is generated from <code>apps/docs/src/lib/official.ts</code>; do not edit it. Add a
-    component there and in <code>apps/docs/src/lib/kinds.ts</code>, then run
-    <code>bun run docs:components</code>. <code>bun run check:pages</code> fails when an official
-    component has no row, when a row names a page that does not exist, and when a row serves nothing
-    without saying why.
+    component there, then run <code>bun run docs:components</code>. Its rows are also what makes a
+    page <em>Official</em> on <a href={withBase("docs/components")}>Components</a>: a page named in
+    one of them is aligned with an official component, and a page named in none is this library's
+    own. <code>bun run check:pages</code> fails when an official component has no row, when a row
+    names a page that does not exist, and when a row serves nothing without saying why.
   </p>
 
   <h2 id="shadcn-ui">shadcn/ui</h2>
