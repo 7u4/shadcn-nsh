@@ -1,14 +1,13 @@
 /**
- * The components' two kinds: whether a component is aligned with a shadcn/ui component or is this
- * library's own. The sidebar, the components index and the coverage page group the set by these,
+ * The components' two kinds: whether a component is aligned with an NSH element or is this library's
+ * own. The sidebar, the components index and the coverage page group the set by these,
  * one kind per component, in this order.
  *
- * A component is not filed by hand: `src/lib/official.ts` says which shadcn/ui component each page
- * answers for, and a page listed by a `SHADCN_UI` row is aligned; one listed by none is ours, even
- * when it wraps an NSH element (every component is built on one, so that table cannot tell them
- * apart). Adding a component therefore means registering it in `official.ts` and its kind follows. `bun run check:pages` checks the generated list.
+ * A component is not filed by hand: `src/lib/official.ts` says which NSH element (one per
+ * `references/nsh/website/elements/*.md`) each page answers for, and a page listed by an
+ * `NSH_ELEMENTS` row is aligned; one listed by none is ours, whether or not shadcn/ui has one. Adding a component therefore means registering it in `official.ts` and its kind follows. `bun run check:pages` checks the generated list.
  */
-import { SHADCN_UI } from "./official";
+import { NSH_ELEMENTS } from "./official";
 
 export type ComponentKindId = "official" | "own";
 
@@ -22,12 +21,12 @@ export const KIND_LABELS: Record<ComponentKindId, string> = {
 export const KINDS: readonly ComponentKindId[] = ["official", "own"];
 
 /**
- * Every page a shadcn/ui row serves. The rows are the one place a page is registered, so this set
+ * Every page an NSH element row serves. The rows are the one place a page is registered, so this set
  * is derived once here rather than written down again.
  */
-const ALIGNED: ReadonlySet<string> = new Set(SHADCN_UI.flatMap((entry) => entry.ours));
+const ALIGNED: ReadonlySet<string> = new Set(NSH_ELEMENTS.flatMap((entry) => entry.ours));
 
-/** The kind of a page: aligned with a shadcn/ui component, or our own. */
+/** The kind of a page: aligned with an NSH element, or our own. */
 export function kindOf(slug: string): ComponentKindId {
   return ALIGNED.has(slug) ? "official" : "own";
 }

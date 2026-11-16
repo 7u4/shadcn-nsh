@@ -73,11 +73,11 @@ Do not edit the generated file. `src/lib/components.ts` keeps the helpers. `bun 
 
 ## Kinds and coverage
 
-There are two kinds, and neither is filed by hand. `Official` is a page that a `SHADCN_UI` row of `src/lib/official.ts` names in its `ours` — it stands in for a shadcn/ui component. `Our own` is a page no shadcn/ui row names: this library's addition, even when it wraps an NSH element (every component is built on one, so the NSH table cannot tell them apart). `src/lib/kinds.ts` derives the kind from those rows and holds the two labels and their order (`Official`, then `Our own`, alphabetically by title inside each); a new component lands in the right group the moment its row exists.
+There are two kinds, and neither is filed by hand. `Official` is a page that an `NSH_ELEMENTS` row of `src/lib/official.ts` (one per `references/nsh/website/elements/*.md`) names in its `ours` — it dresses an NSH element. `Our own` is a page no NSH row names: this library's addition, whether or not shadcn/ui has one. `src/lib/kinds.ts` derives the kind from those rows and holds the two labels and their order (`Official`, then `Our own`, alphabetically by title inside each); a new component lands in the right group the moment its row exists.
 
 `src/lib/official.ts` answers for both official sets: `SHADCN_UI` is one row per `references/shadcn-ui/apps/v4/registry/new-york-v4/ui/*.tsx`, `NSH_ELEMENTS` one row per `references/nsh/website/elements/*.md`. A row lists the pages here that serve it (`ours`, closest first) and, when nothing does, a `status` (`planned`, `missing`, `not-doing`, `primitive`) and a one-line `note`. Reversed, the same rows give each page its header links (`Official: shadcn/ui · dropdown-menu | NSH · nsh.dev/elements/menu`) and its base element, so a page never writes them itself. A `planned` row becomes a link by itself once its page exists.
 
-Adding a component: add or extend the official row if one of theirs answers it (a component no shadcn/ui row names is Our own), add its line to `public/llms.txt`, then `bun run docs:components`. The coverage page is generated from these tables; do not write it by hand.
+Adding a component: add or extend the official row if one of theirs answers it (a component no NSH row names is Our own), add its line to `public/llms.txt`, then `bun run docs:components`. The coverage page is generated from these tables; do not write it by hand.
 
 ## Demos
 
