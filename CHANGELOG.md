@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **`terminal`.** A program's output on the theme's surface, the keys typed back to it:
+  `nsh/base`'s `Terminal` wearing a well — the field's fill and edge, the theme's inner corners and a
+  padding — its cursor half the text color. `variant` is `default` (the well) or `ghost` (no fill, no
+  edge, no padding: an app whose window is the terminal gives the surface). The program stays the
+  app's (`write` on the ref, `onData` and `onResize` on events) and the text is the theme's
+  monospaced family; NSH interprets the escape sequences and draws the cells. `add terminal` brings
+  `theme`.
+
 - **`sidebar`.** An app's navigation column beside its page, after shadcn/ui's sidebar — its own
   component, drawn on `nsh`'s `View`: `SidebarProvider`, `useSidebar`, `Sidebar`,
   `SidebarTrigger`, `SidebarRail`, `SidebarInset`, `SidebarInput`, `SidebarHeader`, `SidebarFooter`,

@@ -1343,6 +1343,20 @@
           "target": "components/ui/sidebar.tsx"
         }
       ]
+    },
+    {
+      "name": "terminal",
+      "type": "registry:ui",
+      "title": "Terminal",
+      "description": "A program's output on the theme's field surface, the keys typed back to it.",
+      "registryDependencies": ["theme"],
+      "files": [
+        {
+          "path": "packages/ui/terminal.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/terminal.tsx"
+        }
+      ]
     }
   ]
 }

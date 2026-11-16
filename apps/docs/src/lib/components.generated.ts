@@ -616,6 +616,14 @@ export const components: ComponentDoc[] = [
     description: "Rich document typography and a code editor pass-through.",
   },
   {
+    slug: "terminal",
+    title: "Terminal",
+    kind: "text",
+    shadcn: null,
+    nshElement: "terminal",
+    description: "A program's output on the theme's field surface, the keys typed back to it.",
+  },
+  {
     slug: "text-view",
     title: "TextView",
     kind: "text",
