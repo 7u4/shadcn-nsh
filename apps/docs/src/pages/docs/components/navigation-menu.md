@@ -1,6 +1,6 @@
 ---
 layout: ../../../layouts/Docs.astro
-title: NavigationMenu
+title: Navigation Menu
 description: A row of triggers, each opening a panel of anything under the bar — one at a time.
 component: true
 demo: navigation-menu

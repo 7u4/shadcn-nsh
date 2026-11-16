@@ -328,7 +328,7 @@ export const components: ComponentDoc[] = [
   },
   {
     slug: "navigation-menu",
-    title: "NavigationMenu",
+    title: "Navigation Menu",
     kind: "navigation",
     shadcn: "navigation-menu",
     nshElement: null,
