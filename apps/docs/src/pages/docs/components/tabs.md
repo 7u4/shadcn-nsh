@@ -39,7 +39,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 ## API
 
-Uses `tabsLook` / `underlineTabsLook` and `TabTitle`. Composition: `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`, `Tab`. Every prop of [`nsh/base` Tabs](https://nsh.dev/elements/tabs) / [`Tab`](https://nsh.dev/elements/tab) passes through on the list and triggers.
+Uses `tabsLook` / `underlineTabsLook` and `TabTitle`. Composition: `Tabs`, `TabsList`, `TabsTrigger`, `TabsContent`, `Tab`. Every prop of [`nsh/base` Tabs / `Tab`](https://nsh.dev/elements/tabs) passes through on the list and triggers.
 
 | Prop (on `TabsList`) | Type                  | Default   |
 | -------------------- | --------------------- | --------- |

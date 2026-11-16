@@ -43,7 +43,7 @@ import { Segmented, SegmentedItem, SegmentedList } from "@/components/ui/segment
 
 ## API
 
-Uses `segmentedLook`. Composition: `Segmented`, `SegmentedList`, `SegmentedItem`. Every prop of [`nsh/base` Tabs](https://nsh.dev/elements/tabs) / [`Tab`](https://nsh.dev/elements/tab) passes through on the list and items.
+Uses `segmentedLook`. Composition: `Segmented`, `SegmentedList`, `SegmentedItem`. Every prop of [`nsh/base` Tabs / `Tab`](https://nsh.dev/elements/tabs) passes through on the list and items.
 
 | Prop (on `SegmentedList`) | Type            | Default     |
 | ------------------------- | --------------- | ----------- |

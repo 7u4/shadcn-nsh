@@ -50,7 +50,7 @@ import { Toggle, ToggleGroup } from "@/components/ui/toggle-group";
 
 ## API
 
-Every prop of [`nsh/base` ToggleGroup](https://nsh.dev/elements/toggle-group) passes through. `style` goes over the look's. `Toggle` is re-exported from the toggle package.
+Every prop of [`nsh/base` ToggleGroup](https://nsh.dev/elements/toggle) passes through. `style` goes over the look's. `Toggle` is re-exported from the toggle package.
 
 | Prop       | Type      | Default |
 | ---------- | --------- | ------- |

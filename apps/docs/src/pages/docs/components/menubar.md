@@ -103,7 +103,7 @@ is over the screen in `nsh/base`'s Menu already, and `popupStyle` / `backdropSty
 Two more differences: shadcn moves the open menu to the neighbour when the pointer passes over
 another trigger; here a press opens one menu and a press closes it, and the bar is a `menubar` whose
 triggers are `menuitem`s, so the pointer moves within the open popup as it does in [`Menu`](./menu).
-And nothing here is a native menu bar: [`nsh/desktop`](https://nsh.dev/elements/desktop)'s app menu is
+And nothing here is a native menu bar: [`nsh/desktop`](https://nsh.dev/modules/nsh-desktop)'s app menu is
 the platform's, and this is one drawn in the app.
 
 ## API

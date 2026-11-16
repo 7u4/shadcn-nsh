@@ -89,6 +89,40 @@ Every page links the base element it is built on where `nsh/base` has one, and t
 
 - /docs/components/message-scroller: A conversation that follows new turns while you are at the end, and waits when you are not. → styled on `nsh` Scroll, View and Text (no base element)
 
+- /docs/components/button-group: Buttons joined into one control, in a row or a column. → styled on `nsh` View and Text (no base element)
+
+- /docs/components/kbd: A key of a shortcut, alone or in a group. → styled on `nsh` View and Text (no base element)
+
+- /docs/components/pressable: A region that takes presses and adds only their feedback. → https://nsh.dev/elements/button
+
+- /docs/components/field: A set of fields under a legend: a label, its control, a description and errors that are read out. → styled on `nsh` View and Text (no base element)
+
+- /docs/components/input-group: A field's frame around an input and what sits beside it — an icon, a unit, a button. → https://nsh.dev/elements/input
+
+- /docs/components/label: The visible name of a control, beside it or over a group of them. → styled on `nsh` View and Text (no base element)
+
+- /docs/components/textarea: A field of several lines, in the look of the input. → https://nsh.dev/elements/input
+
+- /docs/components/drawer: A panel from the bottom edge, with a grabber, that a swipe closes. → https://nsh.dev/elements/sheet
+
+- /docs/components/menubar: A row of menus whose triggers stand in one bar, as a desktop app's menu bar. → https://nsh.dev/elements/menu
+
+- /docs/components/navigation-menu: A row of triggers, each opening a panel of anything under the bar — one at a time. → styled on `nsh` View and Text (no base element)
+
+- /docs/components/sidebar: An app's navigation column beside its page — folded to a strip of icons, or sliding in as a sheet on a phone. → styled on `nsh` View, Text and Scroll (no base element)
+
+- /docs/components/card: A flat surface that groups related content: a header with its action, a body and a footer. → styled on `nsh` View and Text (no base element)
+
+- /docs/components/empty: A centered block that says there is nothing here yet, and what to do about it. → styled on `nsh` View and Text (no base element)
+
+- /docs/components/item: A row of a list: what sits before its content, a title with a note, and controls after it. → styled on `nsh` View and Text (no base element)
+
+- /docs/components/separator: A hairline across the content, or down a row. → styled on `nsh` View (no base element)
+
+- /docs/components/alert: A notice of the whole page or form, read out when it appears. → styled on `nsh` View and Text (no base element)
+
+- /docs/components/skeleton: The shape of content that is still coming. → styled on `nsh` View (no base element)
+
 ## Elsewhere
 
 - Base behavior and elements: https://nsh.dev/elements
