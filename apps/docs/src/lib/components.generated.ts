@@ -336,6 +336,15 @@ export const components: ComponentDoc[] = [
       "A row of triggers, each opening a panel of anything under the bar — one at a time.",
   },
   {
+    slug: "nav-stack",
+    title: "NavStack",
+    kind: "navigation",
+    shadcn: null,
+    nshElement: "nav-stack",
+    description:
+      "Pages pushed on a stack — the system header on a phone, the app's own themed header on a desktop.",
+  },
+  {
     slug: "pagination",
     title: "Pagination",
     kind: "navigation",

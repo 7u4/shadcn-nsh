@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- **`nav-stack`.** Pages pushed on a stack, after `nsh/base`'s `NavStack`: `NavStack`,
+  `NavPage` and `createNavStack` re-exported, with the header a page shows on the desktops and the
+  web — the back button while there is a page below, the page's `title`, and `headerRight` at its
+  trailing edge — drawn from the theme's header roles (`header.headerStyle`: the page's fill, the
+  text color, the accent for the back button's tint) with a `colors.border` hairline under it. The
+  header is 48 points with a pointer (52 on a touch screen), and a page may replace it whole with
+  `header`. iOS and Android draw their system header instead, which takes the same `title` and
+  `headerRight`; there this component draws nothing of its own. The platform's back (Escape /
+  Alt+Left / the mouse's back button / the browser's back, the swipe back on iOS) pops through
+  `nsh/base`, and the back button honours `popOnBack` and reports `onBackPress`. `add nav-stack`
+  brings `button`, `icons` and `theme`.
+
 - **`sidebar`.** An app's navigation column beside its page, after shadcn/ui's sidebar — its own
   component, drawn on `nsh`'s `View`: `SidebarProvider`, `useSidebar`, `Sidebar`,
   `SidebarTrigger`, `SidebarRail`, `SidebarInset`, `SidebarInput`, `SidebarHeader`, `SidebarFooter`,

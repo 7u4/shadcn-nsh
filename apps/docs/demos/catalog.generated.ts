@@ -79,4 +79,5 @@ export const componentIds = [
   "message-scroller",
   "navigation-menu",
   "sidebar",
+  "nav-stack",
 ] as const;

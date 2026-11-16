@@ -86,6 +86,7 @@ export const KIND_OF: Record<string, ComponentKindId> = {
   menu: "navigation",
   menubar: "navigation",
   "navigation-menu": "navigation",
+  "nav-stack": "navigation",
   pagination: "navigation",
   sidebar: "navigation",
   tabs: "navigation",
