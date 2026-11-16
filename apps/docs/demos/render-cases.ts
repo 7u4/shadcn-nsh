@@ -130,6 +130,9 @@ const overrides: Record<string, Override> = {
     // Its popup's shadow lands a frame after the entrance: 16 ms more, on both pages.
     extraSettle: 16,
   },
+  // The bar stays; the panel opens under its trigger, which wears the chosen fill and turns its
+  // chevron up.
+  "navigation-menu": { steps: (app) => app.press("Getting started") },
   toast: { steps: (app) => app.press("Copy the link") },
   select: { steps: (app) => app.press("label:Language") },
   "date-picker": { steps: (app) => app.press("No due date") },

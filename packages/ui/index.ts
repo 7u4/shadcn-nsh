@@ -72,6 +72,7 @@ export * from "./bubble";
 export * from "./message";
 export * from "./attachment";
 export * from "./message-scroller";
+export * from "./navigation-menu";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

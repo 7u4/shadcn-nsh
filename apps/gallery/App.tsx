@@ -33,6 +33,13 @@ import {
   MenuLabel,
   MenuSeparator,
   MenuTrigger,
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  navigationMenuLook,
+  NavigationMenuTrigger,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -209,6 +216,47 @@ function App() {
               Bold
             </Toggle>
           </View>
+        </Section>
+
+        <Section title="Navigation menu">
+          <NavigationMenu>
+            <NavigationMenuList>
+              <NavigationMenuItem value="start">
+                <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
+                <NavigationMenuContent width={260}>
+                  <View style={{ gap: 2 }}>
+                    <NavigationMenuLink onPress={() => count.set(count() + 1)}>
+                      <Text style={navigationMenuLook().linkText}>Introduction</Text>
+                      <Text style={navigationMenuLook().linkHint}>
+                        Components you copy into your app.
+                      </Text>
+                    </NavigationMenuLink>
+                    <NavigationMenuLink onPress={() => count.set(count() + 1)}>
+                      <Text style={navigationMenuLook().linkText}>Installation</Text>
+                      <Text style={navigationMenuLook().linkHint}>What it needs to run.</Text>
+                    </NavigationMenuLink>
+                  </View>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem value="more">
+                <NavigationMenuTrigger>More</NavigationMenuTrigger>
+                <NavigationMenuContent width={200}>
+                  <Text style={{ fontSize: 13, color: colors.text }}>
+                    Rest on a trigger, or press it.
+                  </Text>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink onPress={() => count.set(count() + 1)}>Docs</NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem value="off">
+                <NavigationMenuTrigger disabled>Changelog</NavigationMenuTrigger>
+                <NavigationMenuContent width={200}>
+                  <Text style={{ fontSize: 13, color: colors.muted }}>Not written yet.</Text>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
         </Section>
 
         <Section title="Overlays">

@@ -54,7 +54,7 @@
       "name": "theme-default",
       "type": "registry:theme",
       "title": "Theme: NSH Gallery UI",
-      "description": "The library's own theme (the build-time one) as one more theme, installed into themes/default/ (theme.json, finishes.json, index.ts) \u2014 what an app built on another theme switches back to with `selectTheme` while it runs.",
+      "description": "The library's own theme (the build-time one) as one more theme, installed into themes/default/ (theme.json, finishes.json, index.ts) — what an app built on another theme switches back to with `selectTheme` while it runs.",
       "files": [
         {
           "path": "packages/theme/themes/default/theme.json",
@@ -309,7 +309,7 @@
       "name": "radio-group",
       "type": "registry:ui",
       "title": "Radio Group",
-      "description": "A sunk ring that fills in citrus, with a dot growing in \u2014 alone or as a choice tile.",
+      "description": "A sunk ring that fills in citrus, with a dot growing in — alone or as a choice tile.",
       "registryDependencies": ["checkbox", "label-of", "press", "surface", "theme"],
       "files": [
         {
@@ -351,7 +351,7 @@
       "name": "input",
       "type": "registry:ui",
       "title": "Input",
-      "description": "A text field \u2014 sunk, ghost, multiline, masked, or invalid.",
+      "description": "A text field — sunk, ghost, multiline, masked, or invalid.",
       "registryDependencies": ["theme"],
       "files": [
         {
@@ -365,7 +365,7 @@
       "name": "number-input",
       "type": "registry:ui",
       "title": "Number Input",
-      "description": "A sunk number field with \u2212 / + or stacked chevron steppers.",
+      "description": "A sunk number field with − / + or stacked chevron steppers.",
       "registryDependencies": ["icons", "input", "theme"],
       "files": [
         {
@@ -1065,7 +1065,7 @@
       "name": "skeleton",
       "type": "registry:ui",
       "title": "Skeleton",
-      "description": "The shape of content that is still coming: a block in the theme\u2019s accent fill that breathes.",
+      "description": "The shape of content that is still coming: a block in the theme’s accent fill that breathes.",
       "registryDependencies": ["theme"],
       "files": [
         {
@@ -1093,7 +1093,7 @@
       "name": "label",
       "type": "registry:ui",
       "title": "Label",
-      "description": "The visible name of a control: a row whose text is the control labels\u2019 own type.",
+      "description": "The visible name of a control: a row whose text is the control labels’ own type.",
       "registryDependencies": ["surface", "theme"],
       "files": [
         {
@@ -1149,7 +1149,7 @@
       "name": "input-group",
       "type": "registry:ui",
       "title": "InputGroup",
-      "description": "A field's frame around an input and what sits beside it \u2014 an icon, a unit, a button.",
+      "description": "A field's frame around an input and what sits beside it — an icon, a unit, a button.",
       "registryDependencies": ["button", "input", "theme"],
       "files": [
         {
@@ -1301,6 +1301,21 @@
         }
       ],
       "dependencies": ["lucide@^1.66.0"]
+    },
+    {
+      "name": "navigation-menu",
+      "type": "registry:ui",
+      "title": "NavigationMenu",
+      "description": "A row of triggers, each opening a panel of anything under the bar — one at a time.",
+      "registryDependencies": ["icons", "label-of", "open-state", "popup", "press", "theme"],
+      "dependencies": ["lucide@^1.66.0"],
+      "files": [
+        {
+          "path": "packages/ui/navigation-menu.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/navigation-menu.tsx"
+        }
+      ]
     }
   ]
 }
