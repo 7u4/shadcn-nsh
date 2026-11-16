@@ -6,6 +6,7 @@ import SiteFooter from "../components/SiteFooter.astro";
 import Toc from "../components/Toc.astro";
 import { getComponentBySlug } from "../lib/components";
 import { neighbors, pageFromPath } from "../lib/nav";
+import { nshElementUrl, shadcnUrl } from "../lib/official";
 import { EDIT_BASE, BASE } from "../lib/site";
 import BaseLayout from "./BaseLayout.astro";
 
@@ -46,11 +47,10 @@ const { prev, next } = neighbors(path);
 
 const slugMatch = pathNoBase.match(/^\/docs\/components\/([^/]+)$/);
 const componentDoc = isComponentPage && slugMatch ? getComponentBySlug(slugMatch[1]!) : undefined;
-const nshUrl =
-  componentDoc?.nshElement != null
-    ? `https://nsh.dev/elements/${componentDoc.nshElement}`
-    : undefined;
-const nshMdUrl = nshUrl ? `${nshUrl}.md` : undefined;
+const shadcnHref = componentDoc?.shadcn ? shadcnUrl(componentDoc.shadcn) : undefined;
+const nshHref =
+  componentDoc?.nshElement != null ? nshElementUrl(componentDoc.nshElement) : undefined;
+const nshMdHref = nshHref ? `${nshHref}.md` : undefined;
 const authoringFile = componentDoc ? `packages/ui/${componentDoc.slug}.tsx` : undefined;
 
 const editPath = navPage?.source;
@@ -90,22 +90,23 @@ if (demo) {
           </header>
         ) : null}
         <div class="doc-body">
-          {componentDoc && nshUrl ? (
+          {componentDoc && (shadcnHref || nshHref) ? (
             <p class="component-chrome">
-              Base:{" "}
-              <a href={nshUrl} rel="noopener noreferrer">
-                nsh/base · {componentDoc.nshElement}
-              </a>
-              {" · "}
-              <a href={nshMdUrl} rel="noopener noreferrer">
-                .md
-              </a>
-              {componentDoc.slug !== componentDoc.nshElement ? (
+              Official:{" "}
+              {shadcnHref ? (
+                <a href={shadcnHref} rel="noopener noreferrer">
+                  shadcn/ui · {componentDoc.shadcn}
+                </a>
+              ) : null}
+              {shadcnHref && nshHref ? " | " : null}
+              {nshHref ? (
                 <>
-                  {" "}
-                  <span class="muted">
-                    (docs slug <code>{componentDoc.slug}</code>)
-                  </span>
+                  <a href={nshHref} rel="noopener noreferrer">
+                    NSH · nsh.dev/elements/{componentDoc.nshElement}
+                  </a>{" "}
+                  <a class="muted" href={nshMdHref} rel="noopener noreferrer">
+                    .md
+                  </a>
                 </>
               ) : null}
             </p>
@@ -118,13 +119,13 @@ if (demo) {
             </>
           ) : null}
           <div class="doc-md" set:html={bodyHtml} />
-          {componentDoc && nshUrl ? (
+          {componentDoc && nshHref ? (
             <>
               <h2 id="behavior-a11y">Behavior &amp; a11y</h2>
               <p>
                 Keyboard, focus, platform notes, and the full unstyled API live on nsh — not on this
                 page. See{" "}
-                <a href={nshUrl} rel="noopener noreferrer">
+                <a href={nshHref} rel="noopener noreferrer">
                   {componentDoc.title} on nsh.dev
                 </a>
                 . This package is a curated styled wrapper; only props listed under API (when

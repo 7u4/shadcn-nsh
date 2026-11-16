@@ -1,12 +1,14 @@
 /**
- * Builds the docs' component list from the catalog and the pages, and writes
+ * Builds the docs' component list from the catalog, the pages and the two tables, and writes
  * `src/lib/components.generated.ts`.
  *
  *   bun run docs:components
  *
  * Every component is one entry: the page's frontmatter title and description when it has them,
- * the registry's otherwise. The order is by slug. `check:pages` fails when the checked-in file
- * no longer matches this plan.
+ * the registry's otherwise, plus its kind (`src/lib/kinds.ts`) and the official components it
+ * stands in for (`src/lib/official.ts`). The order is by kind, then title: the order the sidebar,
+ * the index and the coverage page list them in. `check:pages` fails when the checked-in file no
+ * longer matches this plan.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -14,7 +16,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { catalog } from "../../../scripts/catalog";
 import type { ComponentDoc } from "../src/lib/components.types";
-import { NSH_ELEMENTS } from "../src/lib/nsh-elements";
+import { KIND_OF, KINDS } from "../src/lib/kinds";
+import { nshElementOf, shadcnOf } from "../src/lib/official";
 
 const docs = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const repo = path.resolve(docs, "../..");
@@ -47,19 +50,29 @@ export function readPageMeta(source: string): PageMeta {
   return meta;
 }
 
-/** Every component, as the site should list it. */
+/** Every component, as the site should list it: by kind, then title. */
 export function componentPlan(): ComponentDoc[] {
   const plan: ComponentDoc[] = [];
   for (const { id, item, page } of catalog().components) {
+    const kind = KIND_OF[id];
+    if (!kind) {
+      throw new Error(`${id}: no kind in apps/docs/src/lib/kinds.ts; add it before generating.`);
+    }
     const meta = readPageMeta(fs.readFileSync(page, "utf8"));
     plan.push({
       slug: id,
       title: meta.title ?? item.title ?? id,
-      nshElement: id in NSH_ELEMENTS ? (NSH_ELEMENTS[id] ?? null) : id,
+      kind,
+      shadcn: shadcnOf(id) ?? null,
+      nshElement: nshElementOf(id) ?? null,
       description: meta.description ?? item.description ?? "",
     });
   }
-  return plan.sort((a, b) => a.slug.localeCompare(b.slug));
+  const rank = (kind: ComponentDoc["kind"]) => KINDS.indexOf(kind);
+  return plan.sort(
+    (a, b) =>
+      rank(a.kind) - rank(b.kind) || a.title.localeCompare(b.title) || a.slug.localeCompare(b.slug),
+  );
 }
 
 /** The generated module, formatted as the repository's formatter leaves it. */
@@ -69,6 +82,8 @@ export function renderComponents(plan: ComponentDoc[]): string {
       (entry) => `  {
     slug: ${JSON.stringify(entry.slug)},
     title: ${JSON.stringify(entry.title)},
+    kind: ${JSON.stringify(entry.kind)},
+    shadcn: ${entry.shadcn === null ? "null" : JSON.stringify(entry.shadcn)},
     nshElement: ${entry.nshElement === null ? "null" : JSON.stringify(entry.nshElement)},
     description: ${JSON.stringify(entry.description)},
   },`,

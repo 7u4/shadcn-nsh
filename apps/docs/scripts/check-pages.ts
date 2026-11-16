@@ -8,6 +8,11 @@
  * - a `demo:` names the page's own demo;
  * - every name a fenced snippet imports from `@/components/ui/<id>` is
  *   exported by that component's file;
+ * - every component page has a kind, and the kinds table names nothing that
+ *   is neither a page nor a planned one;
+ * - the official tables in `src/lib/official.ts` cover every file of
+ *   `references/shadcn-ui`'s ui directory and every `references/nsh` element,
+ *   name only pages that exist, and say why when they serve nothing;
  * - `components.generated.ts` is what `bun run docs:components` would write.
  *
  * The component set itself (page, demo and reference page exist, no orphans) is
@@ -20,6 +25,8 @@ import path from "node:path";
 
 import { catalog } from "../../../scripts/catalog";
 import { components } from "../src/lib/components.generated";
+import { KIND_OF, KINDS, type ComponentKindId } from "../src/lib/kinds";
+import { NSH_ELEMENTS, SHADCN_UI, type OfficialEntry } from "../src/lib/official";
 import { componentPlan, isCurrent, readPageMeta } from "./build-components";
 
 const cat = catalog();
@@ -104,13 +111,119 @@ function exportsOf(file: string): Set<string> {
   return names;
 }
 
-// Generated list.
-const plan = componentPlan();
-if (!isCurrent(plan, components)) {
-  fail("components.generated.ts is stale; run `bun run docs:components`");
+// Generated list. A page with no kind throws the plan away: `check:pages` reports that below.
+try {
+  if (!isCurrent(componentPlan(), components)) {
+    fail("components.generated.ts is stale; run `bun run docs:components`");
+  }
+} catch (error) {
+  fail((error as Error).message);
 }
 
 const byId = new Map(cat.components.map((component) => [component.id, component]));
+
+// Kinds: exactly one per page, and nothing in the table that is neither a page nor planned.
+const plannedSlugs = new Set(
+  [...SHADCN_UI, ...NSH_ELEMENTS]
+    .filter((entry) => entry.status === "planned")
+    .flatMap((entry) => entry.ours),
+);
+
+for (const component of cat.components) {
+  const kind = KIND_OF[component.id];
+  if (!kind) {
+    fail(`apps/docs/src/pages/docs/components/${component.id}.md: no kind in src/lib/kinds.ts`);
+  }
+}
+
+for (const [slug, kind] of Object.entries(KIND_OF)) {
+  if (!KINDS.includes(kind)) fail(`src/lib/kinds.ts: "${slug}" is "${kind}", which is not a kind`);
+  if (byId.has(slug) || plannedSlugs.has(slug)) continue;
+  fail(`src/lib/kinds.ts: "${slug}" is not a component page and not a planned one`);
+}
+
+// The official tables: every row names pages that exist, and says why when it serves none.
+const tables: { label: string; entries: readonly OfficialEntry[] }[] = [
+  { label: "src/lib/official.ts SHADCN_UI", entries: SHADCN_UI },
+  { label: "src/lib/official.ts NSH_ELEMENTS", entries: NSH_ELEMENTS },
+];
+
+for (const { label, entries } of tables) {
+  const ids = new Set<string>();
+  const servedBy = new Map<string, string>();
+  for (const entry of entries) {
+    if (ids.has(entry.id)) fail(`${label}: "${entry.id}" is listed twice`);
+    ids.add(entry.id);
+    for (const slug of entry.ours) {
+      const owner = servedBy.get(slug);
+      if (owner) fail(`${label}: "${slug}" is served by "${owner}" and by "${entry.id}"`);
+      servedBy.set(slug, entry.id);
+      if (!KIND_OF[slug]) {
+        fail(`${label} "${entry.id}": "${slug}" has no kind in src/lib/kinds.ts`);
+      }
+      if (!byId.has(slug) && entry.status !== "planned") {
+        fail(`${label} "${entry.id}": no docs page "${slug}"`);
+      }
+    }
+    if (entry.ours.some((slug) => byId.has(slug))) continue;
+    if (!entry.status) {
+      fail(`${label} "${entry.id}": nothing serves it; give it a status and a note`);
+    } else if (!entry.note) {
+      fail(`${label} "${entry.id}": say why in a note`);
+    }
+  }
+}
+
+// The official sets themselves: a component added upstream with no row here fails.
+const references = path.join(repo, "references");
+const names = (dir: string, extension: string): string[] | undefined => {
+  if (!fs.existsSync(dir)) return undefined;
+  return fs
+    .readdirSync(dir)
+    .filter((file) => file.endsWith(extension) && file !== "index.md")
+    .map((file) => file.slice(0, -extension.length))
+    .sort();
+};
+
+const shadcnDir = path.join(references, "shadcn-ui/apps/v4/registry/new-york-v4/ui");
+const shadcnFiles = names(shadcnDir, ".tsx");
+if (shadcnFiles) {
+  const rows = new Set(SHADCN_UI.map((entry) => entry.id));
+  for (const id of shadcnFiles) {
+    if (!rows.has(id)) {
+      fail(`references/shadcn-ui …/ui/${id}.tsx: no row in SHADCN_UI (src/lib/official.ts)`);
+    }
+  }
+  for (const id of rows) {
+    if (!shadcnFiles.includes(id))
+      fail(`SHADCN_UI: "${id}" is no file in references/shadcn-ui …/ui`);
+  }
+}
+
+const nshDir = path.join(references, "nsh/website/elements");
+const nshFiles = names(nshDir, ".md");
+if (nshFiles) {
+  const rows = new Map(NSH_ELEMENTS.map((entry) => [entry.id, entry]));
+  for (const id of nshFiles) {
+    if (!rows.has(id)) {
+      fail(
+        `references/nsh/website/elements/${id}.md: no row in NSH_ELEMENTS (src/lib/official.ts)`,
+      );
+    }
+  }
+  for (const [id, entry] of rows) {
+    if (!nshFiles.includes(id)) {
+      fail(`NSH_ELEMENTS: "${id}" is no element in references/nsh/website/elements`);
+      continue;
+    }
+    const source = fs.readFileSync(path.join(nshDir, `${id}.md`), "utf8");
+    const group = /^group:\s*(\S+)\s*$/m.exec(source)?.[1];
+    if (group && group !== entry.group) {
+      fail(`NSH_ELEMENTS: "${id}" is "${group}" in references/nsh, not "${entry.group}"`);
+    }
+  }
+}
+
 let importCount = 0;
 const required = ["Installation", "Usage", "Examples", "API"];
 const old = new Set(["Install", "Composition", "Differences", "Not forwarded"]);
@@ -184,4 +297,10 @@ if (problems.length > 0) {
   process.exit(1);
 }
 
-console.log(`check:pages ok — ${cat.components.length} components, ${importCount} imported names`);
+const official = [
+  shadcnFiles ? `${SHADCN_UI.length} shadcn/ui` : "shadcn/ui (references/ empty)",
+  nshFiles ? `${NSH_ELEMENTS.length} NSH` : "NSH (references/ empty)",
+];
+console.log(
+  `check:pages ok — ${cat.components.length} components, ${importCount} imported names; ${official.join(", ")} answered for`,
+);

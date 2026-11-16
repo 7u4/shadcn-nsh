@@ -1,4 +1,5 @@
 ---
+import { KIND_LABELS } from "../lib/kinds";
 import { SIDEBAR_GROUPS, SIDEBAR_PAGES, type SidebarGroupId, type SidebarPage } from "../lib/nav";
 
 export interface Props {
@@ -16,6 +17,13 @@ const groupLabel = (index: number) => {
   const group = SIDEBAR_PAGES[index]!.group;
   if (!group || group === SIDEBAR_PAGES[index - 1]?.group) return undefined;
   return SIDEBAR_GROUPS[group as SidebarGroupId];
+};
+
+/** The component kind each run of component pages is listed under. */
+const kindLabel = (index: number) => {
+  const kind = SIDEBAR_PAGES[index]!.kind;
+  if (!kind || kind === SIDEBAR_PAGES[index - 1]?.kind) return undefined;
+  return KIND_LABELS[kind];
 };
 ---
 
@@ -51,6 +59,11 @@ const groupLabel = (index: number) => {
           {groupLabel(index) && (
             <li class="sidebar-subgroup" role="presentation">
               {groupLabel(index)}
+            </li>
+          )}
+          {kindLabel(index) && (
+            <li class="sidebar-subgroup" role="presentation">
+              {kindLabel(index)}
             </li>
           )}
           <li>
