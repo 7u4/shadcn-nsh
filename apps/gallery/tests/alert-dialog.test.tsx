@@ -1,39 +1,42 @@
 import { expect, open, test } from "nsh/test";
 
-test("AlertDialog reports the destructive action id and closes", async () => {
+test("AlertDialog shows its parts as the system's alert: title, message, buttons in order", async () => {
   const app = await open("./alert-dialog.fixture.tsx");
+  // The cancel button is `AlertDialogCancel`: pressing it reports its `id`, `"cancel"`.
+  app.onDialog((dialog) => (dialog.buttons.includes("Keep") ? "Keep" : null));
   await app.press("text:Open A");
-  await app.waitFor("text:Body A");
-  await app.press("text:Delete");
-  await app.waitFor("action delete");
-  await app.wait(100);
-  expect(app.shows("Body A")).toBe(false);
+  await app.waitFor("text:action cancel");
+  expect(app.dialogs().length).toBe(1);
+  expect(app.dialogs()[0]).toMatchObject({
+    title: "Delete the photo?",
+    message: "This cannot be undone.",
+    buttons: ["Keep", "Delete"],
+    sheet: false,
+  });
 });
 
-test("AlertDialog cancel reports its own id", async () => {
+test("the chosen button's id reaches onAction", async () => {
   const app = await open("./alert-dialog.fixture.tsx");
+  app.onDialog((dialog) => (dialog.buttons.includes("Delete") ? "Delete" : null));
   await app.press("text:Open A");
-  await app.waitFor("text:Body A");
-  await app.press("text:Keep");
-  await app.waitFor("action cancel");
+  await app.waitFor("text:action delete");
 });
 
-test("Escape reports a null action when the alert allows it", async () => {
-  const app = await open("./alert-dialog.fixture.tsx", { platform: "macos" });
-  await app.press("text:Open B");
-  await app.waitFor("text:Body B");
-  await app.keyboard.press("escape");
-  await app.waitFor("action null");
-  await app.wait(100);
-  expect(app.shows("Body B")).toBe(false);
-});
-
-test("a disabled AlertDialog trigger does not open", async () => {
+test("closing without a button reports null and closes a controlled alert", async () => {
   const app = await open("./alert-dialog.fixture.tsx");
+  app.onDialog(() => null);
+  await app.press("text:Show B");
+  await app.waitFor("text:action null");
+  expect(app.texts()).toContain("open false");
+});
+
+test("a disabled AlertDialog trigger shows no alert", async () => {
+  const app = await open("./alert-dialog.fixture.tsx");
+  app.onDialog(() => null);
   await app.press("text:Flip");
   await app.wait(100);
   expect(app.enabled("text:Open C")).toBe(false);
   await app.press("text:Open C").catch(() => {});
   await app.wait(100);
-  expect(app.shows("Body C")).toBe(false);
+  expect(app.dialogs().length).toBe(0);
 });

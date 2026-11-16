@@ -19,7 +19,7 @@ export const components: ComponentDoc[] = [
     slug: "alert-dialog",
     title: "Alert Dialog",
     nshElement: "alert-dialog",
-    description: "A confirmation card that waits for an action, on the shared dialog look.",
+    description: "A confirmation of the platform's own: shadcn's parts over the system's alert.",
   },
   {
     slug: "aspect-ratio",

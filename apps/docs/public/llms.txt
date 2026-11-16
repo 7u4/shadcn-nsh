@@ -42,7 +42,7 @@ Every page links its base element where `nsh/base` has one: behavior, keyboard s
 - /docs/components/hover-card: A preview card that grows from its trigger, on the shared popover surface. → https://nsh.dev/elements/hover-card
 - /docs/components/sheet: A panel that slides in from an edge of the screen over a scrim. → https://nsh.dev/elements/sheet
 - /docs/components/toast: A raised banner with a title, optional description, action and close. → https://nsh.dev/elements/toast
-- /docs/components/alert-dialog: A confirmation card that waits for an action, on the shared dialog look. → https://nsh.dev/elements/alert-dialog
+- /docs/components/alert-dialog: A confirmation of the platform's own: shadcn's parts over the system's alert. → https://nsh.dev/elements/alert-dialog
 - /docs/components/menu: A menu of items, separators and submenus on the shared menu look. → https://nsh.dev/elements/menu
 - /docs/components/context-menu: A menu at the pointer, on the shared menu look. → https://nsh.dev/elements/menu
 - /docs/components/select: A list of choices from a field trigger, on the shared listbox look. → https://nsh.dev/elements/select

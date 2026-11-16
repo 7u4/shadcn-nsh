@@ -2,10 +2,6 @@ import { Text, View, mount } from "nsh";
 
 // Alert dialog, hover card, toolbar — open chrome in the first screen, nothing floating over it.
 import {
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
   Button,
   Link,
   Toggle,
@@ -24,20 +20,19 @@ const box = { width: 220, flexShrink: 0, margin: 0, maxWidth: 220 };
 mount(() => (
   <Page>
     <Panel title="Surfaces">
+      {/* The card an alert would wear: `alert-dialog` asks the system, so the card is drawn here. */}
       <Row label="alert">
         <View style={[dialogCard(220), box]}>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete file?</AlertDialogTitle>
-            <AlertDialogDescription>This cannot be undone.</AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
+          <Text style={dialogTitle()}>Delete file?</Text>
+          <Text style={dialogText()}>This cannot be undone.</Text>
+          <View style={{ flexDirection: "row", gap: 8, paddingTop: 4, justifyContent: "flex-end" }}>
             <Button size="sm" variant="secondary">
               Cancel
             </Button>
             <Button size="sm" variant="destructive">
               Delete
             </Button>
-          </AlertDialogFooter>
+          </View>
         </View>
       </Row>
       <Row label="hover">

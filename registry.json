@@ -478,8 +478,8 @@
       "name": "alert-dialog",
       "type": "registry:ui",
       "title": "Alert Dialog",
-      "description": "A confirmation card that waits for an action, on the shared dialog look.",
-      "registryDependencies": ["button", "dialog", "open-state", "overlay"],
+      "description": "A confirmation of the platform's own: shadcn's parts over the system's alert (AlertDialog.show).",
+      "registryDependencies": ["button", "open-state"],
       "files": [
         {
           "path": "packages/ui/alert-dialog.tsx",

@@ -22,6 +22,13 @@ type App = {
   /** The pointer over what `selector` names: a hover's fill or ink. Desktops and the web only,
    * so it rejects on a phone. */
   hover(selector: string): Promise<void>;
+  /**
+   * Answers the dialogs the page shows from now on (`AlertDialog.show`): `handler` returns the
+   * text of the button to press, or `null` to close it without one. A shot cannot hold one: the
+   * step that shows a dialog is also the one that answers it, so the alert-dialog page shows the
+   * line it resolved with.
+   */
+  onDialog(handler: (dialog: { buttons: string[] }) => string | null): void;
   /** Resolves once a view matching `selector` is on screen (its timeout bounds the wait). */
   waitFor(selector: string, options?: { timeout?: number } | null): Promise<void>;
   wait(ms: number): Promise<void>;
@@ -115,7 +122,15 @@ const overrides: Record<string, Override> = {
       await app.wait(160);
     },
   },
-  "alert-dialog": { steps: (app) => app.press("Delete…") },
+  "alert-dialog": {
+    // The system's box is answered the moment it is shown, so the shot holds the page and the line
+    // both pages resolved with — the destructive button's `id`, which only reaches it through the
+    // alert (the demo through `onAction`, the reference page through `show`).
+    steps: async (app) => {
+      app.onDialog(() => "Delete");
+      await app.press("Delete…");
+    },
+  },
   sheet: { steps: (app) => app.press('side="bottom"') },
   // The drawer over everything: a scrim hides the page, so the shot is the open drawer itself.
   drawer: { steps: (app) => app.press("Share…") },
