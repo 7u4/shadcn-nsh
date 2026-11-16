@@ -122,6 +122,7 @@ export const KIND_OF: Record<string, ComponentKindId> = {
   message: "chat",
   "message-scroller": "chat",
 
+  "code-editor": "text",
   "diff-view": "text",
   editor: "text",
   "text-view": "text",

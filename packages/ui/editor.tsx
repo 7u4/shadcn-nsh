@@ -1,9 +1,8 @@
-// Editor: `richEditorClasses` and the code `Editor` from `nsh/base`.
+// Editor: `richEditorClasses` and the `RichEditor` that wears them. The code editor is
+// `code-editor.tsx` (`CodeEditor`).
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { split } from "nsh";
 import {
-  Editor as BaseEditor,
-  type EditorProps as BaseEditorProps,
   RichEditor as BaseRichEditor,
   type RichEditorProps as BaseRichEditorProps,
 } from "nsh/base";
@@ -45,25 +44,8 @@ export const richEditorClasses = {
 };
 // @port end
 
-/** Theme layer on `nsh/base` Editor. The model, highlighting and keys stay in base. */
-export type EditorProps = BaseEditorProps;
-
 /** Theme layer on `nsh/base` RichEditor. Document chrome is `richEditorClasses`. */
 export type RichEditorProps = BaseRichEditorProps;
-
-/** A code editor. Pass `classes` / `styles` to paint parts; the host frame is the app's. */
-export function Editor(props: EditorProps) {
-  const [, rest] = split(props, ["class", "style", "classes", "styles"]);
-  return (
-    <BaseEditor
-      {...rest}
-      class={props.class}
-      style={props.style}
-      classes={props.classes}
-      styles={props.styles}
-    />
-  );
-}
 
 /** A rich document editor with `richEditorClasses` by default. */
 export function RichEditor(props: RichEditorProps) {

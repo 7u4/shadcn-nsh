@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- **`code-editor`.** A code file as a field: `CodeEditor`, `nsh/base`'s Editor on the theme's well
+  — the field's fill, its hairline edge and the control tier's corners (`codeEditorFrame()`) — with
+  its parts painted by `codeEditorClasses`: a gutter on the muted fill, line numbers and fold markers
+  muted, the caret's line a faint band and its number in the text color, selected text a tint of the
+  brand, carets in the foreground, indent guides on the border color, search matches in the warning
+  tone, and diagnostics underlined in the theme's semantic colors (`destructive` for an error, `warn`
+  for a warning, `info` for information, `muted-foreground` for a hint). Every `nsh/base` prop passes
+  through — text, language, folding, search, the editing keys, diagnostics; an app's `classes` go
+  over ours and its `style` over the frame. Syntax highlighting is NSH's own colors. `add
+  code-editor` brings `theme`.
+- **`editor` is the rich editor only — a breaking change.** `Editor` and `EditorProps` moved to
+  `code-editor` as `CodeEditor` and `CodeEditorProps`; `editor` keeps `RichEditor`,
+  `richEditorClasses` and `RichEditorProps`, with no alias left behind. An app importing `Editor`
+  from `components/ui/editor` imports `CodeEditor` from `components/ui/code-editor` instead.
 - **`sidebar`.** An app's navigation column beside its page, after shadcn/ui's sidebar — its own
   component, drawn on `nsh`'s `View`: `SidebarProvider`, `useSidebar`, `Sidebar`,
   `SidebarTrigger`, `SidebarRail`, `SidebarInset`, `SidebarInput`, `SidebarHeader`, `SidebarFooter`,

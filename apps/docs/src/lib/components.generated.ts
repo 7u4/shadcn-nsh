@@ -600,6 +600,14 @@ export const components: ComponentDoc[] = [
       "A conversation that keeps up with itself: new turns follow the newest message while you are at the end, and wait when you are not.",
   },
   {
+    slug: "code-editor",
+    title: "Code Editor",
+    kind: "text",
+    shadcn: null,
+    nshElement: "editor",
+    description: "A code editor on the field's well, with line numbers and diagnostics.",
+  },
+  {
     slug: "diff-view",
     title: "DiffView",
     kind: "text",
@@ -613,7 +621,7 @@ export const components: ComponentDoc[] = [
     kind: "text",
     shadcn: null,
     nshElement: "rich-editor",
-    description: "Rich document typography and a code editor pass-through.",
+    description: "Rich document typography for nsh/base's RichEditor.",
   },
   {
     slug: "text-view",

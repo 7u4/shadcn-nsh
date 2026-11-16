@@ -956,13 +956,27 @@
       "name": "editor",
       "type": "registry:ui",
       "title": "Editor",
-      "description": "Rich document typography and code editor pass-through.",
+      "description": "Rich document typography for nsh/base's RichEditor.",
       "registryDependencies": [],
       "files": [
         {
           "path": "packages/ui/editor.tsx",
           "type": "registry:ui",
           "target": "components/ui/editor.tsx"
+        }
+      ]
+    },
+    {
+      "name": "code-editor",
+      "type": "registry:ui",
+      "title": "Code Editor",
+      "description": "A code editor on the field's well, with line numbers and diagnostics.",
+      "registryDependencies": ["theme"],
+      "files": [
+        {
+          "path": "packages/ui/code-editor.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/code-editor.tsx"
         }
       ]
     },

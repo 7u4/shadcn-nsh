@@ -1,16 +1,12 @@
-// The official editor scenes: the code editor (`references/nsh/website/demos/el-editor.tsx`) with
-// a sample per language, a linter's mark, a find field, the caret and the long lines' wrap; and
-// the rich editor (`el-rich-editor.tsx`) with its toolbar, its markdown and its events.
+// The official rich editor scene (`references/nsh/website/demos/el-rich-editor.tsx`) with this
+// library's RichEditor: its toolbar, its markdown and its events. The code editor is
+// `code-editor.tsx`.
 import { mono } from "@shadcn-nsh/theme";
-import { colors } from "@shadcn-nsh/theme";
 import { Undo2 } from "lucide";
 import { mount, signal, Text, View } from "nsh";
 import {
   command,
   createRichEditor,
-  type EditorDiagnostic,
-  type EditorRef,
-  type EditorSearchResult,
   type RichCommand,
   redo,
   RichEditor,
@@ -20,67 +16,14 @@ import {
 } from "nsh/base";
 
 import { Button, buttonGlyph } from "@/packages/ui/button";
-import { Editor, RichEditor as RichEditorView } from "@/packages/ui/editor";
-import { Input } from "@/packages/ui/input";
+import { RichEditor as RichEditorView } from "@/packages/ui/editor";
 import { Icon } from "@/packages/ui/lib/icons";
 import { sectionSurface } from "@/packages/ui/lib/surface";
 import { Toggle } from "@/packages/ui/toggle";
 import { Toolbar, ToolbarGroup, ToolbarSeparator } from "@/packages/ui/toolbar";
 
 import { DemoPage } from "./kit";
-import { desktop, Log, Panel, Segmented, Split, ui, wide } from "./stage";
-
-const SAMPLES = {
-  rust: `/// The n-th Fibonacci number.
-fn fib(n: u64) -> u64 {
-    match n {
-        0 | 1 => n,
-        _ => fib(n - 1) + fib(n - 2),
-    }
-}
-
-fn main() {
-    let unused = 0;
-    for n in 0..10 {
-        println!("fib({n}) = {}", fib(n));
-    }
-}
-`,
-  typescript: `type Shape = { kind: "circle"; r: number } | { kind: "square"; side: number };
-
-function area(shape: Shape): number {
-  switch (shape.kind) {
-    case "circle":
-      return Math.PI * shape.r ** 2;
-    case "square":
-      return shape.side ** 2;
-  }
-}
-
-console.log(area({ kind: "circle", r: 2 }));
-`,
-  json: `{
-  "name": "my-app",
-  "entry": "App.tsx",
-  "capabilities": ["network"]
-}
-`,
-} as const;
-
-type Language = keyof typeof SAMPLES;
-
-// A problem to mark in each file, as a linter would report it.
-const PROBLEMS: Record<Language, EditorDiagnostic[]> = {
-  rust: [
-    {
-      range: { start: { line: 9, column: 8 }, end: { line: 9, column: 14 } },
-      severity: "warning",
-      message: "unused variable",
-    },
-  ],
-  typescript: [],
-  json: [],
-};
+import { desktop, Log, Panel, Split, ui, wide } from "./stage";
 
 const CONTENT = `# A document
 
@@ -91,15 +34,6 @@ Type **Markdown** as you go: \`#\` makes a heading, \`-\` a list, \`[ ]\` a task
 `;
 
 function App() {
-  const language = signal<Language>("rust");
-  const wrap = signal<"Scroll" | "Wrap">("Scroll");
-  const query = signal("");
-  const caret = signal("1:1");
-  const found = signal<EditorSearchResult>({ count: 0 });
-  const events = signal<string[]>([]);
-  const log = (line: string) => events.set([line, ...events()].slice(0, 4));
-  let code: EditorRef | undefined;
-
   // The rich document: the session owns it, the view renders it, the toolbar runs its commands.
   const doc = createRichEditor({ extensions: [StarterKit], content: CONTENT, format: "markdown" });
   const markdown = signal(doc.getMarkdown());
@@ -145,98 +79,7 @@ function App() {
   );
 
   return (
-    <DemoPage title="Editor">
-      <Text style={{ color: ui().muted }}>
-        {desktop
-          ? "Click into the code and type; Alt-click adds a caret, Cmd/Ctrl+D the next match"
-          : "Tap into the code and type"}
-      </Text>
-
-      <Split
-        width={640}
-        gap={14}
-        inspector={
-          <>
-            <Segmented
-              label="language"
-              options={["rust", "typescript", "json"] as const}
-              value={language()}
-              onChange={(value) => language.set(value)}
-            />
-            <Segmented
-              label="long lines"
-              options={["Scroll", "Wrap"] as const}
-              value={wrap()}
-              onChange={(value) => wrap.set(value)}
-            />
-            <Panel title="find">
-              <Input
-                value={query()}
-                onChange={({ value }) => query.set(value)}
-                onSubmit={() => code?.run("findNext")}
-                submitBehavior="submit"
-                placeholder="fib"
-                accessibilityLabel="Find"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
-              <Text style={{ fontSize: 13, fontVariant: ["tabular-nums"], color: ui().text }}>
-                {query()
-                  ? (found().error ??
-                    `${found().current == null ? "–" : found().current! + 1} of ${found().count}`)
-                  : "–"}
-              </Text>
-              <View style={{ flexDirection: "row", gap: 8 }}>
-                <Button variant="secondary" size="sm" onPress={() => code?.run("findNext")}>
-                  Next
-                </Button>
-                <Button variant="secondary" size="sm" onPress={() => code?.run("undo")}>
-                  Undo
-                </Button>
-              </View>
-            </Panel>
-            <Panel title="caret">
-              <Text style={{ fontSize: 13, fontVariant: ["tabular-nums"], color: ui().text }}>
-                {caret()}
-              </Text>
-            </Panel>
-            <Log title="events" lines={events()} minHeight={96} />
-          </>
-        }
-      >
-        <View style={{ height: wide() ? 380 : 300, ...sectionSurface(), overflow: "hidden" }}>
-          {() => {
-            const lang = language();
-            return (
-              <Editor
-                ref={(r) => (code = r)}
-                defaultValue={SAMPLES[lang]}
-                language={lang}
-                softWrap={wrap() === "Wrap"}
-                search={{ query: query() }}
-                diagnostics={PROBLEMS[lang]}
-                accessibilityLabel="Code"
-                onChange={({ value }) => log(`onChange: ${value.length} characters`)}
-                onSelectionChange={({ selections }) => {
-                  const head = selections[selections.length - 1].head;
-                  caret.set(
-                    `${head.line + 1}:${head.column + 1}${selections.length > 1 ? ` (${selections.length} carets)` : ""}`,
-                  );
-                }}
-                onSearchChange={({ result }) => found.set(result)}
-                onFocus={() => log("onFocus")}
-                onBlur={() => log("onBlur")}
-                onLineNumberPress={({ line }) => log(`onLineNumberPress: ${line + 1}`)}
-                onContextMenu={(e) =>
-                  log(`onContextMenu: ${e.position.line + 1}:${e.position.column + 1}`)
-                }
-                style={{ flex: 1 }}
-              />
-            );
-          }}
-        </View>
-      </Split>
-
+    <DemoPage title="Rich editor">
       <Text style={{ color: ui().muted }}>
         {desktop
           ? "Click into the document and type; Cmd/Ctrl+B makes bold"

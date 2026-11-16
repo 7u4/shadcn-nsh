@@ -3,7 +3,7 @@ import { ColorPicker } from "nsh/base";
 
 // Color picker, text, editor, diff — the shot is 390 wide: every box is 300.
 import { colors } from "../../packages/theme";
-import { ColorPanel, DiffView, Editor, TextView } from "../../packages/ui";
+import { CodeEditor, ColorPanel, DiffView, TextView } from "../../packages/ui";
 import { Page, Panel } from "./demo-kit";
 
 const box = { width: 300 };
@@ -18,9 +18,9 @@ function RichPage() {
   const fill = signal("#2563ebff");
   return (
     <Page>
-      <Panel title="Editor">
+      <Panel title="Code editor">
         <Caption>Focus</Caption>
-        <Editor
+        <CodeEditor
           autoFocus
           accessibilityLabel="Source"
           language="ts"
@@ -28,7 +28,7 @@ function RichPage() {
           style={{ ...box, height: 64 }}
         />
         <Caption>Read only</Caption>
-        <Editor readOnly defaultValue="Read only" style={{ ...box, height: 48 }} />
+        <CodeEditor readOnly defaultValue="Read only" style={{ ...box, height: 48 }} />
       </Panel>
       <Panel title="Color">
         <ColorPicker value={fill()} onChange={({ value }) => fill.set(value)}>
