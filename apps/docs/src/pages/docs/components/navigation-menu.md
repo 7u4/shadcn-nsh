@@ -4,6 +4,7 @@ title: NavigationMenu
 description: A row of triggers, each opening a panel of anything under the bar — one at a time.
 component: true
 demo: navigation-menu
+demoHeight: 460
 ---
 
 ## Installation
@@ -95,7 +96,9 @@ const look = navigationMenuLook();
 ```
 
 It goes somewhere with `href` and `openWith`, or reports a press — and on the web a link with an
-`href` shows no hover of its own, so a navigation menu's links are usually `onPress`.
+`href` shows no hover of its own, so a navigation menu's links are usually `onPress`. A `style` goes
+over the look's: the demo's leading card is one link on the inset surface of
+`lib/surface` (`insetSurface()`).
 
 ### A bar item that is a link
 
