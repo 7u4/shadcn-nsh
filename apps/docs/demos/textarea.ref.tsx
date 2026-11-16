@@ -43,6 +43,11 @@ function Field(props: { label: string; children: JSX.Element; after?: JSX.Elemen
  * A textarea as tall as its text (shadcn's `field-sizing-content`): the input reports the size of
  * what it holds, and the box takes that plus the room the look keeps inside it. `value` makes it
  * the app's (`onChange` follows it); without one it keeps its own, from `initial`.
+ *
+ * The height rides in the look's own `style` rather than in a second `style` over the spread: an
+ * element given its style twice keeps the last one applied when the theme switches at runtime, and
+ * the input then measures its text without the override (three lines where four fit, clipped).
+ * `inputLook({ style })` reads it last and is the one style the element gets.
  */
 function Growing(props: {
   value?: string;
@@ -55,7 +60,11 @@ function Growing(props: {
 }) {
   const own = signal(props.initial ?? "");
   const content = signal(0);
-  const look = inputLook({ multiline: true, invalid: () => !!props.invalid });
+  const look = inputLook({
+    multiline: true,
+    invalid: () => !!props.invalid,
+    style: () => ({ height: content() === 0 ? undefined : content() + fieldPad() }),
+  });
   return (
     <Input
       multiline
@@ -68,7 +77,6 @@ function Growing(props: {
         props.onChange?.(event);
       }}
       {...look}
-      style={[look.style, { height: content() === 0 ? undefined : content() + fieldPad() }]}
       onContentSizeChange={({ size }) => content.set(size.height)}
     />
   );
