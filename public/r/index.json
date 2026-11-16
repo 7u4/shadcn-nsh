@@ -1180,6 +1180,19 @@
           "target": "components/ui/navigation-menu.tsx"
         }
       ]
+    },
+    {
+      "name": "sidebar",
+      "type": "registry:ui",
+      "title": "Sidebar",
+      "description": "An app's navigation column: groups of rows, folded to a strip of icons or sliding in as a sheet on a phone.",
+      "files": [
+        {
+          "path": "packages/ui/sidebar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/sidebar.tsx"
+        }
+      ]
     }
   ]
 }

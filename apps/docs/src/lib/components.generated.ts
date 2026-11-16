@@ -363,6 +363,13 @@ export const components: ComponentDoc[] = [
     description: "A panel that slides in from an edge of the screen over a scrim.",
   },
   {
+    slug: "sidebar",
+    title: "Sidebar",
+    nshElement: "sidebar",
+    description:
+      "An app's navigation column beside its page — folded to a strip of icons, or sliding in as a sheet on a phone.",
+  },
+  {
     slug: "skeleton",
     title: "Skeleton",
     nshElement: "skeleton",

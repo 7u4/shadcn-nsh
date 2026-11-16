@@ -24,7 +24,8 @@ const VARIANTS = ["default", "secondary", "outline", "ghost", "destructive", "li
  * `label` are a field's legend (`FieldLegend`), and `muted`, `icon` and `image` an item's surface
  * and its media (`Item`, `ItemMedia`), as shadcn names them; `tinted` is a bubble's wash of the
  * accent (`Bubble`), and `border` and `separator` a marker's hairline, under it or either side of
- * it (`Marker`).
+ * it (`Marker`); `sidebar`, `floating` and `inset` are how a column meets the window (`Sidebar`),
+ * as shadcn names them too.
  */
 const OWN_VARIANTS: Record<string, string> = {
   tile: "radio-group",
@@ -37,6 +38,9 @@ const OWN_VARIANTS: Record<string, string> = {
   tinted: "bubble",
   border: "marker",
   separator: "marker",
+  sidebar: "sidebar",
+  floating: "sidebar",
+  inset: "sidebar",
 };
 
 /** Every `size` value: the three of a scale, and the icon-only ones a shadcn button takes. */
