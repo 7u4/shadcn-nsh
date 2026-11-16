@@ -156,6 +156,13 @@ const overrides: Record<string, Override> = {
   // The bar stays; the panel opens under its trigger, which wears the chosen fill and turns its
   // chevron up.
   "navigation-menu": { steps: (app) => app.press("Getting started") },
+  // One page pushed: the shot is the second page, with the header's back button beside its title.
+  "nav-stack": {
+    steps: async (app) => {
+      await app.press("label:General");
+      await app.wait(300);
+    },
+  },
   // The page is 390 points wide, and a window narrower than 600 (or a touch screen) draws the
   // column as a sheet: the trigger opens it, so the shot is the column itself — its rows, a sub
   // menu, a badge and the footer — over the page it belongs to.

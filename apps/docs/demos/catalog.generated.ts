@@ -81,4 +81,5 @@ export const componentIds = [
   "navigation-menu",
   "sidebar",
   "terminal",
+  "nav-stack",
 ] as const;

@@ -1232,6 +1232,19 @@
           "target": "components/ui/terminal.tsx"
         }
       ]
+    },
+    {
+      "name": "nav-stack",
+      "type": "registry:ui",
+      "title": "NavStack",
+      "description": "Pages pushed on a stack: the themed header a desktop draws, the system one a phone shows.",
+      "files": [
+        {
+          "path": "packages/ui/nav-stack.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/nav-stack.tsx"
+        }
+      ]
     }
   ]
 }
