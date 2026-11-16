@@ -494,7 +494,10 @@ function App() {
   );
 }
 
-/** One frame of the axes below the page: a column and a page in a card 320 by 160. */
+/**
+ * One frame of the axes below the page: a column and a page in a card 420 by 160, wide enough that
+ * an inset page, set in from the column and the card, keeps its line on one row.
+ */
 function Mini(props: {
   label: string;
   variant: SidebarVariant;
@@ -531,7 +534,7 @@ function Mini(props: {
       <Text style={{ fontSize: 12, color: ui().muted }}>{props.label}</Text>
       <View
         style={{
-          width: 320,
+          width: 420,
           height: 160,
           borderRadius: 8,
           borderWidth: 1,

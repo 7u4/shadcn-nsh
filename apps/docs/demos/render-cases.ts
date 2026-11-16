@@ -176,7 +176,7 @@ const overrides: Record<string, Override> = {
   // Sidebar" is the page's trigger, and it opens the sheet, so that shot is the column itself — its
   // rows, a sub menu, a badge and the footer — over the page it belongs to.
   sidebar: {
-    viewport: { width: 1024, height: 1280 },
+    viewport: { width: 1024, height: 1500 },
     // The column draws before the page does, so its rail is the first of the two names in the page.
     steps: (app) => app.press("Toggle Sidebar >> nth=0"),
   },
