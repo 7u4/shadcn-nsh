@@ -20,6 +20,7 @@
  * holds the mapping tables this file implements.
  */
 import { mix, oklch, oklchColor, over, parseColor, toOklchText, withAlpha } from "./oklch";
+import { ordered, orderedFinish } from "./order";
 
 /** shadcn's neutrals, quoted from `registry/themes.ts` (theme `neutral`). */
 const NEUTRAL = {
@@ -295,37 +296,6 @@ function finishes(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
     groove: { boxShadow: "none" },
   };
 }
-
-/** A file's value for every key of the default file, in the default file's order: sections, which must
- * declare every key. */
-const ordered = <T>(keys: Record<string, string>, values: Record<string, T>): Record<string, T> =>
-  Object.fromEntries(
-    Object.keys(keys).map((key) => {
-      const value = values[key];
-      if (value === undefined) throw new Error(`no value for theme key ${key}`);
-      return [key, value];
-    }),
-  );
-
-/**
- * A finish role's value in the default file's key order, leaving out what the theme does not
- * state: a role says only what it means (this theme's `fill` is one colour, with no gradient). A
- * key the default file does not have follows, alone: `fill`'s color.
- */
-const orderedFinish = (keys: Record<string, unknown>, values: Record<string, unknown>) => {
-  const order = [
-    ...Object.keys(keys),
-    ...Object.keys(values)
-      .filter((key) => !(key in keys))
-      .sort(),
-  ];
-  return Object.fromEntries(
-    order.flatMap((key) => {
-      const value = values[key];
-      return value === undefined ? [] : [[key, value]];
-    }),
-  );
-};
 
 /**
  * Both theme files, in the key order of the default ones (so the two diff side by side).

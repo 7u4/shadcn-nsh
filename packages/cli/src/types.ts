@@ -60,6 +60,7 @@ export const DEFAULT_THEME = "theme";
 export const THEMES = {
   default: DEFAULT_THEME,
   shadcn: "theme-shadcn",
+  "solid-glass": "theme-solid-glass",
 } as const;
 
 export type ThemeName = keyof typeof THEMES;

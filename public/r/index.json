@@ -49,6 +49,29 @@
       ]
     },
     {
+      "name": "theme-solid-glass",
+      "type": "registry:theme",
+      "title": "Theme: Solid Glass",
+      "description": "Solid Glass (deeplethe/solid-glass, MIT) as one more theme: panes of thick smoky glass — a rim of light on each top edge, a hairline round it, a shadow underneath — installed into themes/solid-glass/ (theme.json, finishes.json, index.ts) for `selectTheme` to switch to while the app runs.",
+      "files": [
+        {
+          "path": "packages/theme/themes/solid-glass/theme.json",
+          "type": "registry:file",
+          "target": "themes/solid-glass/theme.json"
+        },
+        {
+          "path": "packages/theme/themes/solid-glass/finishes.json",
+          "type": "registry:file",
+          "target": "themes/solid-glass/finishes.json"
+        },
+        {
+          "path": "packages/theme/themes/solid-glass/index.ts",
+          "type": "registry:lib",
+          "target": "themes/solid-glass/index.ts"
+        }
+      ]
+    },
+    {
       "name": "theme-default",
       "type": "registry:theme",
       "title": "Theme: NSH Gallery UI",

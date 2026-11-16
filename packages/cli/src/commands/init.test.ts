@@ -12,10 +12,21 @@ const defaultTheme = source("packages/theme/theme.json");
 const defaultFinishes = source("packages/theme/finishes.json");
 const neutralTheme = source("packages/theme/themes/shadcn/theme.json");
 const neutralFinishes = source("packages/theme/themes/shadcn/finishes.json");
+const glassTheme = source("packages/theme/themes/solid-glass/theme.json");
+const glassFinishes = source("packages/theme/themes/solid-glass/finishes.json");
 
 const fixture = (): Fixture =>
   makeFixture({
-    items: ["theme", "theme-default", "theme-shadcn", "press", "spinner", "button", "label-of"],
+    items: [
+      "theme",
+      "theme-default",
+      "theme-shadcn",
+      "theme-solid-glass",
+      "press",
+      "spinner",
+      "button",
+      "label-of",
+    ],
   });
 
 let current: Fixture | null = null;
@@ -52,6 +63,22 @@ describe("init --theme", () => {
     expect(recordedTheme(current)).toBe("theme-shadcn");
     // The app still points its runtime at `theme.json`, whatever theme that is.
     expect((JSON.parse(current.read("nsh.json")) as { theme?: string }).theme).toBe("./theme.json");
+  });
+
+  test("init --theme solid-glass builds the app on the glass, and lists it too", async () => {
+    current = fixture();
+    const out = await captured(() =>
+      runInit({ cwd: current!.app, registry: current!.url, theme: "solid-glass" }),
+    );
+
+    expect(out.lines).toContain("write theme.json");
+    expect(current.read("theme.json")).toBe(glassTheme);
+    expect(current.read("lib/finishes.json")).toBe(glassFinishes);
+    // The same data as the theme the app lists, `themes/solid-glass/`, beside the roles module.
+    expect(current.read("themes/solid-glass/theme.json")).toBe(glassTheme);
+    expect(current.read("themes/solid-glass/index.ts")).toContain('from "../../lib/theme"');
+    expect(current.exists("lib/theme.ts")).toBe(true);
+    expect(recordedTheme(current)).toBe("theme-solid-glass");
   });
 
   test("--overwrite replaces colors the app has changed, and nothing else", async () => {
@@ -92,7 +119,9 @@ describe("init --theme", () => {
       error = caught;
     }
 
-    expect(String(error)).toContain('Unknown theme "solarized". Choose one of: default, shadcn.');
+    expect(String(error)).toContain(
+      'Unknown theme "solarized". Choose one of: default, shadcn, solid-glass.',
+    );
     expect(current.exists("nsh-ui.json")).toBe(false);
     expect(current.exists("theme.json")).toBe(false);
   });

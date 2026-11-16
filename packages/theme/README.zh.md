@@ -4,18 +4,18 @@
 
 copy-into-app 层的品牌外观：本库所有，起点是上游 gallery UI 主题。**颜色一律 `oklch()`** —— token、渐变的每一站、阴影里的颜色 —— 透明度写成 `oklch(… / a)`。NSH 在颜色是字符串的地方都认 `oklch()`（`references/nsh/website/docs/styling.md#colors`），所以一个文件里只有一种颜色形式，读一个值就是读它的亮度与色相。
 
-| 文件             | 作用                                                                                          |
-| ---------------- | --------------------------------------------------------------------------------------------- |
-| `theme.json`     | 颜色、圆角、cssVars                                                                           |
-| `finishes.json`  | 表面 finish：渐变、阴影，以及按下缩多少                                                       |
-| `theme.ts`       | `colors` / `finish` / `focusRing` / `selectTheme` / `fillStyle` 等读取器                      |
-| `themes/<name>/` | 其它主题，各一个 `AppTheme`：`shadcn/`（shadcn 的 `neutral`）、`default/`（本库这套，供多装） |
+| 文件             | 作用                                                                                                                         |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `theme.json`     | 颜色、圆角、cssVars                                                                                                          |
+| `finishes.json`  | 表面 finish：渐变、阴影，以及按下缩多少                                                                                      |
+| `theme.ts`       | `colors` / `finish` / `focusRing` / `selectTheme` / `fillStyle` 等读取器                                                     |
+| `themes/<name>/` | 其它主题，各一个 `AppTheme`：`shadcn/`（shadcn 的 `neutral`）、`solid-glass/`（Solid Glass）、`default/`（本库这套，供多装） |
 
 由 [`@shadcn-nsh/ui`](../ui) 使用，并以 registry 的 `theme` 项（应用的**构建时主题**）与 `theme-<name>` 项（其它主题）分发。改完后：`bun scripts/theme/to-oklch.ts`（把这两个文件的颜色写成规范形式），再 `bun run registry:build` 并提交 `public/r`。
 
 这两个文件已归本库所有（[`port-map.json`](../../port-map.json) 里的 `"owned"`）：`port:vendor` 不再重填、`port:check` 不再与上游比对，所以像其它源码一样在这里改（[`docs/port.md`](../../docs/port.md#主题文件)）。外观仍以上游 gallery UI 主题为准；变的是数据归谁。
 
-`themes/shadcn/{theme,finishes}.json` 是生成物 —— `bun scripts/theme/generate-shadcn.ts` —— 取自 shadcn 自己的 `oklch()` 调色板，不手改；旁边的 `index.ts` 是手写的一次性声明，给这套主题一个名字。`themes/default/` 是例外：它的两个 JSON 是上面那两个文件的副本（逐字节相同，`scripts/theme/themes.test.ts` 会查），因为构建时主题本身也能当"多装的一套"，而 registry 条目分发的是文件，不是本包里的一个路径。默认的两个文件由 `bun scripts/theme/to-oklch.ts` 同样转换与规范化：它们都是幂等的，文件的颜色形式就是它自己的形式。
+`themes/shadcn/{theme,finishes}.json` 是生成物 —— `bun scripts/theme/generate-shadcn.ts` —— 取自 shadcn 自己的 `oklch()` 调色板；`themes/solid-glass/` 同样是生成物 —— `bun scripts/theme/generate-solid-glass.ts`，取自 deeplethe/solid-glass 的样式表（[`NOTICE`](../../NOTICE)）—— 都不手改；旁边的 `index.ts` 是手写的一次性声明，给这套主题一个名字。`themes/default/` 是例外：它的两个 JSON 是上面那两个文件的副本（逐字节相同，`scripts/theme/themes.test.ts` 会查），因为构建时主题本身也能当"多装的一套"，而 registry 条目分发的是文件，不是本包里的一个路径。默认的两个文件由 `bun scripts/theme/to-oklch.ts` 同样转换与规范化：它们都是幂等的，文件的颜色形式就是它自己的形式。
 
 数值按固定精度写（L、C 五位小数，H 三位，alpha 三位），这是换算无损的原因：每个 sRGB 颜色都能落回自己的 8-bit 通道，所以主题改存 `oklch()` 不动一个像素。
 
