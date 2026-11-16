@@ -121,6 +121,13 @@ export function components(root = DEFAULT_ROOT): Component[] {
  */
 const NON_COMPONENT_DEMOS = new Set(["App.tsx", "kit.tsx", "stage.tsx"]);
 
+/**
+ * Demos that belong to a page of the site rather than to a component: the themes page's showcase.
+ * They are packaged like the component demos (`build-demos.ts`), and the registry does not list
+ * them, because they are not a control an app installs.
+ */
+export const PAGE_DEMOS = ["themes"] as const;
+
 function isFile(file: string): boolean {
   return fs.existsSync(file) && fs.statSync(file).isFile();
 }
@@ -187,7 +194,9 @@ export function checkCatalog(cat: Catalog): string[] {
     } else if (file.endsWith(".tsx") && !file.endsWith(".test.tsx")) {
       if (NON_COMPONENT_DEMOS.has(file)) continue;
       const id = file.slice(0, -".tsx".length);
-      if (!ids.has(id)) problems.push(`${where}: demo for no component`);
+      if (!ids.has(id) && !(PAGE_DEMOS as readonly string[]).includes(id)) {
+        problems.push(`${where}: demo for no component`);
+      }
     }
   }
 
@@ -281,6 +290,12 @@ export function writeGenerated(cat: Catalog): void {
 if (import.meta.main) {
   const cat = catalog();
   const problems = checkCatalog(cat);
+  // The site's own page demos are not components, so the catalog does not require them: this does.
+  for (const id of PAGE_DEMOS) {
+    const file = path.join(cat.paths.demos, `${id}.tsx`);
+    if (!isFile(file))
+      problems.push(`${path.relative(cat.root, file)}: listed in PAGE_DEMOS, but there is no file`);
+  }
   // The runtime's table is plain TypeScript (no `node:fs`), so the check can import its keys.
   const { overrideIds } = await import("../apps/docs/demos/render-cases");
   problems.push(...checkOverrides(cat, overrideIds));

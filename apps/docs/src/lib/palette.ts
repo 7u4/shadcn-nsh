@@ -9,6 +9,7 @@
  */
 import demos from "../../demos/nsh.json";
 import { PALETTES, PALETTE_KEY, type PaletteId } from "../../demos/palettes";
+import { reloadDemos } from "./demo-client";
 
 /** Where the demo app's `Storage` keeps the palette: `nsh:<its id>:palette`. */
 export const PALETTE_STORAGE_KEY = `nsh:${demos.id}:${PALETTE_KEY}`;
@@ -31,4 +32,23 @@ export function storePalette(id: PaletteId) {
     if (id === "default") localStorage.removeItem(PALETTE_STORAGE_KEY);
     else localStorage.setItem(PALETTE_STORAGE_KEY, id);
   } catch {}
+}
+
+/** A palette was chosen: every switch on the page shows the same one (`onPaletteChange`). */
+const PALETTE_EVENT = "palette-change";
+
+/**
+ * Chooses a palette for the demos: stored for the next load, and every demo panel loads again in
+ * it. A running app reads its storage once (nsh's `Storage` has no change event), so the panels
+ * load again rather than switch in place (`reloadDemos`).
+ */
+export function choosePalette(id: PaletteId) {
+  storePalette(id);
+  reloadDemos();
+  document.dispatchEvent(new CustomEvent(PALETTE_EVENT));
+}
+
+/** Calls `change` whenever a switch on the page chose another palette. */
+export function onPaletteChange(change: () => void) {
+  document.addEventListener(PALETTE_EVENT, change);
 }

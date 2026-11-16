@@ -24,6 +24,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { catalog } from "../../../scripts/catalog";
+import { PALETTES } from "../demos/palettes";
 import { components } from "../src/lib/components.generated";
 import { NSH_ELEMENTS, SHADCN_UI, type OfficialEntry } from "../src/lib/official";
 import { componentPlan, isCurrent, readPageMeta } from "./build-components";
@@ -292,6 +293,37 @@ for (const id of listed) {
   if (id !== "coverage" && !byId.has(id)) {
     fail(`apps/docs/public/llms.txt: "${id}" is no component`);
   }
+}
+
+// The themes page and the registry: every palette the site switches to has its `theme-<id>` item
+// and a section on the page, and every `theme-*` item is one of those palettes. The page renders
+// them from the same list (`src/lib/themes.ts`), so a theme is never written twice.
+const themesPage = path.join(repo, "apps/docs/src/pages/docs/themes.astro");
+const themesSource = fs.readFileSync(themesPage, "utf8");
+const registryItems = (
+  JSON.parse(fs.readFileSync(path.join(repo, "registry.json"), "utf8")) as {
+    items: { name: string; type: string }[];
+  }
+).items;
+const themeItems = new Map(registryItems.map((item) => [item.name, item]));
+for (const palette of PALETTES) {
+  const item = `theme-${palette.id}`;
+  const entry = themeItems.get(item);
+  if (!entry) {
+    fail(`registry.json: no "${item}" for the "${palette.id}" palette`);
+  } else if (entry.type !== "registry:theme") {
+    fail(`registry.json: "${item}" is a ${entry.type}, not a registry:theme`);
+  }
+}
+for (const item of themeItems.keys()) {
+  if (!item.startsWith("theme-")) continue;
+  const id = item.slice("theme-".length);
+  if (!PALETTES.some((palette) => palette.id === id)) {
+    fail(`registry.json: "${item}" is no palette in apps/docs/demos/palettes.ts`);
+  }
+}
+if (!/\{themes\.map\(/.test(themesSource)) {
+  fail("apps/docs/src/pages/docs/themes.astro: not generated from the palette list");
 }
 
 if (problems.length > 0) {

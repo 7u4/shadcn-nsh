@@ -1,9 +1,11 @@
 /**
- * Package each catalog demo (`apps/docs/demos/<id>.tsx`, from `scripts/catalog.ts`) with
- * `nsh package --target web` into apps/docs/public/demos/<name>/ (flattened index.html).
+ * Package each catalog demo (`apps/docs/demos/<id>.tsx`, from `scripts/catalog.ts`) and the site's
+ * own page demos (`PAGE_DEMOS`: the themes page's showcase) with `nsh package --target web` into
+ * apps/docs/public/demos/<name>/ (flattened index.html).
  *
- * The catalog's `--check` already guarantees every component has its demo and that no demo is
- * orphaned; this script only packages the set, sorted by file name so the log is stable.
+ * The catalog's `--check` already guarantees every component has its demo, that the page demos
+ * exist and that no other demo is orphaned; this script only packages the set, sorted by file name
+ * so the log is stable.
  *
  * Each packaged page then gets the panel's `?idiom=` and `?theme=` (`player-options.ts`).
  *
@@ -14,7 +16,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { catalog } from "../../../scripts/catalog";
+import { catalog, PAGE_DEMOS } from "../../../scripts/catalog";
 import { addPlayerOptions } from "./player-options";
 
 /** Keep low: concurrent `nsh package --target web` races on the shared web runtime wasm. */
@@ -36,8 +38,10 @@ const only = onlyArg
         .filter(Boolean),
     )
   : undefined;
-const entries = cat.components
-  .map((component) => component.demo)
+const entries = [
+  ...cat.components.map((component) => component.demo),
+  ...PAGE_DEMOS.map((id) => path.join(demosDir, `${id}.tsx`)),
+]
   .filter((entry) => !only || only.has(path.basename(entry, ".tsx")))
   .sort((a, b) => a.localeCompare(b));
 
