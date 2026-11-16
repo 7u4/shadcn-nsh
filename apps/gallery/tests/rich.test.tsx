@@ -27,17 +27,6 @@ test("a ColorField keeps the field transition, including under reduced motion", 
   expect(find(app.texts(), "motion=")).toContain("duration-150");
 });
 
-test("an Editor reports typing and focus, and a read-only Editor does not change", async () => {
-  const app = await open("./rich.fixture.tsx", { platform: "macos", reducedMotion: true });
-  await app.type("id:source", "Z");
-  await app.wait(50);
-  expect(find(app.texts(), "source=")).toContain("Z");
-  expect(has(app.texts(), "focus=editor")).toBe(true);
-  await app.type("id:locked", "NO").catch(() => {});
-  await app.wait(50);
-  expect(has(app.texts(), "locked=keep")).toBe(true);
-});
-
 test("a TextView reports a link press", async () => {
   const app = await open("./rich.fixture.tsx", { platform: "macos", reducedMotion: true });
   await app.press("text:guide");

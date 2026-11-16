@@ -67,7 +67,8 @@
 | `dialog.tsx`       | `Dialog` `DialogTrigger` `DialogClose` `DialogContent` `DialogTitle` `DialogDescription` `DialogFooter`                                                                                                        | `variant`（Trigger / Close）、`width`              |
 | `diff-view.tsx`    | `DiffView` `DiffHunkActions`                                                                                                                                                                                   | `tone`（`"up" \| "down"`）、`iconOnly`             |
 | `dock-area.tsx`    | `DockArea` `DockTab` `DockDragPreview`                                                                                                                                                                         | —                                                  |
-| `editor.tsx`       | `Editor` `RichEditor`                                                                                                                                                                                          | —                                                  |
+| `code-editor.tsx`  | `CodeEditor`                                                                                                                                                                                                   | —                                                  |
+| `editor.tsx`       | `RichEditor`                                                                                                                                                                                                   | —                                                  |
 | `emoji-picker.tsx` | `EmojiPanel` `EmojiTabs` `EmojiTones` `EmojiPreview` `EmojiHeading`                                                                                                                                            | `fill`、`tone`（`EmojiSkinTone`，**不是** `Tone`） |
 | `hover-card.tsx`   | `HoverCard` `HoverCardTrigger` `HoverCardContent`                                                                                                                                                              | `variant`（Trigger）、`compact`、`width`           |
 | `input.tsx`        | `Input`                                                                                                                                                                                                        | `invalid`                                          |
@@ -204,7 +205,7 @@
 
 ### 3.3 没有 shadcn 对应的（本库特有）
 
-`RoundButton`、`SplitButton`、`Segmented`、`Radio.variant="tile"`、`Picker.kind`（trigger 的"字段井 / 线框按钮"）、`Carousel` 箭头的 `glass`、`DiffHunkActions`、`Meter`、`Stat`、`Status`、`DockArea`、`DiffView`、`ColorPanel`、`EmojiPanel`、`NumberInput`、`TimeField`、`OtpInput`、`Tree`、`Plot`、`TextView`、`Editor`、`Link`、`Pagination`、`Scrollbar`、`Toolbar`。它们的轴**沿用本库自己的名字**，但同名轴（`variant`/`size`/`tone`）的值仍然从上面的词表里取。
+`RoundButton`、`SplitButton`、`Segmented`、`Radio.variant="tile"`、`Picker.kind`（trigger 的"字段井 / 线框按钮"）、`Carousel` 箭头的 `glass`、`DiffHunkActions`、`Meter`、`Stat`、`Status`、`DockArea`、`DiffView`、`ColorPanel`、`EmojiPanel`、`NumberInput`、`TimeField`、`OtpInput`、`Tree`、`Plot`、`TextView`、`CodeEditor`、`Link`、`Pagination`、`Scrollbar`、`Toolbar`。它们的轴**沿用本库自己的名字**，但同名轴（`variant`/`size`/`tone`）的值仍然从上面的词表里取。
 
 ## 4 提案：一张词汇表
 

@@ -1,14 +1,11 @@
 import { Text, View, mount, signal } from "nsh";
 import { ColorPicker, ColorSwatch } from "nsh/base";
 
-import { ColorPanel, DiffView, Editor, TextView, fieldLook } from "../../../packages/ui";
+import { ColorPanel, DiffView, TextView, fieldLook } from "../../../packages/ui";
 
 function App() {
   const color = signal("none");
   const blocked = signal("none");
-  const source = signal("let n = 1");
-  const focus = signal("none");
-  const locked = signal("keep");
   const link = signal("none");
   const stats = signal("none");
   const fill = signal("#336699ff");
@@ -39,27 +36,6 @@ function App() {
         <ColorSwatch color="#00ff00" />
       </ColorPicker>
       <Text>{`blocked=${blocked()}`}</Text>
-
-      <Editor
-        testID="source"
-        accessibilityLabel="Source"
-        value={source()}
-        onChange={(event) => source.set(event.value)}
-        onFocus={() => focus.set("editor")}
-        style={{ width: 260, height: 64 }}
-      />
-      <Text>{`source=${source()}`}</Text>
-      <Text>{`focus=${focus()}`}</Text>
-
-      <Editor
-        testID="locked"
-        accessibilityLabel="Locked source"
-        readOnly
-        value="keep"
-        onChange={(event) => locked.set(event.value)}
-        style={{ width: 260, height: 48 }}
-      />
-      <Text>{`locked=${locked()}`}</Text>
 
       <TextView
         markdown="Read the [guide](https://example.com/guide) now."

@@ -75,6 +75,7 @@ export * from "./message-scroller";
 export * from "./navigation-menu";
 export * from "./sidebar";
 export * from "./terminal";
+export * from "./code-editor";
 export * from "./lib/color-format";
 export * from "./lib/icons";
 export {

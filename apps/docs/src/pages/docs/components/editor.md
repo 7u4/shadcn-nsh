@@ -1,7 +1,7 @@
 ---
 layout: ../../../layouts/Docs.astro
 title: Editor
-description: Rich document typography and a code editor pass-through.
+description: Rich document typography for nsh/base's RichEditor.
 component: true
 demo: editor
 ---
@@ -17,7 +17,7 @@ npx shadcn-nsh@latest add editor
 ```tsx
 import { createRichEditor, StarterKit } from "nsh/base";
 
-import { RichEditor, richEditorClasses, Editor } from "@/components/ui/editor";
+import { RichEditor, richEditorClasses } from "@/components/ui/editor";
 ```
 
 ```tsx
@@ -26,7 +26,7 @@ const session = createRichEditor({ extensions: [StarterKit], content: doc, forma
 <RichEditor editor={session} style={{ height: 240 }} />;
 ```
 
-`RichEditor` defaults `classes` to `richEditorClasses`. `Editor` forwards every prop to [`nsh/base` Editor](https://nsh.dev/elements/editor) unchanged.
+`RichEditor` defaults `classes` to `richEditorClasses`. Every prop of [`nsh/base` RichEditor](https://nsh.dev/elements/rich-editor) passes through; `classes` goes over the default.
 
 ## Examples
 
@@ -40,18 +40,10 @@ const session = createRichEditor({ extensions: [StarterKit], content: doc, forma
 <RichEditor editor={session} accessibilityLabel="Notes" style={{ height: 180 }} />;
 ```
 
-### Code
-
-`Editor` is `nsh/base`'s code editor unchanged.
-
-```tsx
-<Editor value={source()} language="ts" onChange={({ value }) => setSource(value)} />
-```
-
 ## API
 
-| Export              | Role                         |
-| ------------------- | ---------------------------- |
-| `richEditorClasses` | `RichEditor` document chrome |
-| `RichEditor`        | Themed `nsh/base` RichEditor |
-| `Editor`            | Pass-through code `Editor`   |
+| Export              | Role                                      |
+| ------------------- | ----------------------------------------- |
+| `richEditorClasses` | `RichEditor` document chrome              |
+| `RichEditor`        | Themed `nsh/base` RichEditor              |
+| `RichEditorProps`   | `nsh/base`'s `RichEditorProps`, unchanged |

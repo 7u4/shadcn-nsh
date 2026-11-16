@@ -75,7 +75,8 @@ Every page links the base element it is built on where `nsh/base` has one, and t
 - /docs/components/text-view: Brand links and a streaming caret for Markdown documents. → https://nsh.dev/elements/text-view
 - /docs/components/terminal: A program's output on the theme's field surface, the keys typed back to it. → https://nsh.dev/elements/terminal
 - /docs/components/emoji-picker: Gallery look for nsh/base EmojiPicker: tabs, search, tones and preview. → https://nsh.dev/elements/emoji-picker
-- /docs/components/editor: Rich document typography and code editor pass-through. → https://nsh.dev/elements/rich-editor
+- /docs/components/code-editor: A code editor on the field's well: line numbers, the caret's line, syntax highlighting and diagnostics. → https://nsh.dev/elements/editor
+- /docs/components/editor: Rich document typography for nsh/base's RichEditor. → https://nsh.dev/elements/rich-editor
 - /docs/components/color-picker: Area, sliders, joined fields, swatches, and popover trigger. → https://nsh.dev/elements/color-picker
 - /docs/components/breadcrumb: The trail from the app's root to the page it shows, its steps parted by a chevron. → styled on `nsh` View and Text (no base element)
 - /docs/components/aspect-ratio: A box as wide as its column, as tall as its ratio says. → styled on `nsh` View (no base element)
