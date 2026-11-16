@@ -65,6 +65,12 @@ export type Case = {
    */
   steps?: (app: App) => Promise<void>;
   /**
+   * The pointer pass's window, for a page whose desktop layout a phone's 390 × 844 never reaches
+   * (the sidebar's column beside its page, and the folds it shows only when wide). The touch pass
+   * fills the simulator's screen and ignores it: there the page keeps its phone layout.
+   */
+  viewport?: { width: number; height: number };
+  /**
    * The reference page draws the component itself, because the component is upstream's own
    * (no shell): a comparison would prove nothing. The reason is printed by the render checks,
    * which then screenshot the demo alone. A component with a shell must not set this, and one
@@ -163,10 +169,17 @@ const overrides: Record<string, Override> = {
       await app.wait(300);
     },
   },
-  // The page is 390 points wide, and a window narrower than 600 (or a touch screen) draws the
-  // column as a sheet: the trigger opens it, so the shot is the column itself — its rows, a sub
-  // menu, a badge and the footer — over the page it belongs to.
-  sidebar: { steps: (app) => app.press("Toggle Sidebar") },
+  // The pointer pass opens a desktop window: the column stands beside its page, and the press — the
+  // first "Toggle Sidebar" in the page, the rail down the column's inner edge — folds it to its
+  // icons, over the variants and the collapsibles each in a frame of its own, two of them closed.
+  // The touch pass keeps the phone's width, where the column is a sheet: there the first "Toggle
+  // Sidebar" is the page's trigger, and it opens the sheet, so that shot is the column itself — its
+  // rows, a sub menu, a badge and the footer — over the page it belongs to.
+  sidebar: {
+    viewport: { width: 1024, height: 1280 },
+    // The column draws before the page does, so its rail is the first of the two names in the page.
+    steps: (app) => app.press("Toggle Sidebar >> nth=0"),
+  },
   toast: { steps: (app) => app.press("Copy the link") },
   select: { steps: (app) => app.press("label:Language") },
   "date-picker": { steps: (app) => app.press("No due date") },

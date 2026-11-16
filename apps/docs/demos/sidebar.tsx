@@ -4,8 +4,10 @@
 // open state and every change reported beside it. A wide window also shows the three variants and
 // the three collapsibles in frames of their own.
 //
-// A narrow window (and a touch screen) gets the column as a sheet: the trigger opens it, and
-// `render-cases.ts` presses it before the screenshot, so both passes keep the column's look.
+// A narrow window (and a touch screen) gets the column as a sheet: the trigger opens it. A wide one
+// keeps the column beside the page and folds it to its icons — the rail down its inner edge or the
+// trigger does that — and `render-cases.ts` presses the first before the screenshot, so each pass
+// shoots the shape its window gives the column.
 //
 // The rows are drawn by hand on the look's words (`sidebarMenuButtonLook().label` and `.glyph`),
 // which is how an app puts an icon and a name in a row: a string child is styled by the component,
