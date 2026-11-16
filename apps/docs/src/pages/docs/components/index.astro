@@ -17,17 +17,17 @@ const byKind = KINDS.map((kind) => ({
 >
   <p>
     {components.length} components, one page each: Installation, Usage, Examples and API. They are
-    grouped in two: <strong>Official</strong>, aligned with a shadcn/ui component or an NSH element,
-    and <strong>Our own</strong>, this library's additions with no official counterpart. Behavior,
-    keyboard support and the full unstyled props live on{" "}
-    <a href="https://nsh.dev/elements">nsh.dev/elements</a>; each page links its base element and
-    the shadcn/ui component it stands in for.
+    grouped in two: <strong>Official</strong>, aligned with a shadcn/ui component, and
+    <strong>Our own</strong>, this library's additions with no shadcn/ui counterpart (an NSH element
+    wrapped in the theme counts as ours). Behavior, keyboard support and the full unstyled props
+    live on <a href="https://nsh.dev/elements">nsh.dev/elements</a>; each page links its base
+    element and the shadcn/ui component it stands in for.
   </p>
   <p>
     The list is generated from <code>registry.json</code> and these pages, so every{" "}
     <code>registry:ui</code> item has a page and every page has an item. The group comes from{" "}
     <a href={withBase("docs/components/coverage")}>Coverage</a>: a page registered in one of its
-    rows is Official, one in none is Our own. Add one with{" "}
+    shadcn/ui rows is Official, one in none is Our own. Add one with{" "}
     <code>npx shadcn-nsh@latest add &lt;name&gt;</code>.
   </p>
   {byKind.map((group) => (
