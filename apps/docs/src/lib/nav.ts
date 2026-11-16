@@ -62,6 +62,14 @@ export const SIDEBAR_PAGES: SidebarPage[] = [
     source: "apps/docs/src/pages/docs/theme.md",
   },
   {
+    route: "/docs/themes",
+    href: url("docs/themes"),
+    title: "Themes",
+    group: "start",
+    section: "theme",
+    source: "apps/docs/src/pages/docs/themes.astro",
+  },
+  {
     route: "/docs/customizing",
     href: url("docs/customizing"),
     title: "Customizing",

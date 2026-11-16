@@ -29,8 +29,7 @@ const label = lang === "zh-CN" ? "演示主题" : "Demo theme";
 
 <script>
   import { PALETTES } from "../../demos/palettes";
-  import { reloadDemos } from "../lib/demo-client";
-  import { storePalette, storedPalette } from "../lib/palette";
+  import { choosePalette, onPaletteChange, storedPalette } from "../lib/palette";
 
   for (const group of document.querySelectorAll<HTMLElement>(".palette-switch")) {
     const buttons = [...group.querySelectorAll<HTMLButtonElement>("[data-palette]")];
@@ -45,12 +44,13 @@ const label = lang === "zh-CN" ? "演示主题" : "Demo theme";
     const choose = (id: string) => {
       const palette = PALETTES.find((option) => option.id === id);
       if (!palette) return;
-      storePalette(palette.id);
-      // A demo reads the palette when it starts: the panels load again with it.
-      reloadDemos();
+      // The panels load again with it: a demo reads the palette when it starts.
+      choosePalette(palette.id);
       sync();
     };
     sync();
+    // Another switch on the page (the themes page's) chose one: show it here too.
+    onPaletteChange(sync);
     group.addEventListener("click", (event) => {
       const button = (event.target as HTMLElement).closest<HTMLButtonElement>("[data-palette]");
       if (button) choose(button.dataset.palette!);

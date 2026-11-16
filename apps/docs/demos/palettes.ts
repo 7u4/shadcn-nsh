@@ -3,7 +3,9 @@
 // it and builds the storage key from it, and neither names a palette of its own.
 //
 // A palette's `label` is what the switch shows. The theme itself names itself too, longer
-// (`AppTheme.label`: "shadcn neutral"); that name is the theme's, not the switch's.
+// (`AppTheme.label`: "shadcn neutral"); that name is the theme's, not the switch's. The themes
+// page (`src/pages/docs/themes.astro`) reads this list too: one more field here is one more
+// column there, and neither side keeps a second list of themes.
 //
 // This module imports nothing, so the site can read it as well as the demos: no `nsh`, no theme
 // data, nothing of the app.
@@ -14,8 +16,18 @@ export const PALETTE_KEY = "palette";
 /** The palettes, in the switch's order. `default` is the theme the demos are built with
  * (`packages/theme/theme.json`), which an app needs no theme file for. */
 export const PALETTES = [
-  { id: "default", label: "Default" },
-  { id: "shadcn", label: "shadcn" },
+  {
+    id: "default",
+    label: "Default",
+    description:
+      "The library's own: graphite surfaces, one citrus accent, roomy 10-point controls.",
+  },
+  {
+    id: "shadcn",
+    label: "shadcn",
+    description:
+      "shadcn's neutral palette: near-black and near-white fills, flat finishes, 8-point controls.",
+  },
 ] as const;
 
 export type Palette = (typeof PALETTES)[number];
