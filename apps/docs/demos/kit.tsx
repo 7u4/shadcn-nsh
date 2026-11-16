@@ -1,6 +1,9 @@
 // Shared chrome for the port demos (not shipped in the registry): the page shell, a
 // section card (`sectionSurface`), and a titled row of controls. Keep `<id>.tsx` and
 // `<id>.ref.tsx` on the same kit so `port:render` compares equal pixels.
+// The palette goes on before anything mounts (every page reaches the kit, and `mount` waits for
+// what it imports): the first frame is already the theme the docs site chose.
+import "./apply-palette";
 import { colors } from "@shadcn-nsh/theme";
 import type { JSX, ViewStyle } from "nsh";
 import { Scroll, Text, View } from "nsh";

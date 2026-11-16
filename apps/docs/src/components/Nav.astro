@@ -2,6 +2,7 @@
 import { activeSection, PRIMARY_NAV } from "../lib/nav";
 import { NSH_SITE_URL, REPO_URL, url } from "../lib/site";
 import Logo from "./Logo.astro";
+import PaletteSwitch from "./PaletteSwitch.astro";
 import ThemeSwitch from "./ThemeSwitch.astro";
 import Button from "./ui/Button.astro";
 
@@ -72,6 +73,7 @@ const home = url();
     </nav>
 
     <div class="site-nav__actions">
+      <PaletteSwitch lang="en" />
       <ThemeSwitch lang="en" />
       <Button
         variant="ghost"
