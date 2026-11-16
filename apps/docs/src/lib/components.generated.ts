@@ -344,6 +344,15 @@ export const components: ComponentDoc[] = [
     description: "Page numbers and chevrons with the current page lit primary.",
   },
   {
+    slug: "sidebar",
+    title: "Sidebar",
+    kind: "navigation",
+    shadcn: "sidebar",
+    nshElement: null,
+    description:
+      "An app's navigation column beside its page — folded to a strip of icons, or sliding in as a sheet on a phone.",
+  },
+  {
     slug: "tabs",
     title: "Tabs",
     kind: "navigation",

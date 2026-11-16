@@ -156,6 +156,10 @@ const overrides: Record<string, Override> = {
   // The bar stays; the panel opens under its trigger, which wears the chosen fill and turns its
   // chevron up.
   "navigation-menu": { steps: (app) => app.press("Getting started") },
+  // The page is 390 points wide, and a window narrower than 600 (or a touch screen) draws the
+  // column as a sheet: the trigger opens it, so the shot is the column itself — its rows, a sub
+  // menu, a badge and the footer — over the page it belongs to.
+  sidebar: { steps: (app) => app.press("Toggle Sidebar") },
   toast: { steps: (app) => app.press("Copy the link") },
   select: { steps: (app) => app.press("label:Language") },
   "date-picker": { steps: (app) => app.press("No due date") },

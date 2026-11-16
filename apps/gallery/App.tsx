@@ -40,6 +40,21 @@ import {
   NavigationMenuList,
   navigationMenuLook,
   NavigationMenuTrigger,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarInset,
+  SidebarMenu,
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
+  useSidebar,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -74,6 +89,17 @@ function Section(props: { title: string; children: unknown }) {
       <Text style={{ fontSize: 16, fontWeight: "600", color: colors.text }}>{props.title}</Text>
       {props.children as never}
     </View>
+  );
+}
+
+/** What a sidebar's provider holds, said as a line of smoke: the gallery's phone window opens the
+ * column as a sheet, so this is where the sheet's state is seen. */
+function SidebarReadout() {
+  const sidebar = useSidebar();
+  return (
+    <Text style={{ fontSize: 12, color: colors.muted }}>
+      {() => `${sidebar.state} · sheet ${sidebar.openMobile}`}
+    </Text>
   );
 }
 
@@ -257,6 +283,56 @@ function App() {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
+        </Section>
+
+        <Section title="Sidebar">
+          <SidebarProvider style={{ height: 300 }}>
+            <Sidebar collapsible="none">
+              <SidebarHeader>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton size="lg">Acme Inc.</SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarHeader>
+              <SidebarContent>
+                <SidebarGroup>
+                  <SidebarGroupLabel>Platform</SidebarGroupLabel>
+                  <SidebarGroupContent>
+                    <SidebarMenu>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton isActive tooltip="Playground">
+                          Playground
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton tooltip="Models">Models</SidebarMenuButton>
+                      </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton size="sm" onPress={() => count.set(count() + 1)}>
+                          Design engineering
+                        </SidebarMenuButton>
+                        <SidebarMenuBadge>12</SidebarMenuBadge>
+                      </SidebarMenuItem>
+                    </SidebarMenu>
+                  </SidebarGroupContent>
+                </SidebarGroup>
+              </SidebarContent>
+              <SidebarFooter>
+                <SidebarMenu>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton>shadcn</SidebarMenuButton>
+                  </SidebarMenuItem>
+                </SidebarMenu>
+              </SidebarFooter>
+            </Sidebar>
+            <SidebarInset>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 8, padding: 8 }}>
+                <SidebarTrigger />
+                <SidebarReadout />
+              </View>
+            </SidebarInset>
+          </SidebarProvider>
         </Section>
 
         <Section title="Overlays">

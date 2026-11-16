@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- **`sidebar`.** An app's navigation column beside its page, after shadcn/ui's sidebar — its own
+  component, drawn on `nsh`'s `View`: `SidebarProvider`, `useSidebar`, `Sidebar`,
+  `SidebarTrigger`, `SidebarRail`, `SidebarInset`, `SidebarInput`, `SidebarHeader`, `SidebarFooter`,
+  `SidebarSeparator`, `SidebarContent`, `SidebarGroup`, `SidebarGroupLabel`, `SidebarGroupAction`,
+  `SidebarGroupContent`, `SidebarMenu`, `SidebarMenuItem`, `SidebarMenuButton`, `SidebarMenuAction`,
+  `SidebarMenuBadge`, `SidebarMenuSkeleton`, `SidebarMenuSub`, `SidebarMenuSubItem` and
+  `SidebarMenuSubButton`. Three axes: `side` (`left` / `right`), `variant` (`sidebar` / `floating`
+  / `inset`) and `collapsible` (`offcanvas` / `icon` / `none`); 256 points wide, 48 folded to its
+  icons (the fold is instant — the platform transitions colors, opacity and transforms, not layout),
+  and a sheet 288 wide on a touch screen or under 600 points. The provider owns the state (`open` /
+  `defaultOpen`, `onOpenChange({ open, reason })` with `triggerPress`, `railPress` and `shortcut`);
+  ⌘B / Ctrl+B is `nsh`'s `keymap`; nothing is written down, so the app keeps the state where it
+  keeps the rest. A folded row names itself in a tooltip, an action steps past a badge instead of
+  drawing over it, and the phone's sheet is this library's `Sheet`. `add sidebar` brings `button`,
+  `input`, `separator`, `sheet`, `skeleton`, `tooltip`, `icons`, `label-of`, `press`, `surface` and
+  `theme`.
+
 - **`navigation-menu`.** A row of triggers, each opening a panel of anything — a link grid, a card
   with a description — under the bar: `NavigationMenu`, `NavigationMenuList`, `NavigationMenuItem`,
   `NavigationMenuTrigger`, `NavigationMenuContent`, `NavigationMenuLink`. One panel at a time, owned

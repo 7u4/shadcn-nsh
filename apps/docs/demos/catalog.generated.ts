@@ -78,4 +78,5 @@ export const componentIds = [
   "attachment",
   "message-scroller",
   "navigation-menu",
+  "sidebar",
 ] as const;
