@@ -2,11 +2,12 @@
  * The palette's first frame: a demo the site switched to `shadcn` must draw shadcn from its very
  * first frame — no frame of the build-time theme first, which a visitor would see as a flash.
  *
- *   bun run check:palette [--only button] [--schemes dark,light] [--shots <dir>]
+ *   bun run check:palette [--only button] [--schemes dark,light] [--shots <dir>] [--deadline 8000]
  *
  * Opens the packaged demo (`public/demos/<id>/`, `bun run docs:demos`) in headless Chrome over the
- * DevTools protocol, with the palette seeded in localStorage before any page script runs — what the
- * site's switch does before it loads a panel again — and records what each display frame paints:
+ * DevTools protocol (`demo-frames.ts`), with the palette seeded in localStorage before any page
+ * script runs — what the site's switch does before it loads a panel again — and records what each
+ * display frame paints:
  * the colors the app writes into the page (its views' inline styles) and into its canvases (icons
  * and the like), frame by frame. The first frame with content must already carry the chosen theme's
  * own colors, and no frame may paint a color only another theme has.
@@ -17,6 +18,9 @@
  * `--shots <dir>` also keeps the compositor's frames (a screencast) as `palette-<id>-<scheme>/
  * frame-<n>.png`, for a look by eye beside it.
  *
+ * `--deadline <ms>` is the longest a run may take to see the page (8000 by default): a demo that
+ * never paints fails the run rather than holding the check open.
+ *
  * Chrome: `NSH_BROWSER` or `CHROME_PATH` names it, else the usual install paths are tried.
  * Nothing here compiles NSH or needs the site built: it reads a packaged demo and the theme files.
  */
@@ -25,10 +29,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { PALETTES, PALETTE_KEY, type PaletteId } from "../demos/palettes";
+import { packagedDemo, repo, servePackagedDemos, watchDemo } from "./demo-frames";
 
 const docsRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const repo = path.resolve(docsRoot, "../..");
-const publicRoot = path.join(docsRoot, "public");
 const themeRoot = path.join(repo, "packages", "theme", "themes");
 
 const args = process.argv.slice(2);
@@ -37,6 +40,8 @@ const schemes = (named("--schemes") ?? "dark,light").split(",").map((scheme) => 
 const shots = named("--shots");
 /** How long to keep recording after the first painted frame, in milliseconds. */
 const wait = Number(named("--wait") ?? 1200);
+/** How long a run may take to see the page at all, in milliseconds. */
+const deadline = Number(named("--deadline") ?? 8000);
 
 function named(name: string): string | undefined {
   const at = args.indexOf(name);
@@ -49,10 +54,7 @@ const nsh = JSON.parse(fs.readFileSync(path.join(docsRoot, "demos", "nsh.json"),
 };
 const STORAGE_KEY = `nsh:${nsh.id}:${PALETTE_KEY}`;
 
-if (!fs.existsSync(path.join(publicRoot, "demos", demo, "index.html"))) {
-  console.error(`check:palette: public/demos/${demo}/ is not built — run \`bun run docs:demos\``);
-  process.exit(1);
-}
+packagedDemo("check:palette", demo);
 
 /** Every string a theme file holds (a gradient's stops and a shadow's colors are in one). */
 function strings(value: unknown): string[] {
@@ -155,25 +157,9 @@ const palettes = PALETTES.map((palette) => ({
   ...palette,
   colors: themeColors(palette.id),
 }));
-const chrome = findChrome();
-if (!chrome) {
-  console.error("check:palette: no Chrome found — set CHROME_PATH");
-  process.exit(1);
-}
 
-const server = Bun.serve({
-  port: 0,
-  fetch(request) {
-    const url = new URL(request.url);
-    let file = path.join(publicRoot, decodeURIComponent(url.pathname));
-    if (url.pathname.endsWith("/")) file = path.join(file, "index.html");
-    if (!fs.existsSync(file) || !fs.statSync(file).isFile()) {
-      return new Response("not found", { status: 404 });
-    }
-    return new Response(Bun.file(file), { headers: { "cache-control": "no-store" } });
-  },
-});
-const origin = `http://127.0.0.1:${server.port}`;
+const server = servePackagedDemos();
+const origin = server.origin;
 
 let failed = 0;
 for (const palette of palettes) {
@@ -218,7 +204,7 @@ for (const palette of palettes) {
   }
 }
 
-server.stop(true);
+server.stop();
 if (failed > 0) {
   console.error(`palette: ${failed} run(s) failed`);
   process.exit(1);
@@ -235,105 +221,36 @@ function union(all: { id: PaletteId; colors: Set<string> }[], except: PaletteId)
   return out;
 }
 
-/** One run: the page in `palette` and `scheme`, open in a fresh target, and its frames read back. */
+/** One run: the page in `palette` and `scheme`, open in a fresh Chrome, its frames read back. */
 async function run(palette: PaletteId, scheme: string): Promise<Frame[]> {
   const url = `${origin}/demos/${demo}/index.html?idiom=desktop&theme=${scheme}`;
   const dir = shots ? path.join(shots, `palette-${palette}-${scheme}`) : undefined;
   if (dir) fs.mkdirSync(dir, { recursive: true });
-
-  const profile = fs.mkdtempSync(path.join(repo, ".check-palette-"));
-  const port = freePort();
-  const browser = Bun.spawn(
-    [
-      chrome!,
-      "--headless",
-      "--disable-gpu",
-      "--force-prefers-reduced-motion",
-      "--hide-scrollbars",
-      "--no-first-run",
-      "--no-default-browser-check",
-      "--force-device-scale-factor=1",
-      "--window-size=1024,700",
-      `--user-data-dir=${profile}`,
-      `--remote-debugging-port=${port}`,
-      "about:blank",
-    ],
-    { stdout: "ignore", stderr: "ignore" },
-  );
-  try {
-    const devtools = await connect(port);
-    try {
-      const created = await devtools.send("Target.createTarget", { url: "about:blank" });
-      const { targetId } = created.result as { targetId: string };
-      const attached = await devtools.send("Target.attachToTarget", { targetId, flatten: true });
-      const { sessionId } = attached.result as { sessionId: string };
-      const session = { sessionId };
-      await devtools.send("Page.enable", {}, session);
-      await devtools.send("Runtime.enable", {}, session);
-      await devtools.send(
-        "Page.addScriptToEvaluateOnNewDocument",
-        { source: sampler(palette, STORAGE_KEY) },
-        session,
-      );
-
-      let frames: Frame[] = [];
-      if (dir) {
-        let at = 0;
-        devtools.on((message) => {
-          if (message.method !== "Page.screencastFrame" || message.sessionId !== sessionId) return;
-          const { data, sessionId: frame } = message.params as { data: string; sessionId: number };
-          fs.writeFileSync(path.join(dir, `frame-${String(at++).padStart(2, "0")}.png`), data, {
-            encoding: "base64",
-          });
-          void devtools.send("Page.screencastFrameAck", { sessionId: frame }, session);
-        });
-        await devtools.send(
-          "Page.startScreencast",
-          { format: "png", maxWidth: 1024, maxHeight: 700, everyNthFrame: 1 },
-          session,
-        );
-      }
-
-      await devtools.send("Page.navigate", { url }, session);
-      const deadline = Date.now() + 8000;
-      let until = 0;
-      while (Date.now() < deadline) {
-        await Bun.sleep(100);
-        const evaluated = await devtools.send(
-          "Runtime.evaluate",
-          { expression: "JSON.stringify(window.__paletteFrames ?? [])", returnByValue: true },
-          session,
-        );
-        const value = (evaluated.result as { result: { value?: string } }).result.value;
-        frames = JSON.parse(value ?? "[]") as Frame[];
-        // Enough frames after the first painted one to see a swap that came later.
-        const painted = frames.findIndex((frame) => frame.draws > 0 || frame.views > 0);
-        if (painted >= 0 && until === 0) until = Date.now() + wait;
-        if (until > 0 && Date.now() > until) break;
-      }
-      if (dir) await devtools.send("Page.stopScreencast", {}, session);
-      return frames;
-    } finally {
-      devtools.close();
-    }
-  } finally {
-    browser.kill();
-    // Chrome writes to its profile while it shuts down: remove the profile once it has exited.
-    await browser.exited;
-    fs.rmSync(profile, { recursive: true, force: true });
-  }
+  let frames: Frame[] = [];
+  // Enough frames after the first painted one to see a swap that came later.
+  let until = 0;
+  let at = 0;
+  await watchDemo({
+    label: "check:palette",
+    url,
+    source: sampler(palette, STORAGE_KEY),
+    deadlineMs: deadline,
+    screencast: dir
+      ? (png) => {
+          fs.writeFileSync(path.join(dir, `frame-${String(at++).padStart(2, "0")}.png`), png);
+        }
+      : undefined,
+    poll: async (read) => {
+      const seen = await read("JSON.stringify(window.__paletteFrames ?? [])");
+      frames = JSON.parse(seen || "[]") as Frame[];
+      const painted = frames.findIndex((frame) => frame.draws > 0 || frame.views > 0);
+      if (painted >= 0 && until === 0) until = Date.now() + wait;
+      return until > 0 && Date.now() > until;
+    },
+  });
+  return frames;
 }
 
-/** A port nothing listens on: Chrome's debugger, a moment from now. */
-function freePort(): number {
-  const probe = Bun.serve({ port: 0, fetch: () => new Response("") });
-  const port = probe.port;
-  probe.stop(true);
-  if (port === undefined) throw new Error("check:palette: no free port");
-  return port;
-}
-
-/** The page's recorder: the palette seeded before any page script, then each frame's paint. */
 function sampler(palette: string, key: string): string {
   return `(() => {
   try { localStorage.setItem(${JSON.stringify(key)}, ${JSON.stringify(palette)}); } catch {}
@@ -407,107 +324,4 @@ function sampler(palette: string, key: string): string {
   const tick = () => { sampleViews(); flush(); requestAnimationFrame(tick); };
   requestAnimationFrame(tick);
 })();`;
-}
-
-/** A DevTools client: one command at a time, replies matched by id, events passed on. */
-type Reply = {
-  id?: number;
-  result?: Record<string, unknown>;
-  error?: { message: string };
-  method?: string;
-  params?: unknown;
-  sessionId?: string;
-};
-
-async function connect(port: number) {
-  const deadline = Date.now() + 8000;
-  let target: string | undefined;
-  while (Date.now() < deadline && !target) {
-    try {
-      const response = await fetch(`http://127.0.0.1:${port}/json/version`);
-      target = ((await response.json()) as { webSocketDebuggerUrl?: string }).webSocketDebuggerUrl;
-    } catch {
-      await Bun.sleep(100);
-    }
-  }
-  if (!target) throw new Error("check:palette: Chrome's debugger did not come up");
-  const socket = new WebSocket(target);
-  await new Promise<void>((resolve, reject) => {
-    socket.addEventListener("open", () => resolve(), { once: true });
-    socket.addEventListener("error", () => reject(new Error("check:palette: debugger socket")), {
-      once: true,
-    });
-  });
-  let next = 0;
-  const waiting = new Map<
-    number,
-    { method: string; resolve: (value: Reply) => void; reject: (e: Error) => void }
-  >();
-  const handlers: ((message: Reply) => void)[] = [];
-  socket.addEventListener("message", (event) => {
-    const message = JSON.parse(String(event.data)) as Reply;
-    if (message.id !== undefined) {
-      const slot = waiting.get(message.id);
-      if (!slot) return;
-      waiting.delete(message.id);
-      if (message.error)
-        slot.reject(new Error(`check:palette: ${slot.method}: ${message.error.message}`));
-      else slot.resolve(message);
-    } else {
-      for (const handler of handlers) handler(message);
-    }
-  });
-  return {
-    send(method: string, params: unknown = {}, session?: { sessionId: string }) {
-      const id = ++next;
-      socket.send(JSON.stringify({ id, method, params, ...session }));
-      return new Promise<Reply>((resolve, reject) => waiting.set(id, { method, resolve, reject }));
-    },
-    on(handler: (message: Reply) => void) {
-      handlers.push(handler);
-    },
-    close() {
-      socket.close();
-    },
-  };
-}
-
-/** Chrome's path: `NSH_BROWSER`, `CHROME_PATH`, then the usual installs. */
-function findChrome(): string | undefined {
-  const named = process.env.NSH_BROWSER ?? process.env.CHROME_PATH;
-  if (named) return fs.existsSync(named) ? named : undefined;
-  if (process.platform === "darwin") {
-    for (const app of [
-      "Google Chrome.app/Contents/MacOS/Google Chrome",
-      "Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing",
-      "Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
-      "Chromium.app/Contents/MacOS/Chromium",
-    ]) {
-      for (const root of ["/Applications", path.join(process.env.HOME ?? "", "Applications")]) {
-        const exe = path.join(root, app);
-        if (fs.existsSync(exe)) return exe;
-      }
-    }
-    return undefined;
-  }
-  if (process.platform === "win32") {
-    for (const app of [
-      "Google\\Chrome\\Application\\chrome.exe",
-      "Microsoft\\Edge\\Application\\msedge.exe",
-      "Chromium\\Application\\chrome.exe",
-    ]) {
-      for (const root of ["ProgramFiles", "ProgramFiles(x86)", "LOCALAPPDATA"]) {
-        const exe = path.join(process.env[root] ?? "", app);
-        if (fs.existsSync(exe)) return exe;
-      }
-    }
-    return undefined;
-  }
-  for (const name of ["google-chrome", "google-chrome-stable", "microsoft-edge", "chromium"]) {
-    for (const dir of (process.env.PATH ?? "").split(path.delimiter)) {
-      const exe = path.join(dir, name);
-      if (fs.existsSync(exe)) return exe;
-    }
-  }
-  return undefined;
 }
