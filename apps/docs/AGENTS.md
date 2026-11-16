@@ -57,13 +57,26 @@ Every name in such an import must be exported by `packages/ui/<slug>.tsx`; `chec
 
 ## One component list
 
-`src/lib/components.generated.ts` is generated from `registry.json` (the `registry:ui` items) and each page's frontmatter. The sidebar (`src/lib/nav.ts`) and the index (`src/pages/docs/components/index.astro`) read it, so they list exactly the components that have pages.
+`src/lib/components.generated.ts` is generated from `registry.json` (the `registry:ui` items), each page's frontmatter, and the two tables: `src/lib/kinds.ts` (every component's kind) and `src/lib/official.ts` (which shadcn/ui component and which NSH element it answers for). The sidebar (`src/lib/nav.ts`), the index (`src/pages/docs/components/index.astro`) and the coverage page (`src/pages/docs/components/coverage.astro`) read it, so they list exactly the components that have pages, grouped by kind in one order.
 
 ```sh
 bun run docs:components   # regenerate after adding a component or a page
 ```
 
-Do not edit the generated file. `src/lib/components.ts` keeps the `nshElement` overrides (a page whose base element has another name, such as `radio-group` → `radio`) and the helpers. `bun run check:pages` fails when the file is stale.
+Do not edit the generated file. `src/lib/components.ts` keeps the helpers. `bun run check:pages` fails when:
+
+- the file is stale, or a component page has no kind in `src/lib/kinds.ts`;
+- `kinds.ts` names something that is neither a page nor a planned one (`navigation-menu`, `sidebar`);
+- an official table names a page that does not exist, or serves nothing without a status and a note;
+- `references/` has a shadcn/ui `ui/*.tsx` or an NSH `elements/*.md` with no row — an upstream addition is one row here.
+
+## Kinds and coverage
+
+`src/lib/kinds.ts` puts each component in exactly one kind (`KIND_OF`), and `KINDS` is the order the sidebar and the index list them in. It holds the planned `navigation-menu` and `sidebar` too, so their pages land grouped the day they exist.
+
+`src/lib/official.ts` answers for both official sets: `SHADCN_UI` is one row per `references/shadcn-ui/apps/v4/registry/new-york-v4/ui/*.tsx`, `NSH_ELEMENTS` one row per `references/nsh/website/elements/*.md`. A row lists the pages here that serve it (`ours`, closest first) and, when nothing does, a `status` (`planned`, `missing`, `not-doing`, `primitive`) and a one-line `note`. Reversed, the same rows give each page its header links (`Official: shadcn/ui · dropdown-menu | NSH · nsh.dev/elements/menu`) and its base element, so a page never writes them itself. A `planned` row becomes a link by itself once its page exists.
+
+Adding a component: register its kind, add or extend an official row if one of theirs answers it, then `bun run docs:components`. The coverage page is generated from these tables; do not write it by hand.
 
 ## Demos
 
@@ -86,4 +99,4 @@ bun run docs:demos     # package the previews
 vp check               # format, lint, tool types
 ```
 
-`public/llms.txt` is this site's table of contents for language models: the docs pages, every component with its base link, and where the base API lives. Update it when a page is added or renamed.
+`public/llms.txt` is this site's table of contents for language models: the docs pages, every component with its base link, and where the base API lives. It is written by hand — update it when a page, a base link or a rename changes.

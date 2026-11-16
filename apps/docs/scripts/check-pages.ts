@@ -10,8 +10,9 @@
  *   exported by that component's file;
  * - every component page has a kind, and the kinds table names nothing that
  *   is neither a page nor a planned one;
- * - the official tables in `src/lib/official.ts` name only pages that exist,
- *   and say why when they serve nothing;
+ * - the official tables in `src/lib/official.ts` cover every file of
+ *   `references/shadcn-ui`'s ui directory and every `references/nsh` element,
+ *   name only pages that exist, and say why when they serve nothing;
  * - `components.generated.ts` is what `bun run docs:components` would write.
  *
  * The component set itself (page, demo and reference page exist, no orphans) is
@@ -173,6 +174,56 @@ for (const { label, entries } of tables) {
   }
 }
 
+// The official sets themselves: a component added upstream with no row here fails.
+const references = path.join(repo, "references");
+const names = (dir: string, extension: string): string[] | undefined => {
+  if (!fs.existsSync(dir)) return undefined;
+  return fs
+    .readdirSync(dir)
+    .filter((file) => file.endsWith(extension) && file !== "index.md")
+    .map((file) => file.slice(0, -extension.length))
+    .sort();
+};
+
+const shadcnDir = path.join(references, "shadcn-ui/apps/v4/registry/new-york-v4/ui");
+const shadcnFiles = names(shadcnDir, ".tsx");
+if (shadcnFiles) {
+  const rows = new Set(SHADCN_UI.map((entry) => entry.id));
+  for (const id of shadcnFiles) {
+    if (!rows.has(id)) {
+      fail(`references/shadcn-ui …/ui/${id}.tsx: no row in SHADCN_UI (src/lib/official.ts)`);
+    }
+  }
+  for (const id of rows) {
+    if (!shadcnFiles.includes(id))
+      fail(`SHADCN_UI: "${id}" is no file in references/shadcn-ui …/ui`);
+  }
+}
+
+const nshDir = path.join(references, "nsh/website/elements");
+const nshFiles = names(nshDir, ".md");
+if (nshFiles) {
+  const rows = new Map(NSH_ELEMENTS.map((entry) => [entry.id, entry]));
+  for (const id of nshFiles) {
+    if (!rows.has(id)) {
+      fail(
+        `references/nsh/website/elements/${id}.md: no row in NSH_ELEMENTS (src/lib/official.ts)`,
+      );
+    }
+  }
+  for (const [id, entry] of rows) {
+    if (!nshFiles.includes(id)) {
+      fail(`NSH_ELEMENTS: "${id}" is no element in references/nsh/website/elements`);
+      continue;
+    }
+    const source = fs.readFileSync(path.join(nshDir, `${id}.md`), "utf8");
+    const group = /^group:\s*(\S+)\s*$/m.exec(source)?.[1];
+    if (group && group !== entry.group) {
+      fail(`NSH_ELEMENTS: "${id}" is "${group}" in references/nsh, not "${entry.group}"`);
+    }
+  }
+}
+
 let importCount = 0;
 const required = ["Installation", "Usage", "Examples", "API"];
 const old = new Set(["Install", "Composition", "Differences", "Not forwarded"]);
@@ -246,6 +297,10 @@ if (problems.length > 0) {
   process.exit(1);
 }
 
+const official = [
+  shadcnFiles ? `${SHADCN_UI.length} shadcn/ui` : "shadcn/ui (references/ empty)",
+  nshFiles ? `${NSH_ELEMENTS.length} NSH` : "NSH (references/ empty)",
+];
 console.log(
-  `check:pages ok — ${cat.components.length} components, ${importCount} imported names; ${SHADCN_UI.length} shadcn/ui and ${NSH_ELEMENTS.length} NSH answered for`,
+  `check:pages ok — ${cat.components.length} components, ${importCount} imported names; ${official.join(", ")} answered for`,
 );

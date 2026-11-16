@@ -77,6 +77,14 @@ export const SIDEBAR_PAGES: SidebarPage[] = [
     section: "components",
     source: "apps/docs/src/pages/docs/components/index.astro",
   },
+  {
+    route: "/docs/components/coverage",
+    href: url("docs/components/coverage"),
+    title: "Coverage",
+    group: "components",
+    section: "components",
+    source: "apps/docs/src/pages/docs/components/coverage.astro",
+  },
   ...components.map((c): SidebarPage => ({
     route: `/docs/components/${c.slug}`,
     href: url(`docs/components/${c.slug}`),

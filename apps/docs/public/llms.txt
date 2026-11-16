@@ -18,6 +18,7 @@ Copy-into-app styled components for [Native Shell (NSH)](https://nsh.dev), built
 - /docs/theme: `theme.json` and `finishes.json` are the look; `lib/theme.ts` reads them.
 - /docs/customizing: after copying, change the theme, one control's look, or its shell.
 - /docs/components: one page per `registry:ui` item, with Installation, Usage, Examples and API.
+- /docs/components/coverage: every shadcn/ui component and every NSH element, and what this library has for it.
 
 ## Components
 
