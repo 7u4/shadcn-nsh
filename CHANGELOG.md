@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **`navigation-menu`.** A row of triggers, each opening a panel of anything — a link grid, a card
+  with a description — under the bar: `NavigationMenu`, `NavigationMenuList`, `NavigationMenuItem`,
+  `NavigationMenuTrigger`, `NavigationMenuContent`, `NavigationMenuLink`. One panel at a time, owned
+  by the root (`value` / `defaultValue`, `onValueChange({ value, reason })`); a press opens and
+  closes one, and on a desktop the pointer's rest opens it too (`delayDuration` 200, `closeDelay`
+  300, both `Infinity`-able). Each panel is [`nsh/base` Popover](https://nsh.dev/elements/popover)
+  placed against its trigger: a trigger is 36 points high and 16 in either side (44 with a touch
+  screen), the open one on the `accent` fill at half with its chevron turned. No viewport (so no
+  bar-wide panel and no size animation), no indicator arrow, no `asChild`. `add navigation-menu`
+  brings `popup`, `icons`, `label-of`, `press` and `theme`.
 - **`message-scroller`.** A conversation that scrolls and keeps up with itself: `MessageScroller`,
   `MessageScrollerViewport`, `MessageScrollerContent`, `MessageScrollerItem` and
   `MessageScrollerButton`, after shadcn/ui's message scroller, on `nsh`'s `Scroll`. New turns follow

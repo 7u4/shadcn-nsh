@@ -271,6 +271,13 @@ export const components: ComponentDoc[] = [
     description: "A horizontal meter with an optional limit marker.",
   },
   {
+    slug: "navigation-menu",
+    title: "NavigationMenu",
+    nshElement: "navigation-menu",
+    description:
+      "A row of triggers, each opening a panel of anything under the bar — one at a time.",
+  },
+  {
     slug: "number-input",
     title: "Number Input",
     nshElement: "number-input",
