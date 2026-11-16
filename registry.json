@@ -338,7 +338,7 @@
       "type": "registry:ui",
       "title": "Toggle Group",
       "description": "A row or column of toggles on the inset toolbar track.",
-      "registryDependencies": ["theme", "toggle", "toolbar"],
+      "registryDependencies": ["toggle", "toolbar"],
       "files": [
         {
           "path": "packages/ui/toggle-group.tsx",

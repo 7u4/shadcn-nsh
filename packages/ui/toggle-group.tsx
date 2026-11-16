@@ -1,6 +1,5 @@
 // A toggle group: `nsh/base`'s ToggleGroup in the inset track of `toolbarTrack`.
 // The track look lives in `toolbar.tsx` (from look/tool.ts); this file is the shell only.
-import { colors } from "@shadcn-nsh/theme";
 import type { ViewStyle } from "nsh";
 import { split } from "nsh";
 import {
@@ -32,28 +31,24 @@ function groupChrome(vertical?: boolean): ViewStyle {
 }
 
 /**
- * `toolbarTrack` with live color reads. The ported helper snapshots `colors.*` into a plain
- * object; on ToggleGroup that snapshot stayed light under a dark scheme in port:render, so the
- * shell re-reads the tokens where the style is applied (as `switchLook`'s getters do).
+ * The track holding a row (or column) of toggles. The look is read where the style is applied,
+ * not held in a variable: `toolbarTrack` reads the theme's colors and radius there (tokens are
+ * values, so a look built once in the body would keep the build-time ones when the app switches
+ * theme).
  */
-function insetTrack(vertical?: boolean): ViewStyle {
-  const base = toolbarTrack({ vertical });
-  return {
-    ...base,
-    get backgroundColor() {
-      return colors.inset;
-    },
-    get borderColor() {
-      return colors.border;
-    },
-  };
-}
-
-/** The track holding a row (or column) of toggles. */
 export function ToggleGroup(props: ToggleGroupProps) {
   const [, rest] = split(props, ["style", "vertical", "inset"]);
-  const look = props.inset === false ? groupChrome(props.vertical) : insetTrack(props.vertical);
-  return <BaseToggleGroup {...rest} style={[look, props.style ?? null]} />;
+  return (
+    <BaseToggleGroup
+      {...rest}
+      style={[
+        props.inset === false
+          ? groupChrome(props.vertical)
+          : toolbarTrack({ vertical: props.vertical }),
+        props.style ?? null,
+      ]}
+    />
+  );
 }
 
 export { Toggle, type ToggleProps, type ToggleSize } from "./toggle";
