@@ -101,8 +101,11 @@ function Column(props: { open: () => boolean; expanded: () => string[] }) {
   const isOpen = (title: string) => expanded().includes(title);
   const look = sidebarLook({ ...COLUMN_AXES, open, isMobile: mobile });
   const group = sidebarGroupLook({ ...AXES, open, isMobile: mobile });
-  const input = sidebarInputLook();
+  const input = sidebarInputLook({ ...AXES, open, isMobile: mobile });
   const skeleton = sidebarMenuSkeletonLook();
+  // The parts the component takes out of the tree while the column is folded to its icons: the
+  // search field, the group's action, a row's action and badge, the open sub menu.
+  const folded = () => !open() && !mobile();
   return (
     <>
       <View style={look.header}>
@@ -139,7 +142,9 @@ function Column(props: { open: () => boolean; expanded: () => string[] }) {
             </View>
           </View>
         </View>
-        <Input placeholder="Search" style={input.style} />
+        <If when={!folded()}>
+          <Input placeholder="Search" style={input.style} />
+        </If>
       </View>
       <Separator style={look.separator} />
       <Scroll style={look.content}>
@@ -167,15 +172,17 @@ function Column(props: { open: () => boolean; expanded: () => string[] }) {
                         reveal
                         style={{ gap: 2 }}
                         content={
-                          <View style={sub.sub}>
-                            {row.items.map((item) => (
-                              <View style={sub.item}>
-                                <View style={subButton.style}>
-                                  <Text style={subButton.label}>{item}</Text>
+                          <If when={!folded()}>
+                            <View style={sub.sub}>
+                              {row.items.map((item) => (
+                                <View style={sub.item}>
+                                  <View style={subButton.style}>
+                                    <Text style={subButton.label}>{item}</Text>
+                                  </View>
                                 </View>
-                              </View>
-                            ))}
-                          </View>
+                              ))}
+                            </View>
+                          </If>
                         }
                       >
                         <View style={rowLook.style}>
@@ -206,9 +213,11 @@ function Column(props: { open: () => boolean; expanded: () => string[] }) {
             <View style={group.labelBox}>
               <Text style={group.label}>Projects</Text>
             </View>
-            <View style={group.action}>
-              <Icon icon={Plus} size={14} tint={ui().muted} />
-            </View>
+            <If when={!folded()}>
+              <View style={group.action}>
+                <Icon icon={Plus} size={14} tint={ui().muted} />
+              </View>
+            </If>
             <View style={group.content}>
               <View style={menuStyle()}>
                 {PROJECTS.map((project) => {
@@ -237,13 +246,17 @@ function Column(props: { open: () => boolean; expanded: () => string[] }) {
                         <Text style={rowLook.label}>{project.name}</Text>
                       </View>
                       {project.badge === undefined ? null : (
-                        <View style={badge.style}>
-                          <Text style={badge.text}>{project.badge}</Text>
-                        </View>
+                        <If when={!folded()}>
+                          <View style={badge.style}>
+                            <Text style={badge.text}>{project.badge}</Text>
+                          </View>
+                        </If>
                       )}
-                      <View style={action.style}>
-                        <Icon icon={Ellipsis} size={14} tint={ui().muted} />
-                      </View>
+                      <If when={!folded()}>
+                        <View style={action.style}>
+                          <Icon icon={Ellipsis} size={14} tint={ui().muted} />
+                        </View>
+                      </If>
                     </View>
                   );
                 })}
@@ -330,7 +343,13 @@ function App() {
       : NAV.some((row) => expanded().includes(row.title))
         ? "expanded · open rows kept"
         : "collapsed";
-  const look = sidebarLook({ ...COLUMN_AXES, open: () => open(), isMobile: mobile });
+  // The column's fold, reported the way the provider reports it: the line the demo's log keeps.
+  const toggle = (reason: string) => {
+    const next = !open();
+    open.set(next);
+    note(`${next ? "opened" : "closed"} — ${reason}`);
+  };
+  const look = sidebarLook({ ...COLUMN_AXES, open, isMobile: mobile });
 
   return (
     <DemoPage title="Sidebar" note={() => lines()[0] ?? "Click the trigger, or press ⌘B."}>
@@ -352,32 +371,55 @@ function App() {
         <DemoCard padded={false} style={{ height: 460, overflow: "hidden", borderRadius: 0 }}>
           <View style={[look.root, { flex: 1, backgroundColor: undefined }]}>
             {/* A narrow window: the column is the page's sheet, as `Sidebar` draws it. */}
-            <Sheet open={sheet()} onOpenChange={({ open: next }) => sheet.set(next)}>
-              <SheetContent
-                side="left"
-                popupStyle={[
-                  {
-                    boxSizing: "border-box",
-                    width: Math.min(sidebarSize.mobile, windowSize().width - 48),
-                    height: "100%",
-                    paddingHorizontal: 0,
-                    paddingTop: safeArea().top,
-                    paddingBottom: safeArea().bottom,
-                    gap: 0,
-                    borderTopLeftRadius: 0,
-                    borderTopRightRadius: 0,
-                    borderBottomLeftRadius: 0,
-                    borderBottomRightRadius: 0,
-                    backgroundColor: colors.sidebar,
-                    borderColor: colors.sidebarBorder,
-                  },
-                ]}
-              >
-                <View style={[look.column, { flex: 1 }]}>
+            <If when={mobile()}>
+              <Sheet open={sheet()} onOpenChange={({ open: next }) => sheet.set(next)}>
+                <SheetContent
+                  side="left"
+                  popupStyle={[
+                    {
+                      boxSizing: "border-box",
+                      width: Math.min(sidebarSize.mobile, windowSize().width - 48),
+                      height: "100%",
+                      paddingHorizontal: 0,
+                      paddingTop: safeArea().top,
+                      paddingBottom: safeArea().bottom,
+                      gap: 0,
+                      borderTopLeftRadius: 0,
+                      borderTopRightRadius: 0,
+                      borderBottomLeftRadius: 0,
+                      borderBottomRightRadius: 0,
+                      backgroundColor: colors.sidebar,
+                      borderColor: colors.sidebarBorder,
+                    },
+                  ]}
+                >
+                  <View style={[look.column, { flex: 1 }]}>
+                    <Column open={open} expanded={expanded} />
+                  </View>
+                </SheetContent>
+              </Sheet>
+            </If>
+
+            {/* A wide window: the column stands beside its page in a frame of its own, and folds
+                to its icons — the rail down its inner edge, or the trigger in the page's header. */}
+            <If when={!mobile()}>
+              <View style={look.frame}>
+                <View style={look.column}>
                   <Column open={open} expanded={expanded} />
                 </View>
-              </SheetContent>
-            </Sheet>
+                <View
+                  accessible
+                  role="group"
+                  accessibilityLabel="Toggle Sidebar"
+                  focusable={false}
+                  hitSlop={{ left: sidebarSize.rail, right: sidebarSize.rail }}
+                  onPress={() => toggle("the rail")}
+                  style={look.rail}
+                >
+                  <View style={[look.railLine, { opacity: 0 }]} />
+                </View>
+              </View>
+            </If>
 
             <View style={look.inset}>
               <View
@@ -395,7 +437,8 @@ function App() {
                   accessibilityLabel="Toggle Sidebar"
                   onPress={() => {
                     note("trigger");
-                    sheet.set(true);
+                    if (mobile()) sheet.set(true);
+                    else toggle("the trigger");
                   }}
                 >
                   <IconLabel label="Menu" icon={PanelLeft} {...iconButtonGlyph()} />

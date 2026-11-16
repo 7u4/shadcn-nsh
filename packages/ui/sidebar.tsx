@@ -214,9 +214,14 @@ export interface SidebarLook {
 /** How much room a floating or inset column keeps around its card. */
 const frameRoom = (variant: SidebarVariant) => (variant === "sidebar" ? 0 : sidebarSize.frame);
 
-/** The width a column takes: open, folded to its icons, or off the window. */
-const columnWidth = (open: boolean, collapsible: SidebarCollapsible, variant: SidebarVariant) =>
-  open ? sidebarSize.width : collapsible === "icon" ? sidebarSize.icon + 2 * frameRoom(variant) : 0;
+/** The width a column takes: open, folded to its icons, or off the window — with the room a
+ * floating or an inset column keeps around its card, so the card itself stays `sidebarSize.width`
+ * across. A `none` column never closes, so it keeps its width whatever the open state says. */
+const columnWidth = (open: boolean, collapsible: SidebarCollapsible, variant: SidebarVariant) => {
+  const room = 2 * frameRoom(variant);
+  if (collapsible === "none" || open) return sidebarSize.width + room;
+  return collapsible === "icon" ? sidebarSize.icon + room : 0;
+};
 
 // The fold takes the room away at once: the platform transitions colors, opacity, transforms and
 // rotations, not layout (`width` is refused as a `transitionProperty`), and a native layout
@@ -454,7 +459,7 @@ export function sidebarMenuButtonLook(o?: SidebarMenuButtonLookOptions) {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-start",
-        gap: folded ? 0 : sidebarSize.gap,
+        gap: sidebarSize.gap,
         ...(folded
           ? { width: sidebarSize.folded, height: sidebarSize.folded }
           : { width: "100%", height: rowHeight[size()] }),
@@ -528,7 +533,6 @@ export function sidebarMenuActionLook(o?: SidebarMenuActionLookOptions) {
     !read(o?.open) && (read(o?.collapsible) ?? "offcanvas") === "icon" && !read(o?.isMobile);
   return {
     get style(): ViewStyle {
-      console.log("ACTION", collapsed(), read(o?.open), read(o?.collapsible), read(o?.isMobile));
       return {
         position: "absolute",
         top: "50%",
@@ -819,16 +823,17 @@ export function useSidebar(): SidebarApi {
   };
 }
 
-/** The axes the `Sidebar` published, and the provider's state, for a part that folds with it. */
+/**
+ * The axes the `Sidebar` published, and the provider's state, for a part that folds with it. Each is
+ * a reader, not a value: a part spreads these into its look's options, and a spread copies a value
+ * once (the axes the column published by then, `offcanvas` before it had published any) — the fold
+ * would then never reach the part.
+ */
 function useFoldOptions(): SidebarFoldOptions {
   const ctx = useSidebarContext();
   return {
-    get side(): SidebarSide {
-      return ctx.axes().side;
-    },
-    get collapsible(): SidebarCollapsible {
-      return ctx.axes().collapsible;
-    },
+    side: () => ctx.axes().side,
+    collapsible: () => ctx.axes().collapsible,
     open: ctx.open,
     isMobile: ctx.isMobile,
   };
@@ -844,19 +849,14 @@ function useShown(): () => boolean {
   return () => !(!ctx.open() && ctx.axes().collapsible === "icon" && !ctx.isMobile());
 }
 
-/** The same fold options, for the column itself and the page beside it: every axis it wears. */
+/** The same fold options, for the column itself and the page beside it: every axis it wears. The
+ * axes are readers for the same reason they are in `useFoldOptions`. */
 function useLookOptions(): SidebarLookOptions {
   const ctx = useSidebarContext();
   return {
-    get side(): SidebarSide {
-      return ctx.axes().side;
-    },
-    get variant(): SidebarVariant {
-      return ctx.axes().variant;
-    },
-    get collapsible(): SidebarCollapsible {
-      return ctx.axes().collapsible;
-    },
+    side: () => ctx.axes().side,
+    variant: () => ctx.axes().variant,
+    collapsible: () => ctx.axes().collapsible,
     open: ctx.open,
     isMobile: ctx.isMobile,
   };
@@ -903,15 +903,12 @@ export function SidebarProvider(props: SidebarProviderProps) {
   };
   // The ground the column and the page stand on (the sidebar's fill for an inset column, which is
   // where that variant's gutters come from): read from the axes the `Sidebar` publishes, so it
-  // follows the variant the app switches to.
-  const root = sidebarLook({
-    get side() {
-      return axes().side;
-    },
-    get variant() {
-      return axes().variant;
-    },
-  }).root;
+  // follows the variant the app switches to. Read where it is worn, not into a value here: the axes
+  // arrive after the parts below have drawn once.
+  const look = sidebarLook({
+    side: () => axes().side,
+    variant: () => axes().variant,
+  });
   // The app's shortcut, on the desktops and the web: made where the provider draws, gone with it.
   keymap.bind("mod+b", () => toggle("shortcut"));
   return (
@@ -928,7 +925,7 @@ export function SidebarProvider(props: SidebarProviderProps) {
         state: () => (open() ? "expanded" : "collapsed"),
       }}
     >
-      <View {...rest} style={[root, props.style ?? null]}>
+      <View {...rest} style={[look.root, props.style ?? null]}>
         {props.children}
       </View>
     </SidebarContext.Provider>
@@ -975,20 +972,12 @@ export function Sidebar(props: SidebarProps) {
   return (
     <>
       <If when={fixed()}>
-        <View
-          {...rest}
-          style={[
-            {
-              boxSizing: "border-box",
-              position: "relative",
-              flexShrink: 0,
-              width: sidebarSize.width,
-            },
-            look.column,
-            props.style ?? null,
-          ]}
-        >
-          {props.children}
+        {/* A column that never closes keeps its frame: the room a floating or an inset column
+            keeps around its card, and the width the column wears. */}
+        <View style={look.frame}>
+          <View {...rest} style={[look.column, props.style ?? null]}>
+            {props.children}
+          </View>
         </View>
       </If>
       <If when={!fixed() && ctx.isMobile()}>

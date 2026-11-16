@@ -55,6 +55,14 @@
   drawing over it, and the phone's sheet is this library's `Sheet`. `add sidebar` brings `button`,
   `input`, `separator`, `sheet`, `skeleton`, `tooltip`, `icons`, `label-of`, `press`, `surface` and
   `theme`.
+- **`sidebar` folds as it starts, and a `none` column keeps its frame.** A column mounted closed
+  (`defaultOpen={false}`, or an `open` that is false at the first frame) is folded from that frame:
+  its rows draw the icon alone, the search field, a group's action, a row's badge and action and an
+  open sub menu are gone, and a folded row keeps the 8-point gap so a trailing icon is clipped at
+  the 48-point rail instead of hanging beside the icon. The parts read the column's axes where they
+  wear them, so a closed column no longer draws its rows expanded. A `collapsible="none"` column
+  keeps its frame — the 8 points of room `floating` and `inset` give a card, on top of the column's
+  256 — so beside an `inset` page both cards stand on the sidebar's ground with their gutters.
 
 - **`navigation-menu`.** A row of triggers, each opening a panel of anything — a link grid, a card
   with a description — under the bar: `NavigationMenu`, `NavigationMenuList`, `NavigationMenuItem`,

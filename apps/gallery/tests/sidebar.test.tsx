@@ -33,6 +33,17 @@ test("the rail folds it, and the change says the rail", async () => {
   expect(app.texts()).toContain("changes 1 · closed · railPress");
 });
 
+test("a column mounted closed is folded from the first frame", async () => {
+  const app = await open("./sidebar-closed.fixture.tsx", wide);
+  expect(app.texts()).toContain("state collapsed · sheet false");
+  // Folded, a row draws its icon alone: the name stays for the tooltip, not for the page.
+  expect(app.texts()).not.toContain("Row A");
+  await app.press("label:Toggle Sidebar");
+  await app.wait(300);
+  expect(app.texts()).toContain("state expanded · sheet false");
+  expect(app.texts()).toContain("Row A");
+});
+
 test("a folded row shows its name in a tooltip", async () => {
   const app = await open("./sidebar.fixture.tsx", wide);
   await app.press("label:Toggle Sidebar");
