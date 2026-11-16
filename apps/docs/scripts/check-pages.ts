@@ -8,6 +8,8 @@
  * - a `demo:` names the page's own demo;
  * - every name a fenced snippet imports from `@/components/ui/<id>` is
  *   exported by that component's file;
+ * - every component page has a kind, and the kinds table names no component
+ *   that does not have a page;
  * - `components.generated.ts` is what `bun run docs:components` would write.
  *
  * The component set itself (page, demo and reference page exist, no orphans) is
@@ -20,6 +22,7 @@ import path from "node:path";
 
 import { catalog } from "../../../scripts/catalog";
 import { components } from "../src/lib/components.generated";
+import { KIND_OF, KINDS } from "../src/lib/kinds";
 import { componentPlan, isCurrent, readPageMeta } from "./build-components";
 
 const cat = catalog();
@@ -104,13 +107,30 @@ function exportsOf(file: string): Set<string> {
   return names;
 }
 
-// Generated list.
-const plan = componentPlan();
-if (!isCurrent(plan, components)) {
-  fail("components.generated.ts is stale; run `bun run docs:components`");
+// Generated list. A page with no kind throws the plan away: `check:pages` reports that below.
+try {
+  if (!isCurrent(componentPlan(), components)) {
+    fail("components.generated.ts is stale; run `bun run docs:components`");
+  }
+} catch (error) {
+  fail((error as Error).message);
 }
 
 const byId = new Map(cat.components.map((component) => [component.id, component]));
+
+// Kinds: exactly one per page, and nothing in the table without a page.
+for (const component of cat.components) {
+  if (!KIND_OF[component.id]) {
+    fail(`apps/docs/src/pages/docs/components/${component.id}.md: no kind in src/lib/kinds.ts`);
+  }
+}
+
+for (const [slug, kind] of Object.entries(KIND_OF)) {
+  if (!KINDS.includes(kind)) fail(`src/lib/kinds.ts: "${slug}" is "${kind}", which is not a kind`);
+  if (byId.has(slug)) continue;
+  fail(`src/lib/kinds.ts: "${slug}" is not a component page`);
+}
+
 let importCount = 0;
 const required = ["Installation", "Usage", "Examples", "API"];
 const old = new Set(["Install", "Composition", "Differences", "Not forwarded"]);

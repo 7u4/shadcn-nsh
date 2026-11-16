@@ -1,4 +1,5 @@
 import { components } from "./components";
+import type { ComponentKindId } from "./kinds";
 import { url } from "./site";
 
 export type NavSectionId = "getting-started" | "cli" | "theme" | "components";
@@ -11,6 +12,8 @@ export type SidebarPage = {
   href: string;
   title: string;
   group: SidebarGroupId;
+  /** The kind a component page is listed under; the sidebar labels each run of them. */
+  kind?: ComponentKindId;
   /** Primary nav section this page belongs to. */
   section: NavSectionId;
   /** Repo path of the page, for "Edit this page". */
@@ -29,7 +32,10 @@ export const SIDEBAR_GROUPS: Record<SidebarGroupId, string> = {
   components: "Components",
 };
 
-/** Flat docs pages in sidebar / pager order (NSH-style consecutive groups). */
+/**
+ * Flat docs pages in sidebar / pager order (NSH-style consecutive groups), one run per component
+ * kind: the generated list is already in kind order, which is the index's order too.
+ */
 export const SIDEBAR_PAGES: SidebarPage[] = [
   {
     route: "/docs/getting-started",
@@ -76,6 +82,7 @@ export const SIDEBAR_PAGES: SidebarPage[] = [
     href: url(`docs/components/${c.slug}`),
     title: c.title,
     group: "components",
+    kind: c.kind,
     section: "components",
     source: `apps/docs/src/pages/docs/components/${c.slug}.md`,
   })),

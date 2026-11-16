@@ -2,6 +2,13 @@
 import Docs from "../../../layouts/Docs.astro";
 import { withBase } from "../../../lib/base";
 import { components } from "../../../lib/components";
+import { KIND_LABELS, KINDS } from "../../../lib/kinds";
+
+const byKind = KINDS.map((kind) => ({
+  kind,
+  label: KIND_LABELS[kind],
+  items: components.filter((c) => c.kind === kind),
+})).filter((group) => group.items.length > 0);
 ---
 
 <Docs
@@ -9,21 +16,28 @@ import { components } from "../../../lib/components";
   description="Copy-into-app components for Native Shell, built on nsh/base."
 >
   <p>
-    {components.length} components, one page each: Installation, Usage, Examples and API. Behavior,
-    keyboard support and the full unstyled props live on{" "}
-    <a href="https://nsh.dev/elements">nsh.dev/elements</a>; each page links its base element.
+    {components.length} components, one page each: Installation, Usage, Examples and API. They are
+    grouped by what they do. Behavior, keyboard support and the full unstyled props live on{" "}
+    <a href="https://nsh.dev/elements">nsh.dev/elements</a>; each page links its base element and
+    the shadcn/ui component it stands in for.
   </p>
   <p>
     The list is generated from <code>registry.json</code> and these pages, so every{" "}
     <code>registry:ui</code> item has a page and every page has an item. Add one with{" "}
-    <code>npx shadcn-nsh@latest add &lt;name&gt;</code>.
+    <code>npx shadcn-nsh@latest add &lt;name&gt;</code>. Which shadcn/ui component and which NSH
+    element each one answers for is on <a href={withBase("docs/components/coverage")}>Coverage</a>.
   </p>
-  <ul>
-    {components.map((c) => (
-      <li>
-        <a href={withBase(`docs/components/${c.slug}`)}>{c.title}</a>
-        <span style="color: var(--muted-foreground)"> — {c.description}</span>
-      </li>
-    ))}
-  </ul>
+  {byKind.map((group) => (
+    <>
+      <h2 id={group.kind}>{group.label}</h2>
+      <ul>
+        {group.items.map((c) => (
+          <li>
+            <a href={withBase(`docs/components/${c.slug}`)}>{c.title}</a>
+            <span style="color: var(--muted-foreground)"> — {c.description}</span>
+          </li>
+        ))}
+      </ul>
+    </>
+  ))}
 </Docs>
