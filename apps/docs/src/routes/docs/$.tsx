@@ -17,7 +17,6 @@ import { useMDXComponents } from "@/components/fd/mdx";
 import { PaletteSwitch } from "@/components/fd/palette-switch";
 import { getComponentBySlug } from "@/lib/components";
 import { CONTENT_PATHS } from "@/lib/content-paths";
-import { KIND_LABELS, kindOf } from "@/lib/kinds";
 import { baseOptions } from "@/lib/layout.shared";
 import { nshElementUrl, shadcnUrl } from "@/lib/official";
 import { EDIT_BASE, SITE_TITLE } from "@/lib/site";
@@ -87,13 +86,10 @@ const loader = createServerFn({ method: "GET" })
   });
 
 /**
- * What `src/layouts/Docs.astro` added around a page's markdown, in the same order: the Official
- * links, the Preview panel, then the "Behavior & a11y" and "Source" sections a component page
- * ends with. None of it is written in the `.md`.
- *
- * One difference from the Astro page: the standfirst (the markdown before its first `##`) used to
- * sit above Preview, which the layout could do because it had the rendered HTML. Here Preview
- * comes first, and the page's own sections follow, so nothing is cut out of the markdown.
+ * What a page shows around its markdown, none of it written in the `.md`: the title and the
+ * description, then straight away the Preview panel (a component page is read by looking at it
+ * first), then the page's own sections, then the official docs it answers to, "Behavior & a11y"
+ * and "Source".
  */
 function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
   const page = docs.getPage(path);
@@ -110,53 +106,49 @@ function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
   const demo = page.demo;
   // The page's own file, in the content folder the site reads.
   const editPath = `apps/docs/content/docs/${path}`;
-  const kind = slug ? kindOf(slug) : undefined;
   const authoringFile = componentDoc ? `packages/ui/${componentDoc.slug}.tsx` : undefined;
 
   return (
     <DocsPage toc={toc}>
-      {kind ? (
-        <p className="text-fd-muted-foreground mb-1 text-sm font-medium">{KIND_LABELS[kind]}</p>
-      ) : null}
       <DocsTitle>{page.title}</DocsTitle>
       <DocsDescription>{page.description}</DocsDescription>
-      <div className="flex flex-wrap items-center gap-2 border-b pb-6">
+      <div className="flex flex-wrap items-center gap-2">
         <MarkdownCopyButton markdownUrl={markdownUrl} />
         <PaletteSwitch />
       </div>
       <DocsBody>
-        {componentDoc && (shadcnHref || nshHref) ? (
-          <p className="text-fd-muted-foreground text-sm">
-            Official:{" "}
-            {shadcnHref ? (
-              <a href={shadcnHref} rel="noopener noreferrer">
-                shadcn/ui · {componentDoc.shadcn}
-              </a>
-            ) : null}
-            {shadcnHref && nshHref ? " | " : null}
-            {nshHref ? (
-              <>
-                <a href={nshHref} rel="noopener noreferrer">
-                  NSH · nsh.dev/elements/{componentDoc.nshElement}
-                </a>{" "}
-                <a
-                  className="text-fd-muted-foreground"
-                  href={`${nshHref}.md`}
-                  rel="noopener noreferrer"
-                >
-                  .md
-                </a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
         {demo ? (
-          <>
-            <h2 id="preview">Preview</h2>
+          <div id="preview">
             <DemoPanel name={demo} loadSource={DEMO_SOURCES[`../../../demos/${demo}.tsx`]} />
-          </>
+          </div>
         ) : null}
         <MDX components={useMDXComponents()} />
+        {componentDoc && (shadcnHref || nshHref) ? (
+          <>
+            <h2 id="official">Official docs</h2>
+            <ul>
+              {shadcnHref ? (
+                <li>
+                  <a href={shadcnHref} rel="noopener noreferrer">
+                    shadcn/ui · {componentDoc.shadcn}
+                  </a>
+                </li>
+              ) : null}
+              {nshHref ? (
+                <li>
+                  <a href={nshHref} rel="noopener noreferrer">
+                    NSH · nsh.dev/elements/{componentDoc.nshElement}
+                  </a>{" "}
+                  (
+                  <a href={`${nshHref}.md`} rel="noopener noreferrer">
+                    .md
+                  </a>
+                  )
+                </li>
+              ) : null}
+            </ul>
+          </>
+        ) : null}
         {componentDoc && nshHref ? (
           <>
             <h2 id="behavior-a11y">Behavior &amp; a11y</h2>
