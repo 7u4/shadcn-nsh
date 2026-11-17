@@ -17,6 +17,28 @@ const avatarSide = platform.desktop ? 32 : 36;
 /** The gap between a message's avatar and its content: 8 points. */
 const gap = 8;
 
+/** The room a message's header and footer keep from the turn's edge, and their gap. */
+const noteInset = 12;
+const noteGap = 6;
+
+/** A header or a footer: one line of words, at the start of the row or on the message's side. */
+const noteRow = (align: MessageAlign): ViewStyle => ({
+  flexDirection: "row",
+  alignItems: "center",
+  alignSelf: "stretch",
+  justifyContent: align === "end" ? "flex-end" : "flex-start",
+  gap: noteGap,
+  paddingHorizontal: noteInset,
+  minWidth: 0,
+});
+
+/** The small, medium, muted type of a header or a footer. */
+const noteType = (): TextStyle => ({
+  fontSize: density.note,
+  fontWeight: "500",
+  color: colors.muted,
+});
+
 /** What a `MessageContent` and a `MessageFooter` under a `Message` wear: the side. */
 const MessageContext = context<(() => MessageAlign) | null>(null);
 
@@ -83,29 +105,14 @@ export function messageLook(): MessageLook {
       minWidth: 0,
     }),
     get header(): ViewStyle {
-      return {
-        flexDirection: "row",
-        alignItems: "center",
-        alignSelf: "stretch",
-        gap: 6,
-        paddingHorizontal: 12,
-        minWidth: 0,
-      };
+      return noteRow("start");
     },
     get headerText(): TextStyle {
-      return { fontSize: density.note, fontWeight: "500", color: colors.muted };
+      return noteType();
     },
-    footer: (align: MessageAlign): ViewStyle => ({
-      flexDirection: "row",
-      alignItems: "center",
-      alignSelf: "stretch",
-      justifyContent: align === "end" ? "flex-end" : "flex-start",
-      gap: 6,
-      paddingHorizontal: 12,
-      minWidth: 0,
-    }),
+    footer: (align: MessageAlign): ViewStyle => noteRow(align),
     get footerText(): TextStyle {
-      return { fontSize: density.note, fontWeight: "500", color: colors.muted };
+      return noteType();
     },
   };
 }
@@ -180,8 +187,7 @@ export function MessageAvatar(props: MessageAvatarProps) {
 
 /** The column a message holds: its header, its turn and its footer, on the message's side. */
 export function MessageContent(props: MessageContentProps) {
-  const context = MessageContext();
-  const align = (): MessageAlign => (context ? context() : "start");
+  const align = (): MessageAlign => MessageContext()?.() ?? "start";
   const [, rest] = split(props, ["children", "style"]);
   return (
     <View {...rest} style={[messageLook().content(align()), props.style ?? null]}>
@@ -207,8 +213,7 @@ export function MessageHeader(props: MessageHeaderProps) {
 /** What is under the turn: a delivery status, actions, an error and a retry. A string child is a
  * line in the look's type; anything else is drawn as given. */
 export function MessageFooter(props: MessageFooterProps) {
-  const context = MessageContext();
-  const align = (): MessageAlign => (context ? context() : "start");
+  const align = (): MessageAlign => MessageContext()?.() ?? "start";
   const [, rest] = split(props, ["children", "style"]);
   return (
     <View {...rest} style={[messageLook().footer(align()), props.style ?? null]}>
