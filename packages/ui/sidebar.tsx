@@ -3,18 +3,16 @@
 // it, on `nsh`'s own View and Text. This library's own: nothing here comes from upstream, so there
 // is no port region. Yours to change.
 //
-// What carries it: `nsh/base` has no sidebar — a sidebar is a layout and a set of parts, not one
-// control — so the column is drawn on `nsh`'s View. The controls it composes are this library's, so
-// a copied sidebar brings what it wears: `Sheet` for the phone's slide-in, `Tooltip` for a folded
-// row's name, `IconButton` for the trigger, `Input` for its search field, `Separator` and
-// `Skeleton`. ⌘B / Ctrl+B is `nsh`'s `keymap`: a binding made where the provider draws, removed
-// with it.
+// What carries it: `nsh/base` has no sidebar — a column and its parts are a layout, not one
+// control — so it is drawn on `nsh`'s View, and brings what it wears: `Sheet` for the phone's
+// slide-in, `Tooltip` for a folded row's name, `IconButton`, `Input`, `Separator`, `Skeleton`, and
+// `keymap` for ⌘B / Ctrl+B.
 //
 // The colors are shadcn's sidebar roles, mapped onto ours (there is no `sidebar-*` role set, and
 // this file does not add one): the column is `colors.sidebar`, its ink `colors.text`, its hover and
 // chosen row `colors.sidebarSelected` (shadcn's `sidebar-accent`), its edge `colors.sidebarBorder`,
-// and the keyboard's ring `focusRing()`. shadcn's `sidebar-primary` draws nothing in shadcn either,
-// so nothing here reads it.
+// and the keyboard's ring `focusRing()`. shadcn's `sidebar-primary` draws nothing there either, so
+// nothing here reads it.
 import { alpha, colors, finish, focusRing, hovered, radius, terminal } from "@shadcn-nsh/theme";
 import { PanelLeft } from "lucide";
 import type { JSX, StyleProp, TextStyle, ViewProps, ViewStyle } from "nsh";
@@ -154,6 +152,12 @@ const trailingRoom = (trailing: SidebarMenuTrailing | null | undefined) =>
 const hasBadge = (trailing: SidebarMenuTrailing | null | undefined) =>
   trailing === "badge" || trailing === "both";
 
+/** How far in from a row's edge its trailing parts stand: 4 points. */
+const trailingInset = 4;
+
+/** How far in a row's action stands with a badge beside it: past the edge room and the badge. */
+const actionPastBadge = trailingInset + sidebarSize.badge + trailingInset;
+
 /** What an item holds beside its row: the room the row keeps, and where the action stands. */
 const trailingOf = (holds: { action: boolean; badge: boolean }): SidebarMenuTrailing | null =>
   holds.action && holds.badge ? "both" : holds.action ? "action" : holds.badge ? "badge" : null;
@@ -173,6 +177,13 @@ export interface SidebarFoldOptions {
   /** A phone or a narrow window: the column is a sheet, always open (default false). */
   isMobile?: Live<boolean>;
 }
+
+/**
+ * Whether a look draws the folded column: closed on an `icon` column, on a window that shows it (a
+ * phone's slide-in shows the whole column, so it never folds).
+ */
+const folded = (o?: SidebarFoldOptions) =>
+  !read(o?.open) && (read(o?.collapsible) ?? "offcanvas") === "icon" && !read(o?.isMobile);
 
 /** What the column's own look takes: the axes it wears and the provider's state. */
 export interface SidebarLookOptions extends SidebarFoldOptions {
@@ -365,8 +376,6 @@ export function sidebarLook(o?: SidebarLookOptions): SidebarLook {
  * Colors as `sidebarLook`'s.
  */
 export function sidebarGroupLook(o?: SidebarFoldOptions) {
-  const collapsed = () =>
-    !read(o?.open) && (read(o?.collapsible) ?? "offcanvas") === "icon" && !read(o?.isMobile);
   return {
     get group(): ViewStyle {
       return {
@@ -381,14 +390,14 @@ export function sidebarGroupLook(o?: SidebarFoldOptions) {
       // property the platform has not been told to apply (it is added to the style, and the
       // element keeps what it had).
       return {
-        height: collapsed() ? 0 : sidebarSize.label,
+        height: folded(o) ? 0 : sidebarSize.label,
         flexDirection: "row",
         alignItems: "center",
         flexShrink: 0,
         paddingHorizontal: sidebarSize.padding,
         gap: 8,
         borderRadius: radius.control,
-        opacity: collapsed() ? 0 : 1,
+        opacity: folded(o) ? 0 : 1,
         overflow: "hidden",
       };
     },
@@ -411,7 +420,7 @@ export function sidebarGroupLook(o?: SidebarFoldOptions) {
         alignItems: "center",
         justifyContent: "center",
         borderRadius: radius.control,
-        display: collapsed() ? "none" : "flex",
+        display: folded(o) ? "none" : "flex",
       };
     },
     get actionHover(): ViewStyle {
@@ -449,24 +458,22 @@ export function sidebarMenuButtonLook(o?: SidebarMenuButtonLookOptions) {
   const size = () => read(o?.size) ?? "default";
   const active = () => !!read(o?.active);
   const disabled = () => !!read(o?.disabled);
-  const collapsed = () =>
-    !read(o?.open) && (read(o?.collapsible) ?? "offcanvas") === "icon" && !read(o?.isMobile);
   return {
     get style(): ViewStyle {
-      const folded = collapsed();
+      const isFolded = folded(o);
       return {
         boxSizing: "border-box",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "flex-start",
         gap: sidebarSize.gap,
-        ...(folded
+        ...(isFolded
           ? { width: sidebarSize.folded, height: sidebarSize.folded }
           : { width: "100%", height: rowHeight[size()] }),
         overflow: "hidden",
         borderRadius: radius.control,
         borderCurve: "continuous",
-        ...(folded
+        ...(isFolded
           ? { paddingHorizontal: size() === "lg" ? 0 : sidebarSize.padding }
           : {
               paddingHorizontal: sidebarSize.padding,
@@ -505,7 +512,7 @@ export function sidebarMenuButtonLook(o?: SidebarMenuButtonLookOptions) {
         color: colors.text,
         numberOfLines: 1,
         flexShrink: 1,
-        ...(collapsed() ? { display: "none" } : {}),
+        ...(folded(o) ? { display: "none" } : {}),
       };
     },
     /** A row's leading icon: 16 points (18 on a touch screen), the muted ink — the text's on the
@@ -529,8 +536,6 @@ export interface SidebarMenuActionLookOptions extends SidebarFoldOptions {
  * there. Colors as `sidebarLook`'s.
  */
 export function sidebarMenuActionLook(o?: SidebarMenuActionLookOptions) {
-  const collapsed = () =>
-    !read(o?.open) && (read(o?.collapsible) ?? "offcanvas") === "icon" && !read(o?.isMobile);
   return {
     get style(): ViewStyle {
       return {
@@ -543,9 +548,9 @@ export function sidebarMenuActionLook(o?: SidebarMenuActionLookOptions) {
         justifyContent: "center",
         borderRadius: radius.control,
         ...(read(o?.side) === "right"
-          ? { left: hasBadge(read(o?.trailing)) ? 28 : 4 }
-          : { right: hasBadge(read(o?.trailing)) ? 28 : 4 }),
-        display: collapsed() ? "none" : "flex",
+          ? { left: hasBadge(read(o?.trailing)) ? actionPastBadge : trailingInset }
+          : { right: hasBadge(read(o?.trailing)) ? actionPastBadge : trailingInset }),
+        display: folded(o) ? "none" : "flex",
       };
     },
     get hoverStyle(): ViewStyle {
@@ -566,8 +571,6 @@ export function sidebarMenuActionLook(o?: SidebarMenuActionLookOptions) {
  * trailing edge, its numbers tabular, the text's ink. Colors as `sidebarLook`'s.
  */
 export function sidebarMenuBadgeLook(o?: SidebarFoldOptions) {
-  const collapsed = () =>
-    !read(o?.open) && (read(o?.collapsible) ?? "offcanvas") === "icon" && !read(o?.isMobile);
   return {
     get style(): ViewStyle {
       return {
@@ -580,8 +583,8 @@ export function sidebarMenuBadgeLook(o?: SidebarFoldOptions) {
         justifyContent: "center",
         paddingHorizontal: 4,
         borderRadius: radius.control,
-        ...(read(o?.side) === "right" ? { left: 4 } : { right: 4 }),
-        display: collapsed() ? "none" : "flex",
+        ...(read(o?.side) === "right" ? { left: trailingInset } : { right: trailingInset }),
+        display: folded(o) ? "none" : "flex",
       };
     },
     /** Its type: 12 points medium (13 on a touch screen), the text's ink, the numbers tabular. */
@@ -603,8 +606,6 @@ export function sidebarMenuBadgeLook(o?: SidebarFoldOptions) {
  * `sidebarLook`'s.
  */
 export function sidebarMenuSubLook(o?: SidebarFoldOptions) {
-  const collapsed = () =>
-    !read(o?.open) && (read(o?.collapsible) ?? "offcanvas") === "icon" && !read(o?.isMobile);
   return {
     get sub(): ViewStyle {
       return {
@@ -616,7 +617,7 @@ export function sidebarMenuSubLook(o?: SidebarFoldOptions) {
         gap: sidebarSize.menuGap,
         flexDirection: "column",
         minWidth: 0,
-        display: collapsed() ? "none" : "flex",
+        display: folded(o) ? "none" : "flex",
       };
     },
     get item(): ViewStyle {
@@ -716,8 +717,6 @@ export function sidebarMenuSkeletonLook() {
 /** A sidebar's search field's look (`SidebarInput`): as tall as a row, on the page's fill rather
  * than a field's, so it reads as the page's own search. Colors as `sidebarLook`'s. */
 export function sidebarInputLook(o?: SidebarFoldOptions) {
-  const collapsed = () =>
-    !read(o?.open) && (read(o?.collapsible) ?? "offcanvas") === "icon" && !read(o?.isMobile);
   return {
     get style(): ViewStyle {
       return {
@@ -725,7 +724,7 @@ export function sidebarInputLook(o?: SidebarFoldOptions) {
         width: "100%",
         backgroundColor: colors.background,
         boxShadow: "none",
-        display: collapsed() ? "none" : "flex",
+        display: folded(o) ? "none" : "flex",
       };
     },
   };
@@ -840,13 +839,23 @@ function useFoldOptions(): SidebarFoldOptions {
 }
 
 /**
+ * Whether the column is folded to its icons: `folded`, read from the provider's state rather than
+ * from options a part is handed.
+ */
+function useFolded(): () => boolean {
+  const ctx = useSidebarContext();
+  return () =>
+    folded({ open: ctx.open, collapsible: () => ctx.axes().collapsible, isMobile: ctx.isMobile });
+}
+
+/**
  * Whether a part is drawn now: a part that goes when the column folds to its icons hands this to
  * `<If>`, which reads it again as the column folds. A style cannot say it — a style written where
  * the part renders is the one it keeps, and the array a shell merges its look into is merged then.
  */
 function useShown(): () => boolean {
-  const ctx = useSidebarContext();
-  return () => !(!ctx.open() && ctx.axes().collapsible === "icon" && !ctx.isMobile());
+  const iconOnly = useFolded();
+  return () => !iconOnly();
 }
 
 /** The same fold options, for the column itself and the page beside it: every axis it wears. The
@@ -865,6 +874,9 @@ function useLookOptions(): SidebarLookOptions {
 /** Whether the window shows a sheet rather than the column: a touch screen, or a narrow window
  * (a terminal keeps the column: it draws no icons to fold to). */
 const showsSheet = () => !terminal && (!platform.desktop || narrowWindow());
+
+/** What a phone's sheet leaves showing of the page beside it: 48 points. */
+const sheetMargin = 48;
 
 /** The root: it owns whether the column is open, the phone's sheet's state, and ⌘B / Ctrl+B. */
 export type SidebarProviderProps = ViewProps & {
@@ -896,9 +908,8 @@ export function SidebarProvider(props: SidebarProviderProps) {
     props.onOpenChange?.({ open: next, reason });
   };
   const setOpenMobile = (next: boolean) => sheet.set(next);
-  const isMobile = showsSheet;
   const toggle = (reason: SidebarOpenChangeReason = "triggerPress") => {
-    if (isMobile()) sheet.set(!sheet());
+    if (showsSheet()) sheet.set(!sheet());
     else setOpen(!open(), reason);
   };
   // The ground the column and the page stand on (the sidebar's fill for an inset column, which is
@@ -920,7 +931,7 @@ export function SidebarProvider(props: SidebarProviderProps) {
         setOpen,
         openMobile: () => sheet(),
         setOpenMobile,
-        isMobile,
+        isMobile: showsSheet,
         toggle,
         state: () => (open() ? "expanded" : "collapsed"),
       }}
@@ -969,17 +980,17 @@ export function Sidebar(props: SidebarProps) {
   );
   const look = sidebarLook(useLookOptions());
   const fixed = () => props.collapsible === "none";
+  /** The column's frame and box, which the branches below draw the same way. */
+  const column = () => (
+    <View style={look.frame}>
+      <View {...rest} style={[look.column, props.style ?? null]}>
+        {props.children}
+      </View>
+    </View>
+  );
   return (
     <>
-      <If when={fixed()}>
-        {/* A column that never closes keeps its frame: the room a floating or an inset column
-            keeps around its card, and the width the column wears. */}
-        <View style={look.frame}>
-          <View {...rest} style={[look.column, props.style ?? null]}>
-            {props.children}
-          </View>
-        </View>
-      </If>
+      <If when={fixed()}>{column()}</If>
       <If when={!fixed() && ctx.isMobile()}>
         <Sheet open={ctx.openMobile()} onOpenChange={({ open: next }) => ctx.setOpenMobile(next)}>
           <SheetContent
@@ -987,7 +998,7 @@ export function Sidebar(props: SidebarProps) {
             popupStyle={[
               {
                 boxSizing: "border-box",
-                width: Math.min(sidebarSize.mobile, windowSize().width - 48),
+                width: Math.min(sidebarSize.mobile, windowSize().width - sheetMargin),
                 height: "100%",
                 paddingHorizontal: 0,
                 paddingTop: safeArea().top,
@@ -1008,13 +1019,7 @@ export function Sidebar(props: SidebarProps) {
           </SheetContent>
         </Sheet>
       </If>
-      <If when={!fixed() && !ctx.isMobile()}>
-        <View style={look.frame}>
-          <View {...rest} style={[look.column, props.style ?? null]}>
-            {props.children}
-          </View>
-        </View>
-      </If>
+      <If when={!fixed() && !ctx.isMobile()}>{column()}</If>
     </>
   );
 }
@@ -1125,7 +1130,7 @@ export function SidebarGroupLabel(props: SidebarGroupLabelProps) {
 /** A group's action: a small square at its top right that takes a press. */
 export type SidebarGroupActionProps = Omit<BaseButtonProps, "children"> & {
   children?: string | JSX.Element;
-  /** Margin in points is not it: `style` goes over the look's. */
+  /** Over the look's, not instead of it. */
   style?: StyleProp<ViewStyle>;
 };
 
@@ -1283,9 +1288,15 @@ function rowName(props: SidebarMenuButtonProps) {
   return typeof tooltip?.children === "string" ? tooltip.children : undefined;
 }
 
-/** A row's button: its look, its name, and (folded) the tooltip that names it. */
-function MenuRow(props: SidebarMenuButtonProps) {
+/**
+ * A row of the sidebar's menu: an icon and a name, 32 points high (44 on a touch screen), the
+ * pointer's fill under it, the chosen fill on the page the app is on. It takes a press (`onPress`)
+ * or is a row of its own; folded to icons it is a square with its icon, and its `tooltip` names it
+ * on the desktops.
+ */
+export function SidebarMenuButton(props: SidebarMenuButtonProps) {
   const item = SidebarItemContext();
+  const iconOnly = useFolded();
   const [, rest] = split(props, [
     "isActive",
     "size",
@@ -1326,27 +1337,15 @@ function MenuRow(props: SidebarMenuButtonProps) {
       )}
     </BaseButton>
   );
-  const ctx = useSidebarContext();
-  const folded = () => !ctx.open() && ctx.axes().collapsible === "icon" && !ctx.isMobile();
   const tip = props.tooltip;
   if (tip === undefined) return row;
   const bubble = typeof tip === "string" ? { children: tip } : tip;
   return (
-    <Tooltip disabled={!folded()} delay={0}>
+    <Tooltip disabled={!iconOnly()} delay={0}>
       <TooltipTrigger>{row}</TooltipTrigger>
       <TooltipContent placement="right" align="center" offset={8} {...bubble} />
     </Tooltip>
   );
-}
-
-/**
- * A row of the sidebar's menu: an icon and a name, 32 points high (44 on a touch screen), the
- * pointer's fill under it, the chosen fill on the page the app is on. It takes a press (`onPress`)
- * or is a row of its own; folded to icons it is a square with its icon, and its `tooltip` names it
- * on the desktops.
- */
-export function SidebarMenuButton(props: SidebarMenuButtonProps) {
-  return <MenuRow {...props} />;
 }
 
 /** A row's action: a small square at its trailing edge that takes a press. */
@@ -1425,7 +1424,7 @@ export function SidebarMenuBadge(props: SidebarMenuBadgeProps) {
         {...rest}
         accessibilityElementsHidden
         importantForAccessibility="no-hide-descendants"
-        style={look.style}
+        style={[look.style, props.style ?? null]}
       >
         {typeof props.children === "string" ? (
           <Text style={look.text}>{props.children}</Text>
@@ -1591,10 +1590,11 @@ export type SidebarTriggerProps = Omit<IconButtonProps, "children" | "accessibil
 export function SidebarTrigger(props: SidebarTriggerProps) {
   const ctx = useSidebarContext();
   const [, rest] = split(props, ["children", "accessibilityLabel", "onPress"]);
+  const variant = props.variant ?? "ghost";
   return (
     <IconButton
       {...rest}
-      variant={props.variant ?? "ghost"}
+      variant={variant}
       accessibilityLabel={props.accessibilityLabel ?? "Toggle Sidebar"}
       onPress={() => {
         props.onPress?.();
@@ -1605,7 +1605,7 @@ export function SidebarTrigger(props: SidebarTriggerProps) {
         <IconLabel
           label="Menu"
           icon={PanelLeft}
-          {...iconButtonGlyph({ variant: props.variant ?? "ghost", size: () => props.size })}
+          {...iconButtonGlyph({ variant, size: () => props.size })}
         />
       )}
     </IconButton>
