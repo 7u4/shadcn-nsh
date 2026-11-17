@@ -224,6 +224,10 @@ function section(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
     hover: "var(--accent)",
     // The keyboard focus's halo: shadcn's `ring-ring/50`.
     "ring-halo": "color-mix(in srgb, var(--ring) 50%, transparent)",
+    // shadcn draws no edge on a filled pane or round a glass surface (`border-transparent`), so both
+    // roles name the theme's border: a theme switched to this one still has the tokens.
+    "brand-edge": "var(--border)",
+    "glass-edge": "var(--border)",
     faint: o.faint,
     brand: p.primary,
     track: o.track,
@@ -271,6 +275,8 @@ function finishes(appearance: Appearance, o: ReturnType<typeof own>) {
     raised: surface(alias("raised"), { boxShadow: SHADOW.xs }),
     hover: surface(alias("hover"), { boxShadow: SHADOW.xs }),
     // Pressed, the lift goes: the one cue a flat theme has left (shadcn styles no press state).
+    // Light, `--input` laid on the card is `--border`'s own grey (shadcn's light `input` and `border`
+    // are one colour), so the finish names that token; dark, no token holds the fill.
     pressed: surface(appearance === "light" ? alias("border") : o.pressed),
     light: surface(alias("primary")),
     accent: surface(alias("primary")),

@@ -85,6 +85,9 @@ const pending = new Set(
   ),
 );
 
+/** The pending rows a finish really writes: a row no theme writes any more has been decided. */
+const written = new Set<string>();
+
 /** What the library writes but does not read: finish roles and tokens, by name. */
 const unread = new Set(
   [...specBlock(spec, "unread").matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]),
@@ -272,6 +275,7 @@ for (const theme of themes) {
         const value = finish[field];
         if (value === undefined) continue;
         const verdict = readColour(value, known, pending, `${theme} ${appearance}`);
+        for (const row of verdict.pending) written.add(row);
         for (const problem of verdict.problems)
           fail(
             problem.kind === "unknown-token"
@@ -310,6 +314,14 @@ for (const [name, value] of Object.entries(themeBlock)) {
   if (!readsToken(name) && !unread.has(name))
     fail(`packages/theme/theme.json: token \`${name}\` is read nowhere and not left to the app`);
 }
+
+// 6. The spec's pending table holds only colours its themes still write: a row left behind would be
+// a colour the table lets back in, and the number the spec says is still undecided would be wrong.
+for (const entry of pending)
+  if (!written.has(entry))
+    fail(
+      `docs/specs/theme-roles.md: the pending table lists ${entry}, which no theme writes any more`,
+    );
 
 // Report.
 if (failures.length > 0) {

@@ -16,6 +16,8 @@ export interface FinishRow {
   role: string;
   /** What it draws, in the spec's words. */
   draws: string;
+  /** The same, in English: what the themes page shows (the page is in English). */
+  drawsEn: string;
   /** Who reads it: the spec's cell, a dash when the library leaves it to the app. */
   reads: string;
 }
@@ -73,11 +75,13 @@ function backticked(text: string): string[] {
 /** The spec's parts: the A and C layers, and every finish's row. */
 export function specParts(markdown: string): SpecParts {
   const shared = specRowsRaw(specBlock(markdown, "tokens-c")).flatMap(([key]) => names(key));
-  const finishes = specRowsRaw(specBlock(markdown, "finishes")).map(([role, draws, reads]) => {
-    if (role === undefined || draws === undefined || reads === undefined)
-      throw new Error(`the spec's finish table writes a row with ${role ?? "no finish"}`);
-    return { role: role.replace(/`/g, ""), draws, reads };
-  });
+  const finishes = specRowsRaw(specBlock(markdown, "finishes")).map(
+    ([role, draws, drawsEn, reads]) => {
+      if (role === undefined || draws === undefined || drawsEn === undefined || reads === undefined)
+        throw new Error(`the spec's finish table writes a row with ${role ?? "no finish"}`);
+      return { role: role.replace(/`/g, ""), draws, drawsEn, reads };
+    },
+  );
   return {
     slots: backticked(specBlock(markdown, "tokens-a")),
     shared,

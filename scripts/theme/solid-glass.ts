@@ -299,6 +299,7 @@ function pane(color: string, token?: string) {
 function section(appearance: Appearance): Record<string, string> {
   const s = source(appearance);
   const panes = laid(appearance);
+  const m = mixed(appearance);
   return {
     background: s("background"),
     foreground: s("foreground"),
@@ -342,6 +343,12 @@ function section(appearance: Appearance): Record<string, string> {
     raised: s("glass-control"),
     "scrollbar-thumb": "color-mix(in srgb, var(--muted-foreground) 50%, var(--background))",
     "scrollbar-thumb-hover": "color-mix(in srgb, var(--muted-foreground) 80%, var(--background))",
+    // The edge a filled pane draws: the stylesheet's primary-button hairline,
+    // `color-mix(in oklab, var(--primary) 55%, var(--primary-edge))`, mixed here because the two
+    // ends are greys and the mix is one value (`mixed`).
+    "brand-edge": m.hairline,
+    // The line round a glass surface: the stylesheet's one hairline, `--glass-edge`.
+    "glass-edge": s("glass-edge"),
     // A field's well: a pane of clear glass to type on, its rim drawn by the finish.
     field: s("field"),
     // Hairlines inside insets: the stylesheet has one hairline, `--border`.
@@ -445,27 +452,27 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     raised: {
       ...pane(s("glass-control"), alias("raised")),
       boxShadow: control,
-      borderColor: s("glass-edge"),
+      borderColor: alias("glass-edge"),
     },
     // Under the pointer the theme's own step fills it; the pane keeps its rim and its shadow.
     hover: {
       ...pane(s("hover"), alias("hover")),
       boxShadow: control,
-      borderColor: s("glass-edge"),
+      borderColor: alias("glass-edge"),
     },
     // Pressed, it sits down on the page: the shadow under it goes and the pane darkens a step.
     // The stylesheet draws no press of its own beyond that, so `press.scale` below is 1.
     pressed: {
       ...paneAt("muted", coords(s("glass-state-armed")).a),
       boxShadow: `inset 0 1px 0 ${s("glass-control-rim")}`,
-      borderColor: s("glass-edge"),
+      borderColor: alias("glass-edge"),
     },
     // Small things filled with the ink — a checked box, a switch that is on, the filled part of a
     // bar — are the solid pane without the shadow a button stands on.
     light: {
       ...paneAt("primary", Number(s("primary-solid").replace("%", "")) / 100),
       boxShadow: `inset 0 1px 0 ${s("primary-rim")}, inset 0 -1px 0 ${m.under}`,
-      borderColor: m.hairline,
+      borderColor: alias("brand-edge"),
     },
     // The primary button: the same pane, standing on its shadow.
     accent: {
@@ -477,7 +484,7 @@ function finishes(appearance: Appearance): Record<string, Finish> {
         `0 1px 2px ${s("glass-contact")}`,
         `0 8px 18px -9px ${s("glass-shade")}`,
       ].join(", "),
-      borderColor: m.hairline,
+      borderColor: alias("brand-edge"),
     },
     // A track is a groove cut into the surface, so the light falls the other way: a shade under
     // its upper lip, a line of light along its lower one. Its edge is the theme's `border`.
@@ -505,12 +512,12 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     pill: {
       ...pane(s("glass-control"), alias("raised")),
       boxShadow: control,
-      borderColor: s("glass-edge"),
+      borderColor: alias("glass-edge"),
     },
     thumb: {
       ...pane(s("glass-control"), alias("raised")),
       boxShadow: control,
-      borderColor: s("glass-edge"),
+      borderColor: alias("glass-edge"),
     },
     // What stays chosen: a small pane of clear glass — a faint tint, a line of light along the
     // top, a hairline round it, and no shadow, or a row starts to look like a raised button.
@@ -528,7 +535,7 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     glass: {
       backgroundColor: alias("raised"),
       boxShadow: `inset 0 1px 0 ${s("glass-control-rim")}, 0 0 0 1px ${s("glass-edge")}, 0 1px 2px ${s("glass-contact")}`,
-      borderColor: s("glass-edge"),
+      borderColor: alias("glass-edge"),
       backdropFilter: appearance === "dark" ? "blur(14px)" : "blur(14px) saturate(180%)",
     },
     // A floating surface: the thickest glass — a firmer hairline, a shade along its foot, and the

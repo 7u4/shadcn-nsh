@@ -35,13 +35,13 @@
       "backgroundColor": "var(--primary)",
       "backgroundImage": "linear-gradient(180deg, var(--primary) 0%, var(--primary) 100%)",
       "boxShadow": "inset 0 0 0 1px oklch(1 0 0 / 0.22), inset 0 1px 1px oklch(1 0 0 / 0.35), 0 1px 1px oklch(0 0 0 / 0.12)",
-      "borderColor": "oklch(0.32672 0.08497 127.611 / 0.55)"
+      "borderColor": "var(--brand-edge)"
     },
     "accent": {
       "backgroundColor": "var(--primary)",
       "backgroundImage": "linear-gradient(180deg, var(--primary) 0%, var(--primary) 100%)",
       "boxShadow": "inset 0 0 0 1px oklch(1 0 0 / 0.22), inset 0 1px 1px oklch(1 0 0 / 0.35), 0 1px 1px oklch(0 0 0 / 0.12)",
-      "borderColor": "oklch(0.32672 0.08497 127.611 / 0.55)"
+      "borderColor": "var(--brand-edge)"
     },
     "track": {
       "boxShadow": "inset 0 1px 1px oklch(0 0 0 / 0.25)",
@@ -140,13 +140,13 @@
       "backgroundColor": "var(--primary)",
       "backgroundImage": "linear-gradient(180deg, var(--primary) 0%, var(--primary) 100%)",
       "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.55), inset 0 -1px 0 oklch(0.42761 0.11265 128.534 / 0.12), 0 1px 0 oklch(0.42761 0.11265 128.534 / 0.14)",
-      "borderColor": "oklch(0.76556 0.16727 124.422)"
+      "borderColor": "var(--brand-edge)"
     },
     "accent": {
       "backgroundColor": "var(--primary)",
       "backgroundImage": "linear-gradient(180deg, var(--primary) 0%, var(--primary) 100%)",
       "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.55), inset 0 -1px 0 oklch(0.42761 0.11265 128.534 / 0.12), 0 1px 0 oklch(0.42761 0.11265 128.534 / 0.14)",
-      "borderColor": "oklch(0.76556 0.16727 124.422)"
+      "borderColor": "var(--brand-edge)"
     },
     "track": {
       "boxShadow": "inset 0 1px 1px oklch(0.1686 0.02256 263.693 / 0.05)",

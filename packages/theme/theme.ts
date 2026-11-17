@@ -237,6 +237,12 @@ export interface Palette {
   border: string;
   /** Hairlines inside insets. */
   line: string;
+  /** The edge a filled pane draws (a primary button, a chosen run, a chip): the accent a step down,
+   * or `border` where the theme's fill is flat. */
+  brandEdge: string;
+  /** The hairline round a glass surface (a raised pane, a track's thumb, a popover): Solid Glass' own
+   * line, `border` in a flat theme. */
+  glassEdge: string;
   text: string;
   muted: string;
   faint: string;
@@ -296,6 +302,8 @@ export const colors: Palette = tokens<keyof Palette>({
   fieldBorder: "input",
   border: "border",
   line: "line",
+  brandEdge: "brand-edge",
+  glassEdge: "glass-edge",
   text: "foreground",
   muted: "muted-foreground",
   faint: "faint",

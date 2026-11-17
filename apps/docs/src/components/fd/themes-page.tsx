@@ -192,7 +192,7 @@ export function ThemesPage() {
                   <td>
                     <code>{finish.role}</code>
                   </td>
-                  <td>{finish.draws}</td>
+                  <td>{finish.drawsEn}</td>
                   <td>
                     <Reads text={finish.reads} />
                   </td>

@@ -71,6 +71,8 @@ export type FinishRow = {
   role: string;
   /** What it draws, in the spec's words. */
   draws: string;
+  /** The same in English: the spec's English column, which is what the page shows. */
+  drawsEn: string;
   /** Who reads it: the components the spec names, or its dash for one the library leaves out. */
   reads: string;
   /** Every token any of its values names, in the order they appear. */
@@ -220,9 +222,10 @@ export function themePages(): ThemePage[] {
           rows: tokenRows(file, Object.keys(file.cssVars.theme), true),
         },
       ],
-      finishes: SPEC.finishes.map(({ role, draws, reads }) => ({
+      finishes: SPEC.finishes.map(({ role, draws, drawsEn, reads }) => ({
         role,
         draws,
+        drawsEn,
         reads,
         tokens: tokensOf(finishes, role),
       })),
