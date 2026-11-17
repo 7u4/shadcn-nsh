@@ -76,9 +76,21 @@ _Avoid_: 把 `Label` 组件当作无障碍名、在每个外壳里重写一遍�
 _Avoid_: 重写行为, 缩减 props
 
 **Theme Source**:
-`theme.json`（shadcn 的 `cssVars` 格式，含上游的扩展键）与 `finishes.json`（渐变与阴影），颜色以 oklch 存储、归本库所有（起点取自上游）；`theme.ts` 读取它们。
+`theme.json`（shadcn 的 `cssVars` 格式，含上游的扩展键）与 `finishes.json`（一个面的样子：底、渐变、边、影、模糊），颜色以 oklch 存储、归本库所有（起点取自上游）；`theme.ts` 读取它们。二者的分工与形状见 [`specs/theme-roles.md`](specs/theme-roles.md)。
 _Avoid_: neutral 映射, `custom-*` 键
 
+**Token**:
+`theme.json` 里的一个颜色键，写法 `var(--token)`（如 `var(--raised)`）。颜色只有这一个来源：`cssVars.light` / `cssVars.dark` 逐外观，`cssVars.theme` 两者共用。A 层是 shadcn 的 31 个槽（NSH 的 `Theme::of` 逐名字解析，缺一个就退回 shadcn 的灰），B 层是本库自己的、组件要用的那些。
+_Avoid_: 用别的词指它；在 B 层另起一个与 A 层槽同义的名字
+
+**Finish（Finish Role）**:
+`finishes.json` 里的一个条目（`card`、`raised`、`fill`… 共 20 个）：一个面的底、渐变、边、影、模糊。finish 只管一个面的画法（底、渐变、边、影、模糊），颜色写 alias；每个 finish 在每套主题、每种外观里的字段集合相同（平涂就是同一个颜色在两个 stop，不删 `backgroundImage`）。
+_Avoid_: 把 finish 当 token；用别的词指它；删字段表示“没有渐变”
+
+**Alias**:
+`var(--token)` 这种写法，finish 的颜色只这么写：`theme.ts` 的 `themed()` 在**读的时候**把它换成当前主题与外观的颜色，所以切外观、`selectTheme` 切主题都自动生效。允许的字面量只有墨色（黑或白带 alpha）、`transparent`，以及规范里待定表列出的那些；`boxShadow` 整条豁免。
+_Avoid_: 在 finish 里写色值；用别的词指它
+
 **Build-time Theme / AppTheme**:
-**构建时主题**是 `nsh.json` 指向的 `theme.json` 与 `lib/finishes.json`，由 `init --theme <name>` 定；**AppTheme**（`{ id, label, theme, finishes }`）是运行时可切的一套，装在 `themes/<name>/`，`selectTheme` 切过去、`selectTheme(null)` 回构建时那套、`currentTheme()` 读当前 `id`（还在构建时主题上时为 `null`）。应用清单里的构建时主题就是 `null`。质感（渐变、阴影）不是 token，所以随 `AppTheme` 走。
+**构建时主题**是 `nsh.json` 指向的 `theme.json` 与 `lib/finishes.json`，由 `init --theme <name>` 定；**AppTheme**（`{ id, label, theme, finishes }`）是运行时可切的一套，装在 `themes/<name>/`，`selectTheme` 切过去、`selectTheme(null)` 回构建时那套、`currentTheme()` 读当前 `id`（还在构建时主题上时为 `null`）。应用清单里的构建时主题就是 `null`。finish（渐变、阴影）不是 token，所以随 `AppTheme` 走。
 _Avoid_: 把 `add theme-<x>` 当成换构建时主题、把主题叫“皮肤”、把 finish 当 token
