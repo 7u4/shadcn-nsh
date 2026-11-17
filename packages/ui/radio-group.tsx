@@ -42,27 +42,27 @@ const dims = (scale = 1) => ({
  * its size; 16 points with a pointer, 22 on a touch screen.
  */
 export function RadioRing(props: { on: boolean; scale?: number; disabled?: boolean }) {
-  const d = dims(props.scale);
+  const { control, height, dot } = dims(props.scale);
   const on = follow(() => (props.on ? 1 : 0));
   return (
     <View
       class={choiceSink}
       style={{
-        width: d.control,
-        height: d.height,
-        borderRadius: d.control / 2,
+        width: control,
+        height,
+        borderRadius: control / 2,
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 1,
         ...choiceWell({ disabled: props.disabled }),
       }}
     >
-      <ChoiceLight on={on} radius={d.control / 2} />
+      <ChoiceLight on={on} radius={control / 2} />
       <View
         style={{
-          width: d.dot,
-          height: d.dot,
-          borderRadius: d.dot / 2,
+          width: dot,
+          height: dot,
+          borderRadius: dot / 2,
           backgroundColor: colors.onAccent,
           opacity: on,
           transform: [{ scale: on.interpolate({ inputRange: [0, 1], outputRange: [0.5, 1] }) }],

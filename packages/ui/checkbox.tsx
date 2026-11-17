@@ -11,18 +11,25 @@ import { labelOf } from "./lib/label";
 import { controlSize } from "./lib/surface";
 
 // @port look/choice.tsx
+/** A value, or a function reading it where the look is applied (a signal). */
+type Live<T> = T | (() => T);
+
+const read = <T,>(v: Live<T> | undefined): T | undefined =>
+  typeof v === "function" ? (v as () => T)() : v;
+
 /** What a checkbox's box shows: a check, a dash (indeterminate) or nothing. */
 export type CheckboxMarkKind = "check" | "dash" | null;
 
-/** Options of `checkboxLook`, `CheckboxMark` and `RadioRing`. */
+/** Options of `checkboxLook` and `CheckboxMark`; a radio's ring takes the same `scale` and `disabled`. */
 export interface ChoiceOptions {
   /** Times the page's size (`controlSize.control`): 0.8, 1 or 1.25 (`ChoiceSize`'s `sm`,
    * `default`, `lg`). */
   scale?: number;
   /** A round box (a task's, as reminders draw it). */
   round?: boolean;
-  /** Disabled, as the control is (`checkboxLook`): its edge stays drawn under the row's half opacity in dark. */
-  disabled?: boolean | (() => boolean);
+  /** Disabled, as the control is (`checkboxLook`): its edge stays drawn under the row's half opacity in dark. A
+   * function is read where the look is applied. */
+  disabled?: Live<boolean>;
 }
 
 /** A box's or ring's size: `scale` times the page's; one row high in the
@@ -90,14 +97,14 @@ export interface CheckboxLook {
  * 90% while its row (the `group`) is pressed. `CheckboxMark` fills it.
  */
 export function checkboxLook(o?: ChoiceOptions): CheckboxLook {
-  const d = dims(o?.scale);
+  const { control, height, corner } = dims(o?.scale);
   return {
     indicatorClass: choiceSink,
     get indicatorStyle(): ViewStyle {
       return {
-        width: d.control,
-        height: d.height,
-        borderRadius: o?.round ? d.control / 2 : d.corner,
+        width: control,
+        height,
+        borderRadius: o?.round ? control / 2 : corner,
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 1,
@@ -144,42 +151,36 @@ export const MARK_WEIGHT = 3.84;
  * reduced motion.
  */
 export function CheckboxMark(props: { mark: CheckboxMarkKind } & ChoiceOptions) {
-  const d = dims(props.scale);
+  const { control, height, check: checkSize, corner } = dims(props.scale);
   // Each part stays mounted while it fades out (unmounting it on the value
   // showed only the fade in).
   const on = follow(() => (props.mark ? 1 : 0));
   const check = follow(() => (props.mark === "check" ? 1 : 0));
   const dash = follow(() => (props.mark === "dash" ? 1 : 0));
   /** A mark: centered in the box, growing a little as it fades in. */
-  const glyph = (t: AnimatedValue, icon: IconNode) => (
+  const glyph = (amount: AnimatedValue, icon: IconNode) => (
     <View
       style={{
         ...centered,
         pointerEvents: "none",
-        opacity: t,
-        transform: [{ scale: t.interpolate({ inputRange: [0, 1], outputRange: [0.75, 1] }) }],
+        opacity: amount,
+        transform: [{ scale: amount.interpolate({ inputRange: [0, 1], outputRange: [0.75, 1] }) }],
       }}
     >
-      <Icon icon={icon} size={d.check} tint={colors.onAccent} weight={MARK_WEIGHT} />
+      <Icon icon={icon} size={checkSize} tint={colors.onAccent} weight={MARK_WEIGHT} />
     </View>
   );
   // One view as large as the box inside its border holds the layers: the
   // slot's content sits in a holder view sized to it, so layers placed only
   // absolutely made it 0 × 0 and the fill a speck at the box's middle.
   return (
-    <View style={{ width: d.control - 2, height: d.height - 2 }}>
-      <ChoiceLight on={on} radius={props.round ? d.control / 2 : d.corner} />
+    <View style={{ width: control - 2, height: height - 2 }}>
+      <ChoiceLight on={on} radius={props.round ? control / 2 : corner} />
       {glyph(check, Check)}
       {glyph(dash, Minus)}
     </View>
   );
 }
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 // @port end
 
 /**
@@ -191,6 +192,10 @@ export type ChoiceSize = "sm" | "default" | "lg";
 
 /** What a `ChoiceSize` multiplies the page's control size by: 0.8, 1, 1.25. */
 export const choiceScales: Record<ChoiceSize, number> = { sm: 0.8, default: 1, lg: 1.25 };
+
+/** The mark a checkbox's props show: a dash while it is indeterminate, a check when it is checked. */
+const markOf = (props: Pick<BaseCheckboxProps, "checked" | "indeterminate">): CheckboxMarkKind =>
+  props.indeterminate ? "dash" : props.checked ? "check" : null;
 
 /**
  * `nsh/base`'s Checkbox in the look of `checkboxLook`. Every base prop passes through; the
@@ -239,7 +244,7 @@ export function Checkbox(props: CheckboxProps) {
         props.indicator ?? (
           <CheckboxMark
             // Read here, where the mark is made, so it follows a value the app changes.
-            mark={props.indeterminate ? "dash" : props.checked ? "check" : null}
+            mark={markOf(props)}
             scale={scale}
             round={props.round}
           />
