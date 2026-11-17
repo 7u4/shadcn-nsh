@@ -135,7 +135,7 @@ nsh check apps/docs/demos  # the demos app
 bun run docs:demos     # package the previews (needed before a build)
 bun run check:palette  # the first frame of a switched demo is the chosen theme (Chrome)
 bun run check:first-frame  # every demo's first frame inside its budget (Chrome)
-bun run build:docs     # nsh:bootstrap + docs:demos + vite build → .output/public
+bun run build:docs     # nsh check (demos types host) + docs:demos + vite build → .output/public
 vp check               # format, lint, tool types
 ```
 
