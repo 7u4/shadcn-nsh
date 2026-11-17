@@ -1,5 +1,5 @@
-// Table: a bordered card built from `nsh/base` parts, wearing `dataTableClasses`.
-// Composition shell only — shared part classes come from `data-table.ts` upstream.
+// A table: `nsh/base`'s parts in the card look of `data-table.tsx` (`dataTableClasses`).
+// This library's own shell: the look is the data table's, so there is no port region. Yours to change.
 import type { JSX } from "nsh";
 import { split, Text } from "nsh";
 import {
@@ -23,6 +23,9 @@ import {
 
 import { dataTableClasses } from "./data-table";
 
+/** Rows ease their fill. `motion-reduce` drops it. */
+export const tableRowClass = "transition-colors duration-150 motion-reduce:transition-none";
+
 /** Theme layer on `nsh/base` Table: a bordered card. Sorting and selection belong to `DataTable`. */
 export type TableProps = BaseTableProps;
 
@@ -35,10 +38,7 @@ export type TableBodyProps = BaseTableBodyProps;
 /** The footer band. */
 export type TableFooterProps = BaseTableFooterProps;
 
-/**
- * A row. `selected` is this wrapper's (base has no selected flag): the reference's
- * `rowSelected`.
- */
+/** A row. `selected` is this wrapper's (base has no selected flag): the look's `rowSelected`. */
 export type TableRowProps = BaseTableRowProps & {
   /** Selected row fill. */
   selected?: boolean;
@@ -59,25 +59,26 @@ export type TableCaptionProps = Omit<BaseTableCaptionProps, "children"> & {
   children?: string | JSX.Element;
 };
 
-/** Rows ease their fill. `motion-reduce` drops it. */
-export const tableRowClass = "transition-colors duration-150 motion-reduce:transition-none";
-
 function mergeClass(base?: string | null, extra?: string | null): string | undefined {
   const a = base ?? undefined;
-  const b = extra === null ? undefined : extra;
+  const b = extra ?? undefined;
   if (a && b) return `${a} ${b}`;
   return b ?? a;
 }
 
-function textOf(children: string | JSX.Element | undefined, kind: "head" | "cell" | "caption") {
+/** A string child's type, by the part it is drawn in. */
+const textClass = {
+  head: "text-sm font-medium text-muted-foreground",
+  cell: "text-sm text-foreground",
+  caption: "text-xs text-muted-foreground",
+} as const;
+
+/** A head and a cell share it: the look's cell padding, and the same vertical padding so a column's two rows line up. */
+const cellClass = `${dataTableClasses.cell} py-2`;
+
+function textOf(children: string | JSX.Element | undefined, kind: keyof typeof textClass) {
   if (typeof children !== "string") return children;
-  const className =
-    kind === "head"
-      ? "text-sm font-medium text-muted-foreground"
-      : kind === "caption"
-        ? "text-xs text-muted-foreground"
-        : "text-sm text-foreground";
-  return <Text class={className}>{children}</Text>;
+  return <Text class={textClass[kind]}>{children}</Text>;
 }
 
 /** A table of the app's rows: a bordered card. Screen readers hear the base roles. */
@@ -113,19 +114,17 @@ export function TableFooter(props: TableFooterProps) {
 export function TableRow(props: TableRowProps) {
   const [, rest] = split(props, ["class", "selected"]);
   const rowClass = mergeClass(
-    dataTableClasses.row,
+    `${tableRowClass} ${dataTableClasses.row}`,
     props.selected ? dataTableClasses.rowSelected : undefined,
   );
-  return (
-    <BaseTableRow {...rest} class={mergeClass(tableRowClass, mergeClass(rowClass, props.class))} />
-  );
+  return <BaseTableRow {...rest} class={mergeClass(rowClass, props.class)} />;
 }
 
 /** A column's header cell. */
 export function TableHead(props: TableHeadProps) {
   const [, rest] = split(props, ["class", "children"]);
   return (
-    <BaseTableHead {...rest} class={mergeClass(`${dataTableClasses.cell} py-2`, props.class)}>
+    <BaseTableHead {...rest} class={mergeClass(cellClass, props.class)}>
       {textOf(props.children, "head")}
     </BaseTableHead>
   );
@@ -137,7 +136,7 @@ export function TableCell(props: TableCellProps) {
   return (
     // No width of its own: a column's width is the app's, set on its head and its cells
     // alike (`w-24`, `flex-1`), so the two rows line up.
-    <BaseTableCell {...rest} class={mergeClass(`${dataTableClasses.cell} py-2`, props.class)}>
+    <BaseTableCell {...rest} class={mergeClass(cellClass, props.class)}>
       {textOf(props.children, "cell")}
     </BaseTableCell>
   );
