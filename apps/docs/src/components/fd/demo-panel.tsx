@@ -5,7 +5,7 @@
  * `public/demos/<name>/`. The behaviour is the Astro `DemoFrame` + `src/lib/demo-client.ts` one,
  * as a component:
  *
- * - the frame runs the demo at the layout's real size (390×844 phone, 1024×640 desktop) and at a
+ * - the frame runs the demo at the layout's real size (390×640 phone, 1024×640 desktop) and at a
  *   height fixed by the layout, so switching demo or layout never moves the page;
  * - the layout's idiom rides in `?idiom=` — an idiom is fixed when an app starts, so the frame
  *   loads again when it changes — and the visitor's choice is kept in `localStorage`;
@@ -21,7 +21,7 @@ import { onPaletteChange } from "@/lib/palette";
 import { url } from "@/lib/site";
 
 const LAYOUTS = {
-  mobile: { width: 390, height: 844, idiom: "phone" },
+  mobile: { width: 390, height: 640, idiom: "phone" },
   desktop: { width: 1024, height: 640, idiom: "desktop" },
 } as const;
 type Layout = keyof typeof LAYOUTS;
