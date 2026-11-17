@@ -19,10 +19,10 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 const root = new URL("../../../", import.meta.url);
 const read = (path: string) => readFileSync(new URL(path, root), "utf8");
 
-/** A source with its comments removed, so prose about a color is not a color. */
+/** A source with its comments removed, so prose about a color is not a color (its lines kept, so a line number is the file's). */
 const code = (path: string) =>
   read(path)
-    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\*[\s\S]*?\*\//g, (comment) => comment.replace(/[^\n]/g, ""))
     .replace(/(^|\s)\/\/[^\n]*/g, "$1");
 
 const rules: Record<string, RegExp> = {
@@ -119,5 +119,52 @@ describe("component sources (P3: colors come from the theme)", () => {
     expect(rules["tailwind palette color"].test('class="bg-raised text-muted-foreground"')).toBe(
       false,
     );
+  });
+});
+
+/**
+ * A finish (`finish.raised`, `finish.inset`, …) is one shared object whose properties are getters.
+ * Passed as it is, a style reaches the engine converted once and keeps the appearance of the render
+ * that converted it: otp-input's cells kept the light appearance's highlight in dark. A look hands a
+ * finish out as a copy (`{ ...finish.x }`, or inside a spread `...(on ? finish.on : {})`), which
+ * reads the getters where the look is applied. Reading one property (`finish.raised.boxShadow`)
+ * is a value, not the object.
+ */
+function sharedFinishes(source: string): string[] {
+  const found: string[] = [];
+  for (const match of source.matchAll(/(?<![\w.$])finish(?:\.\w+|\[[^\]]+\])(?![\w.[$])/g)) {
+    const at = match.index;
+    let spread = /\.\.\.\s*$/.test(source.slice(0, at));
+    // Walk out of the enclosing expression: a `(` opened by a spread makes the finish a spread too.
+    for (let i = at - 1, depth = 0; !spread && i >= 0; i--) {
+      const c = source[i];
+      if (c === ")" || c === "]" || c === "}") depth++;
+      else if (c === "(" || c === "[" || c === "{") {
+        if (depth > 0) depth--;
+        else if (c !== "(") break;
+        else spread = /\.\.\.\s*$/.test(source.slice(0, i));
+      } else if (depth === 0 && (c === ";" || c === ",")) break;
+    }
+    if (!spread) found.push(`line ${source.slice(0, at).split("\n").length}: ${match[0]}`);
+  }
+  return found;
+}
+
+describe("component sources (a finish is handed out as a copy)", () => {
+  test("no look passes a shared finish object as a style", () => {
+    const offenders = [...components, ...lib, ...adapter, ...demos].flatMap((path) =>
+      sharedFinishes(code(path)).map((hit) => `${path}: ${hit}`),
+    );
+    expect(offenders, `shared finish objects:\n${offenders.join("\n")}`).toEqual([]);
+  });
+
+  test("the guard tells a shared finish from a copy", () => {
+    expect(sharedFinishes("return tone ? { ...finish.inset } : finish.inset;")).toHaveLength(1);
+    expect(sharedFinishes("hoverStyle: finish.hover,")).toHaveLength(1);
+    expect(sharedFinishes("<View style={finish.raised} />")).toHaveLength(1);
+    expect(sharedFinishes("return { ...finish.inset };")).toEqual([]);
+    expect(sharedFinishes("...(flat || ghost ? {} : finish.field),")).toEqual([]);
+    expect(sharedFinishes("...(on() ? finish.knobOn : finish.knob),")).toEqual([]);
+    expect(sharedFinishes("boxShadow: finish.raised.boxShadow,")).toEqual([]);
   });
 });

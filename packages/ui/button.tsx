@@ -116,7 +116,7 @@ const filled = (variant: ButtonVariant) => variant === "default";
 /** The fill, edge and shadow of a variant at rest (or selected). A disabled filled button gives up the citrus for the
  * neutral raised fill: half a lime fill reads as a muddy olive in dark, louder than the enabled buttons beside it. */
 function rest(variant: ButtonVariant, selected: boolean, disabled = false): ViewStyle {
-  if (filled(variant) && disabled) return finish.raised;
+  if (filled(variant) && disabled) return { ...finish.raised };
   if (filled(variant)) return { ...finish.accent, opacity: selected ? 0.88 : 1 };
   if (variant === "destructive") {
     return {
@@ -133,7 +133,7 @@ function rest(variant: ButtonVariant, selected: boolean, disabled = false): View
     };
   // Selected stays on: `on`, apart from rest and from hover in both
   // appearances (a sunk `pressed` is a press's, too faint to hold).
-  return selected ? finish.on : finish.raised;
+  return selected ? { ...finish.on } : { ...finish.raised };
 }
 
 /**
@@ -174,7 +174,7 @@ export function buttonLook(variant: Live<ButtonVariant> = "secondary", o?: Butto
       const variant = v();
       if (filled(variant)) return { opacity: 0.94 };
       if (variant === "destructive") return { backgroundColor: alpha(colors.danger, 0.16) };
-      return variant === "ghost" ? hovered() : finish.hover;
+      return variant === "ghost" ? hovered() : { ...finish.hover };
     },
     get activeStyle(): ViewStyle | undefined {
       if (idle()) return undefined;
@@ -183,7 +183,7 @@ export function buttonLook(variant: Live<ButtonVariant> = "secondary", o?: Butto
         ? { opacity: 0.88 }
         : variant === "destructive"
           ? { backgroundColor: alpha(colors.danger, 0.22), boxShadow: "none" }
-          : finish.pressed;
+          : { ...finish.pressed };
       return { ...shade, ...sink(0.97) };
     },
     get focusVisibleStyle(): ViewStyle {
@@ -291,7 +291,11 @@ export function iconButtonLook(o: IconButtonLookOptions = {}) {
     },
     get hoverStyle(): ViewStyle | undefined {
       if (read(o.selected) || read(o.disabled)) return undefined;
-      return destructive ? { backgroundColor: tints.danger } : raised ? finish.hover : hovered();
+      return destructive
+        ? { backgroundColor: tints.danger }
+        : raised
+          ? { ...finish.hover }
+          : hovered();
     },
     get activeStyle(): ViewStyle | undefined {
       if (read(o.disabled)) return undefined;
@@ -373,7 +377,7 @@ export function roundButtonLook(
     },
     get hoverStyle(): ViewStyle | undefined {
       if (read(o.disabled)) return undefined;
-      return primary ? { opacity: 0.94 } : finish.hover;
+      return primary ? { opacity: 0.94 } : { ...finish.hover };
     },
     get activeStyle(): ViewStyle | undefined {
       return read(o.disabled) ? undefined : sink(0.92);
