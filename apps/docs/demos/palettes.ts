@@ -18,7 +18,7 @@ export const PALETTE_KEY = "palette";
 export const PALETTES = [
   {
     id: "default",
-    label: "Default",
+    label: "Official",
     description:
       "The library's own: graphite surfaces, one citrus accent, roomy 10-point controls.",
   },

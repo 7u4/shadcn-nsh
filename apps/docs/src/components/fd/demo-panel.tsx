@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * A component page's demo panel: Preview | Source and Phone | Desktop, over the packaged demo in
+ * A component page's demo panel: Preview | Source, Phone | Desktop and the demo theme, over the packaged demo in
  * `public/demos/<name>/`. The behaviour is the Astro `DemoFrame` + `src/lib/demo-client.ts` one,
  * as a component:
  *
@@ -17,6 +17,7 @@
  */
 import { useEffect, useRef, useState } from "react";
 
+import { PaletteSwitch } from "@/components/fd/palette-switch";
 import { onPaletteChange } from "@/lib/palette";
 import { url } from "@/lib/site";
 
@@ -169,6 +170,7 @@ export function DemoPanel({ name, loadSource }: DemoPanelProps) {
             </button>
           ))}
         </div>
+        <PaletteSwitch />
         <span className="text-fd-muted-foreground ml-auto font-mono text-xs">{name}.tsx</span>
         <a
           href={src ?? demoHref(name)}

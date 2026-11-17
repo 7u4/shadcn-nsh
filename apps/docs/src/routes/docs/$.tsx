@@ -14,7 +14,6 @@ import { Suspense, use } from "react";
 
 import { DemoPanel } from "@/components/fd/demo-panel";
 import { useMDXComponents } from "@/components/fd/mdx";
-import { PaletteSwitch } from "@/components/fd/palette-switch";
 import { getComponentBySlug } from "@/lib/components";
 import { CONTENT_PATHS } from "@/lib/content-paths";
 import { baseOptions } from "@/lib/layout.shared";
@@ -114,7 +113,6 @@ function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
       <DocsDescription>{page.description}</DocsDescription>
       <div className="flex flex-wrap items-center gap-2">
         <MarkdownCopyButton markdownUrl={markdownUrl} />
-        <PaletteSwitch />
       </div>
       <DocsBody>
         {demo ? (
