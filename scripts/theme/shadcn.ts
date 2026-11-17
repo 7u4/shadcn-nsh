@@ -11,7 +11,9 @@
  *   - radii: `apps/v4/app/globals.css` (`--radius: 0.625rem`, and `--radius-sm` … `--radius-2xl`
  *     at 0.6, 0.8, 1, 1.4, 1.8, 2.2, 2.6 times it)
  *   - finishes: the classes of `apps/v4/registry/new-york-v4/ui/*` (which shadow and fill each
- *     surface wears), flattened: no gradient, no inner highlight, no inner shade.
+ *     surface wears), flattened: no inner highlight, no inner shade, and a gradient of one colour
+ *     where the default theme stacks a two-stop one (every finish states a gradient; see
+ *     `docs/specs/theme-roles.md`).
  *
  * A color derived here (an `--input` laid on a card, two tones' midpoint) is mixed in 8-bit sRGB
  * and written back as `oklch()`: `oklch.ts` round-trips every channel exactly.
@@ -19,7 +21,7 @@
  * Read by `generate-shadcn.ts`, which writes the two JSON files; `docs/specs/theme-shadcn.md`
  * holds the mapping tables this file implements.
  */
-import { mix, oklch, oklchColor, over, parseColor, toOklchText, withAlpha } from "./oklch";
+import { oklch, oklchColor, over, parseColor, toOklchText, withAlpha } from "./oklch";
 import { ordered, orderedFinish } from "./order";
 
 /** shadcn's neutrals, quoted from `registry/themes.ts` (theme `neutral`). */
@@ -132,14 +134,10 @@ const tints = (tone: string) => `color-mix(in srgb, var(--${tone}) 10%, transpar
 function own(appearance: Appearance) {
   const p = palette(appearance);
   return {
-    // A control's raised fill, hover and press: shadcn's `CONTROL` at rest, `--input` pressed,
-    // half way between them under the pointer.
+    // A control's raised fill and its press: shadcn's `CONTROL` at rest, `--input` laid on the
+    // card pressed (the finishes take the pointer's step from `--accent`, the theme's own).
     raised: p.control,
-    hover: mix(p.control, p.inputOnCard, 0.5),
     pressed: p.inputOnCard,
-    // On (a toggle, a chosen tool, a selected button): a step further off than a press, as the
-    // default theme's `on` is. shadcn has no hue to give it, so it takes the neutral ramp's step.
-    on: appearance === "light" ? p.chart[0] : p.chart[2],
     // A surface inside a card, a control's track: shadcn's `muted`; an input's well: the card, or
     // `dark:bg-input/30` of it.
     inset: p.muted,
@@ -246,53 +244,69 @@ function section(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
   };
 }
 
-/** A flat fill: one colour, no gradient (`bg-primary`), for what draws its fill and for what draws a gradient.
- * A theme of this shape needs no two-stop gradient to say "one colour". */
-const fill = (color: string) => ({
-  backgroundColor: color,
-  boxShadow: "none",
-  borderColor: "transparent",
-});
+/** A finish names the theme's token instead of writing its colour: one shape, the theme's colours. */
+const alias = (token: string) => `var(--${token})`;
 
-/** A control that stands up: shadcn's `shadow-xs`, no edge of its own. */
-const raised = (color: string) => ({
-  backgroundColor: color,
-  boxShadow: SHADOW.xs,
-  borderColor: "transparent",
-});
+/**
+ * A flat finish's gradient: its colour at both stops. Every finish states one, so a theme that
+ * draws a gradient of one colour says "no gradient" with that, not with a missing key.
+ */
+const flat = (color: string) => `linear-gradient(180deg, ${color} 0%, ${color} 100%)`;
+
+/** A surface: its colour, the gradient over it, its shadow and its edge. */
+const surface = (
+  color: string,
+  {
+    boxShadow = "none",
+    borderColor = "transparent",
+  }: { boxShadow?: string; borderColor?: string } = {},
+) => ({ backgroundColor: color, backgroundImage: flat(color), boxShadow, borderColor });
 
 /** One appearance's finishes: flat, the lift of shadcn's own surfaces and no more. */
-function finishes(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
+function finishes(
+  appearance: Appearance,
+  p: ReturnType<typeof palette>,
+  o: ReturnType<typeof own>,
+) {
   return {
-    card: { boxShadow: SHADOW.sm },
+    card: { backgroundImage: flat(alias("card")), boxShadow: SHADOW.sm },
     inset: { boxShadow: "none" },
     field: { boxShadow: SHADOW.xs },
-    raised: raised(o.raised),
-    hover: raised(o.hover),
+    raised: surface(alias("raised"), { boxShadow: SHADOW.xs }),
+    hover: surface(alias("hover"), { boxShadow: SHADOW.xs }),
     // Pressed, the lift goes: the one cue a flat theme has left (shadcn styles no press state).
-    pressed: { backgroundColor: o.pressed, boxShadow: "none", borderColor: "transparent" },
-    light: { backgroundColor: p.primary, boxShadow: "none", borderColor: "transparent" },
-    accent: { backgroundColor: p.primary, boxShadow: "none", borderColor: "transparent" },
+    pressed: surface(o.pressed),
+    light: surface(alias("primary")),
+    accent: surface(alias("primary")),
     // A rail has no lip of its own (shadcn draws the track flat): the edge comes from the theme's
     // `border`, and `theme.ts`'s `insetEdge` keeps this `none` from voiding it.
-    track: { boxShadow: "none", borderColor: p.border },
-    fill: fill(p.primary),
-    knob: { backgroundColor: o.knob, boxShadow: SHADOW.sm, borderColor: "transparent" },
-    knobOn: { backgroundColor: o.knobOn, boxShadow: SHADOW.sm, borderColor: "transparent" },
+    track: { boxShadow: "none", borderColor: alias("border") },
+    // A run's colour is carried by the gradient: the engine draws the gradient over the fill's
+    // colour, so a colour under it shows through and tints the run. `transparent` is the one that
+    // does not.
+    fill: {
+      backgroundColor: "transparent",
+      backgroundImage: flat(alias("primary")),
+      boxShadow: "none",
+      borderColor: "transparent",
+    },
+    knob: surface(alias("knob"), { boxShadow: SHADOW.sm }),
+    knobOn: surface(alias("knobOn"), { boxShadow: SHADOW.sm }),
     // A slider's thumb: white with a `primary` edge in both appearances (`slider.tsx`'s
     // `border-primary bg-white shadow-sm`), where a switch's knob has no edge.
-    handle: { backgroundColor: WHITE, boxShadow: SHADOW.sm, borderColor: p.primary },
-    pill: raised(o.raised),
-    thumb: { backgroundColor: o.thumb, boxShadow: SHADOW.sm, borderColor: "transparent" },
-    on: { backgroundColor: o.on, boxShadow: "none", borderColor: "transparent" },
+    handle: surface(WHITE, { boxShadow: SHADOW.sm, borderColor: alias("primary") }),
+    pill: surface(alias("raised"), { boxShadow: SHADOW.xs }),
+    thumb: surface(o.thumb, { boxShadow: SHADOW.sm }),
+    // What stays chosen: the neutral ramp's step a press is not (shadcn has no fourth grey).
+    on: surface(alias(appearance === "light" ? "chart-1" : "chart-3")),
     chip: { boxShadow: "none" },
     glass: {
       backgroundColor: withAlpha(p.card, 0.8),
       boxShadow: "none",
-      borderColor: p.border,
+      borderColor: alias("border"),
       backdropFilter: "blur(20px)",
     },
-    menu: { backgroundColor: p.card, boxShadow: SHADOW.md, borderColor: p.border },
+    menu: { backgroundColor: alias("card"), boxShadow: SHADOW.md, borderColor: alias("border") },
     groove: { boxShadow: "none" },
   };
 }
@@ -327,8 +341,8 @@ export function themeFiles(defaults: {
       // A flat theme draws no press of its own: its surfaces change colour under the finger, they
       // do not sink (`press.scale` of 1, which `pressSink` reads as "no sink").
       press: { scale: 1 },
-      dark: orderedFinish(defaults.darkFinishes, finishes(dark, ownDark)),
-      light: orderedFinish(defaults.lightFinishes, finishes(light, ownLight)),
+      dark: orderedFinish(defaults.darkFinishes, finishes("dark", dark, ownDark)),
+      light: orderedFinish(defaults.lightFinishes, finishes("light", light, ownLight)),
     },
   };
 }

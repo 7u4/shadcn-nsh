@@ -22,24 +22,19 @@ export const ordered = <T>(
   );
 
 /**
- * A finish role's value in the default file's key order, leaving out what the theme does not
- * state: a role says only what it means (a theme whose `fill` is one color gives no gradient). A
- * key the default file does not have follows, alone: `fill`'s `backgroundColor`.
+ * A finish role's value in the default file's key order. A role states every key of the default's
+ * and no other: a missing one is an error and so is an extra one, because a finish has one shape in
+ * every theme (`docs/specs/theme-roles.md`) — a theme with no gradient states a gradient of one
+ * colour rather than leaving the key out.
  */
 export const orderedFinish = (
   keys: Record<string, unknown>,
   values: Record<string, unknown>,
 ): Record<string, unknown> => {
-  const order = [
-    ...Object.keys(keys),
-    ...Object.keys(values)
-      .filter((key) => !(key in keys))
-      .sort(),
-  ];
-  return Object.fromEntries(
-    order.flatMap((key) => {
-      const value = values[key];
-      return value === undefined ? [] : [[key, value]];
-    }),
-  );
+  const missing = Object.keys(keys).filter((key) => !(key in values));
+  const extra = Object.keys(values).filter((key) => !(key in keys));
+  if (missing.length > 0) throw new Error(`finish states no ${missing.join(", ")}`);
+  if (extra.length > 0)
+    throw new Error(`finish states ${extra.join(", ")}, which the default theme's does not`);
+  return Object.fromEntries(Object.keys(keys).map((key) => [key, values[key]]));
 };
