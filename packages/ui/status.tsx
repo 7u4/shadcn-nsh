@@ -9,6 +9,12 @@ type Live<T> = T | (() => T);
 const read = <T,>(v: Live<T> | undefined): T | undefined =>
   typeof v === "function" ? (v as () => T)() : v;
 
+/** The dot's diameter; half of it is its corner, a full circle. */
+const dotSide = 7;
+
+/** The dot's color crosses over as the state changes, rather than snapping. */
+const toneTransition = 160;
+
 /** A state in a list row or a header, quieter than a `Badge`: a round dot
  * and a word, tinted only for a tone that matters (an active window); the
  * dot's color crosses over as the state changes. The word alone in the
@@ -19,30 +25,30 @@ export function Status(props: {
   tone?: Tone | (() => Tone);
 }) {
   // Read where the dot and the word are drawn, so a function follows a value the app changes.
-  const tone = () => read(props.tone);
-  const tinted = () => {
-    const color = tone();
-    return color != null && color !== "neutral";
+  // Only a tone that matters tints them: the neutral one stays quiet.
+  const tint = (): string | undefined => {
+    const tone = read(props.tone);
+    return tone != null && tone !== "neutral" ? toneColor(tone) : undefined;
   };
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
       <If when={!terminal}>
         <View
           style={{
-            width: 7,
-            height: 7,
-            borderRadius: 3.5,
-            backgroundColor: tinted() ? toneColor(tone()!) : colors.faint,
+            width: dotSide,
+            height: dotSide,
+            borderRadius: dotSide / 2,
+            backgroundColor: tint() ?? colors.faint,
             transitionProperty: "colors",
-            transitionDuration: 160,
+            transitionDuration: toneTransition,
           }}
         />
       </If>
       <Text
         style={{
           fontSize: 12,
-          fontWeight: tinted() ? "500" : "400",
-          color: tinted() ? toneColor(tone()!) : colors.muted,
+          fontWeight: tint() ? "500" : "400",
+          color: tint() ?? colors.muted,
           numberOfLines: 1,
         }}
       >

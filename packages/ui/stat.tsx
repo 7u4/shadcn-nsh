@@ -1,4 +1,5 @@
-// A labeled figure for grids. From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
+// A stat: a small muted label over a value, for grids of figures.
+// From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors, terminal, toneColor, type Tone } from "@shadcn-nsh/theme";
 import { Text, View } from "nsh";
 
@@ -8,6 +9,9 @@ type Live<T> = T | (() => T);
 
 const read = <T,>(v: Live<T> | undefined): T | undefined =>
   typeof v === "function" ? (v as () => T)() : v;
+
+/** The figure's type: a small muted label over a value a step larger, so the value leads. */
+const type = { label: 12, value: 15 };
 
 /** A label above a value, for grids of figures; on one row in the terminal,
  * the value right-aligned. `truncate` keeps a value that may run long (a
@@ -31,10 +35,10 @@ export function Stat(props: {
     <View
       style={terminal ? { width: props.width } : { width: props.width, gap: 3, paddingVertical: 4 }}
     >
-      <Text style={{ fontSize: 12, color: colors.muted }}>{props.label}</Text>
+      <Text style={{ fontSize: type.label, color: colors.muted }}>{props.label}</Text>
       <Text
         style={{
-          fontSize: 15,
+          fontSize: type.value,
           color: valueColor(),
           fontVariant: ["tabular-nums"],
           numberOfLines: props.truncate ? 1 : undefined,
