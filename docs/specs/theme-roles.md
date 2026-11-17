@@ -106,7 +106,9 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 - **平涂**（大多数 finish）：颜色在 `backgroundColor`，渐变在同一层上再来一遍——两个 stop 同色，看不出区别。
 - **半透明**（`solid-glass` 的玻璃感）：颜色在 `backgroundColor`，渐变两站写 `transparent`；同一个半透明色画两遍，alpha 会翻倍（7% 的白变成 13.5%）。
-- **渐变承担颜色**（`fill`：绿到深绿的一段）：颜色在渐变里，`backgroundColor` 写 `transparent`。底下垫一个不透明的颜色不是“看不见”的：它会从渐变里透出来，实测把默认主题的 `progress` 整条调亮 15/255，`port:render` 会拦下。
+- **渐变承担颜色**（`fill`：绿到深绿的一段）：颜色在渐变里，`backgroundColor` 写 `transparent`。底下垫一个不透明的颜色不是“看不见”的：它会从渐变里透出来，实测把默认主题的 `progress` 整条调亮 15/255，`port:render` 会拦下。在每个主题里都如此，哪怕颜色是半透明的：`solid-glass` 的 `fill` 把它的半透明墨色写在渐变的两站，底仍是 `transparent`。
+
+两层不能同时清空：默认主题里画出底色的 finish，在每个主题里都画出底色；默认主题里清空的（`inset`、`field`、`track`、`chip`、`groove`：靠阴影和边画出来的井与槽），在每个主题里都清空。`theme-lint` 检查这一条。`port:render:theme` 拦不住这种错：组件和参照页读的是同一个 finish，一起变透明时两张图依然相同。
 
 字段顺序固定：`backgroundColor`、`backgroundImage`、`boxShadow`、`borderColor`、`backdropFilter`。`scripts/theme/order.ts` 的 `orderedFinish` 按默认主题的键序写文件，多一个或少一个键都报错。
 

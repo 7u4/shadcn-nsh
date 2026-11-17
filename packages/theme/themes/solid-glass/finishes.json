@@ -49,7 +49,7 @@
     },
     "fill": {
       "backgroundColor": "transparent",
-      "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+      "backgroundImage": "linear-gradient(180deg, oklch(0.94 0 0 / 0.86) 0%, oklch(0.94 0 0 / 0.86) 100%)",
       "boxShadow": "inset 0 1px 0 oklch(1 0 0), inset 0 -1px 0 oklch(0 0 0 / 0.099)",
       "borderColor": "transparent"
     },
@@ -154,7 +154,7 @@
     },
     "fill": {
       "backgroundColor": "transparent",
-      "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+      "backgroundImage": "linear-gradient(180deg, oklch(0.2 0 0 / 0.88) 0%, oklch(0.2 0 0 / 0.88) 100%)",
       "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.3), inset 0 -1px 0 oklch(0 0 0 / 0.203)",
       "borderColor": "transparent"
     },

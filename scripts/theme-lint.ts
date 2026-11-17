@@ -54,6 +54,19 @@ const appearances = ["light", "dark"] as const;
 /** The fields a finish's colour may be written in. `boxShadow` is ink — see the spec. */
 const colourFields = ["backgroundColor", "backgroundImage", "borderColor"] as const;
 
+/** A clear value: unset, `transparent`, or a gradient that is transparent at every stop. */
+const clear = (value: string | undefined) =>
+  value === undefined ||
+  value === "transparent" ||
+  (value.startsWith("linear-gradient(") &&
+    value
+      .slice(value.indexOf(",") + 1, -1)
+      .split(",")
+      .every((stop) => stop.trim().startsWith("transparent")));
+
+/** Whether a finish paints a fill: its colour or its gradient shows. */
+const paints = (finish: Finish) => !clear(finish.backgroundColor) || !clear(finish.backgroundImage);
+
 /** The themes: the default one, and every folder under `themes/`. */
 const themes = readdirSync(join(root, "packages/theme/themes"))
   .filter((name) => statSync(join(root, "packages/theme/themes", name)).isDirectory())
@@ -250,6 +263,15 @@ for (const theme of themes) {
       for (const field of have)
         if (!want.includes(field))
           fail(`${path}: ${role}.${field} is not a field the default theme's \`${role}\` states`);
+      // A flat theme repeats its colour in the gradient rather than clearing it: a finish that
+      // paints a fill in the default theme paints one here too, and a clear one stays clear.
+      const base = defaultFinishes[appearance][role];
+      if (base !== undefined && paints(finish) !== paints(base))
+        fail(
+          paints(base)
+            ? `${path}: ${role} paints no fill (backgroundColor and backgroundImage both clear), and the default theme's does`
+            : `${path}: ${role} paints a fill, and the default theme's is clear`,
+        );
     }
   }
 

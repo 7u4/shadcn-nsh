@@ -477,9 +477,10 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     // A run of the ink in a rail, a meter or a progress bar: the small solid pane. One colour, no
     // gradient.
     fill: {
-      ...pane(solid(appearance)),
-      // The run's colour is the gradient's; a colour under it would show through and tint the run.
+      // The run's colour is the gradient's, at both stops even though it is translucent: the
+      // colour under it stays clear, or it would show through and tint the run.
       backgroundColor: "transparent",
+      backgroundImage: `linear-gradient(180deg, ${solid(appearance)} 0%, ${solid(appearance)} 100%)`,
       boxShadow: `inset 0 1px 0 ${s("primary-rim")}, inset 0 -1px 0 ${m.under}`,
       borderColor: "transparent",
     },
