@@ -56,6 +56,13 @@ export function pageTree(): Root {
     children.push({ type: "separator", name: SIDEBAR_GROUPS.start });
     children.push(...start.map(item));
   }
+  // "All components" and "Coverage" are the group's own pages, above the two runs (they carry no
+  // kind: they list the set rather than belong to one).
+  const group = components.filter((page) => page.kind === undefined);
+  if (components.length > 0) {
+    children.push({ type: "separator", name: SIDEBAR_GROUPS.components });
+    children.push(...group.map(item));
+  }
   const runs = KINDS.map((kind) => ({
     kind,
     pages: components.filter((page) => page.kind === kind),
