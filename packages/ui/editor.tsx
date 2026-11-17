@@ -4,6 +4,7 @@
 import { split } from "nsh";
 import {
   RichEditor as BaseRichEditor,
+  type RichEditorClasses,
   type RichEditorProps as BaseRichEditorProps,
 } from "nsh/base";
 
@@ -15,7 +16,7 @@ import {
  * indented lists, task checkboxes filled with the primary once checked,
  * brand-colored links. NSH's editor draws nothing of its own.
  */
-export const richEditorClasses = {
+export const richEditorClasses: RichEditorClasses = {
   content: "gap-3 px-6 py-5",
   placeholder: "text-muted-foreground",
   listMarker: "text-muted-foreground",
@@ -44,11 +45,17 @@ export const richEditorClasses = {
 };
 // @port end
 
-/** Theme layer on `nsh/base` RichEditor. Document chrome is `richEditorClasses`. */
+/** Every prop of `nsh/base` RichEditor; the document's chrome is `richEditorClasses`. */
 export type RichEditorProps = BaseRichEditorProps;
 
 /** A rich document editor with `richEditorClasses` by default. */
 export function RichEditor(props: RichEditorProps) {
   const [, rest] = split(props, ["classes"]);
-  return <BaseRichEditor {...rest} classes={props.classes ?? richEditorClasses} />;
+  // The look's parts, then the app's: a part the app leaves out keeps the look's, and `null`
+  // drops it (base's own reading of the prop).
+  const classes = props.classes ? { ...richEditorClasses, ...props.classes } : richEditorClasses;
+  return <BaseRichEditor {...rest} classes={classes} />;
 }
+
+/** The classes of a document's parts (`richEditorClasses`), from `nsh/base`. */
+export type { RichEditorClasses };

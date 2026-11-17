@@ -82,18 +82,18 @@ export function terminalLook(o?: TerminalLookOptions) {
   };
 }
 
-/**
- * Theme layer on `nsh/base` Terminal. The emulator, the scrollback, the keys and the size in cells
- * stay in base; the program is the app's (`write` on the ref, `onData` and `onResize` on events).
- * The text is the theme's monospaced family (base's default), and what a program colors comes from
- * its own escape sequences.
- */
+/** Every prop of `nsh/base` Terminal, plus the look's `variant`. */
 export type TerminalProps = BaseTerminalProps & {
   /** `default` (the well) unless `ghost` (the app's own surface). */
   variant?: TerminalVariant;
 };
 
-/** A program's output on a themed surface, the keys typed back to it. */
+/**
+ * A program's output on a themed surface, the keys typed back to it. The emulator, the scrollback,
+ * the keys and the size in cells stay in base; the program is the app's (`write` on the ref,
+ * `onData` and `onResize` on events). The text is the theme's monospaced family (base's default),
+ * and what a program colors comes from its own escape sequences.
+ */
 export function Terminal(props: TerminalProps) {
   const [, rest] = split(props, ["variant", "style", "cursorStyle"]);
   const look = terminalLook({ variant: () => props.variant });
