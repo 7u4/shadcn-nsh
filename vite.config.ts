@@ -4,19 +4,21 @@ import { defineConfig } from "vite-plus";
 // oxlint discovery also skips .gitignore matches. Only list paths that are
 // tracked (or otherwise walked) but should stay out of fmt/lint.
 const ignoreVendored = ["references/**", ".agents/**"];
-// Docs types authority is `check:docs` (astro sync + tsc); vp type-aware lint
-// does not load `astro/client`, so `import.meta.env` fails without this exclude.
+// TanStack Router writes this file on every build in its own style and asks to
+// be left out of formatters; formatting it would dirty the tree after a build.
+const ignoreFmt = [...ignoreVendored, "apps/docs/src/routeTree.gen.ts"];
+// Docs types authority is `check:docs` (the site's own tsconfig + tsc), which
+// knows Vite's `import.meta.env` and the Fumadocs MDX collections.
 const ignoreLint = [...ignoreVendored, "apps/docs/**"];
 
 export default defineConfig({
   resolve: { tsconfigPaths: true },
   fmt: {
-    astro: true,
     sortPackageJson: true,
     sortScripts: true,
     sortImports: true,
     sortTailwindcss: true,
-    ignorePatterns: ignoreVendored,
+    ignorePatterns: ignoreFmt,
   },
   lint: {
     jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
