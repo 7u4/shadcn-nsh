@@ -51,4 +51,5 @@ export function ToggleGroup(props: ToggleGroupProps) {
   );
 }
 
+// `Toggle` comes along: a group and the tools in it are imported from one module.
 export { Toggle, type ToggleProps, type ToggleSize } from "./toggle";
