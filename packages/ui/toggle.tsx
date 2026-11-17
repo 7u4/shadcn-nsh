@@ -67,8 +67,10 @@ const TOUCH_TARGET = 44;
 
 /** How far presses count past a toggle `side` tall, so a finger gets 44
  * points without the toggle looking bigger: none with a pointer. */
-const slop = (side: number) =>
-  pointer || terminal ? undefined : Math.max(0, (TOUCH_TARGET - side) / 2) || undefined;
+const slop = (side: number): number | undefined => {
+  if (pointer || terminal || side >= TOUCH_TARGET) return undefined;
+  return (TOUCH_TARGET - side) / 2;
+};
 
 /** How far a press sinks a toggle (`activeStyle`): none with reduced motion. */
 const sink = (scale: number): ViewStyle => pressSink(scale).activeStyle;
@@ -76,9 +78,7 @@ const sink = (scale: number): ViewStyle => pressSink(scale).activeStyle;
 /** The properties a toggle's states change, eased as a button's press
  * (`pressTransition`): the sink (Design Guides, "Motion"), the on fill
  * fading in and out, the hover's. */
-const transition: ViewStyle = pressTransition(
-  "background-color, border-color, box-shadow, opacity",
-);
+const transition = pressTransition("background-color, border-color, box-shadow, opacity");
 
 const read = <T,>(v: Live<T> | undefined): T | undefined =>
   typeof v === "function" ? (v as () => T)() : v;
@@ -138,7 +138,7 @@ export function toggleLook(o?: ToggleLookOptions) {
     get focusVisibleStyle(): ViewStyle {
       return focusRing(1);
     },
-    disabledStyle: { opacity: 0.5 } as ViewStyle,
+    disabledStyle: { opacity: 0.5 },
     get hitSlop(): number | undefined {
       return slop(dimensions(o).side);
     },
