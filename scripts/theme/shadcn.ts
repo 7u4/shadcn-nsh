@@ -293,7 +293,10 @@ function finishes(appearance: Appearance, o: ReturnType<typeof own>) {
       borderColor: "transparent",
     },
     knob: surface(alias("knob"), { boxShadow: SHADOW.sm }),
-    knobOn: surface(alias("knobOn"), { boxShadow: SHADOW.sm }),
+    // Lit, the knob is `background` light and `primary-foreground` dark: no token of its own.
+    knobOn: surface(alias(appearance === "light" ? "background" : "primary-foreground"), {
+      boxShadow: SHADOW.sm,
+    }),
     // A slider's thumb: white with a `primary` edge in both appearances (`slider.tsx`'s
     // `border-primary bg-white shadow-sm`), where a switch's knob has no edge.
     handle: surface(WHITE, { boxShadow: SHADOW.sm, borderColor: alias("primary") }),

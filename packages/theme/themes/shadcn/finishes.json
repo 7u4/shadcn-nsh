@@ -60,8 +60,8 @@
       "borderColor": "transparent"
     },
     "knobOn": {
-      "backgroundColor": "var(--knobOn)",
-      "backgroundImage": "linear-gradient(180deg, var(--knobOn) 0%, var(--knobOn) 100%)",
+      "backgroundColor": "var(--primary-foreground)",
+      "backgroundImage": "linear-gradient(180deg, var(--primary-foreground) 0%, var(--primary-foreground) 100%)",
       "boxShadow": "0 1px 3px 0 oklch(0 0 0 / 0.1), 0 1px 2px -1px oklch(0 0 0 / 0.1)",
       "borderColor": "transparent"
     },
@@ -165,8 +165,8 @@
       "borderColor": "transparent"
     },
     "knobOn": {
-      "backgroundColor": "var(--knobOn)",
-      "backgroundImage": "linear-gradient(180deg, var(--knobOn) 0%, var(--knobOn) 100%)",
+      "backgroundColor": "var(--background)",
+      "backgroundImage": "linear-gradient(180deg, var(--background) 0%, var(--background) 100%)",
       "boxShadow": "0 1px 3px 0 oklch(0 0 0 / 0.1), 0 1px 2px -1px oklch(0 0 0 / 0.1)",
       "borderColor": "transparent"
     },
