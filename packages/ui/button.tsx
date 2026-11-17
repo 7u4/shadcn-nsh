@@ -96,8 +96,10 @@ const TOUCH_TARGET = 44;
 
 /** How far presses count past a control `height` tall, so a finger gets 44
  * points without the control looking bigger: none with a pointer. */
-const slop = (height: number) =>
-  pointer || terminal ? undefined : Math.max(0, (TOUCH_TARGET - height) / 2) || undefined;
+const slop = (height: number): number | undefined => {
+  if (pointer || terminal || height >= TOUCH_TARGET) return undefined;
+  return (TOUCH_TARGET - height) / 2;
+};
 
 /** How far a press sinks a button (`activeStyle`): none with reduced motion. */
 const sink = (scale: number): ViewStyle => pressSink(scale).activeStyle;
@@ -109,13 +111,24 @@ const transition = pressTransition("background-color, border-color, box-shadow, 
 const read = <T,>(v: Live<T> | undefined): T | undefined =>
   typeof v === "function" ? (v as () => T)() : v;
 
+/** The style props a look fills: the shell writes each as its own prop, never as a
+ * spread object, which is read once and keeps the appearance it was built in. */
+const STYLE_KEYS = [
+  "style",
+  "hoverStyle",
+  "activeStyle",
+  "focusVisibleStyle",
+  "disabledStyle",
+  "hitSlop",
+] as const;
+
 const dimensions = (o?: ButtonLookOptions) => buttonSizes[read(o?.size) ?? "default"];
 
 const filled = (variant: ButtonVariant) => variant === "default";
 
 /** The fill, edge and shadow of a variant at rest (or selected). A disabled filled button gives up the citrus for the
  * neutral raised fill: half a lime fill reads as a muddy olive in dark, louder than the enabled buttons beside it. */
-function rest(variant: ButtonVariant, selected: boolean, disabled = false): ViewStyle {
+function restLook(variant: ButtonVariant, selected: boolean, disabled = false): ViewStyle {
   if (filled(variant) && disabled) return { ...finish.raised };
   if (filled(variant)) return { ...finish.accent, opacity: selected ? 0.88 : 1 };
   if (variant === "destructive") {
@@ -164,7 +177,7 @@ export function buttonLook(variant: Live<ButtonVariant> = "secondary", o?: Butto
         alignItems: "center",
         justifyContent: "center",
         gap: pointer ? 6 : 8,
-        ...rest(v(), !!read(o?.selected), !!read(o?.disabled)),
+        ...restLook(v(), !!read(o?.selected), !!read(o?.disabled)),
         ...transition,
         ...read(o?.style),
       };
@@ -189,7 +202,7 @@ export function buttonLook(variant: Live<ButtonVariant> = "secondary", o?: Butto
     get focusVisibleStyle(): ViewStyle {
       return focusRing();
     },
-    disabledStyle: { opacity: 0.5 } as ViewStyle,
+    disabledStyle: { opacity: 0.5 },
     get hitSlop(): number | undefined {
       return slop(dimensions(o).height);
     },
@@ -307,7 +320,7 @@ export function iconButtonLook(o: IconButtonLookOptions = {}) {
     get focusVisibleStyle(): ViewStyle {
       return focusRing();
     },
-    disabledStyle: { opacity: 0.5 } as ViewStyle,
+    disabledStyle: { opacity: 0.5 },
     get hitSlop(): number | undefined {
       return slop(iconButtonSide(o));
     },
@@ -385,12 +398,15 @@ export function roundButtonLook(
     get focusVisibleStyle(): ViewStyle {
       return focusRing();
     },
-    disabledStyle: { opacity: 0.5 } as ViewStyle,
+    disabledStyle: { opacity: 0.5 },
     get hitSlop(): number | undefined {
       return slop(roundSide(o));
     },
   };
 }
+
+/** How much of a round button's diameter its icon takes. */
+const ROUND_GLYPH_RATIO = 0.42;
 
 /** The icon of a `roundButtonLook` of the same options: 42% of its diameter, on the fill's color. */
 export function roundButtonGlyph(
@@ -398,7 +414,7 @@ export function roundButtonGlyph(
   o?: RoundButtonLookOptions,
 ) {
   return {
-    size: roundSide(o) * 0.42,
+    size: roundSide(o) * ROUND_GLYPH_RATIO,
     get tint() {
       return variant === "default" ? colors.onLight : colors.text;
     },
@@ -437,7 +453,7 @@ export function splitButtonLook(variant: Live<ButtonVariant> = "default", o?: Bu
           borderCurve: "continuous",
           borderWidth: 1,
           overflow: "hidden",
-          ...rest(read(variant) ?? "default", false),
+          ...restLook(read(variant) ?? "default", false),
           ...transition,
           ...read(o?.style),
         };
@@ -498,26 +514,14 @@ export type ButtonProps = Omit<BaseButtonProps, "children"> & {
   /**
    * A string is the label, in `buttonLabel`'s type; anything else is drawn as given. A string
    * label is also the button's name for screen readers, unless `accessibilityLabel` says
-   * otherwise (a test's `label:Retry` finds it); children drawn as given derive nothing.
+   * otherwise; children drawn as given derive nothing.
    */
   children?: string | JSX.Element;
 };
 
 /** A button of a `variant` and a `size`. `selected` (a base prop) shows it as chosen. */
 export function Button(props: ButtonProps) {
-  const [, rest] = split(props, [
-    "variant",
-    "size",
-    "busy",
-    "children",
-    "onPress",
-    "style",
-    "hoverStyle",
-    "activeStyle",
-    "focusVisibleStyle",
-    "disabledStyle",
-    "hitSlop",
-  ]);
+  const [, rest] = split(props, [...STYLE_KEYS, "variant", "size", "busy", "children", "onPress"]);
   const variant = () => props.variant ?? "default";
   const options: ButtonLookOptions = {
     size: () => props.size,
@@ -570,17 +574,7 @@ export type IconButtonProps = Omit<BaseButtonProps, "children" | "accessibilityL
 
 /** A square icon button. `selected` (a base prop) shows it as chosen. */
 export function IconButton(props: IconButtonProps) {
-  const [, rest] = split(props, [
-    "variant",
-    "size",
-    "children",
-    "style",
-    "hoverStyle",
-    "activeStyle",
-    "focusVisibleStyle",
-    "disabledStyle",
-    "hitSlop",
-  ]);
+  const [, rest] = split(props, [...STYLE_KEYS, "variant", "size", "children"]);
   const options: IconButtonLookOptions = {
     selected: () => props.selected,
     variant: props.variant,
@@ -624,18 +618,7 @@ export type RoundButtonProps = Omit<BaseButtonProps, "children" | "accessibility
 
 /** A round icon button of a `variant`, a `size` or a `side`. */
 export function RoundButton(props: RoundButtonProps) {
-  const [, rest] = split(props, [
-    "variant",
-    "size",
-    "side",
-    "children",
-    "style",
-    "hoverStyle",
-    "activeStyle",
-    "focusVisibleStyle",
-    "disabledStyle",
-    "hitSlop",
-  ]);
+  const [, rest] = split(props, [...STYLE_KEYS, "variant", "size", "side", "children"]);
   const variant = props.variant ?? "default";
   const options: RoundButtonLookOptions = {
     size: props.size,
@@ -714,15 +697,7 @@ export function SplitButton(props: SplitButtonProps) {
 /** A pressable half of a `SplitButton`. */
 export function SplitButtonSegment(props: SplitButtonSegmentProps) {
   const ctx = useSplit();
-  const [, rest] = split(props, [
-    "children",
-    "style",
-    "hoverStyle",
-    "activeStyle",
-    "focusVisibleStyle",
-    "disabledStyle",
-    "hitSlop",
-  ]);
+  const [, rest] = split(props, [...STYLE_KEYS, "children"]);
   const segment = ctx.look.segment({
     selected: () => props.selected,
     disabled: () => props.disabled,
