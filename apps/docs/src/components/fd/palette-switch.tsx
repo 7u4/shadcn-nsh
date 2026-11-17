@@ -2,8 +2,8 @@
 
 /**
  * The demos' palette, in the demo panel's toolbar: a dropdown of the palettes the demos offer
- * (`demos/palettes.ts`), Official (the one the demos are built with) first. A choice goes into the
- * demo app's storage and the panels load again — a running app cannot see a later write
+ * (`demos/palettes.ts`), NSH Gallery (the one the demos are built with) first. A choice goes into
+ * the demo app's storage and the panels load again — a running app cannot see a later write
  * (`src/lib/palette.ts` says why).
  */
 import { ChevronDown } from "lucide-react";

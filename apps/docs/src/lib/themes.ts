@@ -106,8 +106,9 @@ export function themePages(): ThemePage[] {
  * The site's own colours (`--color-fd-<name>`, Fumadocs' names) and the theme role each one is
  * drawn from: the docs chrome is drawn in the palette the demos are. Mostly the role of the same
  * name; Fumadocs' primary is ink too (the current page's link, the outline's marker), so it is the
- * theme's `brand`, the accent that reads as text — the theme's `primary` is a fill (Official's is a
- * pale citrus no text could be on a light page) — and what sits on it is the page's background.
+ * theme's `brand`, the accent that reads as text — the theme's `primary` is a fill (the default
+ * theme's is a pale citrus no text could be on a light page) — and what sits on it is the page's
+ * background.
  */
 const SITE_ROLES: [site: string, role: string][] = [
   ["background", "background"],
