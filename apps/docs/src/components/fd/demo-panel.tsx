@@ -13,13 +13,14 @@
  *   message afterwards (the demo page listens for it), so a theme switch does not reload it.
  *
  * The toolbar's controls are drawn here, one height (`h-8`) for all three; the Source tab is
- * Fumadocs' code block, highlighted in the browser when the tab first opens.
+ * Fumadocs' code block, highlighted in the browser when the tab first opens. It is imported only
+ * there (`import.meta.env.SSR` drops the import from the server builds): shiki's oniguruma wasm
+ * does not resolve in the server bundle.
  *
  * Nothing here reads the theme while rendering: it is read after mount, so the static markup and
  * the first client render agree.
  */
-import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
-import { useEffect, useRef, useState } from "react";
+import { type ComponentType, useEffect, useRef, useState } from "react";
 
 import { PaletteSwitch } from "@/components/fd/palette-switch";
 import { onPaletteChange } from "@/lib/palette";
@@ -132,6 +133,18 @@ export function DemoPanel({ name, loadSource }: DemoPanelProps) {
       localStorage.setItem(LAYOUT_KEY, next);
     } catch {}
   };
+
+  // The highlighter is loaded when the tab first opens, and only in the browser.
+  const [CodeBlock, setCodeBlock] =
+    useState<ComponentType<{ lang: string; code: string; codeblock?: { className?: string } }>>();
+  useEffect(() => {
+    if (view !== "source" || CodeBlock) return;
+    if (!import.meta.env.SSR) {
+      import("fumadocs-ui/components/dynamic-codeblock").then((module) =>
+        setCodeBlock(() => module.DynamicCodeBlock),
+      );
+    }
+  }, [view, CodeBlock]);
 
   // The source is read when the tab opens, not with the page.
   useEffect(() => {
@@ -257,8 +270,12 @@ export function DemoPanel({ name, loadSource }: DemoPanelProps) {
         hidden={view !== "source"}
         className="overflow-auto p-3"
       >
-        {source === undefined ? null : (
-          <DynamicCodeBlock lang="tsx" code={source} codeblock={{ className: "my-0" }} />
+        {source === undefined ? null : CodeBlock ? (
+          <CodeBlock lang="tsx" code={source} codeblock={{ className: "my-0" }} />
+        ) : (
+          <pre className="text-xs leading-relaxed">
+            <code>{source}</code>
+          </pre>
         )}
       </div>
     </figure>
