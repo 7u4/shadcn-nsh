@@ -29,6 +29,9 @@ const chevronSide = 14;
 /** The side of the ellipsis's box: 36 points, shadcn's `size-9` (a menu trigger's room). */
 const ellipsisSide = 36;
 
+/** The side of the ellipsis's mark: 16 points, shadcn's `size-4`. */
+const ellipsisMark = 16;
+
 /** A color fade that stands still with reduced motion. */
 const fade = "transition-colors duration-150 motion-reduce:transition-none";
 
@@ -141,7 +144,7 @@ export function breadcrumbLook(): BreadcrumbLook {
       };
     },
     get ellipsisIcon() {
-      return { size: 16, tint: colors.muted };
+      return { size: ellipsisMark, tint: colors.muted };
     },
     get ellipsisGlyph(): TextStyle {
       return { fontSize: labelSize, color: colors.muted };
@@ -258,18 +261,18 @@ export function BreadcrumbLink(props: BreadcrumbLinkProps) {
     "focusVisibleStyle",
     "accessibilityLabel",
   ]);
-  // Read where used, so the look follows the appearance (light / dark) and the theme.
-  const look = () => breadcrumbLook();
   return (
     <BaseLink
       {...rest}
       accessibilityLabel={labelOf(props.accessibilityLabel, props.children)}
-      class={props.class ? `${look().linkClass} ${props.class}` : look().linkClass}
-      style={[look().link, props.style ?? null]}
-      focusVisibleStyle={[look().focusVisible, props.focusVisibleStyle ?? null]}
+      class={
+        props.class ? `${breadcrumbLook().linkClass} ${props.class}` : breadcrumbLook().linkClass
+      }
+      style={[breadcrumbLook().link, props.style ?? null]}
+      focusVisibleStyle={[breadcrumbLook().focusVisible, props.focusVisibleStyle ?? null]}
     >
       {typeof props.children === "string" ? (
-        <Text class={look().linkTextClass} style={look().linkText}>
+        <Text class={breadcrumbLook().linkTextClass} style={breadcrumbLook().linkText}>
           {props.children}
         </Text>
       ) : (
@@ -296,20 +299,23 @@ export function BreadcrumbPage(props: BreadcrumbPageProps) {
 /** What parts one step from the next: a chevron, or the children given instead. */
 export function BreadcrumbSeparator(props: BreadcrumbSeparatorProps) {
   const [, rest] = split(props, ["children", "style"]);
-  const look = breadcrumbLook();
   return (
     <View
       role="none"
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
       {...rest}
-      style={[look.separator, props.style ?? null]}
+      style={[breadcrumbLook().separator, props.style ?? null]}
     >
       {props.children ??
         (terminal ? (
-          <Text style={look.separatorGlyph}>{`›`}</Text>
+          <Text style={breadcrumbLook().separatorGlyph}>{`›`}</Text>
         ) : (
-          <Icon icon={ChevronRight} size={look.separatorIcon.size} tint={look.separatorIcon.tint} />
+          <Icon
+            icon={ChevronRight}
+            size={breadcrumbLook().separatorIcon.size}
+            tint={breadcrumbLook().separatorIcon.tint}
+          />
         ))}
     </View>
   );
@@ -318,18 +324,21 @@ export function BreadcrumbSeparator(props: BreadcrumbSeparatorProps) {
 /** The mark of the steps the trail leaves out: an ellipsis, named `"More"`. */
 export function BreadcrumbEllipsis(props: BreadcrumbEllipsisProps) {
   const [, rest] = split(props, ["accessibilityLabel", "style"]);
-  const look = breadcrumbLook();
   return (
     <View
       accessible
       {...rest}
       accessibilityLabel={props.accessibilityLabel ?? "More"}
-      style={[look.ellipsis, props.style ?? null]}
+      style={[breadcrumbLook().ellipsis, props.style ?? null]}
     >
       {terminal ? (
-        <Text style={look.ellipsisGlyph}>{`…`}</Text>
+        <Text style={breadcrumbLook().ellipsisGlyph}>{`…`}</Text>
       ) : (
-        <Icon icon={Ellipsis} size={look.ellipsisIcon.size} tint={look.ellipsisIcon.tint} />
+        <Icon
+          icon={Ellipsis}
+          size={breadcrumbLook().ellipsisIcon.size}
+          tint={breadcrumbLook().ellipsisIcon.tint}
+        />
       )}
     </View>
   );
