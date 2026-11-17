@@ -528,7 +528,9 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     },
     // A small label that holds something (a key, a chip): clear glass, both lines inside its edge.
     chip: {
+      ...pane(s("glass-control"), alias("raised")),
       boxShadow: `inset 0 1px 0 ${s("glass-control-rim")}, inset 0 0 0 1px ${s("glass-edge")}`,
+      borderColor: "transparent",
     },
     // A control over a photo: the stylesheet's clear glass (`.glass-control`), the one role here
     // that also blurs.

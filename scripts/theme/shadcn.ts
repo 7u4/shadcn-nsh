@@ -301,7 +301,8 @@ function finishes(appearance: Appearance, o: ReturnType<typeof own>) {
     thumb: surface(o.thumb, { boxShadow: SHADOW.sm }),
     // What stays chosen: the neutral ramp's step a press is not (shadcn has no fourth grey).
     on: surface(alias(appearance === "light" ? "chart-1" : "chart-3")),
-    chip: { boxShadow: "none" },
+    // shadcn's combobox chip: a flat `bg-muted` label, no edge and no shadow.
+    chip: surface(alias("muted"), { boxShadow: "none" }),
     glass: {
       // A control over a photo: the card's own colour at 80% (`bg-card/80`), named at that alpha.
       backgroundColor: "oklch(from var(--card) l c h / 0.8)",

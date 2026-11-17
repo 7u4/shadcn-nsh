@@ -89,7 +89,8 @@ export const components: ComponentDoc[] = [
     kind: "official",
     shadcn: "combobox",
     nshElement: "combobox",
-    description: "A searchable field with a list of choices, on the shared listbox look.",
+    description:
+      "A searchable field with a list of choices and chips for the values chosen, on the shared listbox look.",
   },
   {
     slug: "command",

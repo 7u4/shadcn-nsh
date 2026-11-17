@@ -1,12 +1,17 @@
 // The official combobox scene (`references/nsh/website/demos/el-combobox.tsx`) with this library's
 // parts: labels for an issue (several picked in one go, searchable, sections, a clear button, a
-// footer counting them) and an assignee (one person replacing the last); the inspector holds what
-// each field has and logs every change.
+// footer counting them), an assignee (one person replacing the last), and the chosen values as
+// chips inside the field (a tag row that wraps, a person whose avatar leads the chip and whose own
+// chip cannot be removed, and a disabled field); the inspector holds what each field has and logs
+// every change.
 import type { JSX } from "nsh";
 import { mount, signal, Text, View } from "nsh";
 
+import { Avatar } from "@/packages/ui/avatar";
 import {
   Combobox,
+  ComboboxChip,
+  ComboboxChips,
   ComboboxContent,
   ComboboxGroup,
   ComboboxItem,
@@ -61,8 +66,12 @@ function Field(props: { label: string; detail: string; children: JSX.Element }) 
 function App() {
   const labels = signal<string[]>(["bug", "ios"]);
   const assignee = signal<string[]>([]);
+  const tags = signal<string[]>(["bug", "docs", "ios", "macos", "web"]);
+  const reviewers = signal<string[]>(["ada", "grace"]);
+  const archived = signal<string[]>(["wontfix"]);
   const labelsOpen = signal(false);
   const assigneeOpen = signal(false);
+  const tagsOpen = signal(false);
   const events = signal<string[]>([]);
   const log = (line: string) => events.set([line, ...events()].slice(0, 8));
   const opened =
@@ -90,6 +99,15 @@ function App() {
               >{`labels [${labels().join(", ")}]`}</Text>
               <Text style={{ fontSize: 13, color: ui().text }}>
                 {`assignee [${assignee().join(", ")}]`}
+              </Text>
+              <Text style={{ fontSize: 13, color: ui().text }}>
+                {`tags [${tags().join(", ")}]`}
+              </Text>
+              <Text style={{ fontSize: 13, color: ui().text }}>
+                {`reviewers [${reviewers().join(", ")}]`}
+              </Text>
+              <Text style={{ fontSize: 13, color: ui().text }}>
+                {`archived [${archived().join(", ")}]`}
               </Text>
             </Panel>
             <Log title="onChange · onConfirm" lines={events()} minHeight={120} />
@@ -149,6 +167,79 @@ function App() {
                 renderItem={(item) => <OptionRow item={item} />}
               >
                 {PEOPLE.map((item) => (
+                  <ComboboxItem value={item.value}>{item.title}</ComboboxItem>
+                ))}
+              </ComboboxContent>
+            </Combobox>
+          </Field>
+          <Field label="Tags" detail="The chosen values as chips, wrapped inside the field">
+            <Combobox
+              multiple
+              value={tags()}
+              placeholder="Add tags"
+              onChange={({ value }) => {
+                tags.set(value);
+                log(`Tags → ${titlesOf(LABELS, value).join(", ") || "none"}`);
+              }}
+              onOpenChange={opened("Tags", (next) => tagsOpen.set(next))}
+            >
+              <ComboboxChips />
+              <ComboboxTrigger />
+              <ComboboxContent
+                accessibilityLabel="Tags"
+                empty={<ListboxEmpty label="No tag matches" />}
+                renderItem={(item) => <OptionRow item={item} />}
+              >
+                {LABELS.map((item) => (
+                  <ComboboxItem value={item.value} disabled={item.disabled}>
+                    {item.title}
+                  </ComboboxItem>
+                ))}
+              </ComboboxContent>
+            </Combobox>
+          </Field>
+          <Field label="Reviewers" detail="A chip's lead marks who it is; yours keeps its value">
+            <Combobox
+              multiple
+              value={reviewers()}
+              onChange={({ value }) => {
+                reviewers.set(value);
+                log(`Reviewers → ${titlesOf(PEOPLE, value).join(", ") || "none"}`);
+              }}
+            >
+              <ComboboxChips>
+                {(value) => (
+                  <ComboboxChip
+                    value={value}
+                    lead={
+                      <Avatar
+                        name={titlesOf(PEOPLE, [value])[0]}
+                        style={{ width: 18, height: 18 }}
+                      />
+                    }
+                    showRemove={value !== "ada"}
+                  />
+                )}
+              </ComboboxChips>
+              <ComboboxTrigger />
+              <ComboboxContent
+                accessibilityLabel="Reviewers"
+                renderItem={(item) => <OptionRow item={item} />}
+              >
+                {PEOPLE.map((item) => (
+                  <ComboboxItem value={item.value}>{item.title}</ComboboxItem>
+                ))}
+              </ComboboxContent>
+            </Combobox>
+          </Field>
+          <Field label="Archived" detail="Disabled: the chips dim and their remove buttons rest">
+            <Combobox multiple disabled value={archived()}>
+              <ComboboxChips />
+              <ComboboxContent
+                accessibilityLabel="Archived"
+                renderItem={(item) => <OptionRow item={item} />}
+              >
+                {LABELS.map((item) => (
                   <ComboboxItem value={item.value}>{item.title}</ComboboxItem>
                 ))}
               </ComboboxContent>

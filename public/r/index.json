@@ -545,7 +545,7 @@
       "name": "combobox",
       "type": "registry:ui",
       "title": "Combobox",
-      "description": "A searchable field with a list of choices, on the shared listbox look.",
+      "description": "A searchable field with a list of choices and chips for the values chosen, on the shared listbox look.",
       "files": [
         {
           "path": "packages/ui/combobox.tsx",

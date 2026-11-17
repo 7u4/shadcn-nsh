@@ -110,7 +110,7 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 - **半透明**（`solid-glass` 的玻璃感）：颜色在 `backgroundColor`，渐变两站写 `transparent`；同一个半透明色画两遍，alpha 会翻倍（7% 的白变成 13.5%）。
 - **渐变承担颜色**（`fill`：绿到深绿的一段）：颜色在渐变里，`backgroundColor` 写 `transparent`。底下垫一个不透明的颜色不是“看不见”的：它会从渐变里透出来，实测把默认主题的 `progress` 整条调亮 15/255，`port:render` 会拦下。在每个主题里都如此，哪怕颜色是半透明的：`solid-glass` 的 `fill` 把它的半透明墨色写在渐变的两站，底仍是 `transparent`。
 
-两层不能同时清空：默认主题里画出底色的 finish，在每个主题里都画出底色；默认主题里清空的（`inset`、`field`、`track`、`chip`、`groove`：靠阴影和边画出来的井与槽），在每个主题里都清空。`theme-lint` 检查这一条。`port:render:theme` 拦不住这种错：组件和参照页读的是同一个 finish，一起变透明时两张图依然相同。
+两层不能同时清空：默认主题里画出底色的 finish，在每个主题里都画出底色；默认主题里清空的（`inset`、`field`、`track`、`groove`：靠阴影和边画出来的井与槽），在每个主题里都清空。`theme-lint` 检查这一条。`port:render:theme` 拦不住这种错：组件和参照页读的是同一个 finish，一起变透明时两张图依然相同。
 
 字段顺序固定：`backgroundColor`、`backgroundImage`、`boxShadow`、`borderColor`、`backdropFilter`。`scripts/theme/order.ts` 的 `orderedFinish` 按默认主题的键序写文件，多一个或少一个键都报错。
 
@@ -136,7 +136,7 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 | `pill`    | 上游的胶囊面，留给应用                       | The upstream capsule, left to the app                                            | —（见第 8 节）                                |
 | `thumb`   | 分段控件、标签里被选中的那一块               | The chosen segment of a segmented control or a tag                               | `tabs`、`segmented`                           |
 | `on`      | 选中的开关/勾选框，以及它上面的标记          | A chosen switch or box, and the mark on it                                       | `button`、`toggle`                            |
-| `chip`    | 上游的 chip，留给应用                        | The upstream chip, left to the app                                               | —（见第 8 节）                                |
+| `chip`    | 字段里一个已选值的标签：底色、一道内高光与边 | A chosen value's label inside a field: a fill, an inner highlight and an edge    | `combobox`                                    |
 | `glass`   | 玻璃：半透明底 + 模糊                        | Glass: a translucent fill and a blur                                             | `carousel`                                    |
 | `menu`    | 浮层：菜单、弹层、提示                       | A floating surface: a menu, a popover, a tooltip                                 | `popover`、`dialog`、`toast`、`lib/listbox`   |
 | `groove`  | 菜单里一道凹槽                               | A groove cut inside a menu                                                       | `menu`                                        |
@@ -158,15 +158,15 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 好几个 finish 今天取到同一个颜色，看起来可以合并成一条。不合并，是因为它们是不同的决定，改其中一个不该顺手改掉另一个：
 
-| 两个 finish                          | 今天相同的原因                           | 分开的原因                                                               |
-| ------------------------------------ | ---------------------------------------- | ------------------------------------------------------------------------ |
-| `light` / `accent`                   | 主操作与强调是同一个色                   | 上游留了两档，主题可以只让其中一档更亮                                   |
-| `primary` / `brand-fill`             | 强调色的填充就是主操作的色               | `primary` 是 shadcn 的槽，`brand-fill` 是本库的填充                      |
-| `primary-foreground` / `on-brand`    | 同上                                     | 同上：一个是槽，一个是本库的字色                                         |
-| `thumb` / `raised`                   | 分段控件选中的那块，与卡片上的控件面同色 | 一个在井里，一个在卡片上，深色下要分开调                                 |
-| `knob` / `handle`                    | 开关圆点与滑杆把手同色                   | shadcn 的滑杆把手带 `border-primary`，开关圆点不带（`f34fa75` 拆出来的） |
-| `down` / `destructive`               | 都是红                                   | `destructive` 是危险的语义，`down` 是数据的方向                          |
-| `pill` / `raised`、`chip` / `raised` | 上游的胶囊与 chip 借了控件的面           | 上游规范里有，本库还没有组件读（第 8 节）                                |
+| 两个 finish                          | 今天相同的原因                           | 分开的原因                                                                                   |
+| ------------------------------------ | ---------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `light` / `accent`                   | 主操作与强调是同一个色                   | 上游留了两档，主题可以只让其中一档更亮                                                       |
+| `primary` / `brand-fill`             | 强调色的填充就是主操作的色               | `primary` 是 shadcn 的槽，`brand-fill` 是本库的填充                                          |
+| `primary-foreground` / `on-brand`    | 同上                                     | 同上：一个是槽，一个是本库的字色                                                             |
+| `thumb` / `raised`                   | 分段控件选中的那块，与卡片上的控件面同色 | 一个在井里，一个在卡片上，深色下要分开调                                                     |
+| `knob` / `handle`                    | 开关圆点与滑杆把手同色                   | shadcn 的滑杆把手带 `border-primary`，开关圆点不带（`f34fa75` 拆出来的）                     |
+| `down` / `destructive`               | 都是红                                   | `destructive` 是危险的语义，`down` 是数据的方向                                              |
+| `pill` / `raised`、`chip` / `raised` | 上游的胶囊与 chip 借了控件的面           | 胶囊是上游规范、本库还没有组件读；chip 是字段里一个标签，和卡片上的控件不在同一层（第 8 节） |
 
 合并的代价是隐形的：某天主题想把 `thumb` 调深一点，`raised` 会跟着变，而两个地方隔着一个井，肉眼很难对上。
 
@@ -212,11 +212,10 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 <!-- theme-lint: unread -->
 
-`pill`、`chip`
+`pill`
 <!-- /theme-lint: unread -->
 
 - `pill`：上游的胶囊面。本库的组件里没有一处用它，留着是因为它属于上游的规范面（`references/nsh/examples/nsh-gallery-ui`），应用要用就有。
-- `chip`：同上，等 `ComboboxChips` 落地后由它读。
 
 ## 9 加一个 token 之前
 

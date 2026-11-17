@@ -48,7 +48,7 @@ Every page links the base element it is built on where `nsh/base` has one, and t
 - /docs/components/menu: A menu of items, separators and submenus on the shared menu look. → https://nsh.dev/elements/menu
 - /docs/components/context-menu: A menu at the pointer, on the shared menu look. → https://nsh.dev/elements/menu
 - /docs/components/select: A list of choices from a field trigger, on the shared listbox look. → https://nsh.dev/elements/select
-- /docs/components/combobox: A searchable field with a list of choices, on the shared listbox look. → https://nsh.dev/elements/combobox
+- /docs/components/combobox: A searchable field with a list of choices and chips for the values chosen, on the shared listbox look. → https://nsh.dev/elements/combobox
 - /docs/components/calendar: A month of days to pick a date or a range, on the shared calendar look. → https://nsh.dev/elements/calendar
 - /docs/components/date-picker: A calendar in a popup from a field trigger, on the shared listbox look. → https://nsh.dev/elements/date-picker
 - /docs/components/tabs: A pill track or underlined row with a traveling indicator. → https://nsh.dev/elements/tabs
