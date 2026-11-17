@@ -275,7 +275,7 @@ function finishes(
     raised: surface(alias("raised"), { boxShadow: SHADOW.xs }),
     hover: surface(alias("hover"), { boxShadow: SHADOW.xs }),
     // Pressed, the lift goes: the one cue a flat theme has left (shadcn styles no press state).
-    pressed: surface(o.pressed),
+    pressed: surface(appearance === "light" ? alias("border") : o.pressed),
     light: surface(alias("primary")),
     accent: surface(alias("primary")),
     // A rail has no lip of its own (shadcn draws the track flat): the edge comes from the theme's
