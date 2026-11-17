@@ -297,9 +297,12 @@ for (const id of listed) {
 
 // The themes page and the registry: every palette the site switches to has its `theme-<id>` item
 // and a section on the page, and every `theme-*` item is one of those palettes. The page renders
-// them from the same list (`src/lib/themes.ts`), so a theme is never written twice.
-const themesPage = path.join(repo, "apps/docs/src/pages/docs/themes.astro");
+// them from the same list (`src/lib/themes.ts`), so a theme is never written twice: the sections
+// are `themes.map` over that list in the page's component, and the `.mdx` only asks for it.
+const themesPage = path.join(repo, "apps/docs/content/docs/themes.mdx");
+const themesSections = path.join(repo, "apps/docs/src/components/fd/themes-page.tsx");
 const themesSource = fs.readFileSync(themesPage, "utf8");
+const themesSectionsSource = fs.readFileSync(themesSections, "utf8");
 const registryItems = (
   JSON.parse(fs.readFileSync(path.join(repo, "registry.json"), "utf8")) as {
     items: { name: string; type: string }[];
@@ -322,8 +325,11 @@ for (const item of themeItems.keys()) {
     fail(`registry.json: "${item}" is no palette in apps/docs/demos/palettes.ts`);
   }
 }
-if (!/\{themes\.map\(/.test(themesSource)) {
-  fail("apps/docs/src/pages/docs/themes.astro: not generated from the palette list");
+if (!/<ThemesPage \/>/.test(themesSource)) {
+  fail("apps/docs/content/docs/themes.mdx: does not render the palette sections");
+}
+if (!/\{themes\.map\(/.test(themesSectionsSource)) {
+  fail("apps/docs/src/components/fd/themes-page.tsx: not generated from the palette list");
 }
 
 if (problems.length > 0) {

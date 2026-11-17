@@ -1,15 +1,13 @@
 /**
  * The themes the docs site shows: each palette of the demos (`demos/palettes.ts`) with the theme
- * file it draws (`packages/theme/themes/<id>/theme.json`) read at build time. The themes page is
- * generated from this, and `check:pages` holds the registry items to the same list, so a theme is
- * never written twice here.
+ * file it draws (`packages/theme/themes/<id>/theme.json`) as the build has it. `import.meta.glob`
+ * reads every theme file once, eagerly, so the themes page is drawn from the same JSON at build
+ * time and in the browser — no `node:fs`, and the page prerenders like any other. `check:pages`
+ * holds the registry items to the same list, so a theme is never written twice here.
  *
  * `theme.json`'s `name` is the theme's own name — the same one `AppTheme.label` carries in the
  * `index.ts` beside it. The palette's `label` is the switch's shorter name for the same theme.
  */
-import fs from "node:fs";
-import path from "node:path";
-
 import { PALETTES, type Palette } from "../../demos/palettes";
 
 /** A theme file in shadcn's `cssVars` shape, as `theme.json` writes it. */
@@ -42,12 +40,17 @@ export type ThemePage = {
   roles: ThemeRole[];
 };
 
-/** `packages/theme/themes`, from the docs site's working directory (as `demo.js` reads `demos/`). */
-const THEMES_ROOT = path.join(process.cwd(), "..", "..", "packages", "theme", "themes");
+/** `packages/theme/themes/<id>/theme.json`, every one of them, as the build reads them. */
+const FILES = import.meta.glob("../../../../packages/theme/themes/*/theme.json", {
+  eager: true,
+  import: "default",
+}) as Record<string, ThemeFile>;
 
+/** The theme file of a palette: `themes/<id>/theme.json` below `packages/theme`. */
 function themeFile(id: string): ThemeFile {
-  const file = path.join(THEMES_ROOT, id, "theme.json");
-  return JSON.parse(fs.readFileSync(file, "utf8")) as ThemeFile;
+  const file = FILES[`../../../../packages/theme/themes/${id}/theme.json`];
+  if (!file) throw new Error(`no theme file for palette "${id}"`);
+  return file;
 }
 
 /**

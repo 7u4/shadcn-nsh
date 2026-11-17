@@ -1,0 +1,28 @@
+---
+title: Components
+description: Copy-into-app components for Native Shell, built on nsh/base.
+---
+
+import { ComponentsIndex } from "../../src/components/fd/components-index";
+import { components } from "../../src/lib/components";
+import { url } from "../../src/lib/site";
+
+{components.length} components, one page each: Installation, Usage, Examples and API. They are
+grouped in two: <strong>Official</strong>, aligned with an NSH element, and <strong>Our own</strong>,
+this library's additions with no NSH element of their own. Behavior, keyboard support and the full
+unstyled props live on <a href="https://nsh.dev/elements">nsh.dev/elements</a>; each page links its
+base element and the shadcn/ui component it stands in for.
+
+The list is generated from `registry.json` and these pages, so every `registry:ui` item has a page
+and every page has an item. The group comes from{" "}
+
+<a href={url("docs/components/coverage")}>Coverage</a>: a page registered in one of its NSH rows is
+Official, one in none is Our own. Add one with `npx shadcn-nsh@latest add <name>`.
+
+## Official
+
+<ComponentsIndex kind="official" />
+
+## Our own
+
+<ComponentsIndex kind="own" />
