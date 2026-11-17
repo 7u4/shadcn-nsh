@@ -85,40 +85,18 @@ function groupChrome(vertical: boolean): ViewStyle {
   };
 }
 
-/**
- * Live color reads over `toolbarTrack` / `toolbarRule`, so the bar follows the scheme where the
- * style is applied (same reason as ToggleGroup's inset track).
- */
-function liveTrack(vertical: boolean): ViewStyle {
-  const base = toolbarTrack({ vertical });
-  return {
-    ...base,
-    get backgroundColor() {
-      return colors.inset;
-    },
-    get borderColor() {
-      return colors.border;
-    },
-  };
-}
-
-function liveRule(vertical: boolean): ViewStyle {
-  const base = toolbarRule(vertical);
-  return {
-    ...base,
-    get backgroundColor() {
-      return colors.line;
-    },
-  };
-}
-
 /** The bar: one toolbar for screen readers, arrow keys along `axis`. */
 export function Toolbar(props: ToolbarProps) {
   const [, rest] = split(props, ["style", "axis"]);
   const vertical = props.axis === "vertical";
   return (
     <ToolbarContext.Provider value={{ vertical }}>
-      <BaseToolbar {...rest} axis={props.axis} style={[liveTrack(vertical), props.style ?? null]} />
+      <BaseToolbar
+        {...rest}
+        axis={props.axis}
+        // Read in the style itself, so a theme's colors and radius are the ones in use.
+        style={[toolbarTrack({ vertical }), props.style ?? null]}
+      />
     </ToolbarContext.Provider>
   );
 }
@@ -134,5 +112,7 @@ export function ToolbarGroup(props: ToolbarGroupProps) {
 export function ToolbarSeparator(props: ToolbarSeparatorProps) {
   const bar = useToolbar();
   const [, rest] = split(props, ["style"]);
-  return <BaseToolbarSeparator {...rest} style={[liveRule(bar.vertical), props.style ?? null]} />;
+  return (
+    <BaseToolbarSeparator {...rest} style={[toolbarRule(bar.vertical), props.style ?? null]} />
+  );
 }

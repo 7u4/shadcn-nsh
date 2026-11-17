@@ -1,10 +1,6 @@
 // A button group: buttons joined into one control, in a row or a column. This library's own
 // (drawn on `nsh`'s View and Text, with the `group` role), so there is no port region. Yours to
 // change.
-//
-// shadcn joins the buttons with child selectors (`[&>*:not(:first-child)]:rounded-l-none`); a view
-// styles itself and not its children, so here the join is a style each button wears
-// (`buttonGroupLook().item(...)`), and the page says so.
 import { colors, radius, TERMINAL_COLUMN, terminal } from "@shadcn-nsh/theme";
 import type { TextStyle, ViewProps, ViewStyle } from "nsh";
 import { context, split, Text, token, View } from "nsh";
@@ -113,13 +109,13 @@ export type ButtonGroupSeparatorProps = Omit<ViewProps, "children">;
  */
 export function ButtonGroup(props: ButtonGroupProps) {
   const [, rest] = split(props, ["orientation", "style"]);
-  const orientation = () => props.orientation ?? "horizontal";
+  const orientation = props.orientation ?? "horizontal";
   return (
-    <OrientationContext.Provider value={orientation()}>
+    <OrientationContext.Provider value={orientation}>
       <View
         {...rest}
         role="group"
-        style={[buttonGroupLook().root(orientation()), props.style ?? null]}
+        style={[buttonGroupLook().root(orientation), props.style ?? null]}
       >
         {props.children}
       </View>
@@ -151,11 +147,10 @@ export function ButtonGroupText(props: ButtonGroupTextProps) {
  */
 export function ButtonGroupSeparator(props: ButtonGroupSeparatorProps) {
   const [, rest] = split(props, ["style"]);
-  const vertical = () => OrientationContext() === "vertical";
   return (
     <Separator
       {...rest}
-      orientation={vertical() ? "horizontal" : "vertical"}
+      orientation={OrientationContext() === "vertical" ? "horizontal" : "vertical"}
       style={props.style ?? null}
     />
   );

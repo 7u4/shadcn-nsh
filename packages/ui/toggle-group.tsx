@@ -1,5 +1,6 @@
-// A toggle group: `nsh/base`'s ToggleGroup in the inset track of `toolbarTrack`.
-// The track look lives in `toolbar.tsx` (from look/tool.ts); this file is the shell only.
+// A toggle group: `nsh/base`'s ToggleGroup in the inset track of `toolbarTrack`. This library's
+// own shell (the track look lives in `toolbar.tsx`, from look/tool.ts): no port region. Yours to
+// change.
 import type { ViewStyle } from "nsh";
 import { split } from "nsh";
 import {
@@ -51,4 +52,5 @@ export function ToggleGroup(props: ToggleGroupProps) {
   );
 }
 
+// `Toggle` comes along: a group and the tools in it are imported from one module.
 export { Toggle, type ToggleProps, type ToggleSize } from "./toggle";

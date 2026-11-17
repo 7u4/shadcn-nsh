@@ -12,15 +12,17 @@ import { labelOf } from "./lib/label";
 // @port look/nav.tsx
 const pointer = platform.desktop;
 
-// Link -------------------------------------------------------------------
-
 /** A link's text size: the body's, 13 points with a pointer, 15 on a touch screen. */
 export const linkSize = pointer ? 13 : 15;
 
-/** The color fades and the underline's bar slides; both stand still with reduced motion. */
-const tint = "transition-colors duration-200 motion-reduce:transition-none";
+/** The text's color, eased over 200 ms; none with reduced motion. */
+const colorTransition = "transition-colors duration-200 motion-reduce:transition-none";
 
-const slide = "transition-transform duration-300 ease-out motion-reduce:transition-none";
+/** The underline's bar and the arrow, eased out over 300 ms; none with reduced motion. */
+const slideTransition = "transition-transform duration-300 ease-out motion-reduce:transition-none";
+
+/** How much of the label's size the arrow outside the app takes. */
+const ARROW_RATIO = 0.85;
 
 /** What a link is, for its color (`linkColor`). */
 export interface LinkState {
@@ -52,7 +54,7 @@ export function linkColor(o?: LinkState): string {
  * around it; `inline` on a paragraph's baseline, else as wide as its text. */
 export function linkLook(o?: { inline?: boolean }) {
   return {
-    class: `group flex-row items-center gap-1 rounded-sm active:opacity-60 ${tint} ${o?.inline ? "align-text-bottom" : "self-start"}`,
+    class: `group flex-row items-center gap-1 rounded-sm active:opacity-60 ${colorTransition} ${o?.inline ? "align-text-bottom" : "self-start"}`,
     get focusVisibleStyle(): ViewStyle {
       return focusRing(2);
     },
@@ -75,7 +77,7 @@ export function LinkText(
     <>
       <View>
         <Text
-          class={tint}
+          class={colorTransition}
           style={{
             fontSize: size(),
             fontWeight: props.current ? "600" : "500",
@@ -86,20 +88,20 @@ export function LinkText(
         </Text>
         <If when={!props.quiet && !props.disabled}>
           <View
-            class={`absolute right-0 bottom-0 left-0 h-px ${tint}`}
+            class={`absolute right-0 bottom-0 left-0 h-px ${colorTransition}`}
             style={{ backgroundColor: alpha(props.color, 0.35) }}
           />
         </If>
         <If when={!props.disabled}>
           <View
-            class={`absolute right-0 bottom-0 left-0 h-[1.5px] origin-left rounded-full ${slide} ${props.current ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}
+            class={`absolute right-0 bottom-0 left-0 h-[1.5px] origin-left rounded-full ${slideTransition} ${props.current ? "scale-x-100" : "scale-x-0 group-hover:scale-x-100"}`}
             style={{ backgroundColor: props.color }}
           />
         </If>
       </View>
       <If when={props.icon}>
-        <View class={`${slide} group-hover:translate-x-0.5 group-hover:-translate-y-0.5`}>
-          <Icon icon={ExternalLink} size={Math.round(size() * 0.85)} tint={props.color} />
+        <View class={`${slideTransition} group-hover:translate-x-0.5 group-hover:-translate-y-0.5`}>
+          <Icon icon={ExternalLink} size={Math.round(size() * ARROW_RATIO)} tint={props.color} />
         </View>
       </If>
     </>
@@ -127,7 +129,8 @@ export type LinkProps = Omit<BaseLinkProps, "children"> & {
   children?: string | JSX.Element;
 };
 
-/** A text link with the shared underline / bar motion. */
+/** A text link: its label with the underline and the bar that grows under the pointer, an
+ * arrow when it goes outside the app. */
 export function Link(props: LinkProps) {
   const [, rest] = split(props, [
     "quiet",
@@ -137,7 +140,6 @@ export function Link(props: LinkProps) {
     "icon",
     "children",
     "class",
-    "style",
     "focusVisibleStyle",
   ]);
   // Read where used, so the look follows the props and the appearance (light / dark).
@@ -153,7 +155,6 @@ export function Link(props: LinkProps) {
       {...rest}
       accessibilityLabel={labelOf(props.accessibilityLabel, props.children)}
       class={props.class ? `${look().class} ${props.class}` : look().class}
-      style={props.style}
       focusVisibleStyle={[look().focusVisibleStyle, props.focusVisibleStyle ?? null]}
     >
       {typeof props.children === "string" ? (
