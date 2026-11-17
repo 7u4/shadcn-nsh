@@ -38,12 +38,13 @@ export function storePalette(id: PaletteId) {
 const PALETTE_EVENT = "palette-change";
 
 /**
- * Chooses a palette for the demos: stored for the next load, and every demo panel loads again in
- * it. A running app reads its storage once (nsh's `Storage` has no change event), so the panels
+ * Chooses a palette for the demos and the site: stored for the next load, the site's colours
+ * follow at once (`sitePaletteCss`), and every demo panel loads again in it. A running app reads its storage once (nsh's `Storage` has no change event), so the panels
  * load again rather than switch in place.
  */
 export function choosePalette(id: PaletteId) {
   storePalette(id);
+  document.documentElement.dataset.palette = id;
   document.dispatchEvent(new CustomEvent(PALETTE_EVENT));
 }
 
@@ -55,3 +56,10 @@ export function onPaletteChange(change: () => void) {
   document.addEventListener(PALETTE_EVENT, change);
   return () => document.removeEventListener(PALETTE_EVENT, change);
 }
+
+/**
+ * The inline script that marks `<html>` with the stored palette before the first paint, so the
+ * site is never drawn in another palette first. It repeats `storedPalette` as text: it runs before
+ * any module does.
+ */
+export const PALETTE_SCRIPT = `try{var v=localStorage.getItem(${JSON.stringify(PALETTE_STORAGE_KEY)});document.documentElement.dataset.palette=${JSON.stringify(PALETTES.map((palette) => palette.id))}.indexOf(v)<0?"default":v}catch(e){document.documentElement.dataset.palette="default"}`;

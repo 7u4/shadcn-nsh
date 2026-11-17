@@ -49,6 +49,58 @@ function savedLayout(): Layout {
   }
 }
 
+type ToggleOption<T extends string> = { value: T; label: string; id?: string; controls?: string };
+
+/**
+ * The toolbar's two switches, one look: a bordered group whose chosen item is lifted, like the
+ * library's toggle group. `tablist` for Preview | Source (it switches panels), `radiogroup` for
+ * Phone | Desktop.
+ */
+function ToggleGroup<T extends string>({
+  label,
+  role,
+  options,
+  value,
+  onChange,
+}: {
+  label: string;
+  role: "tablist" | "radiogroup";
+  options: ToggleOption<T>[];
+  value: T;
+  onChange: (next: T) => void;
+}) {
+  return (
+    <div
+      role={role}
+      aria-label={label}
+      className="bg-fd-muted inline-flex items-center gap-0.5 rounded-lg border p-0.5"
+    >
+      {options.map((option) => {
+        const on = value === option.value;
+        return (
+          <button
+            key={option.value}
+            type="button"
+            role={role === "tablist" ? "tab" : "radio"}
+            id={option.id}
+            aria-controls={option.controls}
+            aria-selected={role === "tablist" ? on : undefined}
+            aria-checked={role === "radiogroup" ? on : undefined}
+            onClick={() => onChange(option.value)}
+            className={`rounded-md px-2.5 py-0.5 text-sm transition-colors ${
+              on
+                ? "bg-fd-background text-fd-foreground shadow-sm"
+                : "text-fd-muted-foreground hover:text-fd-foreground"
+            }`}
+          >
+            {option.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 export type DemoPanelProps = {
   /** The demo's name: `apps/docs/demos/<name>.tsx`, packaged to `public/demos/<name>/`. */
   name: string;
@@ -102,6 +154,9 @@ export function DemoPanel({ name, loadSource }: DemoPanelProps) {
     () =>
       onPaletteChange(() => {
         loaded.current = false;
+        // The URL carries the theme of the frame's first load; a running frame was told of later
+        // switches by message, so the new load is given the page's theme as it is now.
+        setSrc((current) => (current ? withParam(current, "theme", siteTheme()) : current));
         setReloads((count) => count + 1);
       }),
     [],
@@ -132,44 +187,31 @@ export function DemoPanel({ name, loadSource }: DemoPanelProps) {
   return (
     <figure className="not-prose bg-fd-card text-fd-card-foreground my-6 rounded-xl border">
       <figcaption className="flex flex-wrap items-center gap-2 border-b px-3 py-2 text-sm">
-        <div role="tablist" aria-label="Demo" className="flex items-center gap-1">
-          {(["preview", "source"] as const).map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              role="tab"
-              id={`${id}-tab-${tab}`}
-              aria-controls={`${id}-${tab}`}
-              aria-selected={view === tab}
-              onClick={() => setView(tab)}
-              className={`rounded-md px-2 py-1 capitalize ${
-                view === tab
-                  ? "bg-fd-primary text-fd-primary-foreground"
-                  : "text-fd-muted-foreground"
-              }`}
-            >
-              {tab}
-            </button>
-          ))}
-        </div>
-        <div role="radiogroup" aria-label="Layout" className="flex items-center gap-1">
-          {(Object.keys(LAYOUTS) as Layout[]).map((option) => (
-            <button
-              key={option}
-              type="button"
-              role="radio"
-              aria-checked={layout === option}
-              onClick={() => chooseLayout(option)}
-              className={`rounded-md px-2 py-1 capitalize ${
-                layout === option
-                  ? "bg-fd-secondary text-fd-secondary-foreground"
-                  : "text-fd-muted-foreground"
-              }`}
-            >
-              {option === "mobile" ? "Phone" : "Desktop"}
-            </button>
-          ))}
-        </div>
+        <ToggleGroup
+          label="Demo"
+          role="tablist"
+          options={[
+            {
+              value: "preview",
+              label: "Preview",
+              id: `${id}-tab-preview`,
+              controls: `${id}-preview`,
+            },
+            { value: "source", label: "Source", id: `${id}-tab-source`, controls: `${id}-source` },
+          ]}
+          value={view}
+          onChange={setView}
+        />
+        <ToggleGroup
+          label="Layout"
+          role="radiogroup"
+          options={[
+            { value: "mobile", label: "Phone" },
+            { value: "desktop", label: "Desktop" },
+          ]}
+          value={layout}
+          onChange={chooseLayout}
+        />
         <PaletteSwitch />
         <span className="text-fd-muted-foreground ml-auto font-mono text-xs">{name}.tsx</span>
         <a

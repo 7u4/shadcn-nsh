@@ -101,3 +101,50 @@ export function themePages(): ThemePage[] {
     };
   });
 }
+
+/**
+ * The site's own colours (`--color-fd-<name>`, Fumadocs' names) and the theme role each one is
+ * drawn from: the docs chrome is drawn in the palette the demos are. Mostly the role of the same
+ * name; Fumadocs' primary is ink too (the current page's link, the outline's marker), so it is the
+ * theme's `brand`, the accent that reads as text — the theme's `primary` is a fill (Official's is a
+ * pale citrus no text could be on a light page) — and what sits on it is the page's background.
+ */
+const SITE_ROLES: [site: string, role: string][] = [
+  ["background", "background"],
+  ["foreground", "foreground"],
+  ["muted", "muted"],
+  ["muted-foreground", "muted-foreground"],
+  ["popover", "popover"],
+  ["popover-foreground", "popover-foreground"],
+  ["card", "card"],
+  ["card-foreground", "card-foreground"],
+  ["border", "border"],
+  ["primary", "brand"],
+  ["primary-foreground", "background"],
+  ["secondary", "secondary"],
+  ["secondary-foreground", "secondary-foreground"],
+  ["accent", "accent"],
+  ["accent-foreground", "accent-foreground"],
+  ["ring", "ring"],
+];
+
+/**
+ * The stylesheet that draws the site in each palette: `html[data-palette="<id>"]` sets the
+ * Fumadocs colours from the theme's light roles, `.dark` from its dark ones. The sidebar is named
+ * too, since Fumadocs' preset sets a few of its colours there again. `palette.ts` sets the
+ * attribute: an inline script before the first paint, then every choice.
+ */
+export function sitePaletteCss(): string {
+  return PALETTES.map((palette) => {
+    const file = themeFile(palette.id);
+    const block = (scheme: "light" | "dark", selector: string) => {
+      const vars = { ...file.cssVars.theme, ...file.cssVars[scheme] };
+      const lines = SITE_ROLES.filter(([, role]) => vars[role]).map(
+        ([site, role]) => `--color-fd-${site}:${filled(vars[role]!, vars)};`,
+      );
+      return `${selector},${selector} #nd-sidebar{${lines.join("")}}`;
+    };
+    const at = `html[data-palette="${palette.id}"]`;
+    return block("light", at) + block("dark", `${at}.dark`);
+  }).join("\n");
+}
