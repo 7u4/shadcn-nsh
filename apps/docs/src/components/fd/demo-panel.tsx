@@ -20,7 +20,7 @@
  * Nothing here reads the theme while rendering: it is read after mount, so the static markup and
  * the first client render agree.
  */
-import { type ComponentType, useEffect, useRef, useState } from "react";
+import { type ComponentProps, type ComponentType, useEffect, useRef, useState } from "react";
 
 import { PaletteSwitch } from "@/components/fd/palette-switch";
 import { onPaletteChange } from "@/lib/palette";
@@ -135,8 +135,13 @@ export function DemoPanel({ name, loadSource }: DemoPanelProps) {
   };
 
   // The highlighter is loaded when the tab first opens, and only in the browser.
-  const [CodeBlock, setCodeBlock] =
-    useState<ComponentType<{ lang: string; code: string; codeblock?: { className?: string } }>>();
+  const [CodeBlock, setCodeBlock] = useState<
+    ComponentType<{
+      lang: string;
+      code: string;
+      codeblock?: ComponentProps<"figure"> & { viewportProps?: ComponentProps<"div"> };
+    }>
+  >();
   useEffect(() => {
     if (view !== "source" || CodeBlock) return;
     if (!import.meta.env.SSR) {
@@ -264,16 +269,20 @@ export function DemoPanel({ name, loadSource }: DemoPanelProps) {
           className="mx-auto block max-w-full border-0 bg-transparent"
         />
       </div>
-      <div
-        role="tabpanel"
-        id={`${id}-source`}
-        hidden={view !== "source"}
-        className="overflow-auto p-3"
-      >
+      <div role="tabpanel" id={`${id}-source`} hidden={view !== "source"} className="p-3">
+        {/* The preview's height: switching tabs never moves the page. The code scrolls inside. */}
         {source === undefined ? null : CodeBlock ? (
-          <CodeBlock lang="tsx" code={source} codeblock={{ className: "my-0" }} />
+          <CodeBlock
+            lang="tsx"
+            code={source}
+            codeblock={{
+              className: "my-0",
+              style: { height: size.height },
+              viewportProps: { style: { height: "100%", maxHeight: "none" } },
+            }}
+          />
         ) : (
-          <pre className="text-xs leading-relaxed">
+          <pre className="overflow-auto text-xs leading-relaxed" style={{ height: size.height }}>
             <code>{source}</code>
           </pre>
         )}
