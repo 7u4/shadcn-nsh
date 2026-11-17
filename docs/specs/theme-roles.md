@@ -26,7 +26,11 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 ### A 层：shadcn 的 31 个槽
 
-`background`、`foreground`、`card`、`card-foreground`、`popover`、`popover-foreground`、`primary`、`primary-foreground`、`secondary`、`secondary-foreground`、`muted`、`muted-foreground`、`accent`、`accent-foreground`、`destructive`、`border`、`input`、`ring`、`chart-1`–`chart-5`、`sidebar`、`sidebar-foreground`、`sidebar-primary`、`sidebar-primary-foreground`、`sidebar-accent`、`sidebar-accent-foreground`、`sidebar-border`、`sidebar-ring`。
+<!-- theme-lint: tokens-a -->
+
+`background`、`foreground`、`card`、`card-foreground`、`popover`、`popover-foreground`、`primary`、`primary-foreground`、`secondary`、`secondary-foreground`、`muted`、`muted-foreground`、`accent`、`accent-foreground`、`destructive`、`border`、`input`、`ring`、`chart-1`、`chart-2`、`chart-3`、`chart-4`、`chart-5`、`sidebar`、`sidebar-foreground`、`sidebar-primary`、`sidebar-primary-foreground`、`sidebar-accent`、`sidebar-accent-foreground`、`sidebar-border`、`sidebar-ring`。
+
+<!-- /theme-lint: tokens-a -->
 
 **31 个都必须有，不能省。** NSH 的 `Theme::of` 逐名字取值，缺一个就退回 shadcn 的 neutral 灰，主题会变成一半本库、一半 shadcn 的混合体——面板里出一个 shadcn 灰的面，原因往往就在这里。名字的唯一来源是 `references/nsh/crates/nsh-base/src/theme.rs` 的 `theme! { … }` 块，`theme-lint` 从那里读，不从本文手抄。
 
@@ -61,6 +65,8 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 `cssVars.theme` 里的键在 light 和 dark 下不各写一份——写两份就是两份要同步的答案。圆角是数，颜色是值：
 
+<!-- theme-lint: tokens-c -->
+
 | 键                                                             | 值                               | 用途                       |
 | -------------------------------------------------------------- | -------------------------------- | -------------------------- |
 | `radius` / `radius-card` / `radius-control` / `radius-popover` | `10px` / `12px` / `7px` / `16px` | 四档圆角                   |
@@ -69,6 +75,8 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 | `scrim`                                                        | 遮罩                             | `lib/overlay`、`dock-area` |
 | `window-close` / `window-minimize` / `window-zoom`             | 三颗窗口按钮各自的色             | `theme.ts` 的窗口按钮映射  |
 | `window-control-ink` / `window-control-edge`                   | 窗口按钮的字与边                 | 同上                       |
+
+<!-- /theme-lint: tokens-c -->
 
 ## 2 finishes.json 的两条线
 
@@ -96,13 +104,15 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 引擎先画 `backgroundColor`，再把 `backgroundImage` 叠上去（`references/nsh/crates/nsh-core/src/canvas.rs`），所以一个面有底、有渐变两层：**颜色写在哪一层，另一层就写 `transparent`**，别把同一个颜色写两遍。三种情形：
 
-- **平涂**（大多数角色）：颜色在 `backgroundColor`，渐变在同一层上再来一遍——两个 stop 同色，看不出区别。
+- **平涂**（大多数 finish）：颜色在 `backgroundColor`，渐变在同一层上再来一遍——两个 stop 同色，看不出区别。
 - **半透明**（`solid-glass` 的玻璃感）：颜色在 `backgroundColor`，渐变两站写 `transparent`；同一个半透明色画两遍，alpha 会翻倍（7% 的白变成 13.5%）。
 - **渐变承担颜色**（`fill`：绿到深绿的一段）：颜色在渐变里，`backgroundColor` 写 `transparent`。底下垫一个不透明的颜色不是“看不见”的：它会从渐变里透出来，实测把默认主题的 `progress` 整条调亮 15/255，`port:render` 会拦下。
 
 字段顺序固定：`backgroundColor`、`backgroundImage`、`boxShadow`、`borderColor`、`backdropFilter`。`scripts/theme/order.ts` 的 `orderedFinish` 按默认主题的键序写文件，多一个或少一个键都报错。
 
 ## 4 每个 finish
+
+<!-- theme-lint: finishes -->
 
 | finish    | 画什么                                       | 谁读                                          |
 | --------- | -------------------------------------------- | --------------------------------------------- |
@@ -126,6 +136,8 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 | `glass`   | 玻璃：半透明底 + 模糊                        | `carousel`                                    |
 | `menu`    | 浮层：菜单、弹层、提示                       | `popover`、`dialog`、`toast`、`lib/listbox`   |
 | `groove`  | 菜单里一道凹槽                               | `menu`                                        |
+
+<!-- /theme-lint: finishes -->
 
 ## 5 alias 与例外
 
