@@ -1,3 +1,6 @@
+// A color picker: the look (`colorChecker`, `colorAreaLook`, `colorSliderLook`) and the fields, panel, trigger and
+// popover that wear it.
+// From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import {
   colors,
   hovered,
@@ -6,8 +9,6 @@ import {
   TERMINAL_COLUMN,
   TERMINAL_ROW,
 } from "@shadcn-nsh/theme";
-// Color picker: gallery look for `nsh/base` color parts and `ColorPopover`.
-// From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { Check, ChevronDown, Copy, Pipette } from "lucide";
 import type { InputStyle, JSX, ViewStyle } from "nsh";
 import { Clipboard, platform, signal, Text, token, View } from "nsh";
@@ -229,7 +230,9 @@ export interface ColorFieldsProps {
   value: string;
   /** What the fields' labels start with ("Fill color"): screen readers hear "Fill color hex", "Fill color red value". */
   name: string;
+  /** The format the fields show: hex, or the channels of its space. */
   format: ColorFormat;
+  /** A format chosen from the fields' menu. */
   onFormatChange: (format: ColorFormat) => void;
   /** A field of the opacity at the end, in percent. */
   alpha?: boolean;
@@ -242,7 +245,7 @@ export interface ColorFieldsProps {
  */
 export function ColorFields(props: ColorFieldsProps) {
   const fields = () => FORMAT_FIELDS[props.format];
-  const label = () => colorFormats.find((f) => f.value === props.format)!.label;
+  const label = () => colorFormats.find((f) => f.value === props.format)?.label ?? props.format;
   return (
     <View
       {...fieldLook({
@@ -338,6 +341,9 @@ export function ColorFields(props: ColorFieldsProps) {
   );
 }
 
+/** How long the check stays after a copy, in milliseconds. */
+const COPIED_FOR = 1500;
+
 /** A copy button (the gallery's ghost icon button): it copies `text()` and shows a check for a moment. */
 export function ColorCopy(props: { name: string; text: () => string }) {
   const copied = signal(false);
@@ -349,7 +355,7 @@ export function ColorCopy(props: { name: string; text: () => string }) {
         void Clipboard.writeText(props.text());
         copied.set(true);
         clearTimeout(timer);
-        timer = setTimeout(() => copied.set(false), 1500);
+        timer = setTimeout(() => copied.set(false), COPIED_FOR);
       }}
       {...iconButtonLook()}
     >
@@ -400,9 +406,9 @@ export function ColorSwatches(props: { colors: readonly string[] }) {
         rowGap: 6,
       }}
     >
-      {props.colors.map((c) => (
+      {props.colors.map((color) => (
         <ColorSwatch
-          color={c}
+          color={color}
           class={
             terminal
               ? undefined
@@ -418,7 +424,7 @@ export function ColorSwatches(props: { colors: readonly string[] }) {
         >
           {terminal ? null : (
             <View class="group-selected:flex hidden">
-              <Icon icon={Check} size={14} tint={inkOn(c)} />
+              <Icon icon={Check} size={14} tint={inkOn(color)} />
             </View>
           )}
         </ColorSwatch>

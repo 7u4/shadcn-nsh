@@ -17,8 +17,8 @@ import { controlSize } from "./lib/surface";
 // @port look/listbox.tsx
 const pointer = platform.desktop;
 
-/** The icon of a trigger: 16 points with a pointer (shadcn's `size-4`), 18 on a touch screen. */
-const triggerIcon = pointer ? 16 : 18;
+/** The header's arrows: 16 points with a pointer (shadcn's `size-4`), 18 on a touch screen. */
+const arrowIcon = pointer ? 16 : 18;
 
 const MONTHS = [
   "January",
@@ -53,7 +53,8 @@ const monthGap = 16;
 /** The gap over each week: rows of 36 with a pointer, as shadcn's Base UI calendar's (28-point cells, `mt-2`). */
 const weekGap = 4;
 
-/** The corners of the days, the arrows and the month view's items: the controls' (shadcn's `rounded-md`). */
+/** The corners of the days, the arrows and the month view's items: the controls' (shadcn's
+ * `rounded-md`), read where an item is drawn. */
 const cellRadius = () => radius.control;
 
 /**
@@ -83,139 +84,123 @@ export interface CalendarItemProps {
   firstDayOfWeek?: number;
 }
 
+/** The weekdays over the days: two letters in the muted color, as wide as a day. */
+function Weekday(props: { day: number }) {
+  return (
+    <Text
+      style={{
+        minWidth: cell,
+        textAlign: "center",
+        fontSize: pointer ? 12.8 : 13,
+        color: colors.muted,
+      }}
+    >
+      {WEEKDAYS[props.day]}
+    </Text>
+  );
+}
+
 /**
- * An item of the calendar (`renderItem`), shadcn/ui's calendar: drawn once
- * from what it is, its states the item's classes. Previous and Next are
- * ghost buttons of a cell at the header's ends, lit in the quiet fill under
- * the pointer, at half opacity while they take no press; the month and
- * year toggles (or each month's title, with `months` over one) read
- * "November 2026" centered between them, the open view's toggle in the
- * brand color; the weekdays are two letters in the muted color. A day is a
- * square of a cell with the controls' corners: the quiet fill (shadcn's
- * `accent`) under the pointer and for today, `primary` with its foreground
- * for the selected date and a range's ends, the range's other days on a
- * band of the quiet fill from end to end (`data-range-*`) whose corners
- * round at the weeks' ends, the other months' days muted, the disabled ones
- * muted at half opacity, and the keyboard's day lit as a list's highlighted
- * row is (`optionClass`: the brand tint and edge), so Select, Combobox,
- * Command and the calendar move one kind of highlight.
+ * The header's Previous or Next: a ghost button of a cell at its end of the
+ * header, lit in the quiet fill under the pointer, at half opacity while it
+ * takes no press.
  */
-export function CalendarItem(props: CalendarItemProps) {
-  const kind = props.item.kind;
-  if (terminal) {
-    // The terminal's calendar draws its days, years and arrows itself, on its grid of two-Cell columns: the
-    // labels are plain text at their own size (the painter bands the open view's toggle, from its state).
-    if (kind === "weekday")
-      return <Text style={{ color: colors.faint }}>{WEEKDAY_INITIALS[props.item.value]}</Text>;
-    if (kind === "month") return <Text>{MONTHS[props.item.value - 1].slice(0, 3)}</Text>;
-    const title = kind === "monthToggle" && (props.months ?? 1) > 1;
-    return (
-      <Text style={{ fontWeight: "600" }}>
-        {title
-          ? `${MONTHS[props.item.value - 1]} ${props.item.year}`
-          : kind === "monthToggle"
-            ? MONTHS[props.item.value - 1]
-            : String(props.item.value)}
-      </Text>
-    );
-  }
-  if (kind === "previous" || kind === "next") {
-    return (
+function Arrow(props: { at: "start" | "end" }) {
+  return (
+    <View
+      class={`transition-colors duration-100 motion-reduce:transition-none group-hover:${quietFill} group-disabled:bg-transparent group-disabled:opacity-50`}
+      // At its end of the header, which shares out what the items leave (`calendarLook.itemClass`'s `grow`).
+      style={{
+        width: cell,
+        height: cell,
+        alignSelf: props.at === "start" ? "flex-start" : "flex-end",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: cellRadius(),
+      }}
+    >
+      <View style={{ transform: [{ rotate: props.at === "start" ? "180deg" : "0deg" }] }}>
+        <Icon icon={ChevronRight} size={arrowIcon} tint={colors.text} />
+      </View>
+    </View>
+  );
+}
+
+/**
+ * The month view's months (rows of 3) and the year view's years (rows of 5), as
+ * wide as a month: ghost buttons a week's gap apart, the shown one on
+ * `primary`.
+ */
+function MonthOrYear(props: { kind: "month" | "year"; value: number }) {
+  return (
+    <View
+      style={{
+        width: (7 * cell) / (props.kind === "month" ? 3 : 5),
+        minWidth: 0,
+        paddingTop: weekGap,
+        paddingHorizontal: 2,
+      }}
+    >
       <View
-        class={`transition-colors duration-100 motion-reduce:transition-none group-hover:${quietFill} group-disabled:bg-transparent group-disabled:opacity-50`}
-        // At its end of the header, which shares out what the items leave (`calendarLook.itemClass`'s `grow`).
+        class={`transition-colors duration-100 motion-reduce:transition-none group-hover:${quietFill} group-aria-selected:bg-primary group-disabled:opacity-50`}
         style={{
-          width: cell,
           height: cell,
-          alignSelf: kind === "previous" ? "flex-start" : "flex-end",
           alignItems: "center",
           justifyContent: "center",
           borderRadius: cellRadius(),
         }}
       >
-        <View style={{ transform: [{ rotate: kind === "previous" ? "180deg" : "0deg" }] }}>
-          <Icon icon={ChevronRight} size={triggerIcon} tint={colors.text} />
-        </View>
-      </View>
-    );
-  }
-  if (kind === "monthToggle" || kind === "yearToggle") {
-    // A month's title in a calendar of several takes no press: the month and its year, over the month. One month's
-    // toggles are as wide as their words and grow alike with the arrows (`grow`), the month's name at the end of
-    // its share and the year at the start of its: the two meet a word space apart, and "November 2026" is centered
-    // between the arrows however wide the popup is.
-    const title = kind === "monthToggle" && (props.months ?? 1) > 1;
-    return (
-      <Text
-        class="text-foreground group-selected:text-brand"
-        style={{
-          minWidth: title ? 6 * cell + monthGap / 2 : undefined,
-          paddingHorizontal: title ? 0 : 2,
-          textAlign: title ? "center" : kind === "monthToggle" ? "right" : "left",
-          fontSize: controlSize.label,
-          fontWeight: "500",
-        }}
-      >
-        {title
-          ? `${MONTHS[props.item.value - 1]} ${props.item.year}`
-          : kind === "monthToggle"
-            ? MONTHS[props.item.value - 1]
-            : String(props.item.value)}
-      </Text>
-    );
-  }
-  if (kind === "weekday") {
-    return (
-      <Text
-        style={{
-          minWidth: cell,
-          textAlign: "center",
-          fontSize: pointer ? 12.8 : 13,
-          color: colors.muted,
-        }}
-      >
-        {WEEKDAYS[props.item.value]}
-      </Text>
-    );
-  }
-  if (kind === "month" || kind === "year") {
-    // The month view's months (rows of 3) and the year view's years (rows of 5), as wide as a month: ghost buttons
-    // a week's gap apart, the shown one on `primary`.
-    return (
-      <View
-        style={{
-          width: (7 * cell) / (kind === "month" ? 3 : 5),
-          minWidth: 0,
-          paddingTop: weekGap,
-          paddingHorizontal: 2,
-        }}
-      >
-        <View
-          class={`transition-colors duration-100 motion-reduce:transition-none group-hover:${quietFill} group-aria-selected:bg-primary group-disabled:opacity-50`}
-          style={{
-            height: cell,
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: cellRadius(),
-          }}
+        <Text
+          class="text-foreground group-aria-selected:text-primary-foreground"
+          style={{ fontSize: controlSize.label }}
         >
-          <Text
-            class="text-foreground group-aria-selected:text-primary-foreground"
-            style={{ fontSize: controlSize.label }}
-          >
-            {kind === "month" ? MONTHS[props.item.value - 1].slice(0, 3) : String(props.item.value)}
-          </Text>
-        </View>
+          {props.kind === "month" ? MONTHS[props.value - 1].slice(0, 3) : String(props.value)}
+        </Text>
       </View>
-    );
-  }
-  // A day, as wide as its column (the calendar's columns share its width; a column narrower than a cell, as on a
-  // narrow phone, narrows the square with it), a week's gap over it. The band spans a
-  // range's middle days and reaches from its ends' middles (a range of one day has none), rounded where a week
-  // starts or ends. The square takes the quiet fill under the pointer and for today, `primary` for the selected
-  // date and a range's ends (`aria-selected`, which ranks over the hover; a range's middle days keep the band). A
-  // disabled day takes no hover fill, unless it is today. The keyboard's day takes the lists' highlight (the brand
-  // tint and edge); on the selected day only the edge, over `primary`.
+    </View>
+  );
+}
+
+/**
+ * The month and year toggles, which say "November 2026" between the arrows
+ * (the open view's in the brand color): one month's are as wide as their words
+ * and grow alike with the arrows (`grow`), the month's name at the end of its
+ * share and the year at the start of its, so the two meet a word space apart
+ * and the title is centered however wide the popup is. `months` over one
+ * (each month's title) takes no press.
+ */
+function Toggle(props: CalendarItemProps & { kind: "monthToggle" | "yearToggle" }) {
+  const words = heading(props);
+  const title = props.kind === "monthToggle" && (props.months ?? 1) > 1;
+  return (
+    <Text
+      class="text-foreground group-selected:text-brand"
+      style={{
+        minWidth: title ? 6 * cell + monthGap / 2 : undefined,
+        paddingHorizontal: title ? 0 : 2,
+        textAlign: title ? "center" : props.kind === "monthToggle" ? "right" : "left",
+        fontSize: controlSize.label,
+        fontWeight: "500",
+      }}
+    >
+      {words}
+    </Text>
+  );
+}
+
+/**
+ * A day, as wide as its column (the calendar's columns share its width; a
+ * column narrower than a cell, as on a narrow phone, narrows the square with
+ * it), a week's gap over it. The band spans a range's middle days and reaches
+ * from its ends' middles (a range of one day has none), rounded where a week
+ * starts or ends. The square takes the quiet fill under the pointer and for
+ * today, `primary` for the selected date and a range's ends (`aria-selected`,
+ * which ranks over the hover; a range's middle days keep the band). A disabled
+ * day takes no hover fill, unless it is today. The keyboard's day takes the
+ * lists' highlight (the brand tint and edge); on the selected day only the
+ * edge, over `primary`.
+ */
+function Day(props: { item: CalendarEntry; firstDayOfWeek?: number }) {
   const own = () => (props.item.outside ? "text-muted-foreground" : "text-foreground");
   const column = () =>
     props.item.date ? columnOf(props.item.date, props.firstDayOfWeek ?? 0) : -1;
@@ -261,6 +246,56 @@ export function CalendarItem(props: CalendarItemProps) {
       </View>
     </View>
   );
+}
+
+/**
+ * What a month, a year or a title says: each month's title in a calendar of
+ * several ("November 2026"), else the month's name, else the number.
+ */
+function heading(props: CalendarItemProps) {
+  return props.item.kind === "monthToggle" && (props.months ?? 1) > 1
+    ? `${MONTHS[props.item.value - 1]} ${props.item.year}`
+    : props.item.kind === "monthToggle"
+      ? MONTHS[props.item.value - 1]
+      : String(props.item.value);
+}
+
+/**
+ * An item of the calendar (`renderItem`), shadcn/ui's calendar: drawn once
+ * from what it is, its states the item's classes. Previous and Next are
+ * ghost buttons of a cell at the header's ends, lit in the quiet fill under
+ * the pointer, at half opacity while they take no press; the month and
+ * year toggles (or each month's title, with `months` over one) read
+ * "November 2026" centered between them, the open view's toggle in the
+ * brand color; the weekdays are two letters in the muted color. A day is a
+ * square of a cell with the controls' corners: the quiet fill (shadcn's
+ * `accent`) under the pointer and for today, `primary` with its foreground
+ * for the selected date and a range's ends, the range's other days on a
+ * band of the quiet fill from end to end (`data-range-*`) whose corners
+ * round at the weeks' ends, the other months' days muted, the disabled ones
+ * muted at half opacity, and the keyboard's day lit as a list's highlighted
+ * row is (`optionClass`: the brand tint and edge), so Select, Combobox,
+ * Command and the calendar move one kind of highlight. What draws each kind
+ * is a component of its own, below: `Arrow`, `Toggle`, `Weekday`,
+ * `MonthOrYear` and `Day`; the terminal's labels are drawn here.
+ */
+export function CalendarItem(props: CalendarItemProps) {
+  const kind = props.item.kind;
+  if (terminal) {
+    // The terminal's calendar draws its days, years and arrows itself, on its grid of two-Cell columns: the
+    // labels are plain text at their own size (the painter bands the open view's toggle, from its state).
+    if (kind === "weekday")
+      return <Text style={{ color: colors.faint }}>{WEEKDAY_INITIALS[props.item.value]}</Text>;
+    if (kind === "month") return <Text>{MONTHS[props.item.value - 1].slice(0, 3)}</Text>;
+    return <Text style={{ fontWeight: "600" }}>{heading(props)}</Text>;
+  }
+  if (kind === "previous" || kind === "next")
+    return <Arrow at={kind === "previous" ? "start" : "end"} />;
+  if (kind === "monthToggle" || kind === "yearToggle") return <Toggle {...props} kind={kind} />;
+  if (kind === "weekday") return <Weekday day={props.item.value} />;
+  if (kind === "month" || kind === "year")
+    return <MonthOrYear kind={kind} value={props.item.value} />;
+  return <Day item={props.item} firstDayOfWeek={props.firstDayOfWeek} />;
 }
 
 /**
@@ -330,34 +365,27 @@ export const calendarLook = {
       : { flexDirection: "row", flexWrap: "wrap", gap: 6 };
   },
   get preset() {
-    if (terminal)
+    // A ghost button beside the calendar: 28 points with a pointer or in the terminal, a phone's 34-point chip with
+    // its hairline.
+    if (terminal || pointer)
       return {
         height: 28,
-        paddingHorizontal: 8,
+        paddingHorizontal: terminal ? 8 : 10,
         borderRadius: radius.control,
         justifyContent: "center" as const,
         fontSize: 13,
         color: colors.text,
       };
-    return pointer
-      ? {
-          height: 28,
-          paddingHorizontal: 10,
-          borderRadius: radius.control,
-          justifyContent: "center" as const,
-          fontSize: 13,
-          color: colors.text,
-        }
-      : {
-          height: 34,
-          paddingHorizontal: 12,
-          borderRadius: 17,
-          borderWidth: 1,
-          borderColor: colors.border,
-          justifyContent: "center" as const,
-          fontSize: 14,
-          color: colors.text,
-        };
+    return {
+      height: 34,
+      paddingHorizontal: 12,
+      borderRadius: 17,
+      borderWidth: 1,
+      borderColor: colors.border,
+      justifyContent: "center" as const,
+      fontSize: 14,
+      color: colors.text,
+    };
   },
   presetClass: terminal
     ? "enabled:hover:bg-accent active:opacity-70"

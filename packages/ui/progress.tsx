@@ -42,9 +42,8 @@ export function progressRail(height = 6): ViewStyle {
  * (`up` for done, `warn`, `danger`; `accent` is the run). Neither has an edge, so a tone's bar and
  * the run read as one kind of bar. */
 export function progressFill(height = 6, tone?: Tone): ViewStyle {
-  return tone && tone !== "accent"
-    ? { height, borderRadius: height / 2, backgroundColor: toneColor(tone) }
-    : { height, borderRadius: height / 2, ...fillStyle() };
+  const fill = tone && tone !== "accent" ? { backgroundColor: toneColor(tone) } : fillStyle();
+  return { height, borderRadius: height / 2, ...fill };
 }
 
 /** An indeterminate bar's sweep (`progressSweep()`), for `progressLook`'s `sweep`. */
@@ -73,6 +72,7 @@ export function progressSweep(): ProgressSweep {
     else
       sweep.keyframes([0, 1], {
         duration: 800,
+        // CSS's `ease-in-out`.
         easing: Easing.bezier(0.42, 0, 0.58, 1),
         iterations: "infinite",
         direction: "alternate",
@@ -133,7 +133,7 @@ export type ProgressProps = BaseProgressProps & {
   /** Rail and fill height (default 6). */
   height?: number;
   /** Fill tone; default citrus run. A function is read where the fill is drawn. */
-  tone?: Tone | (() => Tone);
+  tone?: Live<Tone>;
   /** Shared sweep for indeterminate bars. */
   sweep?: ProgressSweep;
 };
