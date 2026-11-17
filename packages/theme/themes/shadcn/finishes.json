@@ -90,7 +90,10 @@
       "borderColor": "transparent"
     },
     "chip": {
-      "boxShadow": "none"
+      "backgroundColor": "var(--muted)",
+      "backgroundImage": "linear-gradient(180deg, var(--muted) 0%, var(--muted) 100%)",
+      "boxShadow": "none",
+      "borderColor": "transparent"
     },
     "glass": {
       "backgroundColor": "oklch(from var(--card) l c h / 0.8)",
@@ -195,7 +198,10 @@
       "borderColor": "transparent"
     },
     "chip": {
-      "boxShadow": "none"
+      "backgroundColor": "var(--muted)",
+      "backgroundImage": "linear-gradient(180deg, var(--muted) 0%, var(--muted) 100%)",
+      "boxShadow": "none",
+      "borderColor": "transparent"
     },
     "glass": {
       "backgroundColor": "oklch(from var(--card) l c h / 0.8)",

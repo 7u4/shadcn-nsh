@@ -597,15 +597,24 @@
       "name": "combobox",
       "type": "registry:ui",
       "title": "Combobox",
-      "description": "A searchable field with a list of choices, on the shared listbox look.",
-      "registryDependencies": ["button", "input", "listbox", "open-state", "surface", "theme"],
+      "description": "A searchable field with a list of choices and chips for the values chosen, on the shared listbox look.",
+      "registryDependencies": [
+        "button",
+        "icons",
+        "input",
+        "listbox",
+        "open-state",
+        "surface",
+        "theme"
+      ],
       "files": [
         {
           "path": "packages/ui/combobox.tsx",
           "type": "registry:ui",
           "target": "components/ui/combobox.tsx"
         }
-      ]
+      ],
+      "dependencies": ["lucide@^1.66.0"]
     },
     {
       "name": "calendar",

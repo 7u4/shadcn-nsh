@@ -1,9 +1,21 @@
 // A combobox: the look (`comboboxLook`, `ComboToggle`) and `Combobox` that wears the listbox look.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
-import { colors, finish, radius } from "@shadcn-nsh/theme";
-import type { InputStyle, JSX, StyleProp, ViewStyle } from "nsh";
-import { cleanup, context, platform, signal, split, View } from "nsh";
+import { colors, finish, focusRing, radius, terminal } from "@shadcn-nsh/theme";
+import { X } from "lucide";
+import type { InputStyle, JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
 import {
+  cleanup,
+  context,
+  createMotion,
+  platform,
+  reduceMotion,
+  signal,
+  split,
+  Text,
+  View,
+} from "nsh";
+import {
+  Button as BaseButton,
   Combobox as BaseCombobox,
   type ComboboxProps as BaseComboboxProps,
   type OpenChangeReason,
@@ -12,6 +24,7 @@ import {
 
 import { Button, type ButtonVariant } from "./button";
 import { edgeClass } from "./input";
+import { Icon } from "./lib/icons";
 import {
   Chevron,
   clearButtonLook,
@@ -116,6 +129,80 @@ export function ComboToggle(props: { open: boolean; id?: string }) {
 }
 // @port end
 
+// @port examples/gallery/demos/Controls.tsx
+/** Options of `chipLook`. */
+export interface ChipLookOptions {
+  /** The root is disabled: the chip dims, and its remove button takes no press. */
+  disabled?: Live<boolean | undefined>;
+}
+
+/**
+ * A chip's look (the gallery's `Chip`): one chosen value as a label of its own, on the theme's
+ * `chip` finish (its fill, edge and shadow — a raised label in the default theme, a flat grey one
+ * in shadcn, glass in Solid Glass), its corners half its height. `lead` goes at the start, the
+ * remove button at the end: a round target lit under the pointer, a muted × (a terminal's text ×).
+ * A disabled chip dims to half.
+ */
+export function chipLook(o?: ChipLookOptions) {
+  const height = pointer ? 26 : 32;
+  const remove = height - (pointer ? 8 : 4);
+  return {
+    get style(): ViewStyle {
+      return {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+        height: terminal ? undefined : height,
+        paddingLeft: 3,
+        paddingRight: 3,
+        borderRadius: terminal ? 0 : height / 2,
+        borderWidth: 1,
+        ...finish.chip,
+        opacity: read(o?.disabled) ? 0.5 : 1,
+      };
+    },
+    get textStyle(): TextStyle {
+      return { fontSize: pointer ? 12 : 14, color: colors.text };
+    },
+    get removeClass(): string {
+      return terminal
+        ? ""
+        : "items-center justify-center rounded-full enabled:hover:bg-foreground/8 active:bg-track";
+    },
+    get removeStyle(): ViewStyle | undefined {
+      return terminal ? undefined : { width: remove, height: remove };
+    },
+    get removeFocusVisible(): ViewStyle {
+      return focusRing();
+    },
+    get removeGlyph(): JSX.Element {
+      return terminal ? (
+        <Text style={{ color: colors.muted }}>×</Text>
+      ) : (
+        <Icon icon={X} size={pointer ? 10 : 12} tint={colors.muted} />
+      );
+    },
+  };
+}
+
+/**
+ * A chips row's look: the chosen values wrapped inside the field's start, so a field with more
+ * chips than fit grows down instead of hiding them, and the input keeps its own width beside them.
+ */
+export function chipsLook(): ViewStyle {
+  return {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignItems: "center",
+    gap: 6,
+    flexShrink: 1,
+    minWidth: 0,
+    paddingVertical: 3,
+    paddingRight: 6,
+  };
+}
+// @port end
+
 /** The root: it owns the open flag, the chosen values and the items its parts register. */
 export type ComboboxProps = {
   /** The chosen items' values (controlled); leave it out and the root keeps them (`defaultValue`). */
@@ -185,6 +272,25 @@ export type ComboboxTriggerProps = {
   style?: StyleProp<ViewStyle>;
 };
 
+/** The chosen values as chips, before the input (`prefix`). */
+export type ComboboxChipsProps = {
+  /** One chip per chosen value; a function draws each (the default is a `ComboboxChip`). */
+  children?: (value: string) => JSX.Element;
+};
+
+/** One chosen value as a chip: its title, a mark at the start, a remove button at the end. */
+export type ComboboxChipProps = {
+  /** The value it holds: its remove button takes it from the root's value, its text is the item's title. */
+  value: string;
+  /** The chip's text (default: the item's title, else the value). */
+  children?: string;
+  /** A mark at its start (an avatar, a dot). */
+  lead?: JSX.Element;
+  /** The remove button (default `true`). */
+  showRemove?: boolean;
+  style?: StyleProp<ViewStyle>;
+};
+
 /** One choice: the string child is the row's title. */
 export type ComboboxItemProps = {
   value: string;
@@ -212,6 +318,7 @@ export type ComboboxLabelProps = {
 type ComboboxContextValue = OpenState & {
   items: ItemRegistry<SelectItemData>;
   trigger: Slot;
+  chips: Slot;
   empty: Slot;
   value: () => string[];
   change: (event: { value: string[] }) => void;
@@ -230,13 +337,16 @@ function useCombobox() {
   return ctx;
 }
 
+/** The title an item gives its value: a chip's text when the app gives none. */
+function titleOf(ctx: ComboboxContextValue, value: string): string {
+  return ctx.items.items().find((item) => item.value === value)?.title ?? value;
+}
+
 /** What the input shows: the chosen titles, or the placeholder while there are none. */
 function promptOf(ctx: ComboboxContextValue): string {
   const values = ctx.value();
   if (values.length === 0) return ctx.root.placeholder ?? "Choose…";
-  return values
-    .map((value) => ctx.items.items().find((item) => item.value === value)?.title ?? value)
-    .join(", ");
+  return values.map((value) => titleOf(ctx, value)).join(", ");
 }
 
 /** The toggle the base root draws: the app's `ComboboxTrigger`, or a `ComboToggle`. */
@@ -251,6 +361,7 @@ export function Combobox(props: ComboboxProps) {
   const state = createOpenState<OpenChangeReason>(props);
   const items = createItemRegistry<SelectItemData>([]);
   const trigger = createSlot();
+  const chips = createSlot();
   const empty = createSlot();
   const picked = signal(false);
   const chosen = signal<string[]>([]);
@@ -271,6 +382,7 @@ export function Combobox(props: ComboboxProps) {
     ...state,
     items,
     trigger,
+    chips,
     empty,
     value,
     change,
@@ -301,6 +413,57 @@ export function ComboboxTrigger(props: ComboboxTriggerProps) {
     return props.children ?? <ComboToggle open={ctx.open()} id={props.testID} />;
   });
   return null;
+}
+
+/**
+ * The chosen values as chips. It registers with the root and draws nothing itself, as
+ * `ComboboxTrigger` does: `ComboboxContent` hands it to the field's `prefix`, where NSH puts the
+ * chips of a multiple combobox (the input keeps the query). Without children every value gets a
+ * `ComboboxChip`; a function draws each value's chip instead.
+ */
+export function ComboboxChips(props: ComboboxChipsProps) {
+  const ctx = useCombobox();
+  ctx.chips.set(() => {
+    const chips: JSX.Element[] = [];
+    for (const value of ctx.value()) {
+      chips.push(props.children ? props.children(value) : <ComboboxChip value={value} />);
+    }
+    return <View style={chipsLook()}>{chips}</View>;
+  });
+  return null;
+}
+
+/**
+ * One chosen value as a chip, on `chipLook`: its title (or the app's string), an optional `lead`,
+ * and a remove button whose label is `Remove <title>` — a press hands the root its value without
+ * this one. It pops in when it appears (still, with reduced motion). While the root is disabled
+ * the chip dims and the button takes no press.
+ */
+export function ComboboxChip(props: ComboboxChipProps) {
+  const ctx = useCombobox();
+  const title = props.children ?? titleOf(ctx, props.value);
+  const look = chipLook({ disabled: () => ctx.root.disabled });
+  const pop = terminal || reduceMotion() ? null : createMotion({ enter: "popIn", duration: 320 });
+  cleanup(() => pop?.stop());
+  const remove = () => ctx.change({ value: ctx.value().filter((value) => value !== props.value) });
+  return (
+    <View style={[look.style, pop?.style ?? null, props.style ?? null]}>
+      {props.lead ?? null}
+      <Text style={look.textStyle}>{title}</Text>
+      {(props.showRemove ?? true) ? (
+        <BaseButton
+          accessibilityLabel={`Remove ${title}`}
+          disabled={ctx.root.disabled}
+          class={look.removeClass}
+          style={look.removeStyle}
+          focusVisibleStyle={look.removeFocusVisible}
+          onPress={remove}
+        >
+          {look.removeGlyph}
+        </BaseButton>
+      ) : null}
+    </View>
+  );
 }
 
 /**
@@ -339,6 +502,7 @@ export function ComboboxContent(props: ComboboxContentProps) {
         // The clear button of a cleanable field: in the row, after the input.
         const clear = clearButtonLook();
         const empty = ctx.empty.get();
+        const chips = ctx.chips.get()?.() as JSX.Element | undefined;
         return (
           <BaseCombobox
             {...rest}
@@ -346,7 +510,10 @@ export function ComboboxContent(props: ComboboxContentProps) {
             multiple={ctx.root.multiple}
             value={ctx.value()}
             open={ctx.open()}
-            placeholder={ctx.prompt()}
+            // Chips hold the chosen values: the input keeps the query, and its prompt is
+            // the empty field's alone (NSH's convention for a multiple combobox).
+            placeholder={chips && ctx.value().length > 0 ? "" : ctx.prompt()}
+            prefix={chips}
             disabled={ctx.root.disabled}
             cleanable={ctx.root.cleanable}
             clearButtonClass={props.clearButtonClass ?? clear.clearButtonClass}

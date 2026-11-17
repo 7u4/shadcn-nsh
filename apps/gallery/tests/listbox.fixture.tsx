@@ -2,6 +2,8 @@ import { mount, platform, signal, Text, View } from "nsh";
 
 import {
   Combobox,
+  ComboboxChip,
+  ComboboxChips,
   ComboboxContent,
   ComboboxItem,
   ComboboxTrigger,
@@ -27,6 +29,8 @@ function App() {
   const fruit = signal<string | null>(null);
   const one = signal<string[]>([]);
   const tags = signal<string[]>([]);
+  const tagged = signal<string[]>(["red"]);
+  const locked = signal<string[]>(["blue"]);
   const frameworkOpen = signal(false);
   const tagsOpen = signal(false);
   const selectLook = pickerLook({ open: () => false });
@@ -72,6 +76,32 @@ function App() {
         </ComboboxContent>
       </Combobox>
       <Text>tags={tags().join("+")}</Text>
+      <Combobox multiple value={tagged()} onChange={({ value }) => tagged.set(value)}>
+        <ComboboxChips />
+        <ComboboxTrigger testID="tagged" />
+        <ComboboxContent accessibilityLabel="Tagged">
+          <ComboboxItem value="red">Red</ComboboxItem>
+          <ComboboxItem value="blue">Blue</ComboboxItem>
+        </ComboboxContent>
+      </Combobox>
+      <Text>chips={tagged().join("+")}</Text>
+      <Combobox multiple defaultValue={["green"]}>
+        <ComboboxChips />
+        <ComboboxContent accessibilityLabel="Plain">
+          <ComboboxItem value="green">Green</ComboboxItem>
+          <ComboboxItem value="cyan">Cyan</ComboboxItem>
+        </ComboboxContent>
+      </Combobox>
+      <Combobox multiple disabled value={locked()}>
+        <ComboboxChips>
+          {(value) => (
+            <ComboboxChip value={value}>{value === "blue" ? "Blue" : value}</ComboboxChip>
+          )}
+        </ComboboxChips>
+        <ComboboxContent accessibilityLabel="Locked">
+          <ComboboxItem value="blue">Blue</ComboboxItem>
+        </ComboboxContent>
+      </Combobox>
       <Text>desktop={String(platform.desktop)}</Text>
       <Text>
         select-size={selectLook.style.height}|{selectLook.style.minWidth ?? 0}|{rowH}

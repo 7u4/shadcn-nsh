@@ -31,6 +31,25 @@ test("a Combobox picks one value, and a multiple Combobox keeps several", async 
   expect(tags).toContain("blue");
 });
 
+test("a Combobox draws its values as chips, and a chip's remove drops its value", async () => {
+  const app = await open("./listbox.fixture.tsx");
+  // The chip shows the item's title, not its value.
+  expect(app.texts()).toContain("Red");
+  await app.press("label:Remove Red");
+  await app.wait(50);
+  expect(find(app.texts(), "chips=")).toBe("");
+  expect(app.texts()).not.toContain("Red");
+  // A disabled Combobox dims its chips and their remove button takes no press.
+  expect(app.texts()).toContain("Blue");
+  await expect(app.press("label:Remove Blue")).rejects.toThrow();
+  expect(find(app.texts(), "chips=")).toBe("");
+  // The same remove drops a default value from an uncontrolled Combobox.
+  expect(app.texts()).toContain("Green");
+  await app.press("label:Remove Green");
+  await app.wait(50);
+  expect(app.texts()).not.toContain("Green");
+});
+
 test("a select and a combobox are compact with a pointer and roomier on a touch screen", async () => {
   const desktop = await open("./listbox.fixture.tsx", { platform: "macos" });
   const touch = await open("./listbox.fixture.tsx", { platform: "ios" });

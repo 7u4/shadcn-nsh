@@ -25,6 +25,8 @@ bun run port:new pressable --base Button
 
 它不写 `port-map.json`、不跑 `port:vendor`，`packages/ui/<id>.tsx` 从 `templates/own.tsx.tmpl` 起步：整份归本库，没有 `// @port` 区域。没有区域也就没有 `selfReference`（外壳必须由演示与 `<id>.ref.tsx` 的 look 展开画出同样的像素），其余流程、演示、文档页、registry 与上面一样。
 
+**外观只在演示里时**：`// @port` 也可以指向 `references/nsh/examples/gallery/demos/<file>.tsx` 里的一段，`port-map.json` 不登记这类路由。`combobox` 的 chip 就这样抽自 `Controls.tsx` 的 `Chip`；区域照常可以直接改。
+
 **只排版和上色的组件**（本库自己的，`nsh/base` 里没有对应的控件：分隔线、占位块、按键示意）用 `--view`：外壳画在 `nsh` 自己的 `View` / `Text` 上，`--base` 与 `--from` 都不给。
 
 ```sh

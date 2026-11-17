@@ -1,11 +1,12 @@
-// The reference of `combobox.tsx`: the same scene as upstream writes it, `comboboxLook` and the
-// listbox looks spread on `nsh/base`'s Combobox. The render check requires the two to draw the
-// same pixels.
+// The reference of `combobox.tsx`: the same scene as upstream writes it, `comboboxLook`, `chipLook`
+// and the listbox looks spread on `nsh/base`'s Combobox. The render check requires the two to draw
+// the same pixels.
 import type { JSX } from "nsh";
 import { mount, signal, Text, View } from "nsh";
-import { Combobox } from "nsh/base";
+import { Button as BaseButton, Combobox } from "nsh/base";
 
-import { comboboxLook, ComboToggle } from "@/packages/ui/combobox";
+import { Avatar } from "@/packages/ui/avatar";
+import { chipLook, chipsLook, comboboxLook, ComboToggle } from "@/packages/ui/combobox";
 import {
   clearButtonLook,
   ListboxEmpty,
@@ -56,11 +57,45 @@ function Field(props: { label: string; detail: string; children: JSX.Element }) 
   );
 }
 
+/** One chosen value as a chip: `chipLook` spread on a View with its remove button. */
+function Chip(props: {
+  title: string;
+  lead?: JSX.Element;
+  disabled?: boolean;
+  showRemove?: boolean;
+  onRemove: () => void;
+}) {
+  const look = chipLook({ disabled: () => props.disabled });
+  return (
+    <View style={look.style}>
+      {props.lead ?? null}
+      <Text style={look.textStyle}>{props.title}</Text>
+      {(props.showRemove ?? true) ? (
+        <BaseButton
+          accessibilityLabel={`Remove ${props.title}`}
+          disabled={props.disabled}
+          class={look.removeClass}
+          style={look.removeStyle}
+          focusVisibleStyle={look.removeFocusVisible}
+          onPress={props.onRemove}
+        >
+          {look.removeGlyph}
+        </BaseButton>
+      ) : null}
+    </View>
+  );
+}
+
 function App() {
   const labels = signal<string[]>(["bug", "ios"]);
   const assignee = signal<string[]>([]);
+  const tags = signal<string[]>(["bug", "docs", "ios", "macos", "web"]);
+  const reviewers = signal<string[]>(["ada", "grace"]);
+  const archived = signal<string[]>(["wontfix"]);
   const labelsOpen = signal(false);
   const assigneeOpen = signal(false);
+  const tagsOpen = signal(false);
+  const reviewersOpen = signal(false);
   const events = signal<string[]>([]);
   const log = (line: string) => events.set([line, ...events()].slice(0, 8));
   const opened =
@@ -88,6 +123,15 @@ function App() {
               >{`labels [${labels().join(", ")}]`}</Text>
               <Text style={{ fontSize: 13, color: ui().text }}>
                 {`assignee [${assignee().join(", ")}]`}
+              </Text>
+              <Text style={{ fontSize: 13, color: ui().text }}>
+                {`tags [${tags().join(", ")}]`}
+              </Text>
+              <Text style={{ fontSize: 13, color: ui().text }}>
+                {`reviewers [${reviewers().join(", ")}]`}
+              </Text>
+              <Text style={{ fontSize: 13, color: ui().text }}>
+                {`archived [${archived().join(", ")}]`}
               </Text>
             </Panel>
             <Log title="onChange · onConfirm" lines={events()} minHeight={120} />
@@ -134,6 +178,96 @@ function App() {
               onOpenChange={opened("Assignee", (next) => assigneeOpen.set(next))}
               {...comboboxLook(() => assigneeOpen())}
               triggerButton={<ComboToggle open={assigneeOpen()} />}
+              renderItem={(item) => <OptionRow item={item} />}
+              {...listboxProps()}
+            />
+          </Field>
+          <Field label="Tags" detail="The chosen values as chips, wrapped inside the field">
+            <Combobox
+              items={LABELS}
+              multiple
+              value={tags()}
+              placeholder={tags().length > 0 ? "" : "Add tags"}
+              accessibilityLabel="Tags"
+              prefix={
+                <View style={chipsLook()}>
+                  {tags().map((value) => (
+                    <Chip
+                      title={titlesOf(LABELS, [value])[0]}
+                      onRemove={() => {
+                        tags.set(tags().filter((tag) => tag !== value));
+                        log(`Tags → ${titlesOf(LABELS, tags()).join(", ") || "none"}`);
+                      }}
+                    />
+                  ))}
+                </View>
+              }
+              onChange={({ value }) => {
+                tags.set(value);
+                log(`Tags → ${titlesOf(LABELS, value).join(", ") || "none"}`);
+              }}
+              onOpenChange={opened("Tags", (next) => tagsOpen.set(next))}
+              {...comboboxLook(() => tagsOpen(), { filled: () => tags().length > 0 })}
+              triggerButton={<ComboToggle open={tagsOpen()} />}
+              empty={<ListboxEmpty label="No tag matches" />}
+              renderItem={(item) => <OptionRow item={item} />}
+              {...listboxProps()}
+            />
+          </Field>
+          <Field label="Reviewers" detail="A chip's lead marks who it is; yours keeps its value">
+            <Combobox
+              items={PEOPLE}
+              multiple
+              value={reviewers()}
+              placeholder={reviewers().length > 0 ? "" : "Add reviewers"}
+              accessibilityLabel="Reviewers"
+              prefix={
+                <View style={chipsLook()}>
+                  {reviewers().map((value) => (
+                    <Chip
+                      title={titlesOf(PEOPLE, [value])[0]}
+                      lead={
+                        <Avatar
+                          name={titlesOf(PEOPLE, [value])[0]}
+                          style={{ width: 18, height: 18 }}
+                        />
+                      }
+                      showRemove={value !== "ada"}
+                      onRemove={() =>
+                        reviewers.set(reviewers().filter((person) => person !== value))
+                      }
+                    />
+                  ))}
+                </View>
+              }
+              onChange={({ value }) => {
+                reviewers.set(value);
+                log(`Reviewers → ${titlesOf(PEOPLE, value).join(", ") || "none"}`);
+              }}
+              onOpenChange={opened("Reviewers", (next) => reviewersOpen.set(next))}
+              {...comboboxLook(() => reviewersOpen(), { filled: () => reviewers().length > 0 })}
+              triggerButton={<ComboToggle open={reviewersOpen()} />}
+              renderItem={(item) => <OptionRow item={item} />}
+              {...listboxProps()}
+            />
+          </Field>
+          <Field label="Archived" detail="Disabled: the chips dim and their remove buttons rest">
+            <Combobox
+              items={LABELS}
+              multiple
+              disabled
+              value={archived()}
+              placeholder=""
+              accessibilityLabel="Archived"
+              prefix={
+                <View style={chipsLook()}>
+                  {archived().map((value) => (
+                    <Chip title={titlesOf(LABELS, [value])[0]} disabled onRemove={() => {}} />
+                  ))}
+                </View>
+              }
+              {...comboboxLook(() => false, { filled: () => archived().length > 0 })}
+              triggerButton={<ComboToggle open={false} />}
               renderItem={(item) => <OptionRow item={item} />}
               {...listboxProps()}
             />
