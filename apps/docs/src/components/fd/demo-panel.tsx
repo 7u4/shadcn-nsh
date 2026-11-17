@@ -12,9 +12,13 @@
  * - the site's theme rides in `?theme=` before the first load, and a running frame is told with a
  *   message afterwards (the demo page listens for it), so a theme switch does not reload it.
  *
+ * The toolbar's controls are drawn here, one height (`h-8`) for all three; the Source tab is
+ * Fumadocs' code block, highlighted in the browser when the tab first opens.
+ *
  * Nothing here reads the theme while rendering: it is read after mount, so the static markup and
  * the first client render agree.
  */
+import { DynamicCodeBlock } from "fumadocs-ui/components/dynamic-codeblock";
 import { useEffect, useRef, useState } from "react";
 
 import { PaletteSwitch } from "@/components/fd/palette-switch";
@@ -73,7 +77,7 @@ function ToggleGroup<T extends string>({
     <div
       role={role}
       aria-label={label}
-      className="bg-fd-muted inline-flex items-center gap-0.5 rounded-lg border p-0.5"
+      className="bg-fd-muted inline-flex h-8 items-center gap-0.5 rounded-lg border p-0.5"
     >
       {options.map((option) => {
         const on = value === option.value;
@@ -87,7 +91,7 @@ function ToggleGroup<T extends string>({
             aria-selected={role === "tablist" ? on : undefined}
             aria-checked={role === "radiogroup" ? on : undefined}
             onClick={() => onChange(option.value)}
-            className={`rounded-md px-2.5 py-0.5 text-sm transition-colors ${
+            className={`h-full rounded-md px-2.5 text-sm transition-colors ${
               on
                 ? "bg-fd-background text-fd-foreground shadow-sm"
                 : "text-fd-muted-foreground hover:text-fd-foreground"
@@ -253,9 +257,9 @@ export function DemoPanel({ name, loadSource }: DemoPanelProps) {
         hidden={view !== "source"}
         className="overflow-auto p-3"
       >
-        <pre className="text-xs leading-relaxed">
-          <code>{source ?? ""}</code>
-        </pre>
+        {source === undefined ? null : (
+          <DynamicCodeBlock lang="tsx" code={source} codeblock={{ className: "my-0" }} />
+        )}
       </div>
     </figure>
   );

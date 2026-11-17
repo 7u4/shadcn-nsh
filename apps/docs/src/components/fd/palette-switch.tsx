@@ -31,7 +31,7 @@ export function PaletteSwitch({ label = "Demo theme" }: { label?: string }) {
         choosePalette(id);
         setCurrent(id);
       }}
-      className="bg-fd-muted text-fd-foreground rounded-lg border px-2 py-1 text-sm"
+      className="bg-fd-muted text-fd-foreground h-8 rounded-lg border px-2 text-sm"
     >
       {PALETTES.map((palette) => (
         <option key={palette.id} value={palette.id}>
