@@ -1,6 +1,6 @@
 // Code editor: `codeEditorClasses`, `codeEditorFrame` and the `CodeEditor` that wears them.
-// This library's own: upstream's `look/workspace.tsx` has no look for the code editor (only the
-// rich one), so nothing here is ported and there is no port region. Yours to change.
+// This library's own: NSH's gallery has a look for the rich editor and none for the code editor,
+// so nothing here is ported and there is no port region. Yours to change.
 import { colors, finish, radius } from "@shadcn-nsh/theme";
 import { split, type ViewStyle } from "nsh";
 import {
@@ -61,9 +61,8 @@ export function codeEditorFrame(): ViewStyle {
 }
 
 /**
- * `nsh/base`'s Editor with this library's look: every base prop passes through, its `classes` go
- * over `codeEditorClasses`, and its `style` over `codeEditorFrame()`. The text model, the
- * highlighting, the editing keys, folding, search and diagnostics stay in base.
+ * Every prop of `nsh/base` Editor: the text model, the highlighting, the editing keys, folding,
+ * search and diagnostics stay in base.
  */
 export type CodeEditorProps = BaseEditorProps;
 

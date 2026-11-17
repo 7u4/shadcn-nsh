@@ -36,14 +36,14 @@ export function resizableHandleLook(axis: "horizontal" | "vertical") {
 }
 // @port end
 
-function mergeClass(base: string, consumer?: string | null): string {
-  return consumer ? `${base} ${consumer}` : base;
+function mergeClass(base: string, extra?: string | null): string {
+  return extra ? `${base} ${extra}` : base;
 }
 
-/** Theme layer on `nsh/base` ResizablePanelGroup. */
+/** Every prop of `nsh/base` ResizablePanelGroup, plus the handle's look. */
 export type ResizablePanelGroupProps = BaseGroupProps;
 
-/** Theme layer on `nsh/base` ResizablePanel. */
+/** Every prop of `nsh/base` ResizablePanel. */
 export type ResizablePanelProps = BasePanelProps;
 
 /** Panels in a row or column. Dragging a handle stays in base; this paints the hairline and thumb. */
@@ -58,7 +58,7 @@ export function ResizablePanelGroup(props: ResizablePanelGroupProps) {
     "handleThumbStyle",
     "handleAccessibilityLabel",
   ]);
-  const axis: "horizontal" | "vertical" = props.axis === "vertical" ? "vertical" : "horizontal";
+  const axis = props.axis === "vertical" ? "vertical" : "horizontal";
   const look = resizableHandleLook(axis);
   return (
     <BaseGroup

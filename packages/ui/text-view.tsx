@@ -1,4 +1,4 @@
-// Text view: link classes and the `TextView` that wears them.
+// Text view: the link and caret classes, and the `TextView` that wears them.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { split } from "nsh";
 import {
@@ -22,10 +22,11 @@ export const textViewLinkClasses = { link: "text-brand decoration-brand/40" };
 export const textViewCaretClass = "ml-0.5 h-4 w-2 animate-pulse rounded-sm bg-brand";
 // @port end
 
-/** Theme layer on `nsh/base` TextView. Parsing stays in base. */
+/** Every prop of `nsh/base` TextView; parsing stays in base. */
 export type TextViewProps = BaseTextViewProps;
 
-function View(props: TextViewProps) {
+/** The view the static parsers are attached to, so the export below carries them. */
+function TextViewRoot(props: TextViewProps) {
   const [, rest] = split(props, ["classes", "class", "style"]);
   return (
     <BaseTextView
@@ -38,13 +39,14 @@ function View(props: TextViewProps) {
 }
 
 /** A Markdown, HTML or block document. */
-export const TextView = Object.assign(View, {
+export const TextView = Object.assign(TextViewRoot, {
   // Bound: these are methods of the base export, and detaching one loses its receiver.
   parse: BaseTextView.parse.bind(BaseTextView),
   parseHtml: BaseTextView.parseHtml.bind(BaseTextView),
   plainText: BaseTextView.plainText.bind(BaseTextView),
 });
 
+/** A document as `TextView.parse` returns it, from `nsh/base`. */
 export type { TextViewDocument };
 
 /** The classes of a text view's parts, from `nsh/base`. */

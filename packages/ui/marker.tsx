@@ -13,8 +13,8 @@ import { density } from "./lib/surface";
  * (a row boundary); `separator`, the label between two rules (a date, a section break). */
 export type MarkerVariant = "default" | "border" | "separator";
 
-/** The side of a marker's icon: a step below the line's type, shadcn/ui's `size-4`. */
-export const MARKER_ICON = 16;
+/** A marker's icon box: 16 points, a step below the line's type (shadcn/ui's `size-4`). */
+const iconSide = 16;
 
 /** The gap between a marker's parts: 8 points, half a Cell in a terminal. */
 const gap = terminal ? TERMINAL_COLUMN / 2 : 8;
@@ -62,7 +62,7 @@ export function markerLook(): MarkerLook {
       gap,
       width: "100%",
       minWidth: 0,
-      minHeight: terminal ? TERMINAL_ROW : MARKER_ICON,
+      minHeight: terminal ? TERMINAL_ROW : iconSide,
       ...(variant === "border"
         ? {
             paddingBottom: borderPad,
@@ -83,8 +83,8 @@ export function markerLook(): MarkerLook {
     },
     get icon(): ViewStyle {
       return {
-        width: MARKER_ICON,
-        height: MARKER_ICON,
+        width: iconSide,
+        height: iconSide,
         alignItems: "center",
         justifyContent: "center",
         flexShrink: 0,
@@ -101,7 +101,7 @@ export function markerLook(): MarkerLook {
       return { cursor: platform.desktop ? "pointer" : undefined };
     },
     get glyph() {
-      return { size: MARKER_ICON, tint: colors.muted };
+      return { size: iconSide, tint: colors.muted };
     },
   };
 }
@@ -180,9 +180,10 @@ export function MarkerIcon(props: MarkerIconProps) {
 
 /** The line of a marker. */
 export function MarkerContent(props: MarkerContentProps) {
-  const context = MarkerContext();
-  const variant = (): MarkerVariant => (context ? context.variant() : "default");
-  const interactive = () => (context ? context.interactive() : false);
+  // Outside a `Marker` the line stands alone: the default layout, and no underline.
+  const inherited = MarkerContext();
+  const variant = (): MarkerVariant => (inherited ? inherited.variant() : "default");
+  const interactive = () => (inherited ? inherited.interactive() : false);
   const [, rest] = split(props, ["children", "style"]);
   return (
     <Text

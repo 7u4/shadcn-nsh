@@ -62,12 +62,12 @@ function HunkAction(props: {
 }
 
 /** What a `DiffView` keeps free at the right of its rows, where its actions on a change sit. */
-const DIFF_PAD = 8;
+const diffPad = 8;
 
 /**
- * A `DiffView`'s colors of change in the theme's tones (its `styles`): added lines on the up tint, deleted on
- * the down tint, both opaque on the card so what lies over them (the actions on a change) matches them, and the words
- * changed within a line a stronger tint of the same tone.
+ * A `DiffView`'s colors of change in the theme's tones (its `styles`): added lines on the up
+ * tint, deleted on the down tint, both opaque on the card so what lies over them (the actions
+ * on a change) matches them; the words changed within a line take a stronger tint of the tone.
  */
 export function diffViewStyles() {
   return {
@@ -94,9 +94,9 @@ export function diffViewStyles() {
 }
 
 /**
- * The tone of the row a change's actions sit on (`DiffHunkActions`'s `tone`): split, the change's first row on the new
- * side, an added line unless the change only deletes (a filler there, on the card); unified, its first line, a deleted
- * one unless it only adds.
+ * The tone of the row a change's actions sit on (`DiffHunkActions`'s `tone`): split, the change's
+ * first row on the new side, an added line unless the change only deletes (a filler there, on the
+ * card); unified, its first line, a deleted one unless it only adds.
  */
 export function diffHunkTone(
   hunk: { oldLines: number; newLines: number },
@@ -140,8 +140,8 @@ export function DiffHunkActions(props: {
               flexDirection: "row",
               gap: 4,
               paddingLeft: 16,
-              paddingRight: 4 + DIFF_PAD,
-              marginRight: -DIFF_PAD,
+              paddingRight: 4 + diffPad,
+              marginRight: -diffPad,
               backgroundImage: `linear-gradient(90deg, ${alpha(backing(), 0)} 0%, ${backing()} 12px)`,
             }
       }

@@ -1,4 +1,7 @@
-// An emoji picker panel. From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
+// An emoji picker panel: the groups and their tabs, the skin tone hand, the preview, and the
+// panel that composes them. All of it is look — the picker itself is `nsh/base`'s, so there is
+// no shell below.
+// From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors } from "@shadcn-nsh/theme";
 import {
   Car,
@@ -50,7 +53,7 @@ export const emojiGroupLabels = Object.fromEntries(
 ) as EmojiGroupLabels;
 
 /** The skin tones in the hand's order, and the hand that shows each. */
-const TONES: { tone: EmojiSkinTone; hand: string; label: string }[] = [
+const tones: { tone: EmojiSkinTone; hand: string; label: string }[] = [
   { tone: "none", hand: "✋", label: "Default skin tone" },
   { tone: "light", hand: "✋🏻", label: "Light skin tone" },
   { tone: "mediumLight", hand: "✋🏼", label: "Medium-light skin tone" },
@@ -127,8 +130,8 @@ export function EmojiTones(props: {
   onChange: (tone: EmojiSkinTone) => void;
 }) {
   const open = signal(false);
-  const current = () => TONES.find((t) => t.tone === props.tone) ?? TONES[0];
-  const hand = (t: (typeof TONES)[number], onPress: () => void, selected = false) => (
+  const current = () => tones.find((t) => t.tone === props.tone) ?? tones[0];
+  const hand = (t: (typeof tones)[number], onPress: () => void, selected = false) => (
     <View
       role="button"
       accessibilityLabel={t.label}
@@ -143,7 +146,7 @@ export function EmojiTones(props: {
   return (
     <If when={open()} else={hand(current(), () => open.set(true))}>
       <View style={{ flexDirection: "row", gap: 1 }}>
-        {TONES.map((t) =>
+        {tones.map((t) =>
           hand(
             t,
             () => {
@@ -157,6 +160,9 @@ export function EmojiTones(props: {
     </If>
   );
 }
+
+/** A label's first letter up: the emoji's name as a sentence. */
+const capitalized = (s: string) => (s ? s[0].toLocaleUpperCase() + s.slice(1) : s);
 
 /** The emoji under the pointer or the keys, named; a hint while none is. */
 export function EmojiPreview(props: { entry: EmojiEntry | null; hint: string }) {
@@ -185,8 +191,6 @@ export function EmojiPreview(props: { entry: EmojiEntry | null; hint: string }) 
     </View>
   );
 }
-
-const capitalized = (s: string) => (s ? s[0].toLocaleUpperCase() + s.slice(1) : s);
 
 /**
  * The whole picker: tabs, search with the skin tone hand, the grid, the

@@ -14,6 +14,9 @@ import { mergeClasses } from "./lib/classes";
 /** Extra room for this UI layer's cell padding and title/button gap. */
 export const dataTableFitPadding = 16;
 
+/** The chosen column's arrow: both directions print it at the same strength, so only the arrow's turn says which. */
+const sortChosen = "text-muted-foreground opacity-60 selected:text-foreground selected:opacity-100";
+
 /** The shared table look. nsh/base owns its structure and interaction. */
 export const dataTableClasses: DataTableClasses = {
   // On the card, so the stripes and the header (muted) stand off it in light as in dark.
@@ -25,8 +28,8 @@ export const dataTableClasses: DataTableClasses = {
   headerCellDragging: "opacity-50",
   groupCell: "border-b border-r border-border px-2",
   sortIndicator: "rounded text-muted-foreground hover:bg-foreground/10 active:bg-foreground/15",
-  sortAscending: "text-muted-foreground opacity-60 selected:text-foreground selected:opacity-100",
-  sortDescending: "text-muted-foreground opacity-60 selected:text-foreground selected:opacity-100",
+  sortAscending: sortChosen,
+  sortDescending: sortChosen,
   // A terminal's columns stand apart by their spaces: the handle shows,
   // faint, only while the pointer is on it.
   resizeHandle: terminal
@@ -54,9 +57,9 @@ export const dataTableClasses: DataTableClasses = {
 export type DataTableProps<T = unknown> = BaseDataTableProps<T>;
 
 /**
- * A table that scrolls both ways over any number of rows and columns. A row is 32 points in both
- * idioms, as upstream's data table is (its `size.rowSm` does not reach the table): nine rows of a
- * phone's fit where six finger-sized ones would.
+ * A table that scrolls both ways over any number of rows and columns. Its rows stay 32 points in
+ * both idioms (the table has no size axis): nine of a phone's fit, where six finger-sized rows
+ * would.
  */
 export function DataTable<T>(props: DataTableProps<T>) {
   const [, rest] = split(props, ["classes"]);
