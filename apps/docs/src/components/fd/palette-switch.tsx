@@ -6,6 +6,7 @@
  * demo app's storage and the panels load again — a running app cannot see a later write
  * (`src/lib/palette.ts` says why).
  */
+import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { choosePalette, onPaletteChange, storedPalette } from "@/lib/palette";
@@ -21,23 +22,31 @@ export function PaletteSwitch({ label = "Demo theme" }: { label?: string }) {
     return onPaletteChange(() => setCurrent(storedPalette()));
   }, []);
 
+  // The browser's own arrow sits where the platform puts it (hard against the edge on macOS):
+  // it is hidden, and the chevron drawn here sits on the same inset as the label.
   return (
-    <select
-      aria-label={label}
-      title={label}
-      value={current}
-      onChange={(event) => {
-        const id = event.currentTarget.value as PaletteId;
-        choosePalette(id);
-        setCurrent(id);
-      }}
-      className="bg-fd-muted text-fd-foreground h-8 rounded-lg border px-2 text-sm"
-    >
-      {PALETTES.map((palette) => (
-        <option key={palette.id} value={palette.id}>
-          {palette.label}
-        </option>
-      ))}
-    </select>
+    <span className="relative inline-flex">
+      <select
+        aria-label={label}
+        title={label}
+        value={current}
+        onChange={(event) => {
+          const id = event.currentTarget.value as PaletteId;
+          choosePalette(id);
+          setCurrent(id);
+        }}
+        className="bg-fd-muted text-fd-foreground h-8 appearance-none rounded-lg border pr-8 pl-2.5 text-sm"
+      >
+        {PALETTES.map((palette) => (
+          <option key={palette.id} value={palette.id}>
+            {palette.label}
+          </option>
+        ))}
+      </select>
+      <ChevronDown
+        aria-hidden="true"
+        className="text-fd-muted-foreground pointer-events-none absolute top-1/2 right-2.5 size-3.5 -translate-y-1/2"
+      />
+    </span>
   );
 }
