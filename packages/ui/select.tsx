@@ -1,4 +1,5 @@
-// A select: the look (`pickerLook`, `Picker`) and `Select` that wears the shared listbox look.
+// A select: the trigger's look (`pickerLook`, `Picker`) and the parts of the list (`Select`,
+// `SelectTrigger`, `SelectContent`), which wear the shared listbox look.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { alpha, colors, finish, radius, terminal, TERMINAL_COLUMN } from "@shadcn-nsh/theme";
 import type { IconNode } from "lucide";
@@ -41,6 +42,19 @@ type Live<T> = T | (() => T);
 const read = <T,>(v: Live<T> | undefined): T | undefined =>
   typeof v === "function" ? (v as () => T)() : v;
 
+/** A trigger's least width with a pointer: room for the list's rows, which are as wide as it. */
+const minTriggerWidth = 180;
+
+/** A trigger's text inset, and the space between its icon, its title and the chevron. */
+const triggerPadding = 10;
+const triggerGap = 8;
+
+/** How long a trigger's edge fades: its border, its ring and its dimming. */
+const edgeFade = 120;
+
+/** How far a pressed trigger sinks to, as a button's does. */
+const pressedOpacity = 0.7;
+
 /** The clear button's inset from a trigger's end: centered where the chevron's lane is. The button is in the
  * select's view, outside the trigger, so its inset counts the trigger's 1-point border too. */
 const clearInset = 1 + 10 + controlSize.check / 4 - controlSize.clear / 2;
@@ -73,44 +87,44 @@ export interface PickerLookOptions {
 
 /**
  * A select's or date picker's trigger (spread it on the trigger's view): a
- * row as high as a text field, on the field's well (`default`) or the
- * raised finish (`outline`), its edge stronger under the pointer and while
- * the list is open, the danger tone while invalid (each after the finish,
- * which has an edge of its own), the fields' focus edge while it has the
- * keys, sunk to 70% while pressed, 50% while disabled.
+ * row as high as the controls around it (`controlSize.line`), on the field's
+ * well (`default`) or the raised finish (`outline`), its edge stronger under
+ * the pointer and while the list is open, the danger tone while invalid (each
+ * after the finish, which has an edge of its own), the fields' focus edge
+ * while it has the keys, sunk to 70% while pressed, 50% while disabled.
  */
 export function pickerLook(o?: PickerLookOptions) {
   const invalid = () => !!read(o?.invalid);
+  const outline = o?.variant === "outline";
   return {
     get style(): ViewStyle {
       const clearable = !!read(o?.clearable);
       return {
         flexDirection: "row",
         alignItems: "center",
-        gap: 8,
+        gap: triggerGap,
         height: controlSize.line,
-        // Room for the list's rows, which are as wide as the trigger.
-        minWidth: pointer ? 180 : undefined,
+        minWidth: pointer ? minTriggerWidth : undefined,
         // With a pointer its title truncates before a row's label is squeezed.
         flexShrink: pointer ? 1 : undefined,
-        paddingLeft: 10,
+        paddingLeft: triggerPadding,
         // Room for the clear button, which goes over the trigger's end in place of the chevron. In the terminal the
         // select's own marks go over the end, each in a slot of three Cells: ` ▾ `, or ` ×  ▾ `.
         paddingRight: terminal
           ? (clearable ? 6 : 3) * TERMINAL_COLUMN
           : clearable
             ? clearInset + controlSize.clear + 8
-            : 10,
+            : triggerPadding,
         borderRadius: radius.control,
         borderWidth: 1,
-        ...(o?.variant === "outline"
+        ...(outline
           ? { backgroundColor: colors.raised, ...finish.raised }
           : { backgroundColor: colors.field, ...finish.field }),
         borderColor: invalid()
           ? colors.danger
           : read(o?.open)
             ? colors.faint
-            : o?.variant === "outline"
+            : outline
               ? colors.border
               : colors.fieldBorder,
         ...(terminal
@@ -124,21 +138,21 @@ export function pickerLook(o?: PickerLookOptions) {
         // Dimmed while the select is: the app knows, as it passes `disabled`.
         opacity: read(o?.disabled) ? 0.5 : 1,
         transitionProperty: "border-color, outline-color, opacity",
-        transitionDuration: reduceMotion() ? 0 : 120,
+        transitionDuration: reduceMotion() ? 0 : edgeFade,
         ...read(o?.style),
       };
     },
     get hoverStyle(): ViewStyle | undefined {
       return read(o?.disabled) || invalid() ? undefined : { borderColor: colors.faint };
     },
-    activeStyle: { opacity: 0.7 } as ViewStyle,
+    activeStyle: { opacity: pressedOpacity },
     // The border with the outline, which not every platform draws over it; `focus-visible` is above `hover` in the
     // states' order. Only for the keyboard: a click's focus, and the focus a closing list gives back, draw nothing.
     get focusVisibleStyle(): ViewStyle {
       const tone = invalid() ? colors.danger : colors.accent;
       return terminal ? { borderColor: tone } : { borderColor: tone, outlineColor: tone };
     },
-    disabledStyle: { opacity: 0.5 } as ViewStyle,
+    disabledStyle: { opacity: 0.5 },
   };
 }
 
@@ -226,10 +240,11 @@ export type SelectProps = {
 };
 
 /**
- * The field. Every prop of `nsh/base`'s Select passes through but the ones the root owns;
+ * The field and its list: every prop of `nsh/base`'s Select passes through but the ones the root owns;
  * `popupStyle`, `backdropStyle`, `itemClass`, `renderItem`, `renderGroup`, `empty`, `offset` and
- * `margin` go over `listboxProps`' and `OptionRow`'s. Its items are the `SelectItem` children
- * unless `items` is given.
+ * `margin` go over `listboxProps`' and `OptionRow`'s, and `clearButtonClass`, `clearButtonStyle`
+ * and `clearButton` over the clear button's. Its items are the `SelectItem` children unless
+ * `items` is given.
  */
 export type SelectContentProps = Omit<
   BaseSelectProps,
@@ -310,7 +325,7 @@ export type SelectLabelProps = {
  * view, the select's box in the app's layout, which `nsh/base`'s Select fills: the trigger alone
  * could take neither the room a row leaves nor less room than its look asks for.
  */
-const TRIGGER_LAYOUT: readonly string[] = [
+const triggerLayoutKeys: readonly string[] = [
   "flex",
   "flexGrow",
   "flexShrink",
@@ -339,7 +354,7 @@ function splitTriggerStyle(style: ViewStyle | undefined): { layout: ViewStyle; l
   const layout: Record<string, unknown> = {};
   const look: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(style ?? {})) {
-    (TRIGGER_LAYOUT.includes(key) ? layout : look)[key] = value;
+    (triggerLayoutKeys.includes(key) ? layout : look)[key] = value;
   }
   if (style?.minWidth !== undefined) {
     layout.minWidth = style.minWidth;
@@ -362,7 +377,11 @@ type SelectContextValue = OpenState & {
 };
 
 const SelectContext = context<SelectContextValue | null>(null);
-const SelectGroupContext = context<{ label?: string } | null>(null);
+
+/** A section's name, which its items take as their group. */
+type SelectGroupValue = { label?: string };
+
+const SelectGroupContext = context<SelectGroupValue | null>(null);
 
 function useSelect() {
   const ctx = SelectContext();
@@ -425,9 +444,7 @@ export function Select(props: SelectProps) {
         change,
         prompt: () => prompt() ?? props.placeholder ?? "Select…",
         setPrompt: (next) => prompt.set(next),
-        get root() {
-          return props;
-        },
+        root: props,
       }}
     >
       {props.children}
@@ -539,7 +556,7 @@ export function SelectContent(props: SelectContentProps) {
 
 /** A section of a list: its items take `SelectLabel`'s name as their group. */
 export function SelectGroup(props: SelectGroupProps) {
-  const group: { label?: string } = {};
+  const group: SelectGroupValue = {};
   return <SelectGroupContext.Provider value={group}>{props.children}</SelectGroupContext.Provider>;
 }
 

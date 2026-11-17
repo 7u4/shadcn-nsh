@@ -8,8 +8,9 @@ import { inputLook } from "./input";
 
 /**
  * A textarea's props: every `nsh/base` Input prop but `multiline` (a textarea is several lines, so
- * the return key writes one), and `invalid`, the look's error state. Its text, placeholder,
- * value, `readonly`, `disabled`, `maxLength`, `onChange` and `onContentSizeChange` are the field's.
+ * the return key writes one), and `invalid`, the look's error state. Every other prop passes
+ * through: its text, placeholder, value, `readonly`, `disabled`, `maxLength`, `onChange` and
+ * `onContentSizeChange` are the field's, as in `nsh/base`.
  */
 export type TextareaProps = Omit<BaseInputProps, "multiline"> & {
   /** Edged in the danger tone, its focus edge too (shadcn's `aria-invalid`). */

@@ -1,4 +1,5 @@
-// A number input: the look (`numberInputClasses`, `numberInputSteps`) and the `NumberInput` that wears it.
+// A number input: the well, its text and its step buttons (`numberInputClasses`, `numberInputText`,
+// `numberInputSteps`) and the `NumberInput` that wears them.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors, terminal } from "@shadcn-nsh/theme";
 import { ChevronDown, ChevronUp, Minus, Plus, type IconNode } from "lucide";
@@ -26,7 +27,7 @@ const press = terminal
  * screen; a stronger edge under the pointer, the focus edge while its field
  * edits), `stepBefore` / `stepAfter` − before the field and + after it,
  * `pair` / `pairButton` the increment over the decrement at the well's end.
- * `w` is a button's width class (`w-8`). In a terminal the input is one band
+ * `width` is a button's width class (`w-8`). In a terminal the input is one band
  * a row high, its steppers at the band's end.
  */
 export const numberInputClasses = {
@@ -38,9 +39,9 @@ export const numberInputClasses = {
         edgeClass({ rest: "border-input", hover: "border-faint", hoverVariant: "enabled:hover" }),
       ].join(" "),
   press,
-  stepBefore: (w: string) => `${w} ${press} border-r border-line`,
-  stepAfter: (w: string) => `${w} ${press} border-l border-line`,
-  pair: (w: string) => `${w} border-l border-line`,
+  stepBefore: (width: string) => `${width} ${press} border-r border-line`,
+  stepAfter: (width: string) => `${width} ${press} border-l border-line`,
+  pair: (width: string) => `${width} border-l border-line`,
   pairButton: (top: boolean) => `flex-1 ${press}${top ? " border-b border-line" : ""}`,
 };
 
@@ -59,14 +60,14 @@ export function numberInputText(): InputStyle {
 }
 
 /** A step button's text glyph in a terminal, which draws no icons. */
-const STEP_GLYPHS = new Map<IconNode, string>([
+const stepGlyphs = new Map<IconNode, string>([
   [Plus, "+"],
   [Minus, "−"],
 ]);
 
 /** A step button's glyph: the icon in the muted text color; a terminal's text glyph. */
 export function NumberStep(props: { icon: IconNode; size: number }) {
-  const glyph = terminal ? STEP_GLYPHS.get(props.icon) : undefined;
+  const glyph = terminal ? stepGlyphs.get(props.icon) : undefined;
   if (glyph) return <Text style={{ color: colors.muted }}>{glyph}</Text>;
   return <Icon icon={props.icon} size={props.size} tint={colors.muted} />;
 }
@@ -75,34 +76,36 @@ export function NumberStep(props: { icon: IconNode; size: number }) {
  * A number input's step buttons (spread them on `NumberInput`): − before
  * the field and + after it (`split`), or a pair of chevrons at the well's
  * end (`pair`); in a terminal always − and + at the band's end, each in a
- * slot of three Cells. `w` is a button's width class, `icon` its glyph's size.
+ * slot of three Cells. `width` is a button's width class, `glyphSize` its glyph's size.
  */
-export function numberInputSteps(kind: "split" | "pair", w: string, icon: number) {
+export function numberInputSteps(kind: "split" | "pair", width: string, glyphSize: number) {
   if (terminal) {
     return {
       controlsRight: true,
       controlsClass: "flex-row",
       decrementButtonClass: `w-6 shrink-0 flex-row items-center ${press}`,
       incrementButtonClass: `w-6 shrink-0 flex-row items-center ${press}`,
-      decrementButton: <NumberStep icon={Minus} size={icon} />,
-      incrementButton: <NumberStep icon={Plus} size={icon} />,
+      decrementButton: <NumberStep icon={Minus} size={glyphSize} />,
+      incrementButton: <NumberStep icon={Plus} size={glyphSize} />,
     };
   }
   if (kind === "split") {
     return {
-      decrementButtonClass: numberInputClasses.stepBefore(w),
-      incrementButtonClass: numberInputClasses.stepAfter(w),
-      decrementButton: <NumberStep icon={Minus} size={icon} />,
-      incrementButton: <NumberStep icon={Plus} size={icon} />,
+      decrementButtonClass: numberInputClasses.stepBefore(width),
+      incrementButtonClass: numberInputClasses.stepAfter(width),
+      decrementButton: <NumberStep icon={Minus} size={glyphSize} />,
+      incrementButton: <NumberStep icon={Plus} size={glyphSize} />,
     };
   }
+  // A chevron at a plus's size reads larger: the pair's glyphs are two points smaller.
+  const chevron = glyphSize - 2;
   return {
     controlsRight: true,
-    controlsClass: numberInputClasses.pair(w),
+    controlsClass: numberInputClasses.pair(width),
     incrementButtonClass: numberInputClasses.pairButton(true),
     decrementButtonClass: numberInputClasses.pairButton(false),
-    incrementButton: <NumberStep icon={ChevronUp} size={icon - 2} />,
-    decrementButton: <NumberStep icon={ChevronDown} size={icon - 2} />,
+    incrementButton: <NumberStep icon={ChevronUp} size={chevron} />,
+    decrementButton: <NumberStep icon={ChevronDown} size={chevron} />,
   };
 }
 // @port end
@@ -134,20 +137,20 @@ export function NumberInput(props: NumberInputProps) {
   // + either side of the field (`w-8` / `w-11`).
   const lanes =
     kind === "pair" ? { desktop: "w-6", touch: "w-9" } : { desktop: "w-8", touch: "w-11" };
-  const w = pointer ? lanes.desktop : lanes.touch;
-  const icon = pointer ? 14 : 16;
-  const steps = numberInputSteps(kind, w, icon);
+  const width = pointer ? lanes.desktop : lanes.touch;
+  const glyphSize = pointer ? 14 : 16;
+  const buttons = numberInputSteps(kind, width, glyphSize);
   return (
     <BaseNumberInput
       {...rest}
       class={props.class ? `${numberInputClasses.frame} ${props.class}` : numberInputClasses.frame}
       inputStyle={[numberInputText(), props.inputStyle ?? null]}
-      controlsRight={props.controlsRight ?? steps.controlsRight}
-      controlsClass={props.controlsClass ?? steps.controlsClass}
-      decrementButtonClass={props.decrementButtonClass ?? steps.decrementButtonClass}
-      incrementButtonClass={props.incrementButtonClass ?? steps.incrementButtonClass}
-      decrementButton={props.decrementButton ?? steps.decrementButton}
-      incrementButton={props.incrementButton ?? steps.incrementButton}
+      controlsRight={props.controlsRight ?? buttons.controlsRight}
+      controlsClass={props.controlsClass ?? buttons.controlsClass}
+      decrementButtonClass={props.decrementButtonClass ?? buttons.decrementButtonClass}
+      incrementButtonClass={props.incrementButtonClass ?? buttons.incrementButtonClass}
+      decrementButton={props.decrementButton ?? buttons.decrementButton}
+      incrementButton={props.incrementButton ?? buttons.incrementButton}
     />
   );
 }
