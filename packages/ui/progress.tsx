@@ -38,7 +38,7 @@ export function progressRail(height = 6): ViewStyle {
 }
 
 /** A bar's fill, `height` points tall (default 6): the slider's citrus run
- * (`finish.fill`: one color, under its gradient where the theme gives one), or a tone's color
+ * (`finish.fill`: its gradient, over a `transparent` bottom), or a tone's color
  * (`up` for done, `warn`, `danger`; `accent` is the run). Neither has an edge, so a tone's bar and
  * the run read as one kind of bar. */
 export function progressFill(height = 6, tone?: Tone): ViewStyle {
