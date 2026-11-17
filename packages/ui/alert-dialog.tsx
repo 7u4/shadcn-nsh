@@ -1,12 +1,6 @@
-// An alert dialog: the system's own alert (`nsh/base`'s `AlertDialog.show`) under shadcn's parts.
-//
-// The box is the platform's — UIAlertController on iOS, NSAlert on macOS, NSH's own drawing of the
-// same box on the web, the platform dialog on Android — so it looks like the operating system and
-// not like this library's theme: there is no card, no scrim and no style of ours to give it. What
-// it can show is plain text too (a title, a message, button labels), never views, icons or fields,
-// and an Android alert takes at most three buttons, so a fourth is dropped there. Reach for
-// `Dialog` instead when the box has to hold content of the app's own or wear the app's look.
-//
+// An alert dialog: the system's own alert (`nsh/base`'s `AlertDialog.show`), in shadcn's parts — a
+// title, a message and button labels, drawn by the platform. There is no card, no scrim and no look
+// of this library to change; the app decides when it shows and what it does with the answer.
 // This library's own: nothing here comes from upstream, so there is no port region. Yours to change.
 import type { JSX, StyleProp, ViewStyle } from "nsh";
 import { cleanup, context, effect, signal, untracked, View } from "nsh";
@@ -46,6 +40,12 @@ export type AlertDialogProps = {
  * parts register. `presentation` picks the box (`"actionSheet"` slides it up from the bottom, a
  * list on Android); Escape and a press outside close it by default as an action sheet, and not as
  * an alert — an alert waits for an action.
+ *
+ * The box is the platform's (UIAlertController on iOS, NSAlert on macOS, this library's drawing of
+ * the same box on the web, the platform dialog on Android). It shows plain text — a title, a message
+ * and button labels — never views, icons or fields, and an Android alert takes at most three buttons
+ * (a fourth is dropped there). Reach for `Dialog` when the box has to hold the app's own content or
+ * wear the app's look.
  */
 export type AlertDialogContentProps = {
   presentation?: AlertDialogPresentation;
@@ -81,6 +81,9 @@ export type AlertDialogCancelProps = {
   id?: string;
   children?: string;
 };
+
+/** What an action means to the platform (its `role`), from `nsh/base`. */
+export type { AlertDialogRole };
 
 /** shadcn's header block: it draws nothing, the system's box draws the title and the message. */
 export type AlertDialogHeaderProps = {
@@ -243,17 +246,19 @@ export function AlertDialogContent(props: AlertDialogContentProps) {
     // children on every change does — and that part must not stack a second box on the first.
     const key = boxKey(options);
     if (untracked(onScreen) === key) return;
+    const clear = () => {
+      showing.set(false);
+      if (untracked(onScreen) === key) onScreen.set(null);
+    };
     onScreen.set(key);
     showing.set(true);
     BaseAlertDialog.show(options)
       .then(({ action }) => {
-        showing.set(false);
-        if (untracked(onScreen) === key) onScreen.set(null);
+        clear();
         ctx.settle(action ?? null);
       })
       .catch(() => {
-        showing.set(false);
-        if (untracked(onScreen) === key) onScreen.set(null);
+        clear();
         // `nsh/base` rejects an alert without actions only — the app's bug. Close it as a
         // dismissal rather than leave the app open on a box that never showed.
         ctx.settle(null);
@@ -306,6 +311,3 @@ export function AlertDialogDescription(props: AlertDialogDescriptionProps) {
   ctx.registerDescription(props.children ?? null);
   return null;
 }
-
-/** What an `AlertDialogAction` means (its `role`), from `nsh/base`. */
-export type { AlertDialogRole };

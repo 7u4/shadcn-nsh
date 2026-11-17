@@ -1,8 +1,8 @@
-// A drawer: a sheet that comes from the bottom edge (unless the app says otherwise) with a wide
-// grabber at its top, close on a swipe, and the parts of a card's panel around it — its header, its
-// footer, a title and a description. The panel is `sheet.tsx`'s (`sheetPanel`) and the title and
-// text are `dialog.tsx`'s (`dialogTitle`, `dialogText`): this file is the shell, and the grabber.
-// This library's own: nothing here comes from upstream, so there is no port region. Yours to change.
+// A drawer: a sheet from the bottom edge with a wide grabber at its top, closed by a swipe, with a
+// card's header, footer, title and description around its content. The panel is `sheet.tsx`'s
+// (`sheetPanel`), the title and text are `dialog.tsx`'s (`dialogTitle`, `dialogText`); this file adds
+// the grabber and the shell. This library's own: nothing here comes from upstream, so there is no
+// port region. Yours to change.
 import { colors } from "@shadcn-nsh/theme";
 import type { JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
 import { context, split, Text, View } from "nsh";
@@ -49,6 +49,9 @@ export function drawerHeader(): ViewStyle {
 export function drawerFooter(): ViewStyle {
   return { gap: 8, paddingTop: 4 };
 }
+
+/** Why a drawer closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type DrawerOpenChangeReason = OpenChangeReason;
 
 /** The root: it owns whether the drawer is open, and nothing of how it looks. */
 export type DrawerProps = {
@@ -175,11 +178,7 @@ function Action(props: DrawerTriggerProps & { onPress: () => void }) {
 /** Opens the drawer. */
 export function DrawerTrigger(props: DrawerTriggerProps) {
   const ctx = useDrawer();
-  return (
-    <Action {...props} onPress={() => ctx.setOpen(true)}>
-      {props.children}
-    </Action>
-  );
+  return <Action {...props} onPress={() => ctx.setOpen(true)} />;
 }
 
 /** Closes the drawer, after its own `onPress`. */
@@ -192,9 +191,7 @@ export function DrawerClose(props: DrawerCloseProps) {
         props.onPress?.();
         ctx.setOpen(false, "closePress");
       }}
-    >
-      {props.children}
-    </Action>
+    />
   );
 }
 
@@ -238,17 +235,14 @@ export function DrawerFooter(props: DrawerFooterProps) {
   return <View style={[drawerFooter(), props.style ?? null]}>{props.children}</View>;
 }
 
-/** The drawer's title; a string takes `dialogTitle`'s type. */
+/** The drawer's title; a string child takes `dialogTitle`'s type, anything else is drawn as given. */
 export function DrawerTitle(props: DrawerTitleProps) {
   if (typeof props.children !== "string") return props.children;
   return <Text style={[dialogTitle(), props.style ?? null]}>{props.children}</Text>;
 }
 
-/** The drawer's description; a string takes `dialogText`'s type, the muted line under the title. */
+/** The drawer's description; a string child takes `dialogText`'s type, the muted line under the title. */
 export function DrawerDescription(props: DrawerDescriptionProps) {
   if (typeof props.children !== "string") return props.children;
   return <Text style={[dialogText(), props.style ?? null]}>{props.children}</Text>;
 }
-
-/** Why a drawer closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
-export type DrawerOpenChangeReason = OpenChangeReason;
