@@ -224,6 +224,10 @@ function section(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
     hover: "var(--accent)",
     // The keyboard focus's halo: shadcn's `ring-ring/50`.
     "ring-halo": "color-mix(in srgb, var(--ring) 50%, transparent)",
+    // shadcn draws no edge on a filled pane or round a glass surface (`border-transparent`), so both
+    // roles name the theme's border: a theme switched to this one still has the tokens.
+    "brand-edge": "var(--border)",
+    "glass-edge": "var(--border)",
     faint: o.faint,
     brand: p.primary,
     track: o.track,
@@ -263,11 +267,7 @@ const surface = (
 ) => ({ backgroundColor: color, backgroundImage: flat(color), boxShadow, borderColor });
 
 /** One appearance's finishes: flat, the lift of shadcn's own surfaces and no more. */
-function finishes(
-  appearance: Appearance,
-  p: ReturnType<typeof palette>,
-  o: ReturnType<typeof own>,
-) {
+function finishes(appearance: Appearance, o: ReturnType<typeof own>) {
   return {
     card: { backgroundImage: flat(alias("card")), boxShadow: SHADOW.sm },
     inset: { boxShadow: "none" },
@@ -275,7 +275,9 @@ function finishes(
     raised: surface(alias("raised"), { boxShadow: SHADOW.xs }),
     hover: surface(alias("hover"), { boxShadow: SHADOW.xs }),
     // Pressed, the lift goes: the one cue a flat theme has left (shadcn styles no press state).
-    pressed: surface(o.pressed),
+    // Light, `--input` laid on the card is `--border`'s own grey (shadcn's light `input` and `border`
+    // are one colour), so the finish names that token; dark, no token holds the fill.
+    pressed: surface(appearance === "light" ? alias("border") : o.pressed),
     light: surface(alias("primary")),
     accent: surface(alias("primary")),
     // A rail has no lip of its own (shadcn draws the track flat): the edge comes from the theme's
@@ -301,7 +303,8 @@ function finishes(
     on: surface(alias(appearance === "light" ? "chart-1" : "chart-3")),
     chip: { boxShadow: "none" },
     glass: {
-      backgroundColor: withAlpha(p.card, 0.8),
+      // A control over a photo: the card's own colour at 80% (`bg-card/80`), named at that alpha.
+      backgroundColor: "oklch(from var(--card) l c h / 0.8)",
       boxShadow: "none",
       borderColor: alias("border"),
       backdropFilter: "blur(20px)",
@@ -341,8 +344,8 @@ export function themeFiles(defaults: {
       // A flat theme draws no press of its own: its surfaces change colour under the finger, they
       // do not sink (`press.scale` of 1, which `pressSink` reads as "no sink").
       press: { scale: 1 },
-      dark: orderedFinish(defaults.darkFinishes, finishes("dark", dark, ownDark)),
-      light: orderedFinish(defaults.lightFinishes, finishes("light", light, ownLight)),
+      dark: orderedFinish(defaults.darkFinishes, finishes("dark", ownDark)),
+      light: orderedFinish(defaults.lightFinishes, finishes("light", ownLight)),
     },
   };
 }

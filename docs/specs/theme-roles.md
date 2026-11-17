@@ -47,8 +47,10 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 | `line`                          | 井里的发丝线（分隔、网格）                                       | `tabs`、`otp-input`、`number-input`、`input`、`lib/surface`                  |
 | `faint`                         | 更弱的字：占位、单位、次要标记                                   | `input`、`combobox`、`number-input`                                          |
 | `brand`                         | 强调色作为前景：字、图标、线                                     | `input`、`calendar`、`command`、`otp-input`、`lib/listbox`                   |
+| `brand-edge`                    | 强调色填充的那条边：主按钮的发丝线                               | `theme.ts` 的 `colors.brandEdge`                                             |
 | `brand-fill`                    | 强调色作为填充（见 C 层）                                        | `calendar`                                                                   |
 | `on-brand`                      | `brand-fill` 上的字（见 C 层）                                   | `calendar`                                                                   |
+| `glass-edge`                    | 玻璃面上的发丝线：控件、胶囊、玻璃、浮层外框                     | `theme.ts` 的 `colors.glassEdge`                                             |
 | `track`                         | 关着的开关、滑杆、进度条底槽                                     | `switch`、`slider`、`progress`、`tabs`、`listbox`                            |
 | `knob`                          | 关着的开关圆点（`finish.knob` 的白底）                           | `theme.ts` 的 `colors.knob`                                                  |
 | `code`                          | 井里的等宽字                                                     | `theme.ts` 的 `colors.code`                                                  |
@@ -116,28 +118,28 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 <!-- theme-lint: finishes -->
 
-| finish    | 画什么                                       | 谁读                                          |
-| --------- | -------------------------------------------- | --------------------------------------------- |
-| `card`    | 卡片的底：一道内高光、一道发丝、接触影、投影 | `sidebar`                                     |
-| `inset`   | 卡片里的井：只靠内阴影凹下去                 | `lib/surface`、`otp-input`、`sidebar`         |
-| `field`   | 输入井的边与内阴影                           | `input`、`select`、`combobox`、`checkbox`     |
-| `raised`  | 卡片上的控件：渐变、内高光、硬投影、边       | `button`、`select`、`radio-group`、`carousel` |
-| `hover`   | 悬停时那一步的底                             | `button`、`carousel`                          |
-| `pressed` | 按下时那一步的底                             | `button`                                      |
-| `light`   | 主操作：最亮的一档，强调色的渐变             | `checkbox`                                    |
-| `accent`  | 强调色的面（同 `light`）                     | `button`                                      |
-| `track`   | 底槽：内阴影 + 边                            | `tabs`、`slider`、`progress`、`switch`        |
-| `fill`    | 已填充的一段（滑杆、进度、关掉的开关）       | `slider`、`progress`、`switch`                |
-| `knob`    | 关着的开关圆点                               | `switch`                                      |
-| `knobOn`  | 开着的开关圆点                               | `switch`                                      |
-| `handle`  | 滑杆的把手（与 `knob` 分开，见第 6 节）      | `slider`                                      |
-| `pill`    | 上游的胶囊面，留给应用                       | —（见第 8 节）                                |
-| `thumb`   | 分段控件、标签里被选中的那一块               | `tabs`、`segmented`                           |
-| `on`      | 选中的开关/勾选框，以及它上面的标记          | `button`、`toggle`                            |
-| `chip`    | 上游的 chip，留给应用                        | —（见第 8 节）                                |
-| `glass`   | 玻璃：半透明底 + 模糊                        | `carousel`                                    |
-| `menu`    | 浮层：菜单、弹层、提示                       | `popover`、`dialog`、`toast`、`lib/listbox`   |
-| `groove`  | 菜单里一道凹槽                               | `menu`                                        |
+| finish    | 画什么                                       | What it draws                                                                    | 谁读                                          |
+| --------- | -------------------------------------------- | -------------------------------------------------------------------------------- | --------------------------------------------- |
+| `card`    | 卡片的底：一道内高光、一道发丝、接触影、投影 | The card's face: an inner highlight, a hairline, a contact shadow and a cast one | `sidebar`                                     |
+| `inset`   | 卡片里的井：只靠内阴影凹下去                 | The well inside a card: sunk by its inner shadow alone                           | `lib/surface`、`otp-input`、`sidebar`         |
+| `field`   | 输入井的边与内阴影                           | A field's well: its edge and its inner shadow                                    | `input`、`select`、`combobox`、`checkbox`     |
+| `raised`  | 卡片上的控件：渐变、内高光、硬投影、边       | A control on a card: a gradient, an inner highlight, a hard shadow, an edge      | `button`、`select`、`radio-group`、`carousel` |
+| `hover`   | 悬停时那一步的底                             | The step the surface takes under the pointer                                     | `button`、`carousel`                          |
+| `pressed` | 按下时那一步的底                             | The step it takes while pressed                                                  | `button`                                      |
+| `light`   | 主操作：最亮的一档，强调色的渐变             | The main action's brightest step: the accent's gradient                          | `checkbox`                                    |
+| `accent`  | 强调色的面（同 `light`）                     | The accent's face (the same as `light`)                                          | `button`                                      |
+| `track`   | 底槽：内阴影 + 边                            | A groove: an inner shadow and an edge                                            | `tabs`、`slider`、`progress`、`switch`        |
+| `fill`    | 已填充的一段（滑杆、进度、关掉的开关）       | The filled run: a slider, a progress bar, a switch that is on                    | `slider`、`progress`、`switch`                |
+| `knob`    | 关着的开关圆点                               | A switch's knob, off                                                             | `switch`                                      |
+| `knobOn`  | 开着的开关圆点                               | A switch's knob, on                                                              | `switch`                                      |
+| `handle`  | 滑杆的把手（与 `knob` 分开，见第 6 节）      | A slider's handle (kept apart from `knob`, see 6)                                | `slider`                                      |
+| `pill`    | 上游的胶囊面，留给应用                       | The upstream capsule, left to the app                                            | —（见第 8 节）                                |
+| `thumb`   | 分段控件、标签里被选中的那一块               | The chosen segment of a segmented control or a tag                               | `tabs`、`segmented`                           |
+| `on`      | 选中的开关/勾选框，以及它上面的标记          | A chosen switch or box, and the mark on it                                       | `button`、`toggle`                            |
+| `chip`    | 上游的 chip，留给应用                        | The upstream chip, left to the app                                               | —（见第 8 节）                                |
+| `glass`   | 玻璃：半透明底 + 模糊                        | Glass: a translucent fill and a blur                                             | `carousel`                                    |
+| `menu`    | 浮层：菜单、弹层、提示                       | A floating surface: a menu, a popover, a tooltip                                 | `popover`、`dialog`、`toast`、`lib/listbox`   |
+| `groove`  | 菜单里一道凹槽                               | A groove cut inside a menu                                                       | `menu`                                        |
 
 <!-- /theme-lint: finishes -->
 
@@ -148,8 +150,9 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 1. **alias**：`var(--token)`，token 必须在同一主题的 `light`/`dark` 或 `cssVars.theme` 里。`theme.ts` 的 `themed()` 在**读的时候**把它换成当前主题与外观的颜色（`token(name)`，NSH 给的 `#rrggbbaa`），所以切外观、`selectTheme` 切主题都自动生效，一次读一次换。
 2. **墨色**：`oklch(0 0 0 / a)`、`oklch(1 0 0 / a)` 允许字面——内高光、接触影、投影都是它。
 3. **`transparent`**：允许，表示这一面没有边。
-4. **`boxShadow` 整条豁免**（见第 2 节）。
-5. 其它字面量一律不许出现，除非它在第 7 节的待定表里：那是一份清单，说明这个颜色还没有 token，暂时留在 finish 里。表里的每一条都是待办，不是许可。
+4. **带 alpha 的 token**：`oklch(from var(--token) l c h / a)`——一个 token 的颜色换一个透明度，唯一允许的相对颜色写法（见第 7 节）。`alias()` 在读的时候把它展开成具体的 `oklch(L C H / a)`，因为 NSH 的 CSS 解析器不认相对颜色。
+5. **`boxShadow` 整条豁免**（见第 2 节）。
+6. 其它字面量一律不许出现，除非它在第 7 节的待定表里：那是一份清单，说明这个颜色还没有 token，暂时留在 finish 里。表里的每一条都是待办，不是许可。
 
 ## 6 为什么相同的值不合并
 
@@ -169,47 +172,37 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 ## 7 待定颜色
 
-下面这些是 finish 里还写着的颜色字面量：形状已经对了（字段齐、渐变有），但颜色还没有 token。它们**不**表示“可以这么写”——`theme-lint` 认得这张表，表外的字面量一律报错；这张表本身是下一步的待办（给 `theme.json` 添 token，或决定就这样留着）。多数是三件事：某个面的渐变末端比它的 token 深一档、某条边比 `border`/`input` 暗一档、某个按下态比前景淡一档；另外半透明的那几条是一个 token 的颜色带 alpha（alias 只能原样引用，写不了 alpha）。
+一个 finish 里的颜色离开这张表只有三条路，每条的理由不同：
+
+1. **一个 token 的颜色，带别的 alpha**：写 `oklch(from var(--token) l c h / a)`。像素不变：`alias()` 从当前主题里取出那个 token 的声明值，补上它的 L、C、H，写出的就是同一个颜色。`theme-lint` 只认这一种写法，`from` 后面的 `var()` 必须是这个主题真有的 token；别的相对形式（把 alpha 写成 `var()`、在 L/C/H 里用 `calc()`）仍然算“没有 token 的颜色”。
+2. **与某个 token 肉眼无差**：ΔL ≤ 0.015、ΔC ≤ 0.003、色相在同一段灰里，就写 `var(--token)`。像素会有一两个单位的差别，受影响的基线重拍。数值够近但语义不对的不换：`chart-*` 是数据色，`window-control-off` 是窗口按钮的底，一个选中的行不该跟着图表的颜色走。
+3. **材质自己的设计色**：同一个主题的两个外观里值相同、语义相同，又出现在两处以上，就进 `theme.json` 的 B 层（第 1 节）。default 用原来的值，另外两个主题取自己同一位置的颜色或最近的 token，零像素变化。只在一处出现的，留在表里。
+
+表里剩下的十七行都是第 3 条没走的、只在一处出现的材质色：`fill` 的渐变末端比 `primary` 深一档或浅一档、开关圆点比 `primary` 淡两档、`track` 的边比 `input` 深一档。其中 `fill` 的那两行只能留在渐变里：NSH 的解析器不认相对颜色，渐变里的颜色写不成 `oklch(from …)`。
+
+`theme-lint` 管两头：表外的字面量报错；表里的条目如果哪个主题都不再写它，也报错——留下一行对不上的，等于给那个颜色留了一条悄悄回来的路。
 
 <!-- theme-lint: pending -->
 
-| 主题        | 外观  | 色值                                    | 位置                                                                                                                           | 最接近的 token                               |
-| ----------- | ----- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
-| default     | light | `oklch(0.82977 0.0043 271.361)`         | `hover.borderColor`                                                                                                            | `border`（ΔL -0.012，ΔC +0.001）             |
-| default     | light | `oklch(0.94921 0.00416 271.368)`        | `pressed.backgroundColor`, `pressed.backgroundImage`                                                                           | `muted`（ΔL -0.003，ΔC +0.000）              |
-| default     | light | `oklch(0.76556 0.16727 124.422)`        | `light.borderColor`, `accent.borderColor`                                                                                      | `chart-1`（ΔL +0.015，ΔC -0.017）            |
-| default     | light | `oklch(0.80472 0.1815 126.061)`         | `fill.backgroundImage`                                                                                                         | `chart-1`（ΔL +0.054，ΔC -0.003）            |
-| default     | light | `oklch(0.69169 0.17204 126.956)`        | `fill.borderColor`                                                                                                             | `chart-1`（ΔL -0.059，ΔC -0.013）            |
-| default     | light | `oklch(0.96424 0.00414 271.369)`        | `knob.backgroundImage`, `handle.backgroundImage`                                                                               | `raised`（ΔL -0.003，ΔC +0.000）             |
-| default     | light | `oklch(0.97867 0.00945 119.575)`        | `knobOn.backgroundImage`                                                                                                       | `primary`（ΔL +0.082，ΔC -0.157）            |
-| default     | light | `oklch(0.72099 0.15728 124.776)`        | `knobOn.borderColor`                                                                                                           | `chart-1`（ΔL -0.030，ΔC -0.027）            |
-| default     | light | `oklch(0.89487 0.00554 274.959)`        | `on.backgroundColor`, `on.backgroundImage`                                                                                     | `chart-5`（ΔL -0.009，ΔC +0.001）            |
-| default     | light | `oklch(0.97997 0.00397 286.326 / 0.8)`  | `glass.backgroundColor`                                                                                                        | `popover`（ΔL +0.000，ΔC +0.000）            |
-| default     | dark  | `oklch(0.34882 0.01075 271.098)`        | `hover.backgroundColor`, `hover.backgroundImage`                                                                               | `input`（ΔL -0.007，ΔC -0.000）              |
-| default     | dark  | `oklch(0.30959 0.01109 271.042)`        | `pressed.backgroundColor`, `pressed.backgroundImage`                                                                           | `line`（ΔL +0.001，ΔC -0.000）               |
-| default     | dark  | `oklch(0.32672 0.08497 127.611 / 0.55)` | `light.borderColor`, `accent.borderColor`                                                                                      | `primary-foreground`（ΔL +0.133，ΔC +0.065） |
-| default     | dark  | `oklch(0.37091 0.01103 264.432)`        | `track.borderColor`                                                                                                            | `input`（ΔL +0.015，ΔC -0.000）              |
-| default     | dark  | `oklch(0.88348 0.15928 123.937)`        | `fill.backgroundImage`                                                                                                         | `primary`（ΔL -0.005，ΔC -0.004）            |
-| default     | dark  | `oklch(0.83973 0.16469 124.137)`        | `fill.backgroundImage`                                                                                                         | `primary`（ΔL -0.049，ΔC +0.001）            |
-| default     | dark  | `oklch(0.71963 0.15821 125.456)`        | `fill.borderColor`, `knobOn.borderColor`                                                                                       | `up`（ΔL -0.060，ΔC +0.010）                 |
-| default     | dark  | `oklch(0.94816 0.00344 247.859)`        | `knob.backgroundImage`, `handle.backgroundImage`                                                                               | `foreground`（ΔL -0.004，ΔC +0.001）         |
-| default     | dark  | `oklch(0.88185 0.00589 264.53)`         | `knob.backgroundImage`, `handle.backgroundImage`                                                                               | `code`（ΔL -0.014，ΔC -0.003）               |
-| default     | dark  | `oklch(0.8324 0.00597 264.528)`         | `knob.borderColor`, `handle.borderColor`                                                                                       | `code`（ΔL -0.064，ΔC -0.003）               |
-| default     | dark  | `oklch(0.97867 0.00945 119.575)`        | `knobOn.backgroundImage`                                                                                                       | `brand`（ΔL +0.074，ΔC -0.157）              |
-| default     | dark  | `oklch(0.42689 0.01421 264.414)`        | `on.backgroundColor`, `on.backgroundImage`                                                                                     | `window-control-off`（ΔL +0.026，ΔC +0.003） |
-| default     | dark  | `oklch(0.25145 0.01219 264.328 / 0.78)` | `glass.backgroundColor`                                                                                                        | `card`（ΔL +0.000，ΔC +0.000）               |
-| shadcn      | light | `oklch(0.92191 0 0)`                    | `pressed.backgroundColor`, `pressed.backgroundImage`                                                                           | `border`（ΔL +0.000，ΔC +0.000）             |
-| shadcn      | dark  | `oklch(0.34846 0 0)`                    | `pressed.backgroundColor`, `pressed.backgroundImage`, `thumb.backgroundColor`, `thumb.backgroundImage`                         | `chart-4`（ΔL -0.023，ΔC -0.000）            |
-| shadcn      | dark  | `oklch(0.20463 0 0 / 0.8)`              | `glass.backgroundColor`                                                                                                        | `card`（ΔL +0.000，ΔC +0.000）               |
-| solid-glass | light | `oklch(0.38 0.03 265 / 0.1)`            | `raised.borderColor`, `hover.borderColor`, `pressed.borderColor`, `pill.borderColor`, `thumb.borderColor`, `glass.borderColor` | `muted`（ΔL +0.079，ΔC +0.011）              |
-| solid-glass | light | `oklch(0.3 0.02 265 / 0.26)`            | `pressed.backgroundColor`                                                                                                      | `muted`（ΔL +0.000，ΔC +0.000）              |
-| solid-glass | light | `oklch(0.2 0 0 / 0.88)`                 | `light.backgroundColor`, `accent.backgroundColor`                                                                              | `primary`（ΔL +0.000，ΔC +0.000）            |
-| solid-glass | light | `oklch(0.2 0 0 / 0.685)`                | `light.borderColor`, `accent.borderColor`                                                                                      | `primary`（ΔL +0.000，ΔC +0.000）            |
-| solid-glass | light | `oklch(0.3 0.02 265 / 0.09)`            | `on.backgroundColor`                                                                                                           | `muted`（ΔL +0.000，ΔC +0.000）              |
-| solid-glass | light | `oklch(0.3 0.02 265 / 0.13)`            | `on.borderColor`                                                                                                               | `muted`（ΔL +0.000，ΔC +0.000）              |
-| solid-glass | light | `oklch(0.38 0.03 265 / 0.22)`           | `menu.borderColor`                                                                                                             | `muted`（ΔL +0.079，ΔC +0.011）              |
-| solid-glass | dark  | `oklch(0.94 0 0 / 0.86)`                | `light.backgroundColor`, `accent.backgroundColor`                                                                              | `primary`（ΔL +0.000，ΔC +0.000）            |
-| solid-glass | dark  | `oklch(0.967 0 0 / 0.667)`              | `light.borderColor`, `accent.borderColor`                                                                                      | `knob`（ΔL -0.003，ΔC -0.000）               |
+| 主题        | 外观  | 色值                             | 位置                                                                                                   | 最接近的 token                               |
+| ----------- | ----- | -------------------------------- | ------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| default     | light | `oklch(0.80472 0.1815 126.061)`  | `fill.backgroundImage`                                                                                 | `chart-1`（ΔL +0.054，ΔC -0.003）            |
+| default     | light | `oklch(0.69169 0.17204 126.956)` | `fill.borderColor`                                                                                     | `chart-1`（ΔL -0.059，ΔC -0.013）            |
+| default     | light | `oklch(0.97867 0.00945 119.575)` | `knobOn.backgroundImage`                                                                               | `primary`（ΔL +0.082，ΔC -0.157）            |
+| default     | light | `oklch(0.72099 0.15728 124.776)` | `knobOn.borderColor`                                                                                   | `chart-1`（ΔL -0.030，ΔC -0.027）            |
+| default     | light | `oklch(0.89487 0.00554 274.959)` | `on.backgroundColor`, `on.backgroundImage`                                                             | `chart-5`（ΔL -0.009，ΔC +0.001，语义不同）  |
+| default     | dark  | `oklch(0.37091 0.01103 264.432)` | `track.borderColor`                                                                                    | `input`（ΔL +0.015，ΔC -0.000）              |
+| default     | dark  | `oklch(0.88348 0.15928 123.937)` | `fill.backgroundImage`                                                                                 | `primary`（ΔL -0.005，ΔC -0.004）            |
+| default     | dark  | `oklch(0.83973 0.16469 124.137)` | `fill.backgroundImage`                                                                                 | `primary`（ΔL -0.049，ΔC +0.001）            |
+| default     | dark  | `oklch(0.71963 0.15821 125.456)` | `fill.borderColor`, `knobOn.borderColor`                                                               | `up`（ΔL -0.060，ΔC +0.010）                 |
+| default     | dark  | `oklch(0.88185 0.00589 264.53)`  | `knob.backgroundImage`, `handle.backgroundImage`                                                       | `code`（ΔL -0.014，ΔC -0.003）               |
+| default     | dark  | `oklch(0.8324 0.00597 264.528)`  | `knob.borderColor`, `handle.borderColor`                                                               | `code`（ΔL -0.064，ΔC -0.003）               |
+| default     | dark  | `oklch(0.97867 0.00945 119.575)` | `knobOn.backgroundImage`                                                                               | `brand`（ΔL +0.074，ΔC -0.157）              |
+| default     | dark  | `oklch(0.42689 0.01421 264.414)` | `on.backgroundColor`, `on.backgroundImage`                                                             | `window-control-off`（ΔL +0.026，ΔC +0.003） |
+| shadcn      | dark  | `oklch(0.34846 0 0)`             | `pressed.backgroundColor`, `pressed.backgroundImage`, `thumb.backgroundColor`, `thumb.backgroundImage` | `chart-4`（ΔL -0.023，ΔC -0.000，语义不同）  |
+| solid-glass | light | `oklch(0.2 0 0 / 0.88)`          | `fill.backgroundImage`                                                                                 | `primary`（ΔL +0.000，ΔC +0.000）            |
+| solid-glass | light | `oklch(0.38 0.03 265 / 0.22)`    | `menu.borderColor`                                                                                     | `muted`（ΔL +0.079，ΔC +0.011）              |
+| solid-glass | dark  | `oklch(0.94 0 0 / 0.86)`         | `fill.backgroundImage`                                                                                 | `primary`（ΔL +0.000，ΔC +0.000）            |
 
 <!-- /theme-lint: pending -->
 

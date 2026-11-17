@@ -20,14 +20,14 @@
       "borderColor": "oklch(0 0 0 / 0.5)"
     },
     "hover": {
-      "backgroundColor": "oklch(0.34882 0.01075 271.098)",
-      "backgroundImage": "linear-gradient(180deg, oklch(0.34882 0.01075 271.098) 0%, oklch(0.34882 0.01075 271.098) 100%)",
+      "backgroundColor": "var(--input)",
+      "backgroundImage": "linear-gradient(180deg, var(--input) 0%, var(--input) 100%)",
       "boxShadow": "inset 0 0 0 1px oklch(1 0 0 / 0.07), inset 0 1px 1px oklch(1 0 0 / 0.09), 0 1px 1px oklch(0 0 0 / 0.12)",
       "borderColor": "oklch(0 0 0 / 0.5)"
     },
     "pressed": {
-      "backgroundColor": "oklch(0.30959 0.01109 271.042)",
-      "backgroundImage": "linear-gradient(180deg, oklch(0.30959 0.01109 271.042) 0%, oklch(0.30959 0.01109 271.042) 100%)",
+      "backgroundColor": "var(--line)",
+      "backgroundImage": "linear-gradient(180deg, var(--line) 0%, var(--line) 100%)",
       "boxShadow": "inset 0 1px 1px oklch(0 0 0 / 0.18)",
       "borderColor": "oklch(0 0 0 / 0.5)"
     },
@@ -35,13 +35,13 @@
       "backgroundColor": "var(--primary)",
       "backgroundImage": "linear-gradient(180deg, var(--primary) 0%, var(--primary) 100%)",
       "boxShadow": "inset 0 0 0 1px oklch(1 0 0 / 0.22), inset 0 1px 1px oklch(1 0 0 / 0.35), 0 1px 1px oklch(0 0 0 / 0.12)",
-      "borderColor": "oklch(0.32672 0.08497 127.611 / 0.55)"
+      "borderColor": "var(--brand-edge)"
     },
     "accent": {
       "backgroundColor": "var(--primary)",
       "backgroundImage": "linear-gradient(180deg, var(--primary) 0%, var(--primary) 100%)",
       "boxShadow": "inset 0 0 0 1px oklch(1 0 0 / 0.22), inset 0 1px 1px oklch(1 0 0 / 0.35), 0 1px 1px oklch(0 0 0 / 0.12)",
-      "borderColor": "oklch(0.32672 0.08497 127.611 / 0.55)"
+      "borderColor": "var(--brand-edge)"
     },
     "track": {
       "boxShadow": "inset 0 1px 1px oklch(0 0 0 / 0.25)",
@@ -55,7 +55,7 @@
     },
     "knob": {
       "backgroundColor": "var(--knob)",
-      "backgroundImage": "linear-gradient(180deg, oklch(0.94816 0.00344 247.859) 0%, oklch(0.88185 0.00589 264.53) 100%)",
+      "backgroundImage": "linear-gradient(180deg, var(--foreground) 0%, oklch(0.88185 0.00589 264.53) 100%)",
       "boxShadow": "0 1px 1px oklch(0 0 0 / 0.45)",
       "borderColor": "oklch(0.8324 0.00597 264.528)"
     },
@@ -67,7 +67,7 @@
     },
     "handle": {
       "backgroundColor": "var(--knob)",
-      "backgroundImage": "linear-gradient(180deg, oklch(0.94816 0.00344 247.859) 0%, oklch(0.88185 0.00589 264.53) 100%)",
+      "backgroundImage": "linear-gradient(180deg, var(--foreground) 0%, oklch(0.88185 0.00589 264.53) 100%)",
       "boxShadow": "0 1px 1px oklch(0 0 0 / 0.45)",
       "borderColor": "oklch(0.8324 0.00597 264.528)"
     },
@@ -93,7 +93,7 @@
       "boxShadow": "0 1px 0 oklch(0 0 0 / 0.3)"
     },
     "glass": {
-      "backgroundColor": "oklch(0.25145 0.01219 264.328 / 0.78)",
+      "backgroundColor": "oklch(from var(--card) l c h / 0.78)",
       "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.06), 0 1px 0 oklch(0 0 0 / 0.4)",
       "borderColor": "var(--border)",
       "backdropFilter": "blur(20px)"
@@ -128,11 +128,11 @@
       "backgroundColor": "var(--popover)",
       "backgroundImage": "linear-gradient(180deg, var(--popover) 0%, var(--popover) 100%)",
       "boxShadow": "inset 0 1px 0 oklch(1 0 0), inset 0 2px 0 oklch(1 0 0 / 0.6), 0 1px 0 oklch(0.1686 0.02256 263.693 / 0.05)",
-      "borderColor": "oklch(0.82977 0.0043 271.361)"
+      "borderColor": "var(--border)"
     },
     "pressed": {
-      "backgroundColor": "oklch(0.94921 0.00416 271.368)",
-      "backgroundImage": "linear-gradient(180deg, oklch(0.94921 0.00416 271.368) 0%, oklch(0.94921 0.00416 271.368) 100%)",
+      "backgroundColor": "var(--muted)",
+      "backgroundImage": "linear-gradient(180deg, var(--muted) 0%, var(--muted) 100%)",
       "boxShadow": "inset 0 1px 1px oklch(0.1686 0.02256 263.693 / 0.1)",
       "borderColor": "var(--input)"
     },
@@ -140,13 +140,13 @@
       "backgroundColor": "var(--primary)",
       "backgroundImage": "linear-gradient(180deg, var(--primary) 0%, var(--primary) 100%)",
       "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.55), inset 0 -1px 0 oklch(0.42761 0.11265 128.534 / 0.12), 0 1px 0 oklch(0.42761 0.11265 128.534 / 0.14)",
-      "borderColor": "oklch(0.76556 0.16727 124.422)"
+      "borderColor": "var(--brand-edge)"
     },
     "accent": {
       "backgroundColor": "var(--primary)",
       "backgroundImage": "linear-gradient(180deg, var(--primary) 0%, var(--primary) 100%)",
       "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.55), inset 0 -1px 0 oklch(0.42761 0.11265 128.534 / 0.12), 0 1px 0 oklch(0.42761 0.11265 128.534 / 0.14)",
-      "borderColor": "oklch(0.76556 0.16727 124.422)"
+      "borderColor": "var(--brand-edge)"
     },
     "track": {
       "boxShadow": "inset 0 1px 1px oklch(0.1686 0.02256 263.693 / 0.05)",
@@ -160,7 +160,7 @@
     },
     "knob": {
       "backgroundColor": "oklch(1 0 0)",
-      "backgroundImage": "linear-gradient(180deg, oklch(1 0 0) 0%, oklch(0.96424 0.00414 271.369) 100%)",
+      "backgroundImage": "linear-gradient(180deg, oklch(1 0 0) 0%, var(--raised) 100%)",
       "boxShadow": "0 1px 0 oklch(0.1686 0.02256 263.693 / 0.08)",
       "borderColor": "var(--input)"
     },
@@ -172,7 +172,7 @@
     },
     "handle": {
       "backgroundColor": "oklch(1 0 0)",
-      "backgroundImage": "linear-gradient(180deg, oklch(1 0 0) 0%, oklch(0.96424 0.00414 271.369) 100%)",
+      "backgroundImage": "linear-gradient(180deg, oklch(1 0 0) 0%, var(--raised) 100%)",
       "boxShadow": "0 1px 0 oklch(0.1686 0.02256 263.693 / 0.08)",
       "borderColor": "var(--input)"
     },
@@ -198,7 +198,7 @@
       "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.65)"
     },
     "glass": {
-      "backgroundColor": "oklch(0.97997 0.00397 286.326 / 0.8)",
+      "backgroundColor": "oklch(from var(--popover) l c h / 0.8)",
       "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), 0 1px 0 oklch(0.1686 0.02256 263.693 / 0.04)",
       "borderColor": "var(--border)",
       "backdropFilter": "blur(20px)"
