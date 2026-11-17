@@ -83,6 +83,10 @@ out
 dist
 .output
 
+# Fumadocs / TanStack Start generated files
+.source
+.tanstack
+
 # Gatsby files
 .cache/
 # Comment in the public line in if your project uses Gatsby and not Next.js
@@ -166,3 +170,11 @@ bun.lockb
 **/demos/shots-theme/
 **/demos-themed/
 **/demos/shots-audit/
+
+# Scratch space for the pi working notes and local probe servers
+.pi-tmp
+
+# Verification screenshots of a migration batch (not committed)
+/shots-*/
+/PI-BRIEF.md
+/PI-SUMMARY.md

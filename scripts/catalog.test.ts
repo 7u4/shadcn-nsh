@@ -56,7 +56,7 @@ function fixture({ items, files = {}, index }: Fixture): string {
     defaults[`packages/ui/${item.name}.tsx`] = "export const value = 1;\n";
     defaults[`apps/docs/demos/${item.name}.tsx`] = "// demo\n";
     defaults[`apps/docs/demos/${item.name}.ref.tsx`] = "// reference\n";
-    defaults[`apps/docs/src/pages/docs/components/${item.name}.md`] = "## Installation\n";
+    defaults[`apps/docs/content/docs/components/${item.name}.md`] = "## Installation\n";
   }
   for (const [rel, text] of Object.entries({ ...defaults, ...files })) {
     const file = path.join(root, rel);
@@ -86,7 +86,7 @@ describe("catalog", () => {
     expect(set[0]!.uiFile).toBe(path.join(root, "packages/ui/beta.tsx"));
     expect(set[0]!.demo).toBe(path.join(root, "apps/docs/demos/beta.tsx"));
     expect(set[0]!.reference).toBe(path.join(root, "apps/docs/demos/beta.ref.tsx"));
-    expect(set[0]!.page).toBe(path.join(root, "apps/docs/src/pages/docs/components/beta.md"));
+    expect(set[0]!.page).toBe(path.join(root, "apps/docs/content/docs/components/beta.md"));
   });
 
   test("exposes the paths the scripts share", () => {
@@ -109,14 +109,14 @@ describe("checkCatalog", () => {
     const root = fixture({ items: [ui("alpha")], index: 'export * from "./other";\n' });
     remove(root, "apps/docs/demos/alpha.tsx");
     remove(root, "apps/docs/demos/alpha.ref.tsx");
-    remove(root, "apps/docs/src/pages/docs/components/alpha.md");
+    remove(root, "apps/docs/content/docs/components/alpha.md");
     remove(root, "packages/ui/alpha.tsx");
 
     const problems = checkCatalog(catalog(root));
     expect(problems).toContain("alpha: no packages/ui/alpha.tsx");
     expect(problems).toContain("alpha: no demo apps/docs/demos/alpha.tsx");
     expect(problems).toContain("alpha: no reference page apps/docs/demos/alpha.ref.tsx");
-    expect(problems).toContain("alpha: no docs page apps/docs/src/pages/docs/components/alpha.md");
+    expect(problems).toContain("alpha: no docs page apps/docs/content/docs/components/alpha.md");
     expect(problems).toContain('alpha: packages/ui/index.ts does not export "./alpha"');
   });
 
@@ -146,7 +146,7 @@ describe("checkCatalog", () => {
         "apps/docs/demos/render-cases.ts": "",
         "apps/docs/demos/alpha.test.tsx": "",
         "apps/docs/demos/baseline/shot.png": "",
-        "apps/docs/src/pages/docs/components/index.astro": "",
+        "apps/docs/content/docs/components/index.astro": "",
       },
     });
 
@@ -164,14 +164,14 @@ describe("checkCatalog", () => {
       files: {
         "apps/docs/demos/orphan.tsx": "",
         "apps/docs/demos/orphan.ref.tsx": "",
-        "apps/docs/src/pages/docs/components/orphan.md": "",
+        "apps/docs/content/docs/components/orphan.md": "",
       },
     });
 
     expect(checkCatalog(catalog(root)).sort()).toEqual([
+      "apps/docs/content/docs/components/orphan.md: docs page for no component",
       "apps/docs/demos/orphan.ref.tsx: reference page for no component",
       "apps/docs/demos/orphan.tsx: demo for no component",
-      "apps/docs/src/pages/docs/components/orphan.md: docs page for no component",
     ]);
   });
 });

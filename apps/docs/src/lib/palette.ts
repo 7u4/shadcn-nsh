@@ -4,12 +4,12 @@
  * the choices the demos themselves read (`apps/docs/demos/palettes.ts`). Neither the app's id nor a
  * palette is written here: both come from the demos.
  *
- * A choice is written before the panels load again (`demo-client.ts`'s `reloadDemos`): a running
- * app reads its storage once, when it starts, and cannot see a later write.
+ * A choice is written before the panels load again: a running app reads its storage once, when it
+ * starts, and cannot see a later write. Each panel subscribes to `onPaletteChange` and loads its
+ * frame again (`src/components/fd/demo-panel.tsx`).
  */
 import demos from "../../demos/nsh.json";
 import { PALETTES, PALETTE_KEY, type PaletteId } from "../../demos/palettes";
-import { reloadDemos } from "./demo-client";
 
 /** Where the demo app's `Storage` keeps the palette: `nsh:<its id>:palette`. */
 export const PALETTE_STORAGE_KEY = `nsh:${demos.id}:${PALETTE_KEY}`;
@@ -40,15 +40,18 @@ const PALETTE_EVENT = "palette-change";
 /**
  * Chooses a palette for the demos: stored for the next load, and every demo panel loads again in
  * it. A running app reads its storage once (nsh's `Storage` has no change event), so the panels
- * load again rather than switch in place (`reloadDemos`).
+ * load again rather than switch in place.
  */
 export function choosePalette(id: PaletteId) {
   storePalette(id);
-  reloadDemos();
   document.dispatchEvent(new CustomEvent(PALETTE_EVENT));
 }
 
-/** Calls `change` whenever a switch on the page chose another palette. */
+/**
+ * Calls `change` whenever a switch on the page chose another palette; returns the unsubscribe, for
+ * callers that mount and unmount (the React panel).
+ */
 export function onPaletteChange(change: () => void) {
   document.addEventListener(PALETTE_EVENT, change);
+  return () => document.removeEventListener(PALETTE_EVENT, change);
 }

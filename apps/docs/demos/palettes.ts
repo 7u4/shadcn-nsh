@@ -4,7 +4,7 @@
 //
 // A palette's `label` is what the switch shows. The theme itself names itself too, longer
 // (`AppTheme.label`: "shadcn neutral"); that name is the theme's, not the switch's. The themes
-// page (`src/pages/docs/themes.astro`) reads this list too: one more field here is one more
+// page (`content/docs/themes.mdx`) reads this list too: one more field here is one more
 // column there, and neither side keeps a second list of themes.
 //
 // This module imports nothing, so the site can read it as well as the demos: no `nsh`, no theme
