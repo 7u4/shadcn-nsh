@@ -17,17 +17,20 @@ import finishes from "./finishes.json";
 
 // @port theme.ts
 /**
- * The Terminal idiom: the shared UI and the gallery leave out what a
- * terminal program would not show (charts, sparklines, decorative icons and
- * art, window chrome), put on one row what other platforms stack, and space
- * in whole Cell rows (16 pt at the default 8 × 16 points per Cell).
+ * The Terminal idiom (`nsh`'s internal module, so not a public API): a
+ * terminal program leaves out what it cannot draw well (charts,
+ * sparklines, decorative icons and art, window chrome), puts on one row
+ * what other platforms stack, and spaces in whole rows.
  */
 export const terminal = platform.idiom === "terminal";
 
-/** One Cell row and one Cell column in points (the default 8 × 16 points
- * per Cell): the terminal's line height and its unit of spacing. */
+/**
+ * One row and one column of the terminal grid, in points (a Cell is 16 by 8
+ * points): the terminal's line height and its unit of spacing. This
+ * library's own, over `nsh`'s internal Cell metrics; everywhere else the
+ * grid keeps two columns to a Cell.
+ */
 export const TERMINAL_ROW = 16;
-
 export const TERMINAL_COLUMN = 8;
 
 /** The gap the terminal's layout makes two columns (it makes any smaller
@@ -35,13 +38,7 @@ export const TERMINAL_COLUMN = 8;
  * as their labels, so they read apart. */
 export const TERMINAL_GAP = 24;
 
-/** A vertical space (a gap, a padding) in the terminal's whole rows: none
- * below half a row, else the nearest whole number of rows. Unchanged
- * elsewhere. */
-export const wholeRows = (points: number) =>
-  terminal ? Math.round(points / TERMINAL_ROW) * TERMINAL_ROW : points;
-
-/** Whether the shared example UI shows its dark palette (reactive: reading it subscribes). */
+/** Whether the app shows its dark palette; reactive: reading it subscribes. */
 export const isDark = () => colorScheme() !== "light";
 
 /** A surface's finish: a gradient over its color and its shadows. */
@@ -134,8 +131,9 @@ const atAlpha = (color: string, a: number) =>
  *
  * A token named at another alpha (`oklch(from var(--card) l c h / 0.78)`, the one relative color a
  * finish writes) resolves to that token's color with the alpha replaced: NSH reads these strings
- * as plain CSS and has no relative color syntax. It goes through `token` rather than the theme's
- * file, so this module imports no `theme.json`, which an app keeps at its root, not beside it.
+ * as plain CSS and has no relative color syntax. It goes through `token` rather than reading the
+ * theme file, so this module imports nothing but `finishes.json`: it is `lib/theme.ts` in an app,
+ * whose `theme.json` sits at its root.
  */
 const alias = (value: string): string =>
   value
@@ -169,7 +167,7 @@ function themed(role: FinishRole): Finish {
   return out;
 }
 
-/** The roles of the palette. */
+/** The palette's roles: one color each, a token of the theme's `theme.json`. */
 export interface Palette {
   /** The page behind the cards. */
   background: string;
@@ -187,6 +185,7 @@ export interface Palette {
   field: string;
   /** An input's edge. */
   fieldBorder: string;
+  /** The hairline round what needs an edge (a card, a well, a divider). */
   border: string;
   /** Hairlines inside insets. */
   line: string;
@@ -196,8 +195,11 @@ export interface Palette {
   /** The hairline round a glass surface (a raised pane, a track's thumb, a popover): Solid Glass' own
    * line, `border` in a flat theme. */
   glassEdge: string;
+  /** Body text. */
   text: string;
+  /** Secondary text: a detail, a caption. */
   muted: string;
+  /** What recedes the furthest: a placeholder, an icon at rest. */
   faint: string;
   /** The accent as a foreground: text, icons, lines, small marks. */
   accent: string;
@@ -221,6 +223,7 @@ export interface Palette {
   knob: string;
   /** Code inside insets. */
   code: string;
+  /** The tone colors: information, a warning, a failure, a gain, a loss. */
   info: string;
   warn: string;
   danger: string;
@@ -239,11 +242,9 @@ function tokens<K extends string>(names: Record<K, keyof Tokens>): Record<K, str
 }
 
 /**
- * The shared example UI's look: a graphite page (or a paper one in light
- * appearance), cards with an inset surface, tabular numbers and one citrus
- * accent, its colors the tokens of `theme.json`. Desktops are compact
- * (28-point controls, 13-point labels), touch screens roomier (36 to 40
- * points).
+ * The palette in use, read from the theme's tokens: reactive, so reading it
+ * in JSX, a `draw` or an `effect` follows the appearance and the theme
+ * `selectTheme` put in.
  */
 export const colors: Palette = tokens<keyof Palette>({
   background: "background",
@@ -293,9 +294,12 @@ export const windowControls = tokens<"close" | "minimize" | "zoom" | "ink" | "ed
   off: "window-control-off",
 });
 
-/** `color` at opacity `a`. */
-export function alpha(color: string, a: number) {
-  return `color-mix(in srgb, ${color} ${a * 100}%, transparent)`;
+/**
+ * `color` at opacity `a` (0 to 1): a `color-mix` over nothing, for a fill or a text color that is
+ * the theme's at a lighter weight. Clamped, so a ratio past its ends is still a color.
+ */
+export function alpha(color: string, a: number): string {
+  return `color-mix(in srgb, ${color} ${Math.min(Math.max(a, 0), 1) * 100}%, transparent)`;
 }
 
 /** The charts' series colors, in order (`theme.json`'s `chart-1` to
@@ -407,13 +411,17 @@ export const toneColor = (tone: Tone) => (tone === "neutral" ? colors.muted : co
 /** The tint of a tone. */
 export const toneTint = (tone: Tone) => (tone === "neutral" ? colors.raised : tints[tone]);
 
+/** How much of a tone a solid tint carries: 10 % over a light base, 16 % over a dark one, where the
+ * same mix would read fainter. */
+const SOLID_TINT = { light: 10, dark: 16 } as const;
+
 /** A tone's tint as `toneTint` shows it on `base` (default the card), but
  * opaque: for what overlaps, such as stacked avatars, where a translucent
  * tint would let what is under it show through. */
 export const solidTint = (tone: Tone, base: string = colors.surface) =>
   tone === "neutral"
     ? colors.raised
-    : `color-mix(in srgb, ${toneColor(tone)} ${isDark() ? 16 : 10}%, ${base})`;
+    : `color-mix(in srgb, ${toneColor(tone)} ${isDark() ? SOLID_TINT.dark : SOLID_TINT.light}%, ${base})`;
 
 /** The monospaced family, for code (API names, identifiers). Figures use
  * the system font with tabular numbers instead. */
@@ -498,16 +506,19 @@ export const hovered = (): ViewStyle => ({ backgroundColor: token("hover") });
  */
 export const ghostFill = () => (terminal ? token("secondary") : "transparent");
 
+/** How wide the halo round a focused view is: shadcn/ui's `ring-3`. */
+const RING_WIDTH = 3;
+
 /**
  * The keyboard focus (`focusVisibleStyle`: not after a click or a tap): the
- * edge turns the theme's muted olive `ring` and a 3-point halo of `ring-halo`
- * (here a faint wash of the ring; shadcn's `ring/50`) lies around the view
- * (`offset` moves the halo out from the edge).
+ * edge turns the theme's `ring` and a 3-point halo of `ring-halo` lies
+ * around the view (a faint wash of the ring; shadcn's `ring/50`), `offset`
+ * points out from the edge.
  */
 export const focusRing = (offset = 0): ViewStyle => ({
   borderColor: token("ring"),
   outlineStyle: "solid",
-  outlineWidth: 3,
+  outlineWidth: RING_WIDTH,
   outlineColor: token("ring-halo"),
   outlineOffset: offset,
 });

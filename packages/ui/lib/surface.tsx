@@ -1,3 +1,5 @@
+// What sections, wells and rows look like: density, surfaces, and rows whose hover fill bleeds.
+// From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import {
   colors,
   finish,
@@ -8,8 +10,6 @@ import {
   TERMINAL_GAP,
   TERMINAL_ROW,
 } from "@shadcn-nsh/theme";
-// What sections, wells and rows look like: density, surfaces, and rows whose hover fill bleeds.
-// From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import type { ViewStyle } from "nsh";
 import { platform, Text, token, View, windowSize } from "nsh";
 
@@ -31,6 +31,72 @@ export const density = pointer
   ? { title: 13, note: 12, body: 13, row: 36, pad: 14, gap: 12, surface: 10 }
   : { title: 13, note: 13, body: 15, row: 48, pad: 16, gap: 12, surface: 16 };
 
+/** One tier's sizes of a list of controls (see `controlSize` for what each is). */
+interface ControlSizes {
+  row: number;
+  padding: number;
+  gap: number;
+  label: number;
+  detail: number;
+  control: number;
+  corner: number;
+  check: number;
+  dot: number;
+  tabs: number;
+  line: number;
+  clear: number;
+  switch: "small" | "regular";
+}
+
+/** Each tier's sizes, by the name `controlSize` picks: see it for what each is. */
+const sizesByTier = {
+  terminal: {
+    row: TERMINAL_ROW,
+    padding: 0,
+    gap: TERMINAL_COLUMN,
+    label: 14,
+    detail: 12,
+    control: 3 * TERMINAL_COLUMN,
+    corner: 0,
+    check: 12,
+    dot: 6,
+    tabs: TERMINAL_ROW,
+    line: TERMINAL_ROW,
+    clear: 2 * TERMINAL_COLUMN,
+    switch: "small",
+  },
+  pointer: {
+    row: 40,
+    padding: 6,
+    gap: 10,
+    label: 14,
+    detail: 12,
+    control: 16,
+    corner: 5,
+    check: 12,
+    dot: 6,
+    tabs: 30,
+    line: 32,
+    clear: 16,
+    switch: "small",
+  },
+  touch: {
+    row: 44,
+    padding: 8,
+    gap: 12,
+    label: 15,
+    detail: 13,
+    control: 22,
+    corner: 7,
+    check: 16,
+    dot: 8,
+    tabs: 40,
+    line: 44,
+    clear: 20,
+    switch: "regular",
+  },
+} satisfies Record<string, ControlSizes>;
+
 /**
  * The sizes of a list of controls (a settings list, a filter, a plan
  * picker): a pointer's compact tier (40-point rows, 14-point labels,
@@ -42,53 +108,8 @@ export const density = pointer
  * and an icon's size, `dot` a radio's dot, `corner` a box's corners, `clear`
  * a clear button's side, `switch` the switch size beside a row's label.
  */
-export const controlSize = terminal
-  ? {
-      row: TERMINAL_ROW,
-      padding: 0,
-      gap: TERMINAL_COLUMN,
-      label: 14,
-      detail: 12,
-      control: 3 * TERMINAL_COLUMN,
-      corner: 0,
-      check: 12,
-      dot: 6,
-      tabs: TERMINAL_ROW,
-      line: TERMINAL_ROW,
-      clear: 2 * TERMINAL_COLUMN,
-      switch: "small" as const,
-    }
-  : pointer
-    ? {
-        row: 40,
-        padding: 6,
-        gap: 10,
-        label: 14,
-        detail: 12,
-        control: 16,
-        corner: 5,
-        check: 12,
-        dot: 6,
-        tabs: 30,
-        line: 32,
-        clear: 16,
-        switch: "small" as const,
-      }
-    : {
-        row: 44,
-        padding: 8,
-        gap: 12,
-        label: 15,
-        detail: 13,
-        control: 22,
-        corner: 7,
-        check: 16,
-        dot: 8,
-        tabs: 40,
-        line: 44,
-        clear: 20,
-        switch: "regular" as const,
-      };
+export const controlSize: ControlSizes =
+  sizesByTier[terminal ? "terminal" : pointer ? "pointer" : "touch"];
 
 /** Options of `sectionSurface`. */
 export interface SectionSurfaceOptions {
@@ -99,7 +120,7 @@ export interface SectionSurfaceOptions {
 }
 
 /**
- * The flat surface a section's content sits on (the gallery's `Card`): the
+ * The flat surface a section's content sits on (a card's): the
  * card color, one hairline edge, no shadow, corners of `density.surface`
  * (10 with a pointer, 16 on a touch screen). In the terminal a border whose
  * row and column on each side the padding fills out, so the content starts
@@ -146,6 +167,9 @@ export function insetSurface(): ViewStyle {
  * the padding stays a column, pushing the label in. */
 export const ROW_BLEED = terminal ? 0 : 8;
 
+/** The room a stacked row leaves between its label and its control. */
+const STACKED_GAP = 8;
+
 /** The widest window that takes the phone's layout (a phone, or a narrow
  * desktop window), in points. */
 const NARROW = 600;
@@ -183,7 +207,7 @@ export function plainRow(o?: PlainRowOptions): ViewStyle {
     minHeight: o?.dense ? controlSize.line : controlSize.row,
     flexDirection: stacked ? "column" : "row",
     alignItems: stacked ? "stretch" : "center",
-    gap: stacked ? 8 : controlSize.gap,
+    gap: stacked ? STACKED_GAP : controlSize.gap,
     paddingVertical: o?.dense ? 0 : controlSize.padding,
     borderTopWidth: o?.first || terminal ? 0 : 1,
     borderTopColor: colors.line,

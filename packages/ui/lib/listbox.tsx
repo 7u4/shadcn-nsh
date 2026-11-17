@@ -19,13 +19,18 @@ export interface ListboxPopupOptions {
   minWidth?: number;
 }
 
+/** A list's sheet, on a touch screen: the corners of its top edge, and the room under its last
+ * row (the window's bottom edge). */
+const SHEET_CORNER = 20;
+const SHEET_FOOT = 34;
+
 /**
  * The list's surface: with a pointer a popup at the trigger that extends
- * it (the floating finish every popup wears, corners of 10, 6 points of
- * padding); on a touch screen a sheet at the bottom, its top corners
- * rounded, at most 70% of the window high. Not the raised finish: that is a
- * control's, and a theme may make it a tint over what is behind it (Solid
- * Glass), which a list floating over the page cannot be.
+ * it (the floating finish every popup wears, the theme's inset corners, 6
+ * points of padding); on a touch screen a sheet at the bottom, its top
+ * corners rounded, at most 70% of the window high. Not the raised finish:
+ * that is a control's, and a theme may make it a tint over what is behind
+ * it (Solid Glass), which a list floating over the page cannot be.
  */
 export function listboxPopup(o?: ListboxPopupOptions): ViewStyle {
   return pointer
@@ -38,11 +43,11 @@ export function listboxPopup(o?: ListboxPopupOptions): ViewStyle {
       }
     : {
         backgroundColor: colors.surface,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
+        borderTopLeftRadius: SHEET_CORNER,
+        borderTopRightRadius: SHEET_CORNER,
         paddingHorizontal: 10,
         paddingTop: 10,
-        paddingBottom: 34,
+        paddingBottom: SHEET_FOOT,
         maxHeight: "70%",
       };
 }
@@ -96,9 +101,14 @@ export function Chevron(props: { open: boolean; hidden?: boolean }) {
   );
 }
 
+/** A trigger's 1-point border, and the padding at its end (the side the chevron or the clear button
+ * sits on). */
+const TRIGGER_BORDER = 1;
+const TRIGGER_PAD_END = 10;
+
 /** The clear button's inset from a trigger's end: centered where the chevron's lane is. The button is in the
  * select's view, outside the trigger, so its inset counts the trigger's 1-point border too. */
-const clearInset = 1 + 10 + controlSize.check / 4 - controlSize.clear / 2;
+const clearInset = TRIGGER_BORDER + TRIGGER_PAD_END + controlSize.check / 4 - controlSize.clear / 2;
 
 /** Options of `clearButtonLook`. */
 export interface ClearButtonOptions {
@@ -136,6 +146,13 @@ export function clearButtonLook(o?: ClearButtonOptions) {
   };
 }
 
+/** A row's height: the title alone, and with a line under it; compact with a pointer, roomier on a
+ * touch screen. */
+const rowHeights = {
+  pointer: { title: 30, detail: 38 },
+  touch: { title: 44, detail: 52 },
+} as const;
+
 /**
  * A row's content (`renderItem`): the title, bolder with a check while
  * chosen (`group-selected:`); `lead` before it (a flag, a dot, a face, an
@@ -154,7 +171,9 @@ export function OptionRow(props: {
         alignItems: "center",
         gap: 8,
         // The row's 1-point border on each side.
-        height: props.detail ? (pointer ? 38 : 52) : pointer ? 30 : 44,
+        height: (pointer ? rowHeights.pointer : rowHeights.touch)[
+          props.detail ? "detail" : "title"
+        ],
         // With its border and the popup's padding, the trigger's inset: a select's chosen row lies over the trigger, title on title.
         paddingHorizontal: pointer ? 3 : 7,
       }}

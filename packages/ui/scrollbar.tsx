@@ -8,11 +8,12 @@ import {
 } from "nsh/base";
 
 // @port scrollbar-theme.ts
+/** Whether the screen is a finger's, which takes a thinner bar and its smaller inset. */
 const touch = !platform.desktop;
 
 /**
- * The gallery's scroll bars, gpui-component's, which `Scrollbar.setTheme`
- * gives every scroll view and list in place of the platform's indicator.
+ * The scroll bars every scroll view and list wears, in place of the
+ * platform's indicator: gpui-component's design.
  * They show while the content scrolls and while the pointer is over them
  * (pointing at a hidden thumb slides it in from the edge), fade in over
  * 300 ms and out over 500 ms, 2 s after the last scroll, drag or hover.
@@ -43,6 +44,7 @@ export const scrollbarTheme: ScrollbarTheme = {
 };
 // @port end
 
+/** `base` and then `extra`, when it has a class of its own. */
 function mergeClass(base: string, extra?: string | null): string {
   return extra ? `${base} ${extra}` : base;
 }
@@ -50,9 +52,10 @@ function mergeClass(base: string, extra?: string | null): string {
 /** Theme layer on `nsh/base` Scrollbar. Every base prop passes through. */
 export type ScrollbarProps = BaseScrollbarProps;
 
+/** The bar itself: `Scrollbar` adds the static `setTheme` to it. */
 function Bar(props: ScrollbarProps) {
   const axis = props.axis ?? "vertical";
-  const part = axis === "horizontal" ? scrollbarTheme.horizontal! : scrollbarTheme.vertical!;
+  const part = (axis === "horizontal" ? scrollbarTheme.horizontal : scrollbarTheme.vertical) ?? {};
   const [, rest] = split(props, ["class", "thumbClass", "mode", "motion", "axis"]);
   return (
     <BaseScrollbar
