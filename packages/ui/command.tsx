@@ -24,6 +24,9 @@ const size = {
   detail: controlSize.detail,
 };
 
+/** A row's label: 13 points under a pointer, a touch screen's control label. */
+const labelFont = desktop ? 13 : size.label;
+
 // @port command.tsx
 /**
  * The classes of a palette's parts. The highlight is a tint and an inner
@@ -64,6 +67,7 @@ export function CommandKeys(props: { label: string }) {
 /** A section's heading: small capitals in the faint color. */
 export function CommandHeading(props: { group: CommandGroup }) {
   return (
+    // Small capitals: an 11-point header, tracked out a little to read as a label.
     <Text style={{ fontSize: 11, fontWeight: "600", letterSpacing: 0.6, color: colors.faint }}>
       {props.group.heading.toLocaleUpperCase()}
     </Text>
@@ -82,6 +86,7 @@ export function CommandRow(props: {
   detail?: string;
   note?: string;
 }) {
+  // A second line of text takes the row past its least height, so the row asks for density's height.
   const height = props.detail ? size.row : size.rowSm;
   return (
     <View
@@ -89,7 +94,7 @@ export function CommandRow(props: {
     >
       {props.icon ? <Icon icon={props.icon} size={16} tint={colors.muted} /> : null}
       <View style={{ flex: 1, minWidth: 0, gap: 1 }}>
-        <Text style={{ fontSize: desktop ? 13 : size.label, color: colors.text, numberOfLines: 1 }}>
+        <Text style={{ fontSize: labelFont, color: colors.text, numberOfLines: 1 }}>
           {props.entry.label}
         </Text>
         {props.detail ? (
@@ -125,7 +130,7 @@ function mergeClass(base: string, extra?: string | null): string {
   return extra ? `${base} ${extra}` : base;
 }
 
-/** `nsh/base` Command with `commandClasses` and default row chrome. */
+/** Every prop of `nsh/base` Command. */
 export type CommandProps = BaseCommandProps;
 
 /** A command of the palette (`items`), from `nsh/base`. */
@@ -158,17 +163,16 @@ export function Command(props: CommandProps) {
     "searchPrefix",
     "style",
   ]);
-  const chrome = commandClasses;
   return (
     <BaseCommand
       {...rest}
-      class={mergeClass(chrome.root, props.class)}
-      searchBarClass={mergeClass(chrome.searchBar, props.searchBarClass)}
-      searchClass={mergeClass(chrome.search, props.searchClass)}
-      listClass={mergeClass(chrome.list, props.listClass)}
-      itemClass={mergeClass(chrome.item, props.itemClass)}
-      groupClass={mergeClass(chrome.group, props.groupClass)}
-      separatorClass={mergeClass(chrome.separator, props.separatorClass)}
+      class={mergeClass(commandClasses.root, props.class)}
+      searchBarClass={mergeClass(commandClasses.searchBar, props.searchBarClass)}
+      searchClass={mergeClass(commandClasses.search, props.searchClass)}
+      listClass={mergeClass(commandClasses.list, props.listClass)}
+      itemClass={mergeClass(commandClasses.item, props.itemClass)}
+      groupClass={mergeClass(commandClasses.group, props.groupClass)}
+      separatorClass={mergeClass(commandClasses.separator, props.separatorClass)}
       placeholder={props.placeholder ?? "Type a command or search…"}
       searchPrefix={
         props.searchPrefix === undefined ? (
