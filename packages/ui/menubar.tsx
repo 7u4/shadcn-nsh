@@ -1,8 +1,6 @@
-// A menubar: a row of menus whose triggers stand in one bar, as a desktop app's menu bar does. The
-// rows, the submenus and the popup's surface are `menu.tsx`'s (`MenuItem`, `menuPopup`, …): this file
-// is the bar, its triggers, and the shell that puts a menu's trigger in the bar and its popup below
-// it. This library's own: nothing here comes from upstream, so there is no port region. Yours to
-// change.
+// A menubar: a row of menus whose triggers stand in one bar, as a desktop app's menu bar. The
+// rows, submenus and popups are `menu.tsx`'s; this file is the bar, its triggers and the shell.
+// This library's own: nothing comes from upstream, so there is no port region. Yours to change.
 import { colors, focusRing, radius } from "@shadcn-nsh/theme";
 import type { JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
 import { context, platform, split, Text, View } from "nsh";
@@ -30,7 +28,14 @@ export const menubarSize = pointer
 /** A trigger's inset from its sides (shadcn's `px-2`). */
 const triggerPad = 8;
 
-/** A menubar's parts as the styles and classes they wear: spread each one on the part it names. */
+/** The gap inside a trigger, between a lead icon and its name (shadcn's `gap-1.5`). */
+const triggerGap = 6;
+
+/** How far a press dims a trigger: a menu row's press shows a deeper fill, a bar's trigger
+ * (which floats on the bar's fill) a shade of its own. */
+const pressDim = 0.7;
+
+/** A menubar's parts as the styles they wear: spread each one on the part it names. */
 export interface MenubarLook {
   /** The bar (`Menubar`): a row of triggers, its height and its 1-point edge, the card's fill. */
   readonly bar: ViewStyle;
@@ -67,7 +72,7 @@ export function menubarLook(): MenubarLook {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        gap: 6,
+        gap: triggerGap,
         height: menubarSize.trigger,
         paddingHorizontal: triggerPad,
         borderRadius: menuItemSize.radius,
@@ -112,12 +117,12 @@ export function menubarTriggerLook(o?: MenubarTriggerLookOptions) {
       return disabled() || open() ? undefined : menuHighlight();
     },
     get activeStyle(): ViewStyle | undefined {
-      return disabled() ? undefined : { opacity: 0.7 };
+      return disabled() ? undefined : { opacity: pressDim };
     },
     get focusVisibleStyle(): ViewStyle {
       return focusRing();
     },
-    disabledStyle: { opacity: 0.5 } as ViewStyle,
+    disabledStyle: { opacity: 0.5 },
   };
 }
 
@@ -126,6 +131,9 @@ export type MenubarProps = {
   children?: JSX.Element;
   style?: StyleProp<ViewStyle>;
 };
+
+/** Why a menu of the bar closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type MenubarOpenChangeReason = OpenChangeReason;
 
 /**
  * One menu of the bar: its own open state (the app may own it with `open`), its trigger and its
@@ -315,6 +323,3 @@ export {
   type MenuSubProps as MenubarSubProps,
   type MenuSubTriggerProps as MenubarSubTriggerProps,
 } from "./menu";
-
-/** Why a menu of the bar closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
-export type MenubarOpenChangeReason = OpenChangeReason;

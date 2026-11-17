@@ -44,7 +44,7 @@ export const menuItemSize: MenuItemDimensions = pointer
   : { height: 46, radius: 10, font: 16, note: 14, icon: 18 };
 
 /** A row's inset from the popup's sides: in a terminal the popup's own padding is its Cell from the frame. */
-const inset = terminal ? 0 : 8;
+const rowInset = terminal ? 0 : 8;
 
 /** The room a checkable row's mark takes before its label: the mark and the row's gap. An `inset`
  * row starts its label that much further in, so it lines up with the checkable rows. */
@@ -86,8 +86,8 @@ export function menuItemLook(o?: MenuItemLookOptions) {
         alignItems: o?.tall ? "flex-start" : "center",
         gap: 8,
         ...(o?.tall ? { paddingVertical: pointer ? 6 : 10 } : { height: menuItemSize.height }),
-        paddingHorizontal: inset,
-        ...(o?.inset ? { paddingStart: inset + markRoom } : {}),
+        paddingHorizontal: rowInset,
+        ...(o?.inset ? { paddingStart: rowInset + markRoom } : {}),
         borderRadius: menuItemSize.radius,
         borderCurve: "continuous",
         ...o?.style,
@@ -102,7 +102,7 @@ export function menuItemLook(o?: MenuItemLookOptions) {
     get activeStyle(): ViewStyle {
       return menuPressed();
     },
-    disabledStyle: { opacity: 0.5 } as ViewStyle,
+    disabledStyle: { opacity: 0.5 },
   };
 }
 
@@ -196,8 +196,9 @@ export function MenuLabel(props: { text: string; inset?: boolean }) {
         fontSize: pointer ? 11 : 13,
         fontWeight: "600",
         color: colors.faint,
-        paddingHorizontal: inset,
-        paddingStart: props.inset ? inset + markRoom : inset,
+        paddingHorizontal: rowInset,
+        ...(props.inset ? { paddingStart: rowInset + markRoom } : {}),
+        // 6 points down from the group above it, 2 up from its own rows.
         paddingTop: 6,
         paddingBottom: 2,
       }}
@@ -219,16 +220,20 @@ export function menuSeparator(): ViewStyle {
   };
 }
 
-/**
- * The row that opens a submenu (a `Submenu`'s `trigger`): `menuItemLook`'s
- * row, `lead` (an icon) before the label and a faint chevron at its end;
- * disabled, 50%.
- */
-export function SubmenuRow(props: {
-  label: string;
-  lead?: JSX.Element;
+/** How far a submenu's row dims while it takes no presses: deeper than a
+ * disabled row's 50%, since the row itself is the trigger. */
+const submenuRowDim = 0.35;
+
+/** The side of a submenu row's chevron: 12 points with a pointer, 14 on a touch screen. */
+const submenuChevron = pointer ? 12 : 14;
+
+/** A submenu's row, whether `SubmenuRow` drew it or a `MenuSubTrigger`'s own
+ * children: `menuItemLook`'s row and its states, dimmed while it takes no presses. */
+function SubmenuRowFrame(props: {
   disabled?: boolean;
   inset?: boolean;
+  style?: StyleProp<ViewStyle>;
+  children: JSX.Element;
 }) {
   const look = menuItemLook({ inset: props.inset });
   return (
@@ -236,12 +241,30 @@ export function SubmenuRow(props: {
       hoverStyle={props.disabled ? undefined : look.hoverStyle}
       focusStyle={look.focusStyle}
       activeStyle={props.disabled ? undefined : look.activeStyle}
-      style={{ ...look.style, opacity: props.disabled ? 0.35 : 1 }}
+      style={[{ ...look.style, opacity: props.disabled ? submenuRowDim : 1 }, props.style ?? null]}
     >
+      {props.children}
+    </View>
+  );
+}
+
+/**
+ * The row that opens a submenu (a `Submenu`'s `trigger`): `menuItemLook`'s
+ * row, `lead` (an icon) before the label and a faint chevron at its end;
+ * disabled, 35%.
+ */
+export function SubmenuRow(props: {
+  label: string;
+  lead?: JSX.Element;
+  disabled?: boolean;
+  inset?: boolean;
+}) {
+  return (
+    <SubmenuRowFrame disabled={props.disabled} inset={props.inset}>
       {props.lead}
       <Text style={menuItemLabel()}>{props.label}</Text>
-      <Icon icon={ChevronRight} size={pointer ? 12 : 14} tint={colors.faint} />
-    </View>
+      <Icon icon={ChevronRight} size={submenuChevron} tint={colors.faint} />
+    </SubmenuRowFrame>
   );
 }
 
@@ -258,6 +281,9 @@ export function SubmenuBack(props: { label: string }) {
   );
 }
 // @port end
+
+/** Why a menu closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type MenuOpenChangeReason = OpenChangeReason;
 
 /** The root: it owns whether the menu is open, and the trigger slot. */
 export type MenuProps = {
@@ -282,7 +308,7 @@ export type MenuContentProps = Omit<
   children?: JSX.Element;
 };
 
-/** Opens the menu. String children render as a Button; otherwise a pressable View. */
+/** Opens the menu. A string child renders as a `Button` (`variant` picks it, `secondary` unless set); anything else as a pressable view. */
 export type MenuTriggerProps = {
   children?: string | JSX.Element;
   variant?: ButtonVariant;
@@ -290,7 +316,7 @@ export type MenuTriggerProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-/** Theme layer on `nsh/base` MenuItem. A string child takes `menuItemLabel`. */
+/** A menu row: a string child is its label (`menuItemLabel`), anything else is drawn as given. */
 export type MenuItemProps = Omit<BaseMenuItemProps, "children"> & {
   /** `default`, the row as it is; `destructive`, its label in the danger tone. */
   variant?: MenuItemVariant;
@@ -302,38 +328,38 @@ export type MenuItemProps = Omit<BaseMenuItemProps, "children"> & {
   inset?: boolean;
 };
 
-/** Checkbox-shaped item — sets `checked` and shows a check. */
+/** A row with a checkbox: `checked` shows a check. */
 export type MenuCheckboxItemProps = Omit<MenuItemProps, "checked"> & {
   checked?: boolean | null;
 };
 
-/** One choice of a group — `menuitemradio`, with a dot. */
+/** One choice of a group, `menuitemradio`: a dot when it is the choice. */
 export type MenuRadioItemProps = Omit<MenuItemProps, "checked"> & {
   checked?: boolean | null;
 };
 
-/** App group wrapper (not an `nsh/base` part). */
+/** A group of rows: `nsh/base` has no group part, so this is the library's own view. */
 export type MenuGroupProps = {
   children?: JSX.Element;
   style?: StyleProp<ViewStyle>;
 };
 
-/** Theme layer on `nsh/base` MenuSeparator. */
+/** A hairline between rows (`menuSeparator`). */
 export type MenuSeparatorProps = BaseMenuSeparatorProps;
 
-/** App trailing shortcut hint (not an `nsh/base` part). */
+/** A shortcut shown at a row's trailing edge (`menuItemNote`); anything but a string is drawn as given. */
 export type MenuShortcutProps = {
   children?: string | JSX.Element;
   style?: StyleProp<TextStyle | ViewStyle>;
 };
 
-/** Composition root for a nested Submenu: trigger slot only. */
+/** The root of a nested menu: it holds the submenu's trigger, its label and its disabled state. */
 export type MenuSubProps = {
   children?: JSX.Element;
   disabled?: boolean;
 };
 
-/** Item that opens a submenu. String children get `SubmenuRow`. */
+/** The row that opens a submenu: a string child is the label (`SubmenuRow`), anything else is drawn as given. */
 export type MenuSubTriggerProps = {
   children?: string | JSX.Element;
   disabled?: boolean;
@@ -342,7 +368,7 @@ export type MenuSubTriggerProps = {
   style?: StyleProp<ViewStyle>;
 };
 
-/** Nested menu body — mounts `nsh/base` Submenu with the SubTrigger slot. */
+/** The nested menu's popup: `nsh/base`'s Submenu, with the trigger `MenuSubTrigger` sets; on a touch screen its sheet opens with a back row (`back`). */
 export type MenuSubContentProps = Omit<BaseSubmenuProps, "trigger" | "children"> & {
   children?: JSX.Element;
 };
@@ -420,7 +446,7 @@ export function MenuTrigger(props: MenuTriggerProps) {
       </View>
     );
   });
-  // No layout node: a zero-size view would still take a flex `gap` in the demo row.
+  // No layout node: a zero-size view would still take a flex `gap` in a row of triggers.
   return null;
 }
 
@@ -583,16 +609,10 @@ export function MenuSubTrigger(props: MenuSubTriggerProps) {
     if (typeof children === "string") {
       return <SubmenuRow label={children} disabled={disabled} inset={props.inset} />;
     }
-    const look = menuItemLook({ inset: props.inset });
     return (
-      <View
-        hoverStyle={disabled ? undefined : look.hoverStyle}
-        focusStyle={look.focusStyle}
-        activeStyle={disabled ? undefined : look.activeStyle}
-        style={[{ ...look.style, opacity: disabled ? 0.35 : 1 }, props.style ?? null]}
-      >
+      <SubmenuRowFrame disabled={disabled} inset={props.inset} style={props.style}>
         {children ?? <View />}
-      </View>
+      </SubmenuRowFrame>
     );
   });
   return null;
@@ -618,6 +638,3 @@ export function MenuSubContent(props: MenuSubContentProps) {
     </BaseSubmenu>
   );
 }
-
-/** Why a menu closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
-export type MenuOpenChangeReason = OpenChangeReason;
