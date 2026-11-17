@@ -14,6 +14,14 @@ import { Segmented as SegmentedRoot, SegmentedItem, SegmentedList } from "@/pack
 import { Toggle } from "@/packages/ui/toggle";
 
 // @port demo.ts
+// A view this file makes is made once: it holds its children as a value, not behind a `children`
+// getter. A getter is read again whenever the view is (a window resized re-reads the styles), and
+// what it returns is a new view — the engine builds that one, and everything under it, again. The
+// sidebar page's first frame was 4.4 s for that reason: four views above the column re-made the
+// whole subject on every size the window reported. A slot the app fills (`props.children`,
+// `props.inspector`, a panel's children) keeps its getter, which is how what the app hands over
+// stays live; the views around it are the ones made once.
+
 /** A pointer and a keyboard: desktop density and copy ("Click", "Tab to it
  * and press Space"); touch density and copy ("Tap") otherwise. */
 export const desktop = __platform.desktop;
@@ -30,6 +38,14 @@ const sideBySide = () => __windowSize().width >= 900;
  * corners, a whisper of the text color) that takes the room and centers its
  * content, at most `width` across (440). */
 export function Stage(props: { children?: __JSX.Element; width?: number; gap?: number }) {
+  const content = __View({
+    get style() {
+      return { width: "100%" as const, maxWidth: props.width ?? 440, gap: props.gap ?? 14 };
+    },
+    get children() {
+      return props.children;
+    },
+  });
   return __View({
     get style() {
       return {
@@ -44,16 +60,7 @@ export function Stage(props: { children?: __JSX.Element; width?: number; gap?: n
         justifyContent: "center" as const,
       };
     },
-    get children() {
-      return __View({
-        get style() {
-          return { width: "100%" as const, maxWidth: props.width ?? 440, gap: props.gap ?? 14 };
-        },
-        get children() {
-          return props.children;
-        },
-      });
-    },
+    children: content,
   });
 }
 
@@ -84,57 +91,51 @@ export function Split(props: {
   // Stacked, the subject keeps its own height and the inspector takes what
   // is left of a growing column, as when they were the column's own items.
   const narrow = () => ({ gap: gap() });
+  const subject = __View({
+    get style() {
+      return sideBySide()
+        ? { width: "100%" as const, maxWidth: props.width ?? 440, gap: gap() }
+        : narrow();
+    },
+    get children() {
+      return props.children;
+    },
+  });
+  const stage = __View({
+    get style() {
+      return sideBySide()
+        ? {
+            flex: 1,
+            minWidth: 0,
+            borderRadius: radius.card,
+            borderWidth: 1,
+            borderColor: ui().line,
+            backgroundColor: tint(ui().text, 0.02),
+            padding: 24,
+            alignItems: "center" as const,
+            justifyContent: "center" as const,
+          }
+        : narrow();
+    },
+    children: subject,
+  });
+  const inspector = __View({
+    get style() {
+      return sideBySide()
+        ? { width: 300, gap: 12 }
+        : { flex: props.grow ? 1 : undefined, gap: gap() };
+    },
+    get children() {
+      return props.inspector;
+    },
+  });
   return __View({
     get style() {
       return sideBySide()
         ? { flex: 1, flexDirection: "row" as const, gap: 16 }
         : { flex: props.grow ? 1 : undefined, gap: gap() };
     },
-    get children() {
-      return [
-        // The stage: a bordered frame centering the subject, side by side.
-        __View({
-          get style() {
-            return sideBySide()
-              ? {
-                  flex: 1,
-                  minWidth: 0,
-                  borderRadius: radius.card,
-                  borderWidth: 1,
-                  borderColor: ui().line,
-                  backgroundColor: tint(ui().text, 0.02),
-                  padding: 24,
-                  alignItems: "center" as const,
-                  justifyContent: "center" as const,
-                }
-              : narrow();
-          },
-          get children() {
-            return __View({
-              get style() {
-                return sideBySide()
-                  ? { width: "100%" as const, maxWidth: props.width ?? 440, gap: gap() }
-                  : narrow();
-              },
-              get children() {
-                return props.children;
-              },
-            });
-          },
-        }),
-        // The inspector: a column beside the stage, under it otherwise.
-        __View({
-          get style() {
-            return sideBySide()
-              ? { width: 300, gap: 12 }
-              : { flex: props.grow ? 1 : undefined, gap: gap() };
-          },
-          get children() {
-            return props.inspector;
-          },
-        }),
-      ];
-    },
+    children: [stage, inspector],
   });
 }
 
