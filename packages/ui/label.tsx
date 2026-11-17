@@ -1,10 +1,6 @@
 // A label: the visible name of a field or a choice, drawn on `nsh`'s own View and Text. This
 // library's own (upstream has none, and no `nsh/base` control is its behavior): there is no port
 // region. Yours to change.
-//
-// It is not the accessible name of the control beside it: nsh has no `htmlFor`, so a label names
-// nothing by itself — give the control an `accessibilityLabel` (`lib/label.ts`'s `labelOf` derives
-// it from a string child where the component has one).
 import { colors } from "@shadcn-nsh/theme";
 import type { JSX, TextStyle, ViewProps, ViewStyle } from "nsh";
 import { split, Text, View } from "nsh";
@@ -69,7 +65,8 @@ export type LabelProps = Omit<ViewProps, "children"> & {
  * it. Every `nsh` view prop passes through; `style` goes over the look's.
  *
  * It names nothing for screen readers: nsh has no `htmlFor` and no `labelledBy`, so give the
- * control beside it an `accessibilityLabel` — a `Checkbox` or a `TextField` reads it as its name.
+ * control beside it an `accessibilityLabel` — a `Checkbox` or a `TextField` reads it as its name,
+ * and `lib/label.ts`'s `labelOf` derives one from a string child where a component has one.
  */
 export function Label(props: LabelProps) {
   const [, rest] = split(props, ["children", "disabled", "style"]);
