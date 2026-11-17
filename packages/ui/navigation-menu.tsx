@@ -1,15 +1,6 @@
 // A navigation menu: a row of triggers, each opening a panel of anything (a grid of links, a card
 // with a description) under itself, one panel open at a time. This library's own: nothing here
 // comes from upstream, so there is no port region. Yours to change.
-//
-// What carries it: `nsh/base`'s Popover. A trigger here has to open its panel by a press in both
-// idioms and by the keyboard (its own words for Popover: the trigger takes the presses, Escape and
-// a press outside close it, and the keyboard focus in it comes back to the trigger), while `Menu`
-// is a list of rows that becomes a sheet on phones and `HoverCard` follows the pointer alone (the
-// keyboard focus opens and holds nothing). Popover's trigger is a plain element, so the pointer's
-// rest can open the panel too — the one thing it leaves out, which this file adds on
-// `onMouseEnter` / `onMouseLeave` with the two delays `nsh/base`'s HoverCard keeps (200 ms of rest
-// to open, 300 ms off both parts to close).
 import { alpha, colors, focusRing, radius } from "@shadcn-nsh/theme";
 import { ChevronDown } from "lucide";
 import type { JSX, StyleProp, TextStyle, ViewProps, ViewStyle } from "nsh";
@@ -52,6 +43,9 @@ const labelSize = pointer ? 13 : 15;
 
 /** The gap inside a trigger, between its name and its chevron (shadcn's `ml-1`). */
 const chevronGap = 4;
+
+/** How long a trigger's chevron takes to turn (200 ms): at once with reduced motion. */
+const chevronTurn = 200;
 
 /** How far a press sinks a trigger or a link: a big region, as a pressable's (98%). */
 const sink = 0.98;
@@ -206,7 +200,7 @@ export function navigationMenuTriggerLook(o?: NavigationMenuTriggerLookOptions) 
         alignItems: "center",
         justifyContent: "center",
         rotate: open() ? "180deg" : "0deg",
-        ...(still ? {} : { transitionProperty: "rotate", transitionDuration: 200 }),
+        ...(still ? {} : { transitionProperty: "rotate", transitionDuration: chevronTurn }),
       };
     },
     /** The chevron itself: `navigationMenuSize.chevron` across, in the muted ink. */
@@ -264,6 +258,10 @@ export function navigationMenuLinkLook(o?: NavigationMenuLinkLookOptions) {
   };
 }
 
+/** Why the bar's open item changed (`onValueChange`'s `reason`): `nsh/base`'s `OpenChangeReason`,
+ * under this part's name. */
+export type NavigationMenuOpenChangeReason = OpenChangeReason;
+
 /**
  * The root: it owns which item's panel is open — one at a time — and the delays the pointer's rest
  * waits. Every `nsh` view prop passes through (`style`, `role`, `accessibilityLabel`, …); `style`
@@ -318,9 +316,8 @@ export type NavigationMenuTriggerProps = {
 
 /**
  * A panel under its trigger. Every prop of `nsh/base`'s Popover passes through but the ones the
- * item owns (`open`, the callbacks); `popupStyle` styles the popup box, over the panel's surface.
- * Defaults: placement `bottom`, align `start`, offset `6` (shadcn's `mt-1.5`), and it takes the
- * pointer and the presses, so a grid of links in it works.
+ * item owns (`open`, the callbacks). Defaults: placement `bottom`, align `start`, offset `6`
+ * (shadcn's `mt-1.5`), and it takes the pointer and the presses, so a grid of links in it works.
  */
 export type NavigationMenuContentProps = Omit<
   BasePopoverProps,
@@ -350,10 +347,6 @@ export type NavigationMenuLinkProps = Omit<BaseLinkProps, "children" | "current"
    * `aria-current="page"`). */
   active?: boolean;
 };
-
-/** Why the bar's open item changed (`onValueChange`'s `reason`): `nsh/base`'s `OpenChangeReason`,
- * under this part's name. */
-export type NavigationMenuOpenChangeReason = OpenChangeReason;
 
 type NavigationMenuContextValue = {
   /** The open item's value, `null` while none is. */
@@ -398,13 +391,22 @@ function useNavigationMenuItem() {
 }
 
 /** The items made up a value so far: a name no one else in the app has. */
-let madeUp = 0;
+let madeUpCount = 0;
 
 /**
  * A navigation menu, after shadcn/ui's: a landmark (`role="navigation"`, named `"Navigation"` by
  * default) holding a list of items, each a trigger over a panel of any content or a link. One
  * panel is open at a time; on the desktops the pointer's rest opens one and the panel closes when
  * the pointer has left both its trigger and itself.
+ *
+ * What carries it: `nsh/base`'s Popover. A trigger here has to open its panel by a press in both
+ * idioms and by the keyboard (its own words for Popover: the trigger takes the presses, Escape and
+ * a press outside close it, and the keyboard focus in it comes back to the trigger), while `Menu`
+ * is a list of rows that becomes a sheet on phones and `HoverCard` follows the pointer alone (the
+ * keyboard focus opens and holds nothing). Popover's trigger is a plain element, so the pointer's
+ * rest can open the panel too — the one thing it leaves out, which this file adds on
+ * `onMouseEnter` / `onMouseLeave` with the two delays `nsh/base`'s HoverCard keeps (200 ms of rest
+ * to open, 300 ms off both parts to close).
  */
 export function NavigationMenu(props: NavigationMenuProps) {
   const [, rest] = split(props, [
@@ -459,7 +461,7 @@ export function NavigationMenuList(props: NavigationMenuListProps) {
  */
 export function NavigationMenuItem(props: NavigationMenuItemProps) {
   const root = useNavigationMenu();
-  const value = props.value ?? `navigation-menu-item-${madeUp++}`;
+  const value = props.value ?? `navigation-menu-item-${madeUpCount++}`;
   const trigger = createSlot();
   // Where the pointer is (off both parts, the panel closes after `closeDelay`) and the one timer
   // waiting on its next move.
@@ -619,6 +621,17 @@ export function NavigationMenuContent(props: NavigationMenuContentProps) {
 }
 
 /**
+ * The look's state style with the app's over it (the app wins), or the app's alone when the look
+ * has none: what a part's `hoverStyle` and `activeStyle` say.
+ */
+function styleOver(
+  own: StyleProp<ViewStyle> | undefined,
+  given: StyleProp<ViewStyle> | undefined,
+): StyleProp<ViewStyle> {
+  return own === undefined ? (given ?? null) : [own, given ?? null];
+}
+
+/**
  * A link: it goes somewhere (`href`, `openWith`, `onOpen`) or reports a press (`onPress`), and it
  * wears the navigation menu's link look — a name and, under it, a description the app nests as its
  * own `Text` with `navigationMenuLook().linkHint`.
@@ -647,16 +660,8 @@ export function NavigationMenuLink(props: NavigationMenuLinkProps) {
       current={props.active}
       accessibilityLabel={labelOf(props.accessibilityLabel, props.children)}
       style={[look().style, props.style ?? null]}
-      hoverStyle={
-        look().hoverStyle === undefined
-          ? (props.hoverStyle ?? null)
-          : [look().hoverStyle, props.hoverStyle ?? null]
-      }
-      activeStyle={
-        look().activeStyle === undefined
-          ? (props.activeStyle ?? null)
-          : [look().activeStyle, props.activeStyle ?? null]
-      }
+      hoverStyle={styleOver(look().hoverStyle, props.hoverStyle)}
+      activeStyle={styleOver(look().activeStyle, props.activeStyle)}
       focusVisibleStyle={[look().focusVisibleStyle, props.focusVisibleStyle ?? null]}
       disabledStyle={[look().disabledStyle, props.disabledStyle ?? null]}
     >

@@ -90,7 +90,7 @@ const written = new Set<string>();
 
 /** What the library writes but does not read: finish roles and tokens, by name. */
 const unread = new Set(
-  [...specBlock(spec, "unread").matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]),
+  [...specBlock(spec, "unread").matchAll(/`([A-Za-z0-9-]+)`/g)].map((match) => match[1]),
 );
 
 /** The shadcn slots NSH itself resolves (`references/nsh/crates/nsh-base/src/theme.rs`). */
@@ -99,7 +99,7 @@ function shadcnSlots(): string[] {
   const start = rust.indexOf("theme! {");
   const end = rust.indexOf("\n}", start);
   if (start === -1 || end === -1) throw new Error("theme.rs states no `theme! {` block");
-  return [...rust.slice(start, end).matchAll(/^\s*\w+ = "([a-z0-9-]+)",$/gm)].map((m) => m[1]);
+  return [...rust.slice(start, end).matchAll(/^\s*\w+ = "([A-Za-z0-9-]+)",$/gm)].map((m) => m[1]);
 }
 
 /** Every file under `dir`, by extension. */
@@ -283,7 +283,7 @@ for (const theme of themes) {
               : `${path}: ${role}.${field} writes ${problem.literal}, which is no token of the theme, no ink, and not in the spec's pending table`,
           );
       }
-      for (const [, name] of (finish.boxShadow ?? "").matchAll(/var\(--([a-z0-9-]+)\)/g))
+      for (const [, name] of (finish.boxShadow ?? "").matchAll(/var\(--([A-Za-z0-9-]+)\)/g))
         if (!known.has(name))
           fail(`${path}: ${role}.boxShadow names token \`${name}\`, which ${theme} does not have`);
     }
@@ -338,7 +338,7 @@ for (const theme of themes) {
       for (const field of colourFields)
         count.set(
           theme,
-          (count.get(theme) ?? 0) + (finish[field]?.match(/var\(--[a-z0-9-]+\)/g)?.length ?? 0),
+          (count.get(theme) ?? 0) + (finish[field]?.match(/var\(--[A-Za-z0-9-]+\)/g)?.length ?? 0),
         );
 }
 console.log(

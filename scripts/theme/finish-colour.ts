@@ -51,7 +51,7 @@ export function isInk(literal: string): boolean {
 
 /** The one relative colour a finish may write: a token's colour at another alpha, whole
  * (`oklch(from var(--card) l c h / 0.78)`). Any other relative form is a colour with no token. */
-export const relativeColour = /^oklch\(from var\(--([a-z0-9-]+)\) l c h \/ ([\d.]+)\)$/;
+export const relativeColour = /^oklch\(from var\(--([A-Za-z0-9-]+)\) l c h \/ ([\d.]+)\)$/;
 
 /**
  * Judge one colour field: `known` are the theme's tokens, `pending` the spec's table, `key` the
@@ -82,7 +82,7 @@ export function readColour(
     }
     problems.push({ kind: "literal", literal });
   }
-  for (const [, name] of value.matchAll(/var\(--([a-z0-9-]+)\)/g))
+  for (const [, name] of value.matchAll(/var\(--([A-Za-z0-9-]+)\)/g))
     if (!known.has(name!)) problems.push({ kind: "unknown-token", name: name! });
   return { problems, pending: rows };
 }
