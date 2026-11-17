@@ -1,7 +1,7 @@
 // A slider: the look (`sliderLook` and its companions) and the `Slider` that wears it.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { alpha, colors, fillStyle, finish, insetEdge } from "@shadcn-nsh/theme";
-import type { JSX, TextStyle, ViewStyle } from "nsh";
+import type { TextStyle, ViewStyle } from "nsh";
 import { platform, split, Text } from "nsh";
 import { Slider as BaseSlider, type SliderProps as BaseSliderProps } from "nsh/base";
 
@@ -27,10 +27,10 @@ export const sliderValueStyle = (): TextStyle => ({ color: alpha(colors.text, 0.
  * A `Slider`'s parts (spread them: `<Slider {...sliderLook()}>`): a rail
  * sunk into the surface and a round thumb on it: a 6-point rail and a
  * 14-point thumb with a pointer (a 20-point band around the rail takes
- * presses), 8 and 20 on a touch screen (a 32-point band). Under the pointer the thumb lightens, the
- * keyboard's focus rings the thumb in the theme's `ring` (not after a press
- * or a drag), a disabled slider fades to 50% (transitions still with reduced
- * motion).
+ * presses), 8 and 20 on a touch screen (a 32-point band). Under the pointer
+ * the thumb lightens, the keyboard's focus rings the thumb in the theme's
+ * `ring` (not after a press or a drag), a disabled slider fades to 50%
+ * (transitions still with reduced motion).
  *
  * Only what never changes is here, so the spread reads no signal: a spread
  * is evaluated where the slider is made, and a signal read there would make
@@ -44,13 +44,19 @@ export function sliderLook(o: SliderLookOptions = {}) {
   const thumb = pointer ? 14 : 20;
   // The band keeps half a thumb free at each end, so the thumbs stay inside.
   const band = vertical
-    ? `${pointer ? "w-5" : "w-8"} ${pointer ? "h-32" : "h-36"} items-center ${pointer ? "py-[7px]" : "py-[10px]"}`
-    : `${pointer ? "h-5" : "h-8"} justify-center ${pointer ? "px-[7px]" : "px-[10px]"}`;
+    ? pointer
+      ? "w-5 h-32 items-center py-[7px]"
+      : "w-8 h-36 items-center py-[10px]"
+    : pointer
+      ? "h-5 justify-center px-[7px]"
+      : "h-8 justify-center px-[10px]";
+  // The rail: 6 points with a pointer, 8 on a touch screen; vertical, it runs the full height.
+  const rail = vertical ? (pointer ? "w-1.5 h-full" : "w-2 h-full") : pointer ? "h-1.5" : "h-2";
   const fade = "transition duration-150 motion-reduce:transition-none";
   return {
     class: o.value ? "flex-row items-center gap-2" : undefined,
     trackClass: `${band} ${o.value ? "flex-1" : ""} cursor-pointer ${fade} disabled:opacity-50 disabled:cursor-not-allowed`,
-    indicatorClass: `${vertical ? (pointer ? "w-1.5" : "w-2") + " h-full" : pointer ? "h-1.5" : "h-2"} rounded-full`,
+    indicatorClass: `${rail} rounded-full`,
     get indicatorStyle(): ViewStyle {
       return {
         backgroundColor: colors.track,
@@ -114,13 +120,6 @@ export function Slider(props: SliderProps) {
   ]);
   const vertical = props.axis === "vertical";
   const look = sliderLook({ vertical, value: props.showValue });
-  const value = props.value;
-  const fillTo =
-    typeof value === "number"
-      ? (value - (props.min ?? 0)) / ((props.max ?? 100) - (props.min ?? 0) || 1)
-      : Array.isArray(value)
-        ? (value[1] - (props.min ?? 0)) / ((props.max ?? 100) - (props.min ?? 0) || 1)
-        : 0;
   const label =
     props.children ??
     (props.showValue ? (
@@ -138,11 +137,12 @@ export function Slider(props: SliderProps) {
       indicatorClass={props.indicatorClass ?? look.indicatorClass}
       indicatorStyle={[look.indicatorStyle, props.indicatorStyle ?? null]}
       rangeClass={props.rangeClass ?? look.rangeClass}
-      rangeStyle={[sliderFill(0, fillTo, vertical), props.rangeStyle ?? null]}
+      // `sliderFill` ignores the ends: the fill runs the rail's whole length.
+      rangeStyle={[sliderFill(0, 0, vertical), props.rangeStyle ?? null]}
       thumbClass={props.thumbClass ?? look.thumbClass}
       thumbStyle={[look.thumbStyle, props.thumbStyle ?? null]}
     >
-      {label as JSX.Element | undefined}
+      {label}
     </BaseSlider>
   );
 }
