@@ -41,12 +41,29 @@ jobs:
       # carries the web runtimes `bun run docs:demos` packages the demos with
       # (docs/toolchain.md).
       - name: Setup NSH
+        id: nsh
         uses: ./.github/actions/setup-nsh
         with:
           channel: ${{ vars.NSH_CHANNEL }}
 
+      # Packaging the demos is most of the build; a commit that leaves them, the
+      # library and the CLI as they were (a docs-site change) reuses the last
+      # packages. The key is exact: no restore-keys, so a stale package is never
+      # deployed.
+      - name: Cache packaged demos
+        id: demos
+        uses: actions/cache@v4
+        with:
+          path: apps/docs/public/demos
+          key: demos-${{ runner.os }}-${{ steps.nsh.outputs.version }}-${{ hashFiles('apps/docs/demos/**', '!apps/docs/demos/baseline/**', '!apps/docs/demos/shots*/**', 'packages/**', '!packages/**/node_modules/**', 'apps/docs/scripts/build-demos.ts', 'apps/docs/scripts/player-options.ts', 'scripts/catalog.ts', 'bun.lock') }}
+
       - name: Build docs
+        if: steps.demos.outputs.cache-hit != 'true'
         run: bun run build:docs
+
+      - name: Build docs (demos from the cache)
+        if: steps.demos.outputs.cache-hit == 'true'
+        run: nsh check apps/docs/demos && bun --filter @shadcn-nsh/docs build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5

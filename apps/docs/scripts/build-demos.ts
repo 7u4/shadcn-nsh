@@ -13,14 +13,19 @@
  */
 import { spawn } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { catalog, PAGE_DEMOS } from "../../../scripts/catalog";
 import { addPlayerOptions } from "./player-options";
 
-/** Keep low: concurrent `nsh package --target web` races on the shared web runtime wasm. */
-const CONCURRENCY = 1;
+/**
+ * How many `nsh package` run at once: one per core (most of a package is compressing the runtime),
+ * at most 8; `DEMO_JOBS` overrides it. Packages made side by side are byte for byte the ones made
+ * one at a time (checked on nsh 0.5.1), so the old one-at-a-time limit is gone.
+ */
+const CONCURRENCY = Number(process.env.DEMO_JOBS) || Math.min(os.availableParallelism(), 8);
 
 const docsRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const cat = catalog();
