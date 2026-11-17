@@ -24,12 +24,12 @@ _Avoid_: 发布组件 npm 包、旧 registry id 的别名
 
 - `registry.json`：**Catalog** 的真源，其 `registry:ui` 条目就是组件集合
 - `port-map.json`：**Port Map**，上游每个声明的来源去向表与已审阅的上游提交；目标不一定是组件——`demo.ts` 的 `Stage` / `Split` / `Inspector` / `Panel` / `Log` / `Segmented` 等去向 `apps/docs/demos/stage.tsx`（演示适配层，不进 registry）
-- `packages/theme/`：**Theme Source**（两个 JSON，oklch，归本库）与 `theme.ts`（角色读取，以及运行时的 `selectTheme` / `currentTheme`）；`themes/<name>/` 是其它主题，一套一个 `AppTheme`（`theme.json`、`finishes.json`、`index.ts`），经 `theme-<name>` 条目分发；不放组件
+- `packages/theme/`：**Theme Source**（两个 JSON，oklch，归本库）与 `theme.ts`（读取 token 与 finish，以及运行时的 `selectTheme` / `currentTheme`）；`themes/<name>/` 是其它主题，一套一个 `AppTheme`（`theme.json`、`finishes.json`、`index.ts`），经 `theme-<name>` 条目分发；不放组件
 - `packages/ui/<id>.tsx`：一个**组件** = look（源自上游的部分以 **Port Region** 标注来源）+ **Shell**；一个 registry 条目一个文件
 - `packages/ui/lib/`：没有所属控件的上游部分（以上游文件名命名）与多个外壳共用的接线；作为 `registry:lib` 条目分发
 - `apps/docs/demos/`：每个组件的 `<id>.tsx` 与 **Reference Page** `<id>.ref.tsx`、渲染比对用例与基线截图；`kit.tsx` 是演示外框，`stage.tsx` 是演示适配层（`Stage` / `Inspector` / `Split` / `Panel` / `Log` / `Segmented` / `Chips` / `desktop` / `wide` / `ui()`，见 [`port.md`](port.md#演示)），`photos.ts` 是照片页用的图（上游 `photos.ts`，原样搬运），都不进 registry；`shots/` 是渲染比对的截图，`shots-audit/` 是诊断脚本的，两者都不提交
 - `apps/docs/public/demos/`：`docs:demos` 的打包产物（页面、运行时、wasm），不进仓库；`apps/docs/scripts/build-demos.ts` 打包每个演示，`player-options.ts` 让页面认面板的 `?idiom=` / `?theme=`
-- `apps/docs/content/docs/`：文档页（MDX / Markdown，`createFileRoute("/docs/$")` 渲染）；组件页 `<id>.md` 固定四节。`components.mdx`（组件索引）、`components/coverage.mdx`（对照页）与 `themes.mdx`（主题页）由 `apps/docs/src/components/fd/` 里的 React 组件画，行与角色都来自生成表，正文只在页面里写一遍。`apps/docs/src/lib/official.ts` 是文档站唯一的登记表（shadcn/ui 与 NSH 元素各一张：来源、去向、没做的理由）；分类从它推导——页被 NSH 元素表（`references/nsh/website/elements`）某行的 `ours` 列出就是**对齐官方**，否则是**自研**（shadcn/ui 有没有对应都不影响）——`apps/docs/src/lib/kinds.ts` 只留两个类名、顺序与这条推导。侧边栏分组、索引分节、每页页头的官方链接（`Official: shadcn/ui · … | NSH · …`）与对照页都从它们生成，页面自己不写。新增组件只在该表登记（若对得上某个官方组件），分类自动得出；`bun run check:pages` 会拦下没登记或没建的页
+- `apps/docs/content/docs/`：文档页（MDX / Markdown，`createFileRoute("/docs/$")` 渲染）；组件页 `<id>.md` 固定四节。`components.mdx`（组件索引）、`components/coverage.mdx`（对照页）与 `themes.mdx`（主题页）由 `apps/docs/src/components/fd/` 里的 React 组件画，行与 token 都来自生成表，正文只在页面里写一遍。`apps/docs/src/lib/official.ts` 是文档站唯一的登记表（shadcn/ui 与 NSH 元素各一张：来源、去向、没做的理由）；分类从它推导——页被 NSH 元素表（`references/nsh/website/elements`）某行的 `ours` 列出就是**对齐官方**，否则是**自研**（shadcn/ui 有没有对应都不影响）——`apps/docs/src/lib/kinds.ts` 只留两个类名、顺序与这条推导。侧边栏分组、索引分节、每页页头的官方链接（`Official: shadcn/ui · … | NSH · …`）与对照页都从它们生成，页面自己不写。新增组件只在该表登记（若对得上某个官方组件），分类自动得出；`bun run check:pages` 会拦下没登记或没建的页
 - `apps/gallery/`：原生行为测试与冒烟页，用同一套 `packages/ui`；不做公开文档，不比截图
 - `packages/cli/`：`shadcn-nsh` CLI（`init`、`add`、`list`、`view`、`diff`、`build`、`serve`）
 - `scripts/catalog.ts`：**Catalog** 模块，脚本读写 `registry.json` 与取组件集合的唯一入口（`addComponent` 写入新条目）；生成 `apps/docs/demos/catalog.generated.ts` 供 NSH 运行时使用（不手改）；`demos/` 下不是组件演示的文件（`App.tsx`、`kit.tsx`、`stage.tsx`）在 `NON_COMPONENT_DEMOS` 登记，新增这样的文件要加进去，否则 `catalog --check` 把它当成没有组件的演示
@@ -72,7 +72,7 @@ flowchart TD
 ```
 
 - `packages/ui/lib` 不 import `packages/ui/<id>`；组件之间可以 import（`./button`），依赖写进该条目的 `registryDependencies`
-- `packages/theme` 不 import `packages/ui`；反过来，组件只经 `@shadcn-nsh/theme` 的角色取外观（`colors`、`finish`、`radius`），不直接读两个 JSON，也不读 `themes/<name>/`
+- `packages/theme` 不 import `packages/ui`；反过来，组件只经 `@shadcn-nsh/theme` 的 token 与 finish 取外观（`colors`、`finish`、`radius`），不直接读两个 JSON，也不读 `themes/<name>/`
 - `packages/*` 不 import `apps/*`、`scripts/*` 或 `references/*`；运行时代码只认 `@shadcn-nsh/theme`、`nsh`、`nsh/base`、`lucide`（图标库，应用经 registry 的 `dependencies` 安装）与相对路径
 - 只有 `scripts/port`（抽取与变化提醒）与 `scripts/audit`（对照诊断截图）读 `references/nsh`；`apps/docs` 的构建不需要子模块
 - 组件集合只从 `scripts/catalog.ts`（脚本）或 `catalog.generated.ts`（NSH 运行时）取；不自己读 `registry.json` 过滤，也不 `readdir` 演示或文档目录来推导
@@ -90,12 +90,12 @@ flowchart TD
 | **构建时主题** | `nsh.json` 的 `theme` 指向的 `theme.json`，以及 `lib/finishes.json`                     | `init --theme <name>`（`nsh-ui.json` 的 `theme` 也记这一个）；换就是重跑 `init --theme <name> --overwrite` |
 | **AppTheme**   | 应用装进 `themes/<name>/` 的一套 `{ id, label, theme, finishes }`，一个 `index.ts` 导出 | registry 的 `theme-<name>` 条目，`add theme-<name>` 多装一套                                               |
 
-- 颜色、圆角、焦点环、悬停经 `token()` 读，`setTheme` 一换就跟；质感（渐变、阴影，以及按下缩到几成 —— `finishes.json` 顶层的 `press.scale`）**不是 token**，所以留在 `finishes.json`，由 `theme.ts` 的一个信号按当前主题取。两者拼成 `selectTheme(theme)`；`selectTheme(null)` 回到构建时主题。平面主题（shadcn）把 `press.scale` 写成 `1`：按下不缩放。
+- 颜色、圆角、焦点环、悬停经 `token()` 读，`setTheme` 一换就跟；finish（渐变、阴影，以及按下缩到几成 —— `finishes.json` 顶层的 `press.scale`）**不是 token**，所以留在 `finishes.json`，由 `theme.ts` 的一个信号按当前主题取。两者拼成 `selectTheme(theme)`；`selectTheme(null)` 回到构建时主题。平面主题（shadcn）把 `press.scale` 写成 `1`：按下不缩放。
 - 圆角一律经 `radius.*`：`card`（卡）/ `inset`（卡内的面、菜单）/ `control`（控件）/ `popover`（对话框这类浮起的面），没有写死的数值。
 - `theme` 条目仍是构建时那套的三个文件（`theme.json`、`lib/finishes.json`、`lib/theme.ts`）；`theme-<name>` 只装 `themes/<name>/`，不碰它们。组件条目的 `theme` 依赖按 `nsh-ui.json` 解析，所以装主题不会把默认主题写回来。
 - **构建时主题也能当"多装的一套"**：`theme-default` 装 `themes/default/`，里面是构建时那两个 JSON 的副本（`scripts/theme/themes.test.ts` 保证逐字节相同）加一个导出 `defaultTheme` 的 `index.ts`。构建时用 shadcn 的应用这样就能两边切。
 - 应用的清单与持久化都是应用的：库只给 `selectTheme` / `currentTheme`，不写清单、不存 `id`（示例见 [`packages/theme/README.md`](../packages/theme/README.md)）。
-- 质感在 JSX 里读（见下）；把 `finish.*` 存进模块级常量，运行时切换就不会跟着变。
+- finish 在 JSX 里读（见下）；把 `finish.*` 存进模块级常量，运行时切换就不会跟着变。
 
 ## Rules
 
@@ -121,7 +121,7 @@ Port Region 是**来源标注**，不是只读区：可以直接修改；`port:v
 
 导出的声明只有一个归属（只有文件私有的常量能路由到多个目标）。组件文件不再导出 `lib/` 的声明：用 `lib/<x>` 的人（应用、演示）直接从那里 import。
 
-**外观随外观模式变化**：颜色与依赖 props 的 look 在 JSX 里读，不在组件体里读一次存下（web 上是 CSS 变量看不出来，原生上会冻结）。这一条同样管主题：`finish` 的 getter 读的是当前主题（`selectTheme`）与当前外观，组件若把质感值存进模块级常量、或读进变量后不再读，运行时切换就不会跟着变。
+**外观随外观模式变化**：颜色与依赖 props 的 look 在 JSX 里读，不在组件体里读一次存下（web 上是 CSS 变量看不出来，原生上会冻结）。这一条同样管主题：`finish` 的 getter 读的是当前主题（`selectTheme`）与当前外观，组件若把 finish 的值存进模块级常量、或读进变量后不再读，运行时切换就不会跟着变。
 
 ## Seams
 

@@ -13,7 +13,7 @@
 | `port:review`（新） | 无                                                              | 审阅完待审阅项后，把 `upstream.reviewed` 移到当前基线（可按文件 / 声明逐项确认）                                                                                         |
 | `port:vendor`       | 覆盖全部区域与 copy 文件                                        | 只为**新组件**抽取初稿（`port:vendor <id>` 或被 `port:new` 调用）；已存在的区域一律不覆盖                                                                                |
 | `port:bump`         | 移基线后 vendor 重填区域                                        | 移基线后**不重填**，改为输出 P2 的待审阅清单                                                                                                                             |
-| `ui-guards.test.ts` | 只扫 Port Region 之外的颜色字面量（旧 P7）                      | **P3**：扫全部组件、lib、`stage.tsx`（含 Port Region）；现有字面量迁到主题角色，或在清单里逐条豁免并写原因（目标为零）                                                   |
+| `ui-guards.test.ts` | 只扫 Port Region 之外的颜色字面量（旧 P7）                      | **P3**：扫全部组件、lib、`stage.tsx`（含 Port Region）；现有字面量迁到主题 token，或在清单里逐条豁免并写原因（目标为零）                                                 |
 | 上游漂移工作流      | 比较最新 release 与基线                                         | 不变（仍提醒"有新 release"）；issue 正文的下一步改为 bump + 审阅                                                                                                         |
 | 发布产物的文件头    | "由 port:vendor 填充，改 port-map.json"（维护者说明发给了用户） | 给用户看的说明："这是你的代码，可随意修改；源自 NSH 示例 `nsh-gallery-ui`（Apache-2.0），见 NOTICE"；`// @port` 标记在 `registry:build` 时去掉或保留由实现决定并说明     |
 

@@ -11,6 +11,10 @@ copy-into-app 层的品牌外观：本库所有，起点是上游 gallery UI 主
 | `theme.ts`       | `colors` / `finish` / `focusRing` / `selectTheme` / `fillStyle` 等读取器                                                     |
 | `themes/<name>/` | 其它主题，各一个 `AppTheme`：`shadcn/`（shadcn 的 `neutral`）、`solid-glass/`（Solid Glass）、`default/`（本库这套，供多装） |
 
+## 规范
+
+主题由三样东西组成：**token**（有名字的颜色或数，`theme.json` 写）、**finish**（组件自己画的表面 —— 底、渐变、边、影、模糊，`finishes.json` 写）、**alias**（写成另一个 token 的 token，`var(--x)`）。有哪些 token、每个 finish 画什么、谁读它，以 [`docs/specs/theme-roles.md`](../../docs/specs/theme-roles.md) 为准；`bun scripts/theme-lint.ts` 拿这两个文件对着它检查。
+
 由 [`@shadcn-nsh/ui`](../ui) 使用，并以 registry 的 `theme` 项（应用的**构建时主题**）与 `theme-<name>` 项（其它主题）分发。改完后：`bun scripts/theme/to-oklch.ts`（把这两个文件的颜色写成规范形式），再 `bun run registry:build` 并提交 `public/r`。
 
 这两个文件已归本库所有（[`port-map.json`](../../port-map.json) 里的 `"owned"`）：`port:vendor` 不再重填、`port:check` 不再与上游比对，所以像其它源码一样在这里改（[`docs/port.md`](../../docs/port.md#主题文件)）。外观仍以上游 gallery UI 主题为准；变的是数据归谁。

@@ -11,6 +11,10 @@ Brand look for the copy-into-app layer: this library's own, started from the ups
 | `theme.ts`       | Readers: `colors`, `finish`, `focusRing`, `selectTheme`, `fillStyle`, …                                                                          |
 | `themes/<name>/` | Other themes, one `AppTheme` each: `shadcn/` (shadcn's `neutral`), `solid-glass/` (Solid Glass), and `default/` (this one, to install beside it) |
 
+## Spec
+
+A theme is three things: a **token** (a colour or a number under a name, as `theme.json` states it), a **finish** (a surface a component draws itself in — background, gradient, edge, shadow, blur — as `finishes.json` states it), and an **alias** (a token written as another, `var(--x)`). Which tokens there are, what each finish draws and who reads it, is [`docs/specs/theme-roles.md`](../../docs/specs/theme-roles.md); `bun scripts/theme-lint.ts` holds these two files to it.
+
 Consumed by [`@shadcn-nsh/ui`](../ui) and shipped as registry item `theme` (the app's build-time theme), and as `theme-<name>` for the others. After edits: `bun scripts/theme/to-oklch.ts` (keeps every color of the two files canonical), then `bun run registry:build` and commit `public/r`.
 
 The two files are this library's own (`"owned"` in [`port-map.json`](../../port-map.json)): `port:vendor` no longer refills them and `port:check` does not compare them with upstream, so they are edited here like any other source ([`docs/port.md`](../../docs/port.md#主题文件)). The look still follows the upstream gallery UI theme; what changed is who owns the data.

@@ -28,7 +28,7 @@
 
 做法分四件：主题数据 → 预览脚本 → 对照页 → 本文。验收口径：
 
-- `packages/theme/themes/shadcn/{theme,finishes}.json` 的键集合与默认完全相同（`bun run test:unit` 的 `scripts/theme/themes.test.ts` 断言 theme/light/dark 三节与 finishes 两套角色）。**第 2 批放宽了 finishes 这一半**：角色可以少写键（本主题的 `fill` 只给 `backgroundColor`，不给渐变），`press` 是新增的顶层一节；`theme.json` 的 token 仍要求逐个相同（`radius-popover` 两套都写了）。
+- `packages/theme/themes/shadcn/{theme,finishes}.json` 的键集合与默认完全相同（`bun run test:unit` 的 `scripts/theme/themes.test.ts` 断言 theme/light/dark 三节与 finishes 两套 finish）。**第 2 批放宽了 finishes 这一半**：一个 finish 可以少写键（本主题的 `fill` 只给 `backgroundColor`，不给渐变），`press` 是新增的顶层一节；`theme.json` 的 token 仍要求逐个相同（`radius-popover` 两套都写了）。
 - 预览脚本跑完 `git status` 里 `packages/theme/theme.json`、`finishes.json` 无改动（脚本 `finally` 还原，并在还原后比对字节）。
 - 16 个组件 × 亮/暗的对照页 + 一张总览；每张都人眼看过（第 4 节）。
 - `vp check` 通过。
@@ -44,7 +44,7 @@
 | 颜色（oklch）                   | `references/shadcn-ui/apps/v4/registry/themes.ts` 的 `neutral`                |
 | 圆角 `--radius: 0.625rem`、派生 | `references/shadcn-ui/apps/v4/app/globals.css:50-56,100`                      |
 | 阴影 `shadow-xs/sm/md` 具体值   | Tailwind v4 的默认阴影（shadcn 类名 `shadow-xs` / `shadow-sm` / `shadow-md`） |
-| 各 finish 的角色                | `references/shadcn-ui/apps/v4/registry/new-york-v4/ui/*`（下表逐个注明）      |
+| 各 finish                       | `references/shadcn-ui/apps/v4/registry/new-york-v4/ui/*`（下表逐个注明）      |
 
 生成链（可复跑，产出就是仓库里那两个文件）：
 
@@ -143,9 +143,9 @@ bun scripts/theme/generate-shadcn.ts   # shadcn 的 oklch() 规范化后，按�
 
 ### 2.4 finishes 对照表
 
-19 个角色，每个都是**一条 shadcn 外观**，全部平面化：没有渐变高光、没有内高光、没有内阴影。平面化的写法不是删掉 `backgroundImage`，而是让它在两个 stop 上写同一个颜色（`linear-gradient(180deg, var(--x) 0%, var(--x) 100%)`）：字段在主题之间不变，渲染才不需要分支，见 [`theme-roles.md`](theme-roles.md) 第 3 节。
+20 个 finish，每个都是**一条 shadcn 外观**，全部平面化：没有渐变高光、没有内高光、没有内阴影。平面化的写法不是删掉 `backgroundImage`，而是让它在两个 stop 上写同一个颜色（`linear-gradient(180deg, var(--x) 0%, var(--x) 100%)`）：字段在主题之间不变，渲染才不需要分支，见 [`theme-roles.md`](theme-roles.md) 第 3 节。
 
-| 角色      | shadcn 的样子                                                                  | 本主题的值（亮 / 暗）                                                               |
+| finish    | shadcn 的样子                                                                  | 本主题的值（亮 / 暗）                                                               |
 | --------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
 | `card`    | Card `rounded-xl border bg-card shadow-sm`                                     | `shadow-sm`；面上一种颜色（`var(--card)` 两个 stop）                                |
 | `inset`   | 无内阴影                                                                       | `boxShadow: none`                                                                   |
@@ -167,7 +167,7 @@ bun scripts/theme/generate-shadcn.ts   # shadcn 的 oklch() 规范化后，按�
 | `menu`    | DropdownMenu `border bg-popover shadow-md`                                     | `#ffffff` / `#171717` + `shadow-md` + `--border`                                    |
 | `groove`  | 无（shadcn 的菜单分隔线是 1px `bg-border`）                                    | `boxShadow: none`                                                                   |
 
-还有一节不在角色里：**`press.scale`**（第 2 批）。默认主题 `0.97`（按下缩到 97%），本主题 `1`——shadcn 的按钮按下去只换底色，不缩放。`pressSink` 在按下那一刻读它，所以运行时 `selectTheme` 一换，缩放就跟着开或关。
+还有一节不在 finish 里：**`press.scale`**（第 2 批）。默认主题 `0.97`（按下缩到 97%），本主题 `1`——shadcn 的按钮按下去只换底色，不缩放。`pressSink` 在按下那一刻读它，所以运行时 `selectTheme` 一换，缩放就跟着开或关。
 
 ## 3 预览工具
 
@@ -224,7 +224,7 @@ bun scripts/theme-sheets.ts   [id,id]        # 对照页
 | 9   | `packages/ui/dialog.tsx:32`、`toast.tsx:76`、`toolbar.tsx:36`、`badge.tsx:20`、`plot.tsx:108`、`lib/popup.tsx:23-24`、`tabs.tsx:221`、`segmented.tsx:66,80-90`、`combobox.tsx:141`                        | ~~**圆角写死**（16 / 12 / 10 / 8 / 6 …），不吃 `radius.*`~~ **已解决（#20b 第 2 批）**                                                                                                                    | 对话框换新的 `radius-popover`（两套主题都写了，默认 16 / 本主题 14），其余换成 `radius.inset` / `radius.card` / `radius.control`——现值与 token 对不上的两处（tabs 计数 8、combobox 的展开钮 6）写成「token 减一档」，默认主题仍是 8 / 6。segmented 的几何（`corner 6/7`、`inset 2`）按限制 13 不动 | 是               |
 | 10  | `packages/ui/button.tsx:162,266,332,392`、`toggle.tsx:117`、`input.tsx:99` 等                                                                                                                             | 边框恒为 1px：shadcn 的 primary / secondary 按钮**没有边**，本库画的是透明边 → 内容盒比 shadcn 窄 2px（视觉几乎看不出，量尺寸会差）                                                                       | 数据层能表达（`borderColor: transparent` 已这么做）；要精确需要按 finish 决定 `borderWidth`                                                                                                                                                                                                        | 是（可选）       |
 | 11  | `packages/ui/button.tsx:122`、`339`                                                                                                                                                                       | 填充按钮的悬停/选中用 `opacity 0.94 / 0.88` 而不是 `hover:bg-primary/90`：透明度会让底下的面透出来，在与卡片不同色的容器上有细微差别                                                                      | 改成 `alpha()` 或 token 的 90% 档                                                                                                                                                                                                                                                                  | 是               |
-| 12  | `packages/ui/switch.tsx:101` 与 `slider.tsx:68`                                                                                                                                                           | ~~`finish.knob` 同时服务 switch 的圆钮和 slider 的滑块~~ **已解决（第 3 批）**                                                                                                                            | 新增 finish 角色 `handle`（slider 的滑块）：默认主题与 `knob` 相同，本主题 `bg-white` + `border-primary` + `shadow-sm`                                                                                                                                                                             | 是               |
+| 12  | `packages/ui/switch.tsx:101` 与 `slider.tsx:68`                                                                                                                                                           | ~~`finish.knob` 同时服务 switch 的圆钮和 slider 的滑块~~ **已解决（第 3 批）**                                                                                                                            | 新增 finish `handle`（slider 的滑块）：默认主题与 `knob` 相同，本主题 `bg-white` + `border-primary` + `shadow-sm`                                                                                                                                                                                  | 是               |
 | 13  | `packages/ui/segmented.tsx:53-56`、`tabs.tsx:56`                                                                                                                                                          | look 里的注释与几何按"白滑块 + 软投影"写死（`corner 6/7`、`inset 2`），换主题不会改几何 —— 这是设计不是配色，属预期                                                                                       | 无需改；若真要贴合 shadcn 的 `p-[3px]` / 段内 `rounded-md`，那是另一件事                                                                                                                                                                                                                           | 否               |
 | 14  | `packages/ui/plot.tsx:43,48`、`link.tsx:43`                                                                                                                                                               | 颜色轴里有 `warn`、`violet`、`brand`：单色主题下这三支都成了灰，图表/已访问链接失去区分度                                                                                                                 | 数据层已尽量错开（`#525252` / `#262626` / `#171717`）；要恢复得给主题加一组"系列色"token                                                                                                                                                                                                           | 否（数据）       |
 
@@ -232,7 +232,7 @@ bun scripts/theme-sheets.ts   [id,id]        # 对照页
 
 ## 6 建议的下一步（若要正式支持多主题）
 
-1. **先把"外观"从两处搬到一处。** 现在配色在 `theme.json`，阴影/渐变在 `finishes.json`，而 `finishes.json` 是 `theme.ts` 的 import，`setTheme()` 换不掉。建议把 19 个 finish 表达为 token（`--shadow-raised`、`--raised-fill`、`--raised-gradient`…），`theme.ts` 只做角色到 token 的映射——这样一套主题就真的只是"一份 JSON"，也才可能有运行时切换。
+1. **先把"外观"从两处搬到一处。** 现在配色在 `theme.json`，阴影/渐变在 `finishes.json`，而 `finishes.json` 是 `theme.ts` 的 import，`setTheme()` 换不掉。建议把 20 个 finish 表达为 token（`--shadow-raised`、`--raised-fill`、`--raised-gradient`…），`theme.ts` 只做 finish 到 token 的映射——这样一套主题就真的只是"一份 JSON"，也才可能有运行时切换。
 2. **registry 形态** —— **已做，后来改了形**：`theme` 条目给的是 `theme.json` + `lib/finishes.json` + `lib/theme.ts`（构建时主题），`theme-shadcn` 现在只装 `themes/shadcn/`（`theme.json`、`finishes.json`、`index.ts`），`add theme-shadcn` 不再换构建时主题；运行时切换的定稿见 [`runtime-themes.md`](runtime-themes.md)。`nsh.json` 的 `theme` 仍指向 `./theme.json`，不必改。没有为旧 id 起别名（AGENTS.md 的边界）。
 3. **文档站**：`apps/docs` 的播放器已经有 `?theme=light|dark`（`player-options.ts`），多主题只需再加一个 `?skin=`/`?palette=`，由构建时生成多份 demo 包（当前 `docs:demos` 只按一个 `nsh.json` 主题打包）。演示页加一个主题切换，和 `Port Map` 无关。
 4. **`port:render` 的基线**：现在的基线是"一个主题 + 亮暗两套"（`apps/docs/demos/baseline/`）。多主题要么按主题出基线（目录变 `<theme>/<page>.png`，比较表按主题分），要么只对**默认主题**保持字节基线、其它主题只做"能渲染 + 与 ref 一致"的门（P4 的一半）。倾向前者做门、后者做慢检查，代价是基线体积翻倍。
