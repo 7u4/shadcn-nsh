@@ -59,7 +59,7 @@ export function sheetPanel(side: SheetSide): ViewStyle {
       gap: 14,
     };
   }
-  const r = 16;
+  const corner = 16;
   return {
     ...surface,
     width: Math.min(360, windowSize().width - 48),
@@ -69,13 +69,13 @@ export function sheetPanel(side: SheetSide): ViewStyle {
     gap: 16,
     borderCurve: "continuous",
     ...(side === "right"
-      ? { borderLeftWidth: 1, borderTopLeftRadius: r, borderBottomLeftRadius: r }
-      : { borderRightWidth: 1, borderTopRightRadius: r, borderBottomRightRadius: r }),
+      ? { borderLeftWidth: 1, borderTopLeftRadius: corner, borderBottomLeftRadius: corner }
+      : { borderRightWidth: 1, borderTopRightRadius: corner, borderBottomRightRadius: corner }),
   };
 }
 
-/** The grabber at the top of a bottom sheet (a view's `style`): a pill 36
- * by 5 points in the raised fill, centered. */
+/** The grabber at the top of a bottom sheet (a view's `style`): a pill 36 by 5 points in the raised
+ * fill, centered. */
 export function sheetGrabber(): ViewStyle {
   return {
     width: 36,
@@ -89,6 +89,7 @@ export function sheetGrabber(): ViewStyle {
 
 /** The root: it owns whether the sheet is open, and nothing of how it looks. */
 export type SheetProps = {
+  /** Controlled; leave it out and the root keeps the state (`defaultOpen`). */
   open?: boolean | null;
   defaultOpen?: boolean;
   children?: JSX.Element;
@@ -111,6 +112,7 @@ export type SheetContentProps = Omit<
   children?: JSX.Element;
 };
 
+/** What opens the sheet: a string is a `Button`'s label, anything else a pressable of its own. */
 export type SheetTriggerProps = {
   children?: string | JSX.Element;
   variant?: ButtonVariant;
@@ -118,6 +120,7 @@ export type SheetTriggerProps = {
   style?: StyleProp<ViewStyle>;
 };
 
+/** What closes the sheet: as `SheetTrigger`; `onPress` runs before it closes. */
 export type SheetCloseProps = SheetTriggerProps & {
   onPress?: () => void;
 };
@@ -184,11 +187,7 @@ function Action(props: SheetTriggerProps & { onPress: () => void }) {
 /** Opens the sheet. */
 export function SheetTrigger(props: SheetTriggerProps) {
   const ctx = useSheet();
-  return (
-    <Action {...props} onPress={() => ctx.setOpen(true)}>
-      {props.children}
-    </Action>
-  );
+  return <Action {...props} onPress={() => ctx.setOpen(true)} />;
 }
 
 /** Closes the sheet, after its own `onPress`. */
@@ -201,9 +200,7 @@ export function SheetClose(props: SheetCloseProps) {
         props.onPress?.();
         ctx.setOpen(false, "closePress");
       }}
-    >
-      {props.children}
-    </Action>
+    />
   );
 }
 

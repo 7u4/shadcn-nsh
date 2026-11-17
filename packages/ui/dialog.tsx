@@ -1,4 +1,5 @@
-// A card dialog: the look (`dialogCard`, `dialogTitle`, `dialogText`) and the parts that wear it.
+// A card dialog: the look (`dialogCard`, `dialogTitle`, `dialogText`) at the top, and the parts that
+// wear it below. `nsh/base`'s `Dialog` is the box; what this file adds is its card.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors, finish, focusRing, radius, terminal } from "@shadcn-nsh/theme";
 import type { JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
@@ -15,6 +16,10 @@ import { backdrop } from "./lib/overlay";
 
 // @port look/overlay.ts
 const pointer = platform.desktop;
+
+/** A card's width where the app gives none: 360 points with a pointer, 320 on a touch screen
+ * (upstream's dialog demo, `el-dialog`; never wider than 90% of the window). */
+const cardWidth = pointer ? 360 : 320;
 
 /**
  * A dialog shown as a card in the middle of the window, over `backdrop()`:
@@ -163,11 +168,7 @@ function Action(props: DialogTriggerProps & { onPress: () => void }) {
 /** Opens the dialog. */
 export function DialogTrigger(props: DialogTriggerProps) {
   const ctx = useDialog();
-  return (
-    <Action {...props} onPress={() => ctx.setOpen(true)}>
-      {props.children}
-    </Action>
-  );
+  return <Action {...props} onPress={() => ctx.setOpen(true)} />;
 }
 
 /** Closes the dialog, after its own `onPress`. */
@@ -180,9 +181,7 @@ export function DialogClose(props: DialogCloseProps) {
         props.onPress?.();
         ctx.setOpen(false, "closePress");
       }}
-    >
-      {props.children}
-    </Action>
+    />
   );
 }
 
@@ -200,21 +199,20 @@ export function DialogContent(props: DialogContentProps) {
       onClose={ctx.onClose}
       onCancel={ctx.onCancel}
       backdropStyle={[backdrop(), props.backdropStyle ?? null]}
-      // The widths of upstream's dialog demo (`el-dialog`).
-      style={[dialogCard(props.width ?? (pointer ? 360 : 320)), props.style ?? null]}
+      style={[dialogCard(props.width ?? cardWidth), props.style ?? null]}
     >
       {props.children}
     </BaseDialog>
   );
 }
 
-/** The card's title; a string takes `dialogTitle`'s type. */
+/** The card's title; a string child takes `dialogTitle`'s type, anything else is drawn as given. */
 export function DialogTitle(props: DialogTextProps) {
   if (typeof props.children !== "string") return props.children;
   return <Text style={[dialogTitle(), props.style ?? null]}>{props.children}</Text>;
 }
 
-/** The text under the title; a string takes `dialogText`'s type. */
+/** The text under the title; a string child takes `dialogText`'s type, anything else as given. */
 export function DialogDescription(props: DialogTextProps) {
   if (typeof props.children !== "string") return props.children;
   return <Text style={[dialogText(), props.style ?? null]}>{props.children}</Text>;
