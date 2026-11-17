@@ -21,19 +21,19 @@ export interface ListboxPopupOptions {
 
 /**
  * The list's surface: with a pointer a popup at the trigger that extends
- * it (the raised finish, corners of 10, 6 points of padding); on a touch
- * screen a sheet at the bottom, its top corners rounded, at most 70% of the
- * window high.
+ * it (the floating finish every popup wears, corners of 10, 6 points of
+ * padding); on a touch screen a sheet at the bottom, its top corners
+ * rounded, at most 70% of the window high. Not the raised finish: that is a
+ * control's, and a theme may make it a tint over what is behind it (Solid
+ * Glass), which a list floating over the page cannot be.
  */
 export function listboxPopup(o?: ListboxPopupOptions): ViewStyle {
   return pointer
     ? {
-        backgroundColor: colors.raised,
         borderRadius: radius.inset,
         borderWidth: 1,
-        borderColor: colors.border,
         padding: 6,
-        ...finish.raised,
+        ...finish.menu,
         ...(o?.minWidth ? { minWidth: o.minWidth } : {}),
       }
     : {

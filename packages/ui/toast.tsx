@@ -13,8 +13,9 @@ const pointer = platform.desktop;
 
 /**
  * A toast (`nsh/base`'s `Toast`'s `style`): a row 12 points apart on the
- * raised fill and finish with the border's edge, 10-point corners
- * (`radius.inset`), 12 by 14 points of padding. Its title takes
+ * floating finish every popup wears (not the raised one, a control's, which a
+ * theme may make a tint over the page), 10-point corners (`radius.inset`), 12
+ * by 14 points of padding. Its title takes
  * `toastTitle`, its description `toastText`.
  */
 export function toastLook(): ViewStyle {
@@ -27,9 +28,7 @@ export function toastLook(): ViewStyle {
     borderRadius: radius.inset,
     borderCurve: "continuous",
     borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.raised,
-    ...finish.raised,
+    ...finish.menu,
   };
 }
 
