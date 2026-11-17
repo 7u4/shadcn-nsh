@@ -1,6 +1,6 @@
-// A time field: `nsh/base`'s TimeField in the well and the segments of the date picker's time
-// row (`timeFieldClass`, `calendarLook`, `TimeSegment`, all ported from NSH's
-// examples/nsh-gallery-ui — Apache-2.0, © Longbridge; see NOTICE).
+// A time field: the well of `timeFieldClass` and the segments of the date picker's time row, and the
+// `TimeField` that wears them.
+// From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { split } from "nsh";
 import { TimeField as BaseTimeField, type TimeFieldProps as BaseTimeFieldProps } from "nsh/base";
 
@@ -15,29 +15,19 @@ export { timeFieldClass } from "./input";
  * so a field on a page and the one in a calendar's popup read alike. Every base prop passes
  * through; `class`, `segmentClass`, `separatorStyle` and `renderSegment` go over the look's.
  *
- * The module it reads them from is the calendar's: upstream keeps the time row, the calendar and
- * the date picker's look in one file (`look/listbox.tsx`: `TimeSegment` at :582, `calendarLook` at
- * :602, `datePickerLook` at :653), so a time field that shares the row shares that module here
- * too — the calendar's look and its parts arrive with it. Splitting them would mean a look file of
- * our own, which P1-P3 keep out of this library.
+ * Those come from the calendar's look: a time field is the date picker's time row, so the two read
+ * it from `calendar.tsx` rather than each keeping a copy.
  */
 export type TimeFieldProps = BaseTimeFieldProps;
 
 /** A time of day, one segment at a time. */
 export function TimeField(props: TimeFieldProps) {
-  const [, rest] = split(props, [
-    "class",
-    "segmentClass",
-    "separatorClass",
-    "separatorStyle",
-    "renderSegment",
-  ]);
+  const [, rest] = split(props, ["class", "segmentClass", "separatorStyle", "renderSegment"]);
   return (
     <BaseTimeField
       {...rest}
       class={props.class ? `${timeFieldClass} ${props.class}` : timeFieldClass}
       segmentClass={props.segmentClass ?? calendarLook.segmentClass}
-      separatorClass={props.separatorClass}
       separatorStyle={[calendarLook.separator, props.separatorStyle ?? null]}
       renderSegment={props.renderSegment ?? ((segment) => <TimeSegment label={segment.label} />)}
     />

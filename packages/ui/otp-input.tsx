@@ -1,4 +1,4 @@
-// An OTP input: the look (`otpCellLook`) and the `OtpInput` that wears it.
+// An OTP input: the cells (`otpCells`, `otpCellLook`) and the `OtpInput` that wears them.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors, finish, terminal, type Tone, toneColor, toneTint } from "@shadcn-nsh/theme";
 import type { ViewStyle } from "nsh";
@@ -44,9 +44,9 @@ export function otpCellLook(o?: OtpCellOptions) {
     get cellStyle(): ViewStyle {
       const tone = read(o?.tone);
       if (terminal) return tone ? { borderColor: toneColor(tone) } : {};
-      // A copy, as the other looks hand a finish out: its shadow is read when the look is applied,
-      // so a cell drawn after an appearance or theme change wears that one's (the shared
-      // `finish.inset` object, passed as it is, kept the appearance of the render that converted it).
+      // A copy, as the other looks hand a finish out: `finish` reads the theme when the style is
+      // applied, so a cell drawn after an appearance change wears that appearance (a shared object
+      // passed as it is would keep the one of the render that made it).
       return tone
         ? { ...finish.inset, backgroundColor: toneTint(tone), borderColor: toneColor(tone) }
         : { ...finish.inset };
