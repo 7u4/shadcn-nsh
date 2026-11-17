@@ -33,24 +33,9 @@ const read = <T,>(v: Live<T> | undefined): T | undefined =>
  * it has a value, `clearable`).
  */
 export function DateTrigger(props: Omit<PickerProps, "icon" | "chevron" | "lead">) {
-  return (
-    <Picker
-      title={props.title}
-      open={props.open}
-      disabled={props.disabled}
-      placeholder={props.placeholder}
-      clearable={props.clearable}
-      invalid={props.invalid}
-      variant={props.variant}
-      icon={Calendar}
-      chevron={false}
-      style={props.style}
-    />
-  );
+  // The calendar and the missing chevron are the trigger's own: every other prop is `Picker`'s.
+  return <Picker {...props} icon={Calendar} chevron={false} />;
 }
-
-/** The gap between the months of a calendar of two (shadcn's `gap-4`). */
-const monthGap = 16;
 
 /** Options of `datePickerLook`. */
 export interface DatePickerLookOptions {
@@ -86,7 +71,7 @@ export function datePickerLook(o?: DatePickerLookOptions) {
     presetClass: calendarLook.presetClass,
     calendarStyle: calendarLook.calendar,
     headerStyle: calendarLook.header,
-    bodyStyle: terminal ? undefined : { gap: monthGap },
+    bodyStyle: terminal ? undefined : { gap: calendarLook.monthGap },
     itemClass: calendarLook.itemClass,
     renderItem: (item: CalendarEntry) => (
       <CalendarItem item={item} months={read(o?.months)} firstDayOfWeek={read(o?.firstDayOfWeek)} />
@@ -129,7 +114,7 @@ export type DatePickerProps = {
 /**
  * The calendar's popup. Every prop of `nsh/base`'s DatePicker passes through but the ones the
  * root owns; `datePickerLook` fills the popup, the scrim, the calendar and the time's row by
- * default. Its parts are the `DatePickerTrigger` above it.
+ * default. The `DatePickerTrigger` above it opens it.
  */
 export type DatePickerContentProps = Omit<
   BaseDatePickerProps,

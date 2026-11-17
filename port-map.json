@@ -298,7 +298,7 @@
         "WEEKDAY_INITIALS": "packages/ui/calendar.tsx",
         "WEEKDAYS": "packages/ui/calendar.tsx",
         "cell": "packages/ui/calendar.tsx",
-        "monthGap": ["packages/ui/calendar.tsx", "packages/ui/date-picker.tsx"],
+        "monthGap": "packages/ui/calendar.tsx",
         "weekGap": "packages/ui/calendar.tsx",
         "cellRadius": "packages/ui/calendar.tsx",
         "quietFill": "packages/ui/calendar.tsx",
