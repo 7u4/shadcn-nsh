@@ -1,7 +1,7 @@
-// A navigation stack: `nsh/base`'s NavStack and NavPage, and the header a page shows on the
-// desktops and the web — a back button, the title and a trailing slot — which iOS and Android take
-// from the system instead. This library's own: nothing here comes from upstream, so there is no
-// port region. Yours to change.
+// A navigation stack: `nsh/base`'s NavStack and NavPage, and the header the desktops and the web
+// draw — a back button, the title, a trailing slot — which iOS and Android take from the system
+// instead. The looks are `navStackLook` and `navPageLook` below; the parts only wear them. This
+// library's own: nothing here comes from upstream, so there is no port region. Yours to change.
 import { colors, header } from "@shadcn-nsh/theme";
 import { ChevronLeft } from "lucide";
 import type { JSX, TextStyle, ViewStyle } from "nsh";
@@ -17,7 +17,7 @@ import { IconButton } from "./button";
 import { Icon } from "./lib/icons";
 
 // The stack and its routes are `nsh/base`'s, with nothing drawn on them: one module to import a
-// page's navigation from, as `plot.tsx` re-exports the marks a plot draws with.
+// page's navigation from.
 export { createNavStack, type NavStackChangeEvent, type NavStackState } from "nsh/base";
 
 const pointer = platform.desktop;
@@ -114,12 +114,15 @@ type NavPageSlot = {
 
 const NavPageSlotContext = context<NavPageSlot | null>(null);
 
-/** The stack: `nsh/base`'s, on the page's fill, telling each page how deep the stack is and how to
- * leave it. The slot is given around the stack, not around each page: `nsh/base` reads what a route
- * renders to find the `<NavPage>` it turns into a screen, so nothing may wrap it. */
+/** A stack's props: its routes, the page shown, and the rest of `nsh/base`'s `NavStack`. */
 export type NavStackProps<R> = BaseNavStackProps<R>;
 
-/** A stack of pages, one shown at a time. Every prop of `nsh/base`'s [`NavStack`](https://nsh.dev/elements/nav-stack) passes through; `style` goes over the look's. */
+/**
+ * A stack of pages, one shown at a time, telling each page how deep the stack is and how to leave it.
+ * Every prop of `nsh/base`'s [`NavStack`](https://nsh.dev/elements/nav-stack) passes through; `style`
+ * goes over the look's. The slot is given around the stack, not around each page: `nsh/base` reads
+ * what a route renders to find the `<NavPage>` it turns into a screen, so nothing may wrap it.
+ */
 export function NavStack<R>(props: NavStackProps<R>) {
   const [, rest] = split(props, ["children", "style"]);
   const look = navStackLook();
@@ -173,9 +176,10 @@ export function NavPage(props: NavPageProps) {
   const slot = NavPageSlotContext();
   const look = navPageLook();
   const [, rest] = split(props, ["header", "style", "children"]);
+  /** Whether a page stands below this one, so the header has a back button to offer. */
+  const above = () => slot != null && slot.pages() > 1;
   /** Whether the page has a header to draw: a back button to offer, a title, or a trailing action. */
-  const hasHeader = () =>
-    props.title != null || props.headerRight != null || (slot != null && slot.pages() > 1);
+  const hasHeader = () => props.title != null || props.headerRight != null || above();
   /** The user pressed back: `onBackPress` first, as the platform's back buttons do, then the pop
    * `popOnBack` allows. */
   const back = () => {
@@ -192,7 +196,7 @@ export function NavPage(props: NavPageProps) {
               title={props.title}
               right={props.headerRight}
               back={slot ? back : undefined}
-              above={() => slot != null && slot.pages() > 1}
+              above={above}
             />
           </If>
         )
