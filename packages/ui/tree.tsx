@@ -10,11 +10,13 @@ import { controlSize } from "./lib/surface";
 
 const desktop = platform.desktop;
 const size = {
-  row: controlSize.row,
   rowSm: desktop ? 32 : controlSize.row,
   label: controlSize.label,
   detail: controlSize.detail,
 };
+
+/** A row's label: 13 points under a pointer, a touch screen's control label. */
+const labelFont = desktop ? 13 : size.label;
 
 // @port tree.tsx
 /**
@@ -33,7 +35,7 @@ export const treeItemClass =
 /** How far each level is indented, in points. */
 export const treeIndent = 14;
 
-/** A `TreeRow`'s height: compact with a pointer, a 44-point target on a touch screen. */
+/** A row's height: 4 points under a pointer's 32-point row, or a touch screen's 44-point target whole. */
 export const treeRowHeight = desktop ? size.rowSm - 4 : size.rowSm;
 
 /**
@@ -80,7 +82,7 @@ export function TreeRow(props: {
       )}
       <Text
         class="text-muted-foreground group-selected:text-foreground flex-1"
-        style={{ fontSize: desktop ? 13 : size.label, numberOfLines: 1 }}
+        style={{ fontSize: labelFont, numberOfLines: 1 }}
       >
         {props.entry.label}
       </Text>
@@ -134,7 +136,7 @@ function mergeClass(base: string, extra?: string | null): string {
 /** `nsh/base` Tree with row chrome and `TreeRow` by default. */
 export type TreeProps = BaseTreeProps;
 
-/** Items that hold items: one virtualized list, one keyboard stop. */
+/** A tree in a card: base's virtualized list of rows, `TreeRow` by default. */
 export function Tree(props: TreeProps) {
   const [, rest] = split(props, [
     "class",

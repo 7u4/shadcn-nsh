@@ -1,11 +1,11 @@
-// Plot marks: shared look helpers for `nsh/base/plot`.
+// A plot: every mark of `nsh/base/plot` re-exported with the look this library gives them (series
+// and category colors, grid, baseline, cross line, hover dot, wash, axis text, tooltip), plus `Legend`.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { alpha, chart, colors, finish, mono, radius, terminal } from "@shadcn-nsh/theme";
 import { Text, token, View } from "nsh";
 import type { TextStyle, ViewStyle } from "nsh";
 
-// Every mark of `nsh/base/plot`, so a chart asks this module for its parts as it asks for their
-// look (upstream's seven examples reach for all of them).
+// Every mark, so a chart asks one module for its parts and their look.
 export {
   Arc,
   Area,
@@ -34,8 +34,11 @@ export {
  * `colors.up` / `colors.down`. */
 export const seriesColors = (): string[] => [chart.s1, chart.s2, chart.s3, chart.s4, chart.s5];
 
-/** The `i`th series' color, around the five. */
-export const seriesColor = (i: number): string => seriesColors()[i % 5];
+/** The `i`th series' color, cycling through the five. */
+export const seriesColor = (i: number): string => {
+  const palette = seriesColors();
+  return palette[i % palette.length];
+};
 
 /** Colors for categories that must read apart at a glance (sectors,
  * regions, platforms), in order: the citrus lead, then the theme's info,
