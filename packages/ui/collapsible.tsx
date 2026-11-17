@@ -1,5 +1,6 @@
-// A collapsible: `nsh/base` Collapsible with the shared disclosure look from `accordion.tsx`.
-// Composition root owns open state; the trigger registers via a slot on {@link CollapsibleContent}.
+// A collapsible: `nsh/base`'s Collapsible in the disclosure look of `accordion.tsx` — a trigger row
+// and the panel it reveals. This library's own: nothing here comes from upstream, so there is no
+// port region. Yours to change.
 import type { JSX, StyleProp, ViewStyle } from "nsh";
 import { context, split, View } from "nsh";
 import {
@@ -17,11 +18,13 @@ import { labelOf } from "./lib/label";
 import { createOpenState, createSlot, type OpenState, type Slot } from "./lib/open-state";
 import { RowLabel } from "./lib/surface";
 
-/** Composition root: open state and a slot for the trigger row. */
+/** The root: it owns whether the panel is open, and the trigger slot. */
 export type CollapsibleProps = {
+  /** Controlled; leave it out and the root keeps the state (`defaultOpen`). */
   open?: boolean | null;
   defaultOpen?: boolean;
   children?: JSX.Element;
+  /** Told whenever it opens or closes; the reason is `nsh/base`'s, as a string. */
   onOpenChange?: (event: { open: boolean; reason?: string }) => void;
 };
 
@@ -34,7 +37,7 @@ export type CollapsibleContentProps = Omit<
   panel?: DisclosurePanelOptions;
 };
 
-/** Toggles open: a disclosure row, not a {@link Button}. String children are the title. */
+/** Toggles open: a disclosure row, not a `Button`. String children are the title. */
 export type CollapsibleTriggerProps = {
   children?: string | JSX.Element;
   disabled?: boolean;
@@ -61,7 +64,7 @@ function useCollapsible() {
   return ctx;
 }
 
-/** Owns open state for {@link CollapsibleTrigger} and {@link CollapsibleContent}. */
+/** Owns open state for `CollapsibleTrigger` and `CollapsibleContent`. */
 export function Collapsible(props: CollapsibleProps) {
   const state = createOpenState(props);
   const trigger = createSlot();
@@ -72,17 +75,17 @@ export function Collapsible(props: CollapsibleProps) {
   );
 }
 
-/** Registers the disclosure row; {@link CollapsibleContent} renders it as the base child. */
+/** Registers the disclosure row; `CollapsibleContent` renders it as the base child. */
 export function CollapsibleTrigger(props: CollapsibleTriggerProps) {
   const ctx = useCollapsible();
   ctx.trigger.set(() => {
     const look = disclosureTriggerLook({
       first: props.first,
       start: props.start,
-      disabled: () => !!props.disabled,
+      disabled: () => Boolean(props.disabled),
     });
     const children = props.children;
-    const disabled = !!props.disabled;
+    const disabled = Boolean(props.disabled);
     const body =
       typeof children === "string" ? (
         <RowLabel label={children} strong />

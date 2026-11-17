@@ -1,4 +1,5 @@
-// An accordion: disclosure look (`disclosureTriggerLook`, `DisclosureChevron`, `disclosurePanel`) and base parts.
+// An accordion: the disclosure look (`disclosureTriggerLook`, `DisclosureChevron`, `disclosurePanel`)
+// at the top, and the parts that wear it below.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors } from "@shadcn-nsh/theme";
 import { ChevronDown, ChevronRight } from "lucide";
@@ -55,6 +56,14 @@ export function disclosureTriggerLook(o?: DisclosureTriggerOptions) {
   };
 }
 
+/** The chevron's options. */
+type DisclosureChevronProps = {
+  /** Its own chevron points along the row and turns down as it opens (a collapsible's). */
+  open?: boolean;
+  /** Follow the trigger's `aria-expanded` instead (an accordion's). */
+  accordion?: boolean;
+};
+
 /**
  * The chevron at a trigger's trailing edge, muted, the size of a row's
  * icons (`controlSize.check`). A collapsible's (default) points along the
@@ -62,9 +71,10 @@ export function disclosureTriggerLook(o?: DisclosureTriggerOptions) {
  * (half its box), so it ends where the values below it end. An accordion's
  * (`accordion`) points down and turns up with its trigger's `aria-expanded`
  * (the trigger's `group` class), in its whole box. Both turn on a short
- * transition, at once with reduced motion.
+ * transition (200 ms in an accordion, 150 ms in a collapsible), at once with
+ * reduced motion.
  */
-export function DisclosureChevron(props: { open?: boolean; accordion?: boolean }) {
+export function DisclosureChevron(props: DisclosureChevronProps) {
   const icon = controlSize.check;
   return props.accordion ? (
     <View
@@ -112,7 +122,7 @@ export type AccordionProps = BaseAccordionProps;
 /** One section. */
 export type AccordionItemProps = BaseAccordionItemProps;
 
-/** The heading around {@link AccordionTrigger}. */
+/** The heading around `AccordionTrigger`. */
 export type AccordionHeaderProps = BaseAccordionHeaderProps;
 
 /**
@@ -136,6 +146,7 @@ export type AccordionPanelProps = BaseAccordionPanelProps & {
 
 /** Hairline between items (among an item's children, not on the first). */
 export type AccordionDividerProps = {
+  /** Draw it: false on the item first in the stack. */
   show: boolean;
 };
 
@@ -154,7 +165,7 @@ export function AccordionItem(props: AccordionItemProps) {
   );
 }
 
-/** Heading slot. */
+/** The heading around the trigger. */
 export function AccordionHeader(props: AccordionHeaderProps) {
   return <BaseAccordionHeader {...props} />;
 }
