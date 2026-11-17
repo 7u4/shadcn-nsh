@@ -39,7 +39,7 @@ export type Component = {
   demo: string;
   /** `apps/docs/demos/<id>.ref.tsx`. */
   reference: string;
-  /** `apps/docs/src/pages/docs/components/<id>.md`. */
+  /** `apps/docs/content/docs/components/<id>.md`. */
   page: string;
 };
 
@@ -84,7 +84,7 @@ export function catalog(root = DEFAULT_ROOT): Catalog {
     ui: path.join(root, "packages/ui"),
     theme: path.join(root, "packages/theme"),
     demos: path.join(root, "apps/docs/demos"),
-    pages: path.join(root, "apps/docs/src/pages/docs/components"),
+    pages: path.join(root, "apps/docs/content/docs/components"),
     index: path.join(root, "packages/ui/index.ts"),
     generated: path.join(root, "apps/docs/demos/catalog.generated.ts"),
   };
