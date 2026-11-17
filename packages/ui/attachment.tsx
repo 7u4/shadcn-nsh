@@ -40,13 +40,23 @@ const corners = (size: AttachmentSize): number => (size === "xs" ? radius.inset 
 const verticalWidth = 120;
 const groupGap = 12;
 
-/** What the parts of an attachment wear when they are not told: the frame's state, size and
- * orientation. */
-const AttachmentContext = context<{
+/** The axes an `Attachment` hands down to its parts: how it is doing, how big it is, which way it
+ * runs. Read where used, so a part follows its frame. */
+interface AttachmentAxes {
   state: () => AttachmentState;
   size: () => AttachmentSize;
   orientation: () => AttachmentOrientation;
-} | null>(null);
+}
+
+/** What a part of an attachment is told, or `null` when it is drawn on its own. */
+const AttachmentContext = context<AttachmentAxes | null>(null);
+
+/** What a part wears when it is not under an `Attachment`. */
+const unattached: AttachmentAxes = {
+  state: () => "done",
+  size: () => "default",
+  orientation: () => "horizontal",
+};
 
 /** An attachment's parts as the styles they wear: spread each one onto the part that matches its name. */
 export interface AttachmentLook {
@@ -270,7 +280,7 @@ export function AttachmentGroup(props: AttachmentGroupProps) {
 /** The media of an attachment: an `Icon` of `attachmentGlyph(size, orientation)` points, or a
  * picture drawn into a square. */
 export function AttachmentMedia(props: AttachmentMediaProps) {
-  const attachment = AttachmentContext();
+  const attachment = AttachmentContext() ?? unattached;
   const variant = () => props.variant ?? "icon";
   const [, rest] = split(props, ["variant", "children", "style"]);
   return (
@@ -278,10 +288,10 @@ export function AttachmentMedia(props: AttachmentMediaProps) {
       {...rest}
       style={[
         attachmentLook().media(
-          attachment?.size() ?? "default",
-          attachment?.orientation() ?? "horizontal",
+          attachment.size(),
+          attachment.orientation(),
           variant(),
-          attachment?.state() ?? "done",
+          attachment.state(),
         ),
         props.style ?? null,
       ]}
@@ -294,15 +304,12 @@ export function AttachmentMedia(props: AttachmentMediaProps) {
 /** The text of an attachment: its title and its description, in a column that takes the room
  * left. */
 export function AttachmentContent(props: ViewProps) {
-  const attachment = AttachmentContext();
+  const attachment = AttachmentContext() ?? unattached;
   const [, rest] = split(props, ["children", "style"]);
   return (
     <View
       {...rest}
-      style={[
-        attachmentLook().content(attachment?.orientation() ?? "horizontal"),
-        props.style ?? null,
-      ]}
+      style={[attachmentLook().content(attachment.orientation()), props.style ?? null]}
     >
       {props.children}
     </View>
@@ -311,13 +318,10 @@ export function AttachmentContent(props: ViewProps) {
 
 /** What the file is called, in one line. */
 export function AttachmentTitle(props: AttachmentTitleProps) {
-  const attachment = AttachmentContext();
+  const attachment = AttachmentContext() ?? unattached;
   const [, rest] = split(props, ["children", "style"]);
   return (
-    <Text
-      {...rest}
-      style={[attachmentLook().title(attachment?.size() ?? "default"), props.style ?? null]}
-    >
+    <Text {...rest} style={[attachmentLook().title(attachment.size()), props.style ?? null]}>
       {props.children}
     </Text>
   );
@@ -325,13 +329,10 @@ export function AttachmentTitle(props: AttachmentTitleProps) {
 
 /** What the attachment is doing, or what it weighs, in one line under its title. */
 export function AttachmentDescription(props: AttachmentDescriptionProps) {
-  const attachment = AttachmentContext();
+  const attachment = AttachmentContext() ?? unattached;
   const [, rest] = split(props, ["children", "style"]);
   return (
-    <Text
-      {...rest}
-      style={[attachmentLook().description(attachment?.state() ?? "done"), props.style ?? null]}
-    >
+    <Text {...rest} style={[attachmentLook().description(attachment.state()), props.style ?? null]}>
       {props.children}
     </Text>
   );
@@ -340,15 +341,12 @@ export function AttachmentDescription(props: AttachmentDescriptionProps) {
 /** The actions on an attachment: a remove, a retry, a preview. They sit beside the text, or in the
  * corner of a vertical attachment. */
 export function AttachmentActions(props: ViewProps) {
-  const attachment = AttachmentContext();
+  const attachment = AttachmentContext() ?? unattached;
   const [, rest] = split(props, ["children", "style"]);
   return (
     <View
       {...rest}
-      style={[
-        attachmentLook().actions(attachment?.orientation() ?? "horizontal"),
-        props.style ?? null,
-      ]}
+      style={[attachmentLook().actions(attachment.orientation()), props.style ?? null]}
     >
       {props.children}
     </View>
