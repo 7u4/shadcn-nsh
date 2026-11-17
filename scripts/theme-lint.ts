@@ -17,7 +17,8 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
-import { parseColor, rgbToOklch } from "./theme/oklch";
+import { colourFields, readColour } from "./theme/finish-colour";
+import { parseColor } from "./theme/oklch";
 import { specBlock, specParts, specRows } from "./theme/spec";
 
 const root = join(import.meta.dir, "..");
@@ -52,8 +53,6 @@ interface FinishesFile {
 const appearances = ["light", "dark"] as const;
 
 /** The fields a finish's colour may be written in. `boxShadow` is ink — see the spec. */
-const colourFields = ["backgroundColor", "backgroundImage", "borderColor"] as const;
-
 /** A clear value: unset, `transparent`, or a gradient that is transparent at every stop. */
 const clear = (value: string | undefined) =>
   value === undefined ||
@@ -144,21 +143,6 @@ function readsRole(role: string): boolean {
     pattern.test(code),
   );
 }
-
-/** Whether a colour literal is ink: white or black, at any alpha. */
-function isInk(literal: string): boolean {
-  try {
-    const { l, c } = rgbToOklch(parseColor(literal));
-    return c < 0.001 && (l > 0.99 || l < 0.01);
-  } catch {
-    return false;
-  }
-}
-
-/** The colours a value writes out, as text. */
-const literals = (value: string) =>
-  value.match(/(?:oklch|oklab|rgba?|hsla?|lab|lch)\([^)]*\)|#[0-9a-fA-F]{3,8}(?![0-9a-zA-Z])/g) ??
-  [];
 
 // 1. The default theme is the one under `themes/default/`, byte for byte — it is a copy, and a copy
 // that drifts is two answers to the same question.
@@ -287,16 +271,13 @@ for (const theme of themes) {
       for (const field of colourFields) {
         const value = finish[field];
         if (value === undefined) continue;
-        for (const literal of literals(value)) {
-          if (isInk(literal)) continue;
-          if (pending.has(`${theme} ${appearance} ${literal}`)) continue;
+        const verdict = readColour(value, known, pending, `${theme} ${appearance}`);
+        for (const problem of verdict.problems)
           fail(
-            `${path}: ${role}.${field} writes ${literal}, which is no token of the theme, no ink, and not in the spec's pending table`,
+            problem.kind === "unknown-token"
+              ? `${path}: ${role}.${field} names token \`${problem.name}\`, which ${theme} does not have`
+              : `${path}: ${role}.${field} writes ${problem.literal}, which is no token of the theme, no ink, and not in the spec's pending table`,
           );
-        }
-        for (const [, name] of value.matchAll(/var\(--([a-z0-9-]+)\)/g))
-          if (!known.has(name))
-            fail(`${path}: ${role}.${field} names token \`${name}\`, which ${theme} does not have`);
       }
       for (const [, name] of (finish.boxShadow ?? "").matchAll(/var\(--([a-z0-9-]+)\)/g))
         if (!known.has(name))

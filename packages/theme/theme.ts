@@ -14,6 +14,7 @@ import {
 } from "nsh";
 
 import finishes from "./finishes.json";
+import themeJson from "./theme.json";
 
 // @port theme.ts
 /**
@@ -111,23 +112,88 @@ export interface Press {
 /** The build-time finishes: `finishes.json` beside this file (the app's `nsh-ui.json` names the theme they belong to). */
 const builtIn: Finishes = finishes;
 
+/** `theme.json`'s content: the tokens the finishes' relative colors read their channels from. */
+type ThemeFile = {
+  cssVars: {
+    theme?: Record<string, string | number>;
+    light?: Record<string, string | number>;
+    dark?: Record<string, string | number>;
+  };
+};
+
+/** The build-time tokens: `theme.json` beside this file. */
+const builtInTokens = themeJson as ThemeFile;
+
+/** The last theme and appearance `tokensInUse` read, so a draw that reads several finishes spreads
+ * the tokens once. */
+let spread: { theme: unknown; dark: boolean; vars: Record<string, string | number> } | null = null;
+
+/** The tokens in use, one appearance's over the theme's: the selected theme's own, else the build-time
+ * ones. A relative color names a token the theme that wrote it has; the finishes and the tokens
+ * always come from the same theme.
+ */
+function tokensInUse(): Record<string, string | number> {
+  const theme: unknown = selected()?.theme ?? builtInTokens;
+  const dark = isDark();
+  if (spread === null || spread.theme !== theme || spread.dark !== dark) {
+    const cssVars = (theme as ThemeFile).cssVars;
+    spread = { theme, dark, vars: { ...cssVars.theme, ...(dark ? cssVars.dark : cssVars.light) } };
+  }
+  return spread.vars;
+}
+
+/** A token's `oklch()` channels as the theme declares them (`null` for a token that is no plain
+ * `oklch()`, and for a name the theme does not have).
+ */
+function channels(name: string): [string, string, string] | null {
+  let at = name;
+  for (let hop = 0; hop < 4; hop++) {
+    const value = tokensInUse()[at];
+    if (typeof value !== "string") return null;
+    const colour = /^oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s*(?:\/.*)?\)$/.exec(value.trim());
+    if (colour !== null) return [colour[1]!, colour[2]!, colour[3]!];
+    const next = /^var\(--([a-z0-9-]+)\)$/.exec(value.trim());
+    if (next === null) return null;
+    at = next[1]!;
+  }
+  return null;
+}
+
 /** The theme `selectTheme` put in; `null` while the app shows its build-time one. */
 const selected = signal<AppTheme | null>(null);
 
 /** The finishes in use: the selected theme's, else the build-time ones. Reactive: reading it subscribes. */
 const finishesOf = (): Finishes => selected()?.finishes ?? builtIn;
 
+/** The one relative color a finish writes: a token's color at another alpha. */
+const relative = /oklch\(from var\(--([a-z0-9-]+)\) l c h \/ ([\d.]+)\)/g;
+
+/** `#rrggbbaa` without its alpha, for a token whose declared value is no plain `oklch()`. */
+const opaque = (color: string) => (/^#[0-9a-f]{8}$/i.test(color) ? color.slice(0, 7) : color);
+
 /**
  * A finish's strings name the theme's tokens instead of writing their colors (`var(--raised)`, an
  * alias): the finishes keep one shape in every theme while the colors they draw are the theme's.
  * `token` reads the same token the rest of the theme does, so an alias follows the appearance and
  * the theme `selectTheme` put in, and a `var()` anywhere in a gradient or a shadow resolves with it.
+ *
+ * A token named at another alpha (`oklch(from var(--card) l c h / 0.78)`, the one relative color a
+ * finish writes) resolves to that token's own channels, `oklch(0.25145 0.01219 264.328 / 0.78)`:
+ * NSH reads these strings as plain CSS and has no relative color syntax, and the theme wrote the
+ * channels, so the string is the one the finish would have written before it named the token.
  */
 const alias = (value: string): string =>
-  value.replace(/var\(--([a-z0-9-]+)\)/g, (whole, name: string) => {
-    const color = token(name as keyof Tokens);
-    return typeof color === "string" ? color : whole;
-  });
+  value
+    .replace(relative, (whole, name: string, a: string) => {
+      const found = channels(name);
+      if (found !== null) return `oklch(${found[0]} ${found[1]} ${found[2]} / ${a})`;
+      const color = token(name as keyof Tokens);
+      return typeof color === "string" ? alpha(opaque(color), Number(a)) : whole;
+    })
+    .replace(/var\(--([a-z0-9-]+)\)/g, (whole, name: string) => {
+      const color = token(name as keyof Tokens);
+      return typeof color === "string" ? color : whole;
+    });
 
 /**
  * An object whose getters read one finish role of the finishes in use, in

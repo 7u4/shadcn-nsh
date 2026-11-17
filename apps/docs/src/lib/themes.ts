@@ -134,6 +134,14 @@ function filled(value: string, vars: Record<string, string>): string {
     if (next === out) break;
     out = next;
   }
+  // A relative colour — a token's own colour at another alpha (`oklch(from var(--card) l c h /
+  // 0.78)`) — is written out whole once its reference is filled in: `theme.ts` draws it as a
+  // concrete `oklch(L C H / a)` (NSH's parser reads no relative colour), and the sample should be
+  // the colour the theme draws, not one a browser alone can.
+  const relative = /^oklch\(from (oklch\([^)]*\)) l c h \/ ([\d.]+)\)$/.exec(out);
+  const channels = relative && /^oklch\(\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)/.exec(relative[1]!);
+  if (relative !== null && channels !== null)
+    out = `oklch(${channels[1]} ${channels[2]} ${channels[3]} / ${relative[2]})`;
   return out;
 }
 

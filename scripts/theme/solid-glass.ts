@@ -256,6 +256,17 @@ const alias = (token: string) => `var(--${token})`;
 const seeThrough = (color: string) => coords(color).a < 1;
 
 /**
+ * A pane filled with a token at another alpha — `oklch(from var(--muted) l c h / 0.26)`, the one
+ * relative colour a finish writes (docs/specs/theme-roles.md) — and the clear gradient an
+ * always-translucent pane carries: the engine draws it over the colour, and the same translucent
+ * colour twice would double its alpha.
+ */
+const paneAt = (token: string, a: number) => ({
+  backgroundColor: `oklch(from var(--${token}) l c h / ${a})`,
+  backgroundImage: "linear-gradient(180deg, transparent 0%, transparent 100%)",
+});
+
+/**
  * A pane's fill: a finish's colour and the gradient over it, which every theme states. `token` names
  * the colour where the theme has one. A translucent pane's gradient is transparent at both stops —
  * the engine draws it over the colour, and the same translucent colour twice would double its alpha
@@ -445,20 +456,20 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     // Pressed, it sits down on the page: the shadow under it goes and the pane darkens a step.
     // The stylesheet draws no press of its own beyond that, so `press.scale` below is 1.
     pressed: {
-      ...pane(s("glass-state-armed")),
+      ...paneAt("muted", coords(s("glass-state-armed")).a),
       boxShadow: `inset 0 1px 0 ${s("glass-control-rim")}`,
       borderColor: s("glass-edge"),
     },
     // Small things filled with the ink — a checked box, a switch that is on, the filled part of a
     // bar — are the solid pane without the shadow a button stands on.
     light: {
-      ...pane(solid(appearance)),
+      ...paneAt("primary", Number(s("primary-solid").replace("%", "")) / 100),
       boxShadow: `inset 0 1px 0 ${s("primary-rim")}, inset 0 -1px 0 ${m.under}`,
       borderColor: m.hairline,
     },
     // The primary button: the same pane, standing on its shadow.
     accent: {
-      ...pane(solid(appearance)),
+      ...paneAt("primary", Number(s("primary-solid").replace("%", "")) / 100),
       boxShadow: [
         `inset 0 1px 0 ${s("primary-rim")}`,
         `inset 0 -1px 0 ${m.under}`,
@@ -504,9 +515,9 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     // What stays chosen: a small pane of clear glass — a faint tint, a line of light along the
     // top, a hairline round it, and no shadow, or a row starts to look like a raised button.
     on: {
-      ...pane(s("glass-state")),
+      ...paneAt("muted", coords(s("glass-state")).a),
       boxShadow: `inset 0 1px 0 ${s("glass-state-rim")}`,
-      borderColor: s("glass-state-edge"),
+      borderColor: `oklch(from var(--muted) l c h / ${coords(s("glass-state-edge")).a})`,
     },
     // A small label that holds something (a key, a chip): clear glass, both lines inside its edge.
     chip: {

@@ -148,8 +148,9 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 1. **alias**：`var(--token)`，token 必须在同一主题的 `light`/`dark` 或 `cssVars.theme` 里。`theme.ts` 的 `themed()` 在**读的时候**把它换成当前主题与外观的颜色（`token(name)`，NSH 给的 `#rrggbbaa`），所以切外观、`selectTheme` 切主题都自动生效，一次读一次换。
 2. **墨色**：`oklch(0 0 0 / a)`、`oklch(1 0 0 / a)` 允许字面——内高光、接触影、投影都是它。
 3. **`transparent`**：允许，表示这一面没有边。
-4. **`boxShadow` 整条豁免**（见第 2 节）。
-5. 其它字面量一律不许出现，除非它在第 7 节的待定表里：那是一份清单，说明这个颜色还没有 token，暂时留在 finish 里。表里的每一条都是待办，不是许可。
+4. **带 alpha 的 token**：`oklch(from var(--token) l c h / a)`——一个 token 的颜色换一个透明度，唯一允许的相对颜色写法（见第 7 节）。`alias()` 在读的时候把它展开成具体的 `oklch(L C H / a)`，因为 NSH 的 CSS 解析器不认相对颜色。
+5. **`boxShadow` 整条豁免**（见第 2 节）。
+6. 其它字面量一律不许出现，除非它在第 7 节的待定表里：那是一份清单，说明这个颜色还没有 token，暂时留在 finish 里。表里的每一条都是待办，不是许可。
 
 ## 6 为什么相同的值不合并
 
@@ -169,7 +170,11 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 ## 7 待定颜色
 
-下面这些是 finish 里还写着的颜色字面量：形状已经对了（字段齐、渐变有），但颜色还没有 token。它们**不**表示“可以这么写”——`theme-lint` 认得这张表，表外的字面量一律报错；这张表本身是下一步的待办（给 `theme.json` 添 token，或决定就这样留着）。多数是三件事：某个面的渐变末端比它的 token 深一档、某条边比 `border`/`input` 暗一档、某个按下态比前景淡一档；另外半透明的那几条是一个 token 的颜色带 alpha（alias 只能原样引用，写不了 alpha）。
+一个 finish 里的颜色离开这张表只有三条路，每条的理由不同：
+
+1. **一个 token 的颜色，带别的 alpha**：写 `oklch(from var(--token) l c h / a)`。像素不变：`alias()` 从当前主题里取出那个 token 的声明值，补上它的 L、C、H，写出的就是同一个颜色。`theme-lint` 只认这一种写法，`from` 后面的 `var()` 必须是这个主题真有的 token；别的相对形式（把 alpha 写成 `var()`、在 L/C/H 里用 `calc()`）仍然算“没有 token 的颜色”。
+2. **与某个 token 肉眼无差**：ΔL ≤ 0.015、ΔC ≤ 0.003、色相在同一段灰里，就写 `var(--token)`。像素会有一两个单位的差别，受影响的基线重拍。数值够近但语义不对的不换：`chart-*` 是数据色，`window-control-off` 是窗口按钮的底，一个选中的行不该跟着图表的颜色走。
+3. **材质自己的设计色**：同一个主题的两个外观里值相同、语义相同，又出现在两处以上，就进 `theme.json` 的 B 层（第 1 节）。default 用原来的值，另外两个主题取自己同一位置的颜色或最近的 token，零像素变化。只在一处出现的，留在表里。
 
 <!-- theme-lint: pending -->
 
