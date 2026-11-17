@@ -1,10 +1,9 @@
-// A pagination: the look (`paginationLook` and its companions) and the `Pagination` that wears it.
+// A pagination: `paginationItemClass` and `paginationArrows`, and the `Pagination` that wears them.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors, terminal } from "@shadcn-nsh/theme";
 import { ChevronRight } from "lucide";
 import type { JSX } from "nsh";
-import { platform, split } from "nsh";
-import { Text, View } from "nsh";
+import { platform, split, Text, View } from "nsh";
 import {
   Pagination as BasePagination,
   type PaginationItemState,
@@ -15,6 +14,9 @@ import { Icon } from "./lib/icons";
 
 // @port look/nav.tsx
 const pointer = platform.desktop;
+
+/** The side of an arrow's chevron: 14 points with a pointer, 16 on a touch screen. */
+const arrowSize = pointer ? 14 : 16;
 
 // Pagination -------------------------------------------------------------
 
@@ -43,10 +45,10 @@ export function paginationItemClass(o?: { variant?: PaginationVariant }): string
 }
 
 /**
- * A `Pagination`'s items (its `renderItem`), as gpui-component's: Previous
- * and Next as chevrons (their accessibility labels name them), so a row of
- * pages fits a phone's width; a page its number, tabular; an ellipsis `…`.
- * A terminal's chevrons are glyphs.
+ * A `Pagination`'s items (its `renderItem`): Previous and Next as chevrons
+ * (their accessibility labels name them), so a row of pages fits a phone's
+ * width; a page its number, tabular; an ellipsis `…`. A terminal's chevrons
+ * are glyphs.
  */
 export function paginationArrows(item: PaginationItemState): JSX.Element {
   if (item.kind === "page")
@@ -56,7 +58,7 @@ export function paginationArrows(item: PaginationItemState): JSX.Element {
     return <Text style={{ color: colors.muted }}>{item.kind === "previous" ? "‹" : "›"}</Text>;
   return (
     <View style={item.kind === "previous" ? { transform: [{ rotate: "180deg" }] } : undefined}>
-      <Icon icon={ChevronRight} size={pointer ? 14 : 16} tint={colors.text} />
+      <Icon icon={ChevronRight} size={arrowSize} tint={colors.text} />
     </View>
   );
 }
