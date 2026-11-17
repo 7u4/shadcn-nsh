@@ -44,9 +44,12 @@ export function otpCellLook(o?: OtpCellOptions) {
     get cellStyle(): ViewStyle {
       const tone = read(o?.tone);
       if (terminal) return tone ? { borderColor: toneColor(tone) } : {};
+      // A copy, as the other looks hand a finish out: its shadow is read when the look is applied,
+      // so a cell drawn after an appearance or theme change wears that one's (the shared
+      // `finish.inset` object, passed as it is, kept the appearance of the render that converted it).
       return tone
         ? { ...finish.inset, backgroundColor: toneTint(tone), borderColor: toneColor(tone) }
-        : finish.inset;
+        : { ...finish.inset };
     },
     caretClass: "w-0.5 h-6 rounded-full",
     get caretStyle(): ViewStyle {

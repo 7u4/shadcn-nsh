@@ -212,17 +212,6 @@ const overrides: Record<string, Override> = {
       why: "a circular photo's edge is antialiased a pixel apart between two page instances",
     },
   },
-  "otp-input": {
-    // Measured (2026-11-15, macOS, pointer light): the cells' two top corners land 10–20 levels
-    // apart between the component page and its reference page, 6 pixels a corner rank, 138 in all,
-    // on every run; both pages spread the same `otpCellLook`, and dark draws them identical. A
-    // changed fill, edge or radius moves the whole cell row and still fails.
-    tolerance: {
-      pixels: 160,
-      delta: 24,
-      why: "the code cells' rounded top corners are antialiased apart between two page instances",
-    },
-  },
   "color-picker": {
     selfReference: "the panel and the popover are upstream's own composition, with no shell",
     photos: true,
