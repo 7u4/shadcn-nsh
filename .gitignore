@@ -173,3 +173,8 @@ bun.lockb
 
 # Scratch space for the pi working notes and local probe servers
 .pi-tmp
+
+# Verification screenshots of a migration batch (not committed)
+/shots-*/
+/PI-BRIEF.md
+/PI-SUMMARY.md

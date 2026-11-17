@@ -1,0 +1,21 @@
+---
+title: Themes
+description: "The palettes the demos can draw in: their names, how to install each one, and every role it sets."
+demo: themes
+---
+
+import { ThemesPage } from "../../src/components/fd/themes-page";
+
+## One look, more than one palette
+
+A theme is one `AppTheme`: `theme.json` (colors and radii), `finishes.json` (gradients and shadows)
+and the `index.ts` that names it. An app is _built_ with one theme and can _carry_ more, switching
+between them while it runs with `selectTheme`.
+
+Every demo on this site can be drawn in either palette: pick one with the **Demo theme** switch in
+the nav, and the previews load again in it. The panel above is the showcase — buttons, a card with a
+field, badges, switches, a slider and a meter, with the card, inset and press finishes the palette
+brings. The list is `apps/docs/demos/palettes.ts`; this page is generated from it and from each
+theme's own `theme.json`.
+
+<ThemesPage />
