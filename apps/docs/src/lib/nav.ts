@@ -20,11 +20,27 @@ export type SidebarPage = {
   source?: string;
 };
 
-export const PRIMARY_NAV: { id: NavSectionId; label: string; href: string }[] = [
-  { id: "getting-started", label: "Getting started", href: url("docs/getting-started") },
-  { id: "cli", label: "CLI", href: url("docs/cli") },
-  { id: "theme", label: "Theme", href: url("docs/theme") },
-  { id: "components", label: "Components", href: url("docs/components") },
+export const PRIMARY_NAV: {
+  id: NavSectionId;
+  label: string;
+  /** Site path below the base: what the router's own links take (it adds the base itself). */
+  route: string;
+  href: string;
+}[] = [
+  {
+    id: "getting-started",
+    label: "Getting started",
+    route: "/docs/getting-started",
+    href: url("docs/getting-started"),
+  },
+  { id: "cli", label: "CLI", route: "/docs/cli", href: url("docs/cli") },
+  { id: "theme", label: "Theme", route: "/docs/theme", href: url("docs/theme") },
+  {
+    id: "components",
+    label: "Components",
+    route: "/docs/components",
+    href: url("docs/components"),
+  },
 ];
 
 export const SIDEBAR_GROUPS: Record<SidebarGroupId, string> = {
@@ -43,7 +59,7 @@ export const SIDEBAR_PAGES: SidebarPage[] = [
     title: "Getting started",
     group: "start",
     section: "getting-started",
-    source: "apps/docs/src/pages/docs/getting-started.md",
+    source: "apps/docs/content/docs/getting-started.md",
   },
   {
     route: "/docs/cli",
@@ -51,7 +67,7 @@ export const SIDEBAR_PAGES: SidebarPage[] = [
     title: "CLI",
     group: "start",
     section: "cli",
-    source: "apps/docs/src/pages/docs/cli.md",
+    source: "apps/docs/content/docs/cli.md",
   },
   {
     route: "/docs/theme",
@@ -59,8 +75,10 @@ export const SIDEBAR_PAGES: SidebarPage[] = [
     title: "Theme",
     group: "start",
     section: "theme",
-    source: "apps/docs/src/pages/docs/theme.md",
+    source: "apps/docs/content/docs/theme.md",
   },
+  // Three entries below are not Markdown: `themes`, the index and `coverage` are the pages the
+  // specials batch replaces, so their `source` still names the Astro file it reads today.
   {
     route: "/docs/themes",
     href: url("docs/themes"),
@@ -75,7 +93,7 @@ export const SIDEBAR_PAGES: SidebarPage[] = [
     title: "Customizing",
     group: "start",
     section: "theme",
-    source: "apps/docs/src/pages/docs/customizing.md",
+    source: "apps/docs/content/docs/customizing.md",
   },
   {
     route: "/docs/components",
@@ -100,7 +118,7 @@ export const SIDEBAR_PAGES: SidebarPage[] = [
     group: "components",
     kind: c.kind,
     section: "components",
-    source: `apps/docs/src/pages/docs/components/${c.slug}.md`,
+    source: `apps/docs/content/docs/components/${c.slug}.md`,
   })),
 ];
 
