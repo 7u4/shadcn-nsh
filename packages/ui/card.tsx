@@ -8,11 +8,11 @@ import { density, sectionSurface } from "./lib/surface";
 
 // @port index.tsx
 /** The padding a card's parts keep from its edge, and the gap between them. */
-const pad = () => density.pad;
-const gap = () => density.gap + 4;
+const pad = density.pad;
+const gap = density.gap + 4;
 
 /** The space between a card's title, description and action. */
-const headGap = () => 6;
+const headGap = 6;
 
 /** A card's seven parts as the styles they wear: spread each one. */
 export interface CardLook {
@@ -21,10 +21,15 @@ export interface CardLook {
   /** Title, description and action: title and description in the first column,
    * the action at the trailing edge of the first row. */
   readonly header: ViewStyle;
+  /** The card's title: a step larger than body, semibold, the text colour. */
   readonly title: TextStyle;
+  /** The line under the title: body size in the muted colour. */
   readonly description: TextStyle;
+  /** The control at the trailing edge, beside title and description. */
   readonly action: ViewStyle;
+  /** What the card is about: a column of parts a `gap` apart. */
   readonly content: ViewStyle;
+  /** What goes under the content: a wrapping row, centred, `8` apart. */
   readonly footer: ViewStyle;
 }
 
@@ -45,7 +50,7 @@ export function cardLook(): CardLook {
     get card(): ViewStyle {
       return {
         ...sectionSurface(),
-        ...(terminal ? {} : { paddingVertical: pad(), overflow: "hidden", gap: gap() }),
+        ...(terminal ? {} : { paddingVertical: pad, overflow: "hidden", gap }),
         ...(terminal ? { gap: TERMINAL_GAP } : {}),
         flexDirection: "column",
       };
@@ -57,8 +62,8 @@ export function cardLook(): CardLook {
         gridAutoRows: "min-content",
         alignItems: "start",
         columnGap: 12,
-        rowGap: headGap(),
-        paddingHorizontal: terminal ? 0 : pad(),
+        rowGap: headGap,
+        paddingHorizontal: terminal ? 0 : pad,
       };
     },
     get title(): TextStyle {
@@ -87,8 +92,8 @@ export function cardLook(): CardLook {
     },
     get content(): ViewStyle {
       return {
-        paddingHorizontal: terminal ? 0 : pad(),
-        ...(terminal ? {} : { gap: gap() }),
+        paddingHorizontal: terminal ? 0 : pad,
+        ...(terminal ? {} : { gap }),
         flexDirection: "column",
       };
     },
@@ -98,7 +103,7 @@ export function cardLook(): CardLook {
         flexWrap: "wrap",
         alignItems: "center",
         gap: 8,
-        paddingHorizontal: terminal ? 0 : pad(),
+        paddingHorizontal: terminal ? 0 : pad,
       };
     },
   };
