@@ -20,7 +20,7 @@ export function mergeClasses<C extends { [K in keyof C]?: string | null }>(
       continue;
     }
     const prior = merged[key];
-    merged[key] = (prior ? `${prior} ${next}` : next) as C[keyof C];
+    merged[key] = (prior ? `${prior} ${next}` : next) as C[keyof C]; // `next` is the string the type allows
   }
   return merged;
 }

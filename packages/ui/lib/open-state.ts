@@ -1,3 +1,6 @@
+// The state a composition root keeps and hands to its parts: the open flag it controls or owns,
+// the slot a Trigger fills before Content reads it, and the items the `…Item` parts register.
+// This library's own: no upstream file holds these, so there is no port region. Yours to change.
 import { signal, type Signal } from "nsh";
 
 /** Controlled/uncontrolled open flag shared by composition roots. */
@@ -34,6 +37,7 @@ export type Slot = {
   set: (accessor: () => unknown) => void;
 };
 
+/** A mutable slot: the Trigger part fills it, the Content part reads it when it lays out. */
 export function createSlot(): Slot {
   let accessor: (() => unknown) | undefined;
   return {
