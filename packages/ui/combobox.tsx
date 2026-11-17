@@ -1,4 +1,5 @@
-// A combobox: the look (`comboboxLook`, `ComboToggle`) and `Combobox` that wears the listbox look.
+// A combobox: the field's and a chip's look (`comboboxLook`, `ComboToggle`, `chipLook`, `chipsLook`)
+// and the parts that wear them (`Combobox`, `ComboboxTrigger`, `ComboboxContent`, `ComboboxChip`).
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { colors, finish, focusRing, radius, terminal } from "@shadcn-nsh/theme";
 import { X } from "lucide";
@@ -62,15 +63,17 @@ export interface ComboboxLookOptions {
   filled?: Live<boolean>;
 }
 
+/** As wide as a select's trigger with a pointer, and no narrower than its rows. */
+const fieldWidth = 260;
+const fieldMinWidth = 160;
+
 /**
- * A combobox's field, shadcn's input group (spread it on `Combobox`): the
- * root draws the well, its edge stronger under the pointer and while the
- * list is open, the fields' focus edge while its input has the keys; the
- * input types inside it in the label size, the toggle (`ComboToggle`) at
- * its end. As wide as a select's trigger with a pointer, the row's on a
- * touch screen and in a narrow window (`narrowWindow`), where its row
- * puts it under the label (`plainRow`'s `wide`). A placeholder that sums up the chosen values (`filled`)
- * reads as a value, in the text color.
+ * A combobox's field, shadcn's input group (spread it on `Combobox`): the root draws the well, its edge
+ * stronger under the pointer and while the list is open, the fields' focus edge while its input has the
+ * keys; the input types inside it in the label size, the toggle (`ComboToggle`) at its end. As wide as a
+ * select's trigger with a pointer, the row's on a touch screen and in a narrow window (`narrowWindow`),
+ * where its row puts it under the label (`plainRow`'s `wide`). A placeholder that sums up the chosen
+ * values (`filled`) reads as a value, in the text color.
  */
 export function comboboxLook(open: Live<boolean>, o?: ComboboxLookOptions) {
   return {
@@ -80,9 +83,10 @@ export function comboboxLook(open: Live<boolean>, o?: ComboboxLookOptions) {
         alignItems: "center",
         // Narrower in a narrow window, beside a row's label (`RowLabel` keeps its own least width).
         ...(pointer && !narrowWindow()
-          ? { width: 260, flexShrink: 1, minWidth: 160 }
+          ? { width: fieldWidth, flexShrink: 1, minWidth: fieldMinWidth }
           : { alignSelf: "stretch" }),
         minHeight: controlSize.line,
+        // The query starts where a select's title does, and stops 4 points short of the toggle.
         paddingLeft: 10,
         paddingRight: 4,
         borderRadius: radius.control,
@@ -103,10 +107,14 @@ export function comboboxLook(open: Live<boolean>, o?: ComboboxLookOptions) {
       return `${pointer ? "text-sm" : "text-base"} text-foreground ${read(o?.filled) ? "placeholder:text-foreground" : "placeholder:text-muted-foreground"}`;
     },
     get inputStyle(): InputStyle {
+      // A least width for the query, so a row of chips leaves it room at the row's end.
       return { flex: 1, minWidth: 40, height: controlSize.line - 2 };
     },
   };
 }
+
+/** A toggle's square: as tall as a step (`controlSize.check`) sits, 24 points with a pointer and a touch screen. */
+const toggleSide = 24;
 
 /** A combobox's toggle (`triggerButton`): the chevron in a square that lights under the pointer. */
 export function ComboToggle(props: { open: boolean; id?: string }) {
@@ -114,8 +122,8 @@ export function ComboToggle(props: { open: boolean; id?: string }) {
     <View
       testID={props.id}
       style={{
-        width: 24,
-        height: 24,
+        width: toggleSide,
+        height: toggleSide,
         alignItems: "center",
         justifyContent: "center",
         // A step inside a control's corners (`radius-control`).
@@ -145,6 +153,7 @@ export interface ChipLookOptions {
  */
 export function chipLook(o?: ChipLookOptions) {
   const height = pointer ? 26 : 32;
+  // A round target 8 points inside a pointer chip's edge, 4 inside a touch chip's.
   const remove = height - (pointer ? 8 : 4);
   return {
     get style(): ViewStyle {
@@ -202,6 +211,12 @@ export function chipsLook(): ViewStyle {
   };
 }
 // @port end
+
+/** Why a combobox's list closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type ComboboxOpenChangeReason = OpenChangeReason;
+
+/** An option of the list (`items`): `nsh/base`'s `SelectItem`, under this part's name. */
+export type ComboboxSelectItem = SelectItemData;
 
 /** The root: it owns the open flag, the chosen values and the items its parts register. */
 export type ComboboxProps = {
@@ -329,7 +344,11 @@ type ComboboxContextValue = OpenState & {
 };
 
 const ComboboxContext = context<ComboboxContextValue | null>(null);
-const ComboboxGroupContext = context<{ label?: string } | null>(null);
+
+/** A group's name, which its items take as their group. */
+type ComboboxGroupValue = { label?: string };
+
+const ComboboxGroupContext = context<ComboboxGroupValue | null>(null);
 
 function useCombobox() {
   const ctx = ComboboxContext();
@@ -393,7 +412,10 @@ export function Combobox(props: ComboboxProps) {
   return <ComboboxContext.Provider value={ctx}>{props.children}</ComboboxContext.Provider>;
 }
 
-/** The disclosure at the field's end: a `ComboToggle` unless the app gives another. */
+/**
+ * The disclosure at the field's end: a `ComboToggle` unless the app gives another (a string is drawn
+ * as a `Button`). It registers with the root and draws nothing itself.
+ */
 export function ComboboxTrigger(props: ComboboxTriggerProps) {
   const ctx = useCombobox();
   ctx.trigger.set(() => {
@@ -424,6 +446,8 @@ export function ComboboxTrigger(props: ComboboxTriggerProps) {
 export function ComboboxChips(props: ComboboxChipsProps) {
   const ctx = useCombobox();
   ctx.chips.set(() => {
+    // A loop rather than `.map`, which the linter reads as a keyed list: NSH rebuilds these by
+    // position, so no chip needs a key.
     const chips: JSX.Element[] = [];
     for (const value of ctx.value()) {
       chips.push(props.children ? props.children(value) : <ComboboxChip value={value} />);
@@ -555,7 +579,7 @@ export function ComboboxEmpty(props: ComboboxEmptyProps) {
 
 /** A section of options: its items take `ComboboxLabel`'s name as their group. */
 export function ComboboxGroup(props: ComboboxGroupProps) {
-  const group: { label?: string } = {};
+  const group: ComboboxGroupValue = {};
   return (
     <ComboboxGroupContext.Provider value={group}>{props.children}</ComboboxGroupContext.Provider>
   );
@@ -582,9 +606,3 @@ export function ComboboxItem(props: ComboboxItemProps) {
   cleanup(() => ctx.items.unregister(item.value));
   return null;
 }
-
-/** Why a combobox's list closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
-export type ComboboxOpenChangeReason = OpenChangeReason;
-
-/** An option of the list (`items`): `nsh/base`'s `SelectItem`, under this part's name. */
-export type ComboboxSelectItem = SelectItemData;
