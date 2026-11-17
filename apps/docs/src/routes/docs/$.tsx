@@ -17,8 +17,8 @@ import { useMDXComponents } from "@/components/fd/mdx";
 import { PaletteSwitch } from "@/components/fd/palette-switch";
 import { getComponentBySlug } from "@/lib/components";
 import { CONTENT_PATHS } from "@/lib/content-paths";
+import { KIND_LABELS, kindOf } from "@/lib/kinds";
 import { baseOptions } from "@/lib/layout.shared";
-import { SIDEBAR_PAGES } from "@/lib/nav";
 import { nshElementUrl, shadcnUrl } from "@/lib/official";
 import { EDIT_BASE, SITE_TITLE } from "@/lib/site";
 import { docs, pageTree, source } from "@/lib/source";
@@ -108,13 +108,16 @@ function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
   const nshHref =
     componentDoc?.nshElement != null ? nshElementUrl(componentDoc.nshElement) : undefined;
   const demo = page.demo;
-  const editPath = SIDEBAR_PAGES.find(
-    (entry) => entry.route === `/docs/${path.replace(/\.md$/, "")}`,
-  )?.source;
+  // The page's own file, in the content folder the site reads.
+  const editPath = `apps/docs/content/docs/${path}`;
+  const kind = slug ? kindOf(slug) : undefined;
   const authoringFile = componentDoc ? `packages/ui/${componentDoc.slug}.tsx` : undefined;
 
   return (
     <DocsPage toc={toc}>
+      {kind ? (
+        <p className="text-fd-muted-foreground mb-1 text-sm font-medium">{KIND_LABELS[kind]}</p>
+      ) : null}
       <DocsTitle>{page.title}</DocsTitle>
       <DocsDescription>{page.description}</DocsDescription>
       <div className="flex flex-wrap items-center gap-2 border-b pb-6">
