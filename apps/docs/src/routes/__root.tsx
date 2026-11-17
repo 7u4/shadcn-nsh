@@ -2,7 +2,7 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-r
 import { RootProvider } from "fumadocs-ui/provider/tanstack";
 
 import SearchDialog from "@/components/fd/search";
-import { SITE_DESCRIPTION, SITE_TITLE } from "@/lib/site";
+import { BASE, SITE_DESCRIPTION, SITE_TITLE } from "@/lib/site";
 
 import appCss from "@/styles/fd.css?url";
 
@@ -14,7 +14,11 @@ export const Route = createRootRoute({
       { title: SITE_TITLE },
       { name: "description", content: SITE_DESCRIPTION },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      // The app icon's mark, in the arch it has on nsh (`public/favicon.svg`).
+      { rel: "icon", href: `${BASE}favicon.svg`, type: "image/svg+xml" },
+    ],
   }),
   component: RootComponent,
 });
