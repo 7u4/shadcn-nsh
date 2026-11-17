@@ -18,13 +18,12 @@ const sink = (): number => {
   return 1;
 };
 
-/** A slider's run, as the page reads it out: the color it lays, and whether the theme's gradient
- * draws over it (`gradient`) or it is the run itself (`color`). */
+/** A slider's run, as the page reads it out: the gradient it lays (its stops, with the aliases
+ * already named), or the color under it when a theme states no gradient. */
 const run = () => {
   const fill = sliderFill(0, 1);
-  const color = typeof fill.backgroundColor === "string" ? fill.backgroundColor : "none";
-  const drawn = typeof fill.backgroundImage === "string" ? "gradient" : "color";
-  return `${color}|${drawn}`;
+  if (typeof fill.backgroundImage === "string") return fill.backgroundImage;
+  return typeof fill.backgroundColor === "string" ? fill.backgroundColor : "none";
 };
 
 /** A slider's rail, as the page reads it out: its edge and its shade, joined where the theme

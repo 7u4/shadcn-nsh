@@ -72,16 +72,15 @@ export function sliderLook(o: SliderLookOptions = {}) {
  * A `Slider`'s fill (`rangeStyle`): the accent's run along the rail, a
  * little lighter at the top, edged a shade deeper. `from` and `to` are where
  * the fill starts and ends along the track, from 0 to 1 (unused: the run is
- * one color along its length, kept for the callers). A theme may give the
- * fill as a gradient, as one color under it, or as a color alone.
+ * one color along its length, kept for the callers). A theme gives the
+ * fill as its color and the gradient over it, in every theme.
  */
 export function sliderFill(_from: number, _to: number, vertical = false): ViewStyle {
   const fill = fillStyle();
   return {
-    // A vertical rail turns the theme's gradient a quarter turn; a theme that gives one color has
-    // none to turn.
+    // A vertical rail turns the theme's gradient a quarter turn.
     ...(vertical && fill.backgroundImage
-      ? { backgroundImage: fill.backgroundImage.replace("180deg", "90deg") }
+      ? { ...fill, backgroundImage: fill.backgroundImage.replace("180deg", "90deg") }
       : fill),
     borderWidth: 1,
     borderColor: finish.fill.borderColor,

@@ -249,6 +249,27 @@ function laid(appearance: Appearance) {
   };
 }
 
+/** A finish names the theme's token instead of writing its colour (`var(--raised)`): one shape, the theme's colours. */
+const alias = (token: string) => `var(--${token})`;
+
+/** Whether a colour lets the surface behind it through (an alpha below 1). */
+const seeThrough = (color: string) => coords(color).a < 1;
+
+/**
+ * A pane's fill: a finish's colour and the gradient over it, which every theme states. `token` names
+ * the colour where the theme has one. A translucent pane's gradient is transparent at both stops —
+ * the engine draws it over the colour, and the same translucent colour twice would double its alpha
+ * — while an opaque one repeats its own colour at both.
+ */
+function pane(color: string, token?: string) {
+  const fill = token ?? color;
+  const stop = seeThrough(color) ? "transparent" : fill;
+  return {
+    backgroundColor: fill,
+    backgroundImage: `linear-gradient(180deg, ${stop} 0%, ${stop} 100%)`,
+  };
+}
+
 /**
  * The tokens this library's components read, for one appearance.
  *
@@ -393,8 +414,10 @@ function finishes(appearance: Appearance): Record<string, Finish> {
   ].join(", ");
   return {
     // A card's pane: the rim and the faint inner hairline inside the card's own border, the
-    // contact shadow, and the shade gathered underneath. No gradient across the face — ever.
+    // contact shadow, and the shade gathered underneath. Its face carries no gradient of two
+    // colours: one colour at both stops is what this material states.
     card: {
+      backgroundImage: `linear-gradient(180deg, ${alias("card")} 0%, ${alias("card")} 100%)`,
       boxShadow: [
         `inset 0 1px 0 ${s("glass-rim")}`,
         `inset 0 0 0 1px ${s("glass-inner")}`,
@@ -409,29 +432,33 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     field: { boxShadow: `inset 0 1px 0 ${s("field-rim")}` },
     // A control that does not ask to be pressed is clear glass.
     raised: {
-      backgroundColor: s("glass-control"),
+      ...pane(s("glass-control"), alias("raised")),
       boxShadow: control,
       borderColor: s("glass-edge"),
     },
     // Under the pointer the theme's own step fills it; the pane keeps its rim and its shadow.
-    hover: { backgroundColor: s("hover"), boxShadow: control, borderColor: s("glass-edge") },
+    hover: {
+      ...pane(s("hover"), alias("hover")),
+      boxShadow: control,
+      borderColor: s("glass-edge"),
+    },
     // Pressed, it sits down on the page: the shadow under it goes and the pane darkens a step.
     // The stylesheet draws no press of its own beyond that, so `press.scale` below is 1.
     pressed: {
-      backgroundColor: s("glass-state-armed"),
+      ...pane(s("glass-state-armed")),
       boxShadow: `inset 0 1px 0 ${s("glass-control-rim")}`,
       borderColor: s("glass-edge"),
     },
     // Small things filled with the ink — a checked box, a switch that is on, the filled part of a
     // bar — are the solid pane without the shadow a button stands on.
     light: {
-      backgroundColor: solid(appearance),
+      ...pane(solid(appearance)),
       boxShadow: `inset 0 1px 0 ${s("primary-rim")}, inset 0 -1px 0 ${m.under}`,
       borderColor: m.hairline,
     },
     // The primary button: the same pane, standing on its shadow.
     accent: {
-      backgroundColor: solid(appearance),
+      ...pane(solid(appearance)),
       boxShadow: [
         `inset 0 1px 0 ${s("primary-rim")}`,
         `inset 0 -1px 0 ${m.under}`,
@@ -450,27 +477,33 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     // A run of the ink in a rail, a meter or a progress bar: the small solid pane. One colour, no
     // gradient.
     fill: {
-      backgroundColor: solid(appearance),
+      ...pane(solid(appearance)),
+      // The run's colour is the gradient's; a colour under it would show through and tint the run.
+      backgroundColor: "transparent",
       boxShadow: `inset 0 1px 0 ${s("primary-rim")}, inset 0 -1px 0 ${m.under}`,
       borderColor: "transparent",
     },
     // A switch's knob, a slider's thumb: the brightest pane there is.
-    knob: { backgroundColor: s("knob"), boxShadow: knob, borderColor: "transparent" },
+    knob: { ...pane(s("knob"), alias("knob")), boxShadow: knob, borderColor: "transparent" },
     // On, a switch's knob is the same pane: the stylesheet does not paint it differently.
-    knobOn: { backgroundColor: s("knob"), boxShadow: knob, borderColor: "transparent" },
+    knobOn: { ...pane(s("knob"), alias("knob")), boxShadow: knob, borderColor: "transparent" },
     // A slider's thumb is a switch's knob: the stylesheet gives both the one rule.
-    handle: { backgroundColor: s("knob"), boxShadow: knob, borderColor: "transparent" },
+    handle: { ...pane(s("knob"), alias("knob")), boxShadow: knob, borderColor: "transparent" },
     // A tray a segment sits in, and the chosen segment lying in it: clear glass.
-    pill: { backgroundColor: s("glass-control"), boxShadow: control, borderColor: s("glass-edge") },
+    pill: {
+      ...pane(s("glass-control"), alias("raised")),
+      boxShadow: control,
+      borderColor: s("glass-edge"),
+    },
     thumb: {
-      backgroundColor: s("glass-control"),
+      ...pane(s("glass-control"), alias("raised")),
       boxShadow: control,
       borderColor: s("glass-edge"),
     },
     // What stays chosen: a small pane of clear glass — a faint tint, a line of light along the
     // top, a hairline round it, and no shadow, or a row starts to look like a raised button.
     on: {
-      backgroundColor: s("glass-state"),
+      ...pane(s("glass-state")),
       boxShadow: `inset 0 1px 0 ${s("glass-state-rim")}`,
       borderColor: s("glass-state-edge"),
     },
@@ -481,7 +514,7 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     // A control over a photo: the stylesheet's clear glass (`.glass-control`), the one role here
     // that also blurs.
     glass: {
-      backgroundColor: s("glass-control"),
+      backgroundColor: alias("raised"),
       boxShadow: `inset 0 1px 0 ${s("glass-control-rim")}, 0 0 0 1px ${s("glass-edge")}, 0 1px 2px ${s("glass-contact")}`,
       borderColor: s("glass-edge"),
       backdropFilter: appearance === "dark" ? "blur(14px)" : "blur(14px) saturate(180%)",
@@ -489,7 +522,7 @@ function finishes(appearance: Appearance): Record<string, Finish> {
     // A floating surface: the thickest glass — a firmer hairline, a shade along its foot, and the
     // lift of standing well off the page. Its hairline is its border, so no ring goes outside it.
     menu: {
-      backgroundColor: laid(appearance).popover,
+      backgroundColor: alias("popover"),
       boxShadow: [
         `inset 0 1px 0 ${s("glass-rim")}`,
         `inset 0 -1px 0 ${s("popover-under")}`,

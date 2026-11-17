@@ -1,0 +1,220 @@
+# 主题的构成：token、finish 与 alias
+
+本库的颜色只有一个来源，一个面的样子只有一张表，二者之间用 alias 相连：
+
+| 文件                           | 管什么                                              | 不管什么                 |
+| ------------------------------ | --------------------------------------------------- | ------------------------ |
+| `packages/theme/theme.json`    | 颜色：每个 token 在 light / dark 下的值             | 面、边、影、渐变、模糊   |
+| `packages/theme/finishes.json` | 一个面的样子：每个 finish 的底、渐变、边、影、模糊  | 颜色字面量（只写 alias） |
+| `packages/theme/theme.ts`      | 读时把 alias 换成当前主题与外观的颜色（`themed()`） | 具体颜色值               |
+| `packages/ui/*.tsx`            | 只经 `finish.*` 与 `colors.*` 取色                  | 内联颜色                 |
+
+这样定，是为了两件事：
+
+- **改一个颜色只改一处。** 组件里没有颜色字面量，`finishes.json` 里只有 `var(--token)`，改 token 的值同时改到所有用到它的面。
+- **平涂的主题不必删字段。** 一个没有渐变的外观也必须给出 `backgroundImage`（见第 3 节），形状在主题之间不变，渲染时才不需要分支。
+
+规则的执行者是 `bun scripts/theme-lint.ts`（在 `bun run check` 里）：下文每一条都在那里有一条检查，写错了会点名文件、finish 和字段。
+
+```sh
+bun scripts/theme-lint.ts   # 一次跑完本文所有规则
+```
+
+## 1 theme.json 的三层
+
+`theme.json` 的 `cssVars` 有三个块：`theme`（两种外观共用的值）、`light`、`dark`。`light` 与 `dark` 的 token 名字必须完全一样，三套主题之间也必须完全一样。
+
+### A 层：shadcn 的 31 个槽
+
+`background`、`foreground`、`card`、`card-foreground`、`popover`、`popover-foreground`、`primary`、`primary-foreground`、`secondary`、`secondary-foreground`、`muted`、`muted-foreground`、`accent`、`accent-foreground`、`destructive`、`border`、`input`、`ring`、`chart-1`–`chart-5`、`sidebar`、`sidebar-foreground`、`sidebar-primary`、`sidebar-primary-foreground`、`sidebar-accent`、`sidebar-accent-foreground`、`sidebar-border`、`sidebar-ring`。
+
+**31 个都必须有，不能省。** NSH 的 `Theme::of` 逐名字取值，缺一个就退回 shadcn 的 neutral 灰，主题会变成一半本库、一半 shadcn 的混合体——面板里出一个 shadcn 灰的面，原因往往就在这里。名字的唯一来源是 `references/nsh/crates/nsh-base/src/theme.rs` 的 `theme! { … }` 块，`theme-lint` 从那里读，不从本文手抄。
+
+### B 层：本库自己的 token
+
+这些是 shadcn 没有、本库的组件要用的 token。加一个之前先看第 9 节。
+
+| token                           | 管什么                                                           | 谁读                                                                         |
+| ------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `inset`                         | 卡片里凹下去的一层（井）                                         | `lib/surface`、`otp-input`、`sidebar`、`menu`、`dock-area`                   |
+| `raised`                        | 卡片上凸起的一层：按钮、字段、轨道                               | `button`、`select`、`radio-group`、`carousel`、`dock-area`                   |
+| `field`                         | 输入井：比卡片和 inset 更下一层                                  | `input`、`select`、`combobox`、`checkbox`、`code-editor`                     |
+| `hover`                         | 指针停在可点项上的那一步                                         | `button`、`select`、`input`、`command`、`tree`、`menu`                       |
+| `line`                          | 井里的发丝线（分隔、网格）                                       | `tabs`、`otp-input`、`number-input`、`input`、`lib/surface`                  |
+| `faint`                         | 更弱的字：占位、单位、次要标记                                   | `input`、`combobox`、`number-input`                                          |
+| `brand`                         | 强调色作为前景：字、图标、线                                     | `input`、`calendar`、`command`、`otp-input`、`lib/listbox`                   |
+| `brand-fill`                    | 强调色作为填充（见 C 层）                                        | `calendar`                                                                   |
+| `on-brand`                      | `brand-fill` 上的字（见 C 层）                                   | `calendar`                                                                   |
+| `track`                         | 关着的开关、滑杆、进度条底槽                                     | `switch`、`slider`、`progress`、`tabs`、`listbox`                            |
+| `knob`                          | 关着的开关圆点（`finish.knob` 的白底）                           | `theme.ts` 的 `colors.knob`                                                  |
+| `code`                          | 井里的等宽字                                                     | `theme.ts` 的 `colors.code`                                                  |
+| `info` / `warn` / `up` / `down` | 四状态色：提示、警告、增长、下降                                 | `progress`、`diff-view`、`code-editor`、`status`                             |
+| `brand-tint` 等 `*-tint`        | 状态色的淡底（`info`、`warn`、`destructive`、`up`、`down` 各一） | `theme.ts` 的 `colors` 映射；`brand-tint` 另见 `calendar`、`tree`、`command` |
+| `scrollbar-thumb` / `-hover`    | 滚动条滑块及其悬停                                               | `scrollbar`                                                                  |
+| `ring-halo`                     | 焦点环外面的一圈晕                                               | `theme.ts` 的 `focusRing`                                                    |
+| `violet`                        | 第三个数据色：图的一条线、链接                                   | `link`、`plot`                                                               |
+| `window-control-off`            | 窗口按钮不可用时的底                                             | `theme.ts`                                                                   |
+
+`destructive` 本身是 A 层（shadcn 的），本库的 `colors.danger` 指向它；`down` 是另一个色，红得更亮一点，用在数据里表示下降（见[为什么不合并](#6-why-identical-values-are-not-merged)）。
+
+### C 层：两种外观一样的值
+
+`cssVars.theme` 里的键在 light 和 dark 下不各写一份——写两份就是两份要同步的答案。圆角是数，颜色是值：
+
+| 键                                                             | 值                               | 用途                       |
+| -------------------------------------------------------------- | -------------------------------- | -------------------------- |
+| `radius` / `radius-card` / `radius-control` / `radius-popover` | `10px` / `12px` / `7px` / `16px` | 四档圆角                   |
+| `brand-fill`                                                   | 强调色的填充                     | `calendar` 的选中日        |
+| `on-brand`                                                     | `brand-fill` 上的字              | 同上                       |
+| `scrim`                                                        | 遮罩                             | `lib/overlay`、`dock-area` |
+| `window-close` / `window-minimize` / `window-zoom`             | 三颗窗口按钮各自的色             | `theme.ts` 的窗口按钮映射  |
+| `window-control-ink` / `window-control-edge`                   | 窗口按钮的字与边                 | 同上                       |
+
+## 2 finishes.json 的两条线
+
+一个 finish 是一个面的样子，由这几样拼出来：
+
+| 字段              | 写什么                                       |
+| ----------------- | -------------------------------------------- |
+| `backgroundColor` | 底：`var(--token)`、墨色，或 `transparent`   |
+| `backgroundImage` | 叠在底上的渐变：`linear-gradient(180deg, …)` |
+| `boxShadow`       | 内高光、接触影、投影：永远字面（墨色）       |
+| `borderColor`     | 边：`var(--token)` 或 `transparent`          |
+| `backdropFilter`  | 只有模糊，不放颜色                           |
+
+颜色字段只有 `backgroundColor`、`backgroundImage`、`borderColor` 三个，规则也管这三个。`boxShadow` 例外：影子是墨色，不为几何、不为对比提供颜色，也就没有对应的 token——它在所有主题里都保留字面（黑或白带 alpha，或强调色的半透明墨）。一条影子里写了一个表面的颜色，是设计问题，不是 lint 能判的。
+
+## 3 固定形状
+
+**每种主题、每种外观里，同一个 finish 的字段集合完全一样，且等于默认主题的那一份。** 一个主题觉得“我没有渐变”，答案不是删掉 `backgroundImage`，而是把它写成一种颜色：
+
+```json
+"backgroundImage": "linear-gradient(180deg, var(--primary) 0%, var(--primary) 100%)"
+```
+
+两个 stop 同色，等于没有渐变，但形状还在，`fillStyle()` 与 `sliderFill` 不需要 `undefined` 分支，换主题也就不会换出另一种结构。
+
+引擎先画 `backgroundColor`，再把 `backgroundImage` 叠上去（`references/nsh/crates/nsh-core/src/canvas.rs`），所以一个面有底、有渐变两层：**颜色写在哪一层，另一层就写 `transparent`**，别把同一个颜色写两遍。三种情形：
+
+- **平涂**（大多数角色）：颜色在 `backgroundColor`，渐变在同一层上再来一遍——两个 stop 同色，看不出区别。
+- **半透明**（`solid-glass` 的玻璃感）：颜色在 `backgroundColor`，渐变两站写 `transparent`；同一个半透明色画两遍，alpha 会翻倍（7% 的白变成 13.5%）。
+- **渐变承担颜色**（`fill`：绿到深绿的一段）：颜色在渐变里，`backgroundColor` 写 `transparent`。底下垫一个不透明的颜色不是“看不见”的：它会从渐变里透出来，实测把默认主题的 `progress` 整条调亮 15/255，`port:render` 会拦下。
+
+字段顺序固定：`backgroundColor`、`backgroundImage`、`boxShadow`、`borderColor`、`backdropFilter`。`scripts/theme/order.ts` 的 `orderedFinish` 按默认主题的键序写文件，多一个或少一个键都报错。
+
+## 4 每个 finish
+
+| finish    | 画什么                                       | 谁读                                          |
+| --------- | -------------------------------------------- | --------------------------------------------- |
+| `card`    | 卡片的底：一道内高光、一道发丝、接触影、投影 | `sidebar`                                     |
+| `inset`   | 卡片里的井：只靠内阴影凹下去                 | `lib/surface`、`otp-input`、`sidebar`         |
+| `field`   | 输入井的边与内阴影                           | `input`、`select`、`combobox`、`checkbox`     |
+| `raised`  | 卡片上的控件：渐变、内高光、硬投影、边       | `button`、`select`、`radio-group`、`carousel` |
+| `hover`   | 悬停时那一步的底                             | `button`、`carousel`                          |
+| `pressed` | 按下时那一步的底                             | `button`                                      |
+| `light`   | 主操作：最亮的一档，强调色的渐变             | `checkbox`                                    |
+| `accent`  | 强调色的面（同 `light`）                     | `button`                                      |
+| `track`   | 底槽：内阴影 + 边                            | `tabs`、`slider`、`progress`、`switch`        |
+| `fill`    | 已填充的一段（滑杆、进度、关掉的开关）       | `slider`、`progress`、`switch`                |
+| `knob`    | 关着的开关圆点                               | `switch`                                      |
+| `knobOn`  | 开着的开关圆点                               | `switch`                                      |
+| `handle`  | 滑杆的把手（与 `knob` 分开，见第 6 节）      | `slider`                                      |
+| `pill`    | 上游的胶囊面，留给应用                       | —（见第 8 节）                                |
+| `thumb`   | 分段控件、标签里被选中的那一块               | `tabs`、`segmented`                           |
+| `on`      | 选中的开关/勾选框，以及它上面的标记          | `button`、`toggle`                            |
+| `chip`    | 上游的 chip，留给应用                        | —（见第 8 节）                                |
+| `glass`   | 玻璃：半透明底 + 模糊                        | `carousel`                                    |
+| `menu`    | 浮层：菜单、弹层、提示                       | `popover`、`dialog`、`toast`、`lib/listbox`   |
+| `groove`  | 菜单里一道凹槽                               | `menu`                                        |
+
+## 5 alias 与例外
+
+一个 finish 的颜色这样写：
+
+1. **alias**：`var(--token)`，token 必须在同一主题的 `light`/`dark` 或 `cssVars.theme` 里。`theme.ts` 的 `themed()` 在**读的时候**把它换成当前主题与外观的颜色（`token(name)`，NSH 给的 `#rrggbbaa`），所以切外观、`selectTheme` 切主题都自动生效，一次读一次换。
+2. **墨色**：`oklch(0 0 0 / a)`、`oklch(1 0 0 / a)` 允许字面——内高光、接触影、投影都是它。
+3. **`transparent`**：允许，表示这一面没有边。
+4. **`boxShadow` 整条豁免**（见第 2 节）。
+5. 其它字面量一律不许出现，除非它在第 7 节的待定表里：那是一份清单，说明这个颜色还没有 token，暂时留在 finish 里。表里的每一条都是待办，不是许可。
+
+## 6 为什么相同的值不合并
+
+好几个 finish 今天取到同一个颜色，看起来可以合并成一条。不合并，是因为它们是不同的决定，改其中一个不该顺手改掉另一个：
+
+| 两个 finish                          | 今天相同的原因                           | 分开的原因                                                               |
+| ------------------------------------ | ---------------------------------------- | ------------------------------------------------------------------------ |
+| `light` / `accent`                   | 主操作与强调是同一个色                   | 上游留了两档，主题可以只让其中一档更亮                                   |
+| `primary` / `brand-fill`             | 强调色的填充就是主操作的色               | `primary` 是 shadcn 的槽，`brand-fill` 是本库的填充                      |
+| `primary-foreground` / `on-brand`    | 同上                                     | 同上：一个是槽，一个是本库的字色                                         |
+| `thumb` / `raised`                   | 分段控件选中的那块，与卡片上的控件面同色 | 一个在井里，一个在卡片上，深色下要分开调                                 |
+| `knob` / `handle`                    | 开关圆点与滑杆把手同色                   | shadcn 的滑杆把手带 `border-primary`，开关圆点不带（`f34fa75` 拆出来的） |
+| `down` / `destructive`               | 都是红                                   | `destructive` 是危险的语义，`down` 是数据的方向                          |
+| `pill` / `raised`、`chip` / `raised` | 上游的胶囊与 chip 借了控件的面           | 上游规范里有，本库还没有组件读（第 8 节）                                |
+
+合并的代价是隐形的：某天主题想把 `thumb` 调深一点，`raised` 会跟着变，而两个地方隔着一个井，肉眼很难对上。
+
+## 7 待定颜色
+
+下面这些是 finish 里还写着的颜色字面量：形状已经对了（字段齐、渐变有），但颜色还没有 token。它们**不**表示“可以这么写”——`theme-lint` 认得这张表，表外的字面量一律报错；这张表本身是下一步的待办（给 `theme.json` 添 token，或决定就这样留着）。多数是三件事：某个面的渐变末端比它的 token 深一档、某条边比 `border`/`input` 暗一档、某个按下态比前景淡一档；另外半透明的那几条是一个 token 的颜色带 alpha（alias 只能原样引用，写不了 alpha）。
+
+<!-- theme-lint: pending -->
+
+| 主题        | 外观  | 色值                                    | 位置                                                                                                                           | 最接近的 token                               |
+| ----------- | ----- | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| default     | light | `oklch(0.82977 0.0043 271.361)`         | `hover.borderColor`                                                                                                            | `border`（ΔL -0.012，ΔC +0.001）             |
+| default     | light | `oklch(0.94921 0.00416 271.368)`        | `pressed.backgroundColor`, `pressed.backgroundImage`                                                                           | `muted`（ΔL -0.003，ΔC +0.000）              |
+| default     | light | `oklch(0.76556 0.16727 124.422)`        | `light.borderColor`, `accent.borderColor`                                                                                      | `chart-1`（ΔL +0.015，ΔC -0.017）            |
+| default     | light | `oklch(0.80472 0.1815 126.061)`         | `fill.backgroundImage`                                                                                                         | `chart-1`（ΔL +0.054，ΔC -0.003）            |
+| default     | light | `oklch(0.69169 0.17204 126.956)`        | `fill.borderColor`                                                                                                             | `chart-1`（ΔL -0.059，ΔC -0.013）            |
+| default     | light | `oklch(0.96424 0.00414 271.369)`        | `knob.backgroundImage`, `handle.backgroundImage`                                                                               | `raised`（ΔL -0.003，ΔC +0.000）             |
+| default     | light | `oklch(0.97867 0.00945 119.575)`        | `knobOn.backgroundImage`                                                                                                       | `primary`（ΔL +0.082，ΔC -0.157）            |
+| default     | light | `oklch(0.72099 0.15728 124.776)`        | `knobOn.borderColor`                                                                                                           | `chart-1`（ΔL -0.030，ΔC -0.027）            |
+| default     | light | `oklch(0.89487 0.00554 274.959)`        | `on.backgroundColor`, `on.backgroundImage`                                                                                     | `chart-5`（ΔL -0.009，ΔC +0.001）            |
+| default     | light | `oklch(0.97997 0.00397 286.326 / 0.8)`  | `glass.backgroundColor`                                                                                                        | `popover`（ΔL +0.000，ΔC +0.000）            |
+| default     | dark  | `oklch(0.34882 0.01075 271.098)`        | `hover.backgroundColor`, `hover.backgroundImage`                                                                               | `input`（ΔL -0.007，ΔC -0.000）              |
+| default     | dark  | `oklch(0.30959 0.01109 271.042)`        | `pressed.backgroundColor`, `pressed.backgroundImage`                                                                           | `line`（ΔL +0.001，ΔC -0.000）               |
+| default     | dark  | `oklch(0.32672 0.08497 127.611 / 0.55)` | `light.borderColor`, `accent.borderColor`                                                                                      | `primary-foreground`（ΔL +0.133，ΔC +0.065） |
+| default     | dark  | `oklch(0.37091 0.01103 264.432)`        | `track.borderColor`                                                                                                            | `input`（ΔL +0.015，ΔC -0.000）              |
+| default     | dark  | `oklch(0.88348 0.15928 123.937)`        | `fill.backgroundImage`                                                                                                         | `primary`（ΔL -0.005，ΔC -0.004）            |
+| default     | dark  | `oklch(0.83973 0.16469 124.137)`        | `fill.backgroundImage`                                                                                                         | `primary`（ΔL -0.049，ΔC +0.001）            |
+| default     | dark  | `oklch(0.71963 0.15821 125.456)`        | `fill.borderColor`, `knobOn.borderColor`                                                                                       | `up`（ΔL -0.060，ΔC +0.010）                 |
+| default     | dark  | `oklch(0.94816 0.00344 247.859)`        | `knob.backgroundImage`, `handle.backgroundImage`                                                                               | `foreground`（ΔL -0.004，ΔC +0.001）         |
+| default     | dark  | `oklch(0.88185 0.00589 264.53)`         | `knob.backgroundImage`, `handle.backgroundImage`                                                                               | `code`（ΔL -0.014，ΔC -0.003）               |
+| default     | dark  | `oklch(0.8324 0.00597 264.528)`         | `knob.borderColor`, `handle.borderColor`                                                                                       | `code`（ΔL -0.064，ΔC -0.003）               |
+| default     | dark  | `oklch(0.97867 0.00945 119.575)`        | `knobOn.backgroundImage`                                                                                                       | `brand`（ΔL +0.074，ΔC -0.157）              |
+| default     | dark  | `oklch(0.42689 0.01421 264.414)`        | `on.backgroundColor`, `on.backgroundImage`                                                                                     | `window-control-off`（ΔL +0.026，ΔC +0.003） |
+| default     | dark  | `oklch(0.25145 0.01219 264.328 / 0.78)` | `glass.backgroundColor`                                                                                                        | `card`（ΔL +0.000，ΔC +0.000）               |
+| shadcn      | light | `oklch(0.92191 0 0)`                    | `pressed.backgroundColor`, `pressed.backgroundImage`                                                                           | `border`（ΔL +0.000，ΔC +0.000）             |
+| shadcn      | dark  | `oklch(0.34846 0 0)`                    | `pressed.backgroundColor`, `pressed.backgroundImage`, `thumb.backgroundColor`, `thumb.backgroundImage`                         | `chart-4`（ΔL -0.023，ΔC -0.000）            |
+| shadcn      | dark  | `oklch(0.20463 0 0 / 0.8)`              | `glass.backgroundColor`                                                                                                        | `card`（ΔL +0.000，ΔC +0.000）               |
+| solid-glass | light | `oklch(0.38 0.03 265 / 0.1)`            | `raised.borderColor`, `hover.borderColor`, `pressed.borderColor`, `pill.borderColor`, `thumb.borderColor`, `glass.borderColor` | `muted`（ΔL +0.079，ΔC +0.011）              |
+| solid-glass | light | `oklch(0.3 0.02 265 / 0.26)`            | `pressed.backgroundColor`                                                                                                      | `muted`（ΔL +0.000，ΔC +0.000）              |
+| solid-glass | light | `oklch(0.2 0 0 / 0.88)`                 | `light.backgroundColor`, `accent.backgroundColor`                                                                              | `primary`（ΔL +0.000，ΔC +0.000）            |
+| solid-glass | light | `oklch(0.2 0 0 / 0.685)`                | `light.borderColor`, `accent.borderColor`                                                                                      | `primary`（ΔL +0.000，ΔC +0.000）            |
+| solid-glass | light | `oklch(0.3 0.02 265 / 0.09)`            | `on.backgroundColor`                                                                                                           | `muted`（ΔL +0.000，ΔC +0.000）              |
+| solid-glass | light | `oklch(0.3 0.02 265 / 0.13)`            | `on.borderColor`                                                                                                               | `muted`（ΔL +0.000，ΔC +0.000）              |
+| solid-glass | light | `oklch(0.38 0.03 265 / 0.22)`           | `menu.borderColor`                                                                                                             | `muted`（ΔL +0.079，ΔC +0.011）              |
+| solid-glass | dark  | `oklch(0.94 0 0 / 0.86)`                | `light.backgroundColor`, `accent.backgroundColor`                                                                              | `primary`（ΔL +0.000，ΔC +0.000）            |
+| solid-glass | dark  | `oklch(0.967 0 0 / 0.667)`              | `light.borderColor`, `accent.borderColor`                                                                                      | `knob`（ΔL -0.003，ΔC -0.000）               |
+
+<!-- /theme-lint: pending -->
+
+## 8 留给应用
+
+`theme-lint` 要求每个 token 和每个 finish 都被读到，否则就是写了没人用。下面这些是有意的例外——上游的规范里有，本库还没有组件读它们，应用装进来可以自己用：
+
+<!-- theme-lint: unread -->
+
+`pill`、`chip`
+<!-- /theme-lint: unread -->
+
+- `pill`：上游的胶囊面。本库的组件里没有一处用它，留着是因为它属于上游的规范面（`references/nsh/examples/nsh-gallery-ui`），应用要用就有。
+- `chip`：同上，等 `ComboboxChips` 落地后由它读。
+
+## 9 加一个 token 之前
+
+1. 先看上游：`references/nsh/examples/nsh-gallery-ui` 的 `look/*` 里有没有同一个面，`references/nsh/website/demos/el-<id>.tsx` 用它做什么。
+2. 再看 shadcn 的主题有没有：A 层的槽已经覆盖了 shadcn 的全部颜色，能对上就用槽，不要另起一个同义的名字。
+3. 确实要加，就在第 1 节的 B 层（逐外观的颜色）或 C 层（两种外观一样）表格里写清楚：管什么、谁读。同时让组件真的读它，否则 `theme-lint` 会问它被谁读。
+4. 三套主题都要有：默认主题写值；shadcn 与 solid glass 由 `scripts/theme/generate-*.ts` 生成（改生成器，不改产物）。
+5. 跑 `bun scripts/theme-lint.ts` 与 `bun run port:render:theme`：前者管形状，后者管像素——加 token 不该改一个像素，改了就是形状或颜色出了问题。

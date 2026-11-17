@@ -118,32 +118,32 @@ const selected = signal<AppTheme | null>(null);
 const finishesOf = (): Finishes => selected()?.finishes ?? builtIn;
 
 /**
- * Finishes a role may hold beyond the build-time file's keys. `fill` is the one: a theme may draw
- * its runs as a gradient (the build-time one) or as a single color with no gradient at all
- * (shadcn's flat fills), and a reader has to see the color the second kind states.
+ * A finish's strings name the theme's tokens instead of writing their colors (`var(--raised)`, an
+ * alias): the finishes keep one shape in every theme while the colors they draw are the theme's.
+ * `token` reads the same token the rest of the theme does, so an alias follows the appearance and
+ * the theme `selectTheme` put in, and a `var()` anywhere in a gradient or a shadow resolves with it.
  */
-const FINISH_EXTRA: Partial<Record<FinishRole, (keyof Finish)[]>> = {
-  fill: ["backgroundColor"],
-};
+const alias = (value: string): string =>
+  value.replace(/var\(--([a-z0-9-]+)\)/g, (whole, name: string) => {
+    const color = token(name as keyof Tokens);
+    return typeof color === "string" ? color : whole;
+  });
 
 /**
  * An object whose getters read one finish role of the finishes in use, in
  * the appearance shown: shadows and gradients are no design tokens, so they
- * stay here while every color is the theme's. Reading one subscribes to the
- * appearance and to the theme `selectTheme` put in.
+ * stay here while every color is the theme's, by alias. Reading one
+ * subscribes to the appearance and to the theme `selectTheme` put in.
  */
 function themed(role: FinishRole): Finish {
   const out = {} as Finish;
-  const keys = [
-    ...(Object.keys(builtIn.dark[role]) as (keyof Finish)[]),
-    ...(FINISH_EXTRA[role] ?? []).filter((key) => !(key in builtIn.dark[role])),
-  ];
-  for (const key of keys) {
+  for (const key of Object.keys(builtIn.dark[role]) as (keyof Finish)[]) {
     Object.defineProperty(out, key, {
       enumerable: true,
       get: () => {
         const finishes = finishesOf();
-        return (isDark() ? finishes.dark : finishes.light)[role][key];
+        const value = (isDark() ? finishes.dark : finishes.light)[role][key];
+        return value === undefined ? value : alias(value);
       },
     });
   }
@@ -491,14 +491,15 @@ export const focusRing = (offset = 0): ViewStyle => ({
  */
 
 /**
- * A theme's fill for a run, a bar or a slider's range: its gradient where it gives one, else its
- * color. A theme may state both (a color under the gradient), as the build-time one does; the
- * gradient is what draws then, so what a theme that states one color alone says is a fill too.
+ * A theme's fill for a run, a bar or a slider's range: its gradient, and the color under it. The
+ * gradient carries the color (a flat theme repeats one color in both stops); the theme keeps its
+ * `backgroundColor` transparent, since a color under the gradient shows through and tints the run.
  */
 export function fillStyle(): ViewStyle {
-  return finish.fill.backgroundImage === undefined
-    ? { backgroundColor: finish.fill.backgroundColor }
-    : { backgroundImage: finish.fill.backgroundImage };
+  return {
+    backgroundColor: finish.fill.backgroundColor,
+    backgroundImage: finish.fill.backgroundImage,
+  };
 }
 
 /**
