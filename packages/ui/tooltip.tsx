@@ -1,4 +1,4 @@
-// A tooltip: the look (`tooltipLook`, `tooltipText`, `tooltipNote`) and the `Tooltip` that wears it.
+// A tooltip: the look (`tooltipLook`, `tooltipText`, `tooltipNote`) at the top, and the parts below.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import type { JSX, StyleProp, ViewStyle } from "nsh";
 import { context, split, Text, View } from "nsh";
@@ -40,6 +40,9 @@ export const tooltipText = "text-xs text-popover-foreground";
 /** A tooltip's quieter text (`class`): a shortcut's keys, a time. */
 export const tooltipNote = "text-xs text-muted-foreground";
 // @port end
+
+/** Why a tooltip closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type TooltipOpenChangeReason = OpenChangeReason;
 
 /**
  * The root: it owns whether the hint shows, and the trigger and content slots. `nsh/base` takes a
@@ -175,6 +178,7 @@ export function Tooltip(props: TooltipProps) {
         },
       }}
     >
+      {/* No gap of its own: this view only hosts the hint, the children lay out as they would. */}
       <View style={[{ gap: 0 }, props.style ?? null]}>
         {props.children}
         {() => <TooltipAnchor />}
@@ -230,8 +234,7 @@ function TooltipAnchor() {
 }
 
 function AnchorBubble(props: { content: TooltipContentProps; ctx: TooltipContextValue }) {
-  const content = props.content;
-  const ctx = props.ctx;
+  const { content, ctx } = props;
   return (
     <Bubble
       {...content}
@@ -253,6 +256,3 @@ function AnchorBubble(props: { content: TooltipContentProps; ctx: TooltipContext
     </Bubble>
   );
 }
-
-/** Why a tooltip closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
-export type TooltipOpenChangeReason = OpenChangeReason;
