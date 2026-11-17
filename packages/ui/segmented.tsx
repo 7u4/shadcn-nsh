@@ -13,7 +13,10 @@ import {
 import { labelOf } from "./lib/label";
 import type { TabLook, TabState } from "./tabs";
 
-/** Shared with `look/tabs.tsx` (routed to `tabs.tsx`); needed by the ported `segmentedLook`. */
+/**
+ * The hover rule `tabsLook` uses, repeated here because `tabs.tsx` does not export it: under the
+ * pointer, a segment that is neither selected (its thumb shows) nor disabled.
+ */
 const hoverOf = (state: TabState) => {
   const selected = typeof state.selected === "function" ? state.selected() : state.selected;
   const disabled =
@@ -63,9 +66,10 @@ export function segmentedLook(o?: SegmentedLookOptions) {
   const inset = 2;
   // Small is as tall as a small button with a pointer (24), so the two sit level in a row.
   const height = pointer ? (small ? 24 : 30) : small ? 32 : 36;
-  const corner = pointer ? 6 : 7;
+  // The thumb's corners, two points inside the track's.
+  const thumbCorner = pointer ? 6 : 7;
   const thumb = (): ViewStyle => ({
-    borderRadius: corner,
+    borderRadius: thumbCorner,
     borderCurve: "continuous",
     borderWidth: 1,
     ...finish.thumb,
@@ -100,7 +104,7 @@ export function segmentedLook(o?: SegmentedLookOptions) {
         // A clear edge the thumb's takes over, so a checked segment keeps its size.
         style: {
           ...(spread ? { flex: 1, paddingHorizontal: 7 } : { paddingHorizontal: 9 }),
-          borderRadius: corner,
+          borderRadius: thumbCorner,
           borderCurve: "continuous",
           borderWidth: 1,
           borderColor: "transparent",
@@ -164,12 +168,10 @@ type SegmentedContextValue = {
 
 const SegmentedContext = context<SegmentedContextValue | null>(null);
 
-type SegmentedListOptions = {
-  size?: SegmentedSize;
-  fill?: boolean;
-};
+/** What a segment reads from its list: the axes the list was given. */
+type SegmentedListAxes = Pick<SegmentedLookOptions, "size" | "fill">;
 
-const SegmentedListContext = context<SegmentedListOptions | null>(null);
+const SegmentedListContext = context<SegmentedListAxes | null>(null);
 
 function useSegmented() {
   const ctx = SegmentedContext();
