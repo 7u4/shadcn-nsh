@@ -48,7 +48,11 @@ export function choosePalette(id: PaletteId) {
   document.dispatchEvent(new CustomEvent(PALETTE_EVENT));
 }
 
-/** Calls `change` whenever a switch on the page chose another palette. */
+/**
+ * Calls `change` whenever a switch on the page chose another palette; returns the unsubscribe, for
+ * callers that mount and unmount (the React panel).
+ */
 export function onPaletteChange(change: () => void) {
   document.addEventListener(PALETTE_EVENT, change);
+  return () => document.removeEventListener(PALETTE_EVENT, change);
 }
