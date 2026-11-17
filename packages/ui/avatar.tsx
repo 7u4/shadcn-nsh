@@ -1,7 +1,8 @@
-// A avatar: the look (`avatarLook` and its companions) and the `Avatar` that wears it.
+// An avatar: the identity ring (`avatarIdentity`, `avatarPortrait`) and the `Avatar` that wears it.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { isDark } from "@shadcn-nsh/theme";
 import { split } from "nsh";
+import type { ViewStyle } from "nsh";
 import { Avatar as BaseAvatar, type AvatarProps as BaseAvatarProps } from "nsh/base";
 
 // @port avatar.ts
@@ -12,7 +13,7 @@ const HUES = 12;
 function hash(text: string): number {
   let h = 2166136261;
   for (const c of text) {
-    h ^= c.codePointAt(0)!;
+    h ^= c.codePointAt(0) ?? 0;
     h = Math.imul(h, 16777619);
   }
   return h >>> 0;
@@ -98,28 +99,26 @@ export type AvatarProps = BaseAvatarProps;
 export function Avatar(props: AvatarProps) {
   const [, rest] = split(props, ["style", "fallbackStyle", "fallbackClass", "imageClass"]);
   // Read where used, so the identity colors follow the name and the appearance (light / dark).
-  const id = () => (props.name ? avatarIdentity(props.name) : null);
+  const identity = () => (props.name ? avatarIdentity(props.name) : null);
+  const ringClass = () => {
+    const ring = identity();
+    return ring
+      ? `rounded-full overflow-hidden items-center justify-center font-semibold text-[${ring.foreground}]`
+      : undefined;
+  };
+  const ringStyle = (): ViewStyle | null => {
+    const ring = identity();
+    return ring
+      ? { backgroundColor: ring.background, borderWidth: 1, borderColor: ring.border }
+      : null;
+  };
   return (
     <BaseAvatar
       {...rest}
       style={props.style}
       imageClass={props.imageClass ?? "rounded-full overflow-hidden"}
-      fallbackClass={
-        props.fallbackClass ??
-        (id()
-          ? `rounded-full overflow-hidden items-center justify-center font-semibold text-[${id()!.foreground}]`
-          : undefined)
-      }
-      fallbackStyle={[
-        id()
-          ? {
-              backgroundColor: id()!.background,
-              borderWidth: 1,
-              borderColor: id()!.border,
-            }
-          : null,
-        props.fallbackStyle ?? null,
-      ]}
+      fallbackClass={props.fallbackClass ?? ringClass()}
+      fallbackStyle={[ringStyle(), props.fallbackStyle ?? null]}
     />
   );
 }

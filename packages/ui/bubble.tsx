@@ -44,6 +44,9 @@ const reactionsOverlap = "75%";
 /** How far a row of reactions sits inside the bubble's edge: 12 points. */
 const reactionsInset = 12;
 
+/** A pill's corners: half the tallest it gets, so any height of the row rounds to a pill. */
+const pill = 999;
+
 /** What a `BubbleContent` under a `Bubble` wears: the variant its fill and ink come from. */
 const BubbleContext = context<(() => BubbleVariant) | null>(null);
 
@@ -163,7 +166,7 @@ export function bubbleLook(): BubbleLook {
       gap: 4,
       paddingHorizontal: 6,
       paddingVertical: 3,
-      borderRadius: 999,
+      borderRadius: pill,
       backgroundColor: token("muted"),
       boxShadow: `0 0 0 3px ${colors.surface}`,
       ...(side === "bottom" ? { bottom: 0 } : { top: 0 }),
@@ -240,8 +243,7 @@ export function BubbleGroup(props: BubbleGroupProps) {
  * equivalent here; the frame itself takes the press.
  */
 export function BubbleContent(props: BubbleContentProps) {
-  const context = BubbleContext();
-  const variant = (): BubbleVariant => (context ? context() : "default");
+  const variant = (): BubbleVariant => BubbleContext()?.() ?? "default";
   const [, rest] = split(props, ["children", "style"]);
   return (
     <View

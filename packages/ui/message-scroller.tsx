@@ -36,6 +36,12 @@ const itemGap = 32;
 /** How far a scroller's button sits from the edge it points past: 16 points. */
 const buttonInset = 16;
 
+/** A point of slack in the overflow test, so a height rounded under a viewport's is not an overflow. */
+const slack = 1;
+
+/** A pill's corners: half the tallest it gets, so any height of the button rounds to a pill. */
+const pill = 999;
+
 /** What a scroller keeps: where the viewport is, how tall it and its content are, and the view
  * whose end it reveals. */
 interface Scroller {
@@ -117,7 +123,7 @@ export function messageScrollerLook(): MessageScrollerLook {
       ...(direction === "end" ? { bottom: buttonInset } : { top: buttonInset }),
     }),
     get button(): ViewStyle {
-      return { borderRadius: 999 };
+      return { borderRadius: pill };
     },
   };
 }
@@ -171,7 +177,7 @@ export function MessageScroller(props: MessageScrollerProps) {
   const viewport = signal(0);
   const content = signal(0);
   const contentView = signal<ViewRef | undefined>(undefined);
-  const overflows = () => content() > viewport() + 1;
+  const overflows = () => content() > viewport() + slack;
   const scroller: Scroller = {
     atEnd,
     atStart,
