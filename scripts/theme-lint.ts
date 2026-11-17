@@ -18,6 +18,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 import { parseColor, rgbToOklch } from "./theme/oklch";
+import { specBlock, specParts, specRows } from "./theme/spec";
 
 const root = join(import.meta.dir, "..");
 const read = (path: string) => readFileSync(join(root, path), "utf8");
@@ -59,44 +60,23 @@ const themes = readdirSync(join(root, "packages/theme/themes"))
   .sort();
 
 const spec = read("docs/specs/theme-roles.md");
+/** What the spec names: the A and C layers, and every finish's row. */
+const specPartsOf = specParts(spec);
 
 const failures: string[] = [];
 const fail = (message: string) => failures.push(message);
 
-/** The text between a pair of markers in the spec's tables. */
-function block(name: string): string {
-  const open = `<!-- theme-lint: ${name} -->`;
-  const close = `<!-- /theme-lint: ${name} -->`;
-  const start = spec.indexOf(open);
-  const end = spec.indexOf(close);
-  if (start === -1 || end === -1)
-    throw new Error(`docs/specs/theme-roles.md states no ${open} … ${close} block`);
-  return spec.slice(start + open.length, end);
-}
-
-/** A markdown table's body rows, cells trimmed and backticks stripped. */
-function rows(text: string): string[][] {
-  return text
-    .split("\n")
-    .filter((line) => line.trim().startsWith("|"))
-    .map((line) =>
-      line
-        .trim()
-        .replace(/^\|/, "")
-        .replace(/\|$/, "")
-        .split("|")
-        .map((cell) => cell.trim().replace(/`/g, "")),
-    )
-    .filter((cells) => cells[0] !== "" && !/^-+$/.test(cells[0]) && cells[0] !== "主题");
-}
-
 /** The colours a finish may still write out: theme, appearance and the literal itself. */
 const pending = new Set(
-  rows(block("pending")).map(([theme, appearance, value]) => `${theme} ${appearance} ${value}`),
+  specRows(specBlock(spec, "pending")).map(
+    ([theme, appearance, value]) => `${theme} ${appearance} ${value}`,
+  ),
 );
 
 /** What the library writes but does not read: finish roles and tokens, by name. */
-const unread = new Set([...block("unread").matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]));
+const unread = new Set(
+  [...specBlock(spec, "unread").matchAll(/`([a-z0-9-]+)`/g)].map((match) => match[1]),
+);
 
 /** The shadcn slots NSH itself resolves (`references/nsh/crates/nsh-base/src/theme.rs`). */
 function shadcnSlots(): string[] {
@@ -182,6 +162,15 @@ for (const name of ["theme.json", "finishes.json"]) {
 const slots = shadcnSlots();
 if (slots.length !== 31) fail(`theme.rs states ${slots.length} shadcn slots, not 31`);
 
+// The spec names the same slots: the docs site groups tokens by its A list, so a slot it leaves out
+// would be drawn under the wrong layer.
+for (const name of slots)
+  if (!specPartsOf.slots.includes(name))
+    fail(`docs/specs/theme-roles.md: the A layer states no \`${name}\`, a slot NSH resolves`);
+for (const name of specPartsOf.slots)
+  if (!slots.includes(name))
+    fail(`docs/specs/theme-roles.md: the A layer states \`${name}\`, which is no slot of theme.rs`);
+
 const tokensOf = new Map<string, ThemeFile>();
 for (const theme of themes) {
   const path = `packages/theme/themes/${theme}/theme.json`;
@@ -214,6 +203,25 @@ for (const theme of rest) {
 // has one shape, and a theme with no gradient states a gradient of one colour.
 const defaultFinishes = readJson<FinishesFile>("packages/theme/finishes.json");
 const defaultRoles = Object.keys(defaultFinishes.light).sort();
+
+// The spec says what each finish draws and who reads it, and the docs site shows that row: the
+// spec's list of finishes is the theme's.
+for (const role of defaultRoles)
+  if (!specPartsOf.finishes.some((finish) => finish.role === role))
+    fail(`docs/specs/theme-roles.md: states no finish \`${role}\`, which finishes.json has`);
+for (const { role } of specPartsOf.finishes)
+  if (!defaultRoles.includes(role))
+    fail(`docs/specs/theme-roles.md: states finish \`${role}\`, which finishes.json has not`);
+
+// The C layer is `cssVars.theme`: the spec lists the same keys, and the docs site shows them as
+// the group that does not change with the appearance.
+const sharedKeys = Object.keys(tokensOf.get(first)?.cssVars.theme ?? {});
+for (const name of sharedKeys)
+  if (!specPartsOf.shared.includes(name))
+    fail(`docs/specs/theme-roles.md: the C layer states no \`${name}\`, which cssVars.theme has`);
+for (const name of specPartsOf.shared)
+  if (!sharedKeys.includes(name))
+    fail(`docs/specs/theme-roles.md: the C layer states \`${name}\`, which cssVars.theme has not`);
 
 const shapeOf = new Map<string, string[]>();
 for (const appearance of appearances)

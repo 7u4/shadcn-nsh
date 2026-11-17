@@ -1,13 +1,21 @@
 /**
  * The themes the docs site shows: each palette of the demos (`demos/palettes.ts`) with the theme
- * file it draws (`packages/theme/themes/<id>/theme.json`) as the build has it. `import.meta.glob`
- * reads every theme file once, eagerly, so the themes page is drawn from the same JSON at build
- * time and in the browser — no `node:fs`, and the page prerenders like any other. `check:pages`
- * holds the registry items to the same list, so a theme is never written twice here.
+ * it draws — `packages/theme/themes/<id>/theme.json` and the `finishes.json` beside it — as the
+ * build has them. `import.meta.glob` reads every theme file once, eagerly, so the themes page is
+ * drawn from the same JSON at build time and in the browser — no `node:fs`, and the page prerenders
+ * like any other. `check:pages` holds the registry items to the same list, so a theme is never
+ * written twice here.
+ *
+ * What the page says about a token's layer and a finish's duty is the spec's, read as text
+ * (`docs/specs/theme-roles.md` through `scripts/theme/spec.ts`), so the page keeps no second list:
+ * the A layer is the spec's 31 slots, the C layer is `cssVars.theme`, the B layer is the light
+ * tokens that are neither, and every finish is the spec's row.
  *
  * `theme.json`'s `name` is the theme's own name — the same one `AppTheme.label` carries in the
  * `index.ts` beside it. The palette's `label` is the switch's shorter name for the same theme.
  */
+import specText from "../../../../docs/specs/theme-roles.md?raw";
+import { specParts } from "../../../../scripts/theme/spec";
 import { PALETTES, type Palette } from "../../demos/palettes";
 
 /** A theme file in shadcn's `cssVars` shape, as `theme.json` writes it. */
@@ -20,13 +28,53 @@ export type ThemeFile = {
   };
 };
 
-/** One cssVars role, in both appearances: the value the theme writes and the one a swatch draws. */
-export type ThemeRole = {
-  role: string;
+/** The fields a finish may draw with, in `finishes.json`'s order. */
+export const FINISH_FIELDS = [
+  "backgroundColor",
+  "backgroundImage",
+  "boxShadow",
+  "borderColor",
+  "backdropFilter",
+] as const;
+
+/** A finish as a theme file writes it: the fields it draws with, and nothing else. */
+export type Finish = Partial<Record<(typeof FINISH_FIELDS)[number], string>>;
+
+/** A theme's finishes, as `finishes.json` writes them. */
+export type FinishesFile = {
+  press: { scale: number };
+  light: Record<string, Finish>;
+  dark: Record<string, Finish>;
+};
+
+/** One token, in both appearances: the value the theme writes and the one a swatch draws. */
+export type TokenRow = {
+  name: string;
   light: string;
   dark: string;
   lightSwatch: string;
   darkSwatch: string;
+  /** The token this one is written as (`card: var(--background)` → `background`), else null. */
+  aliasOf: string | null;
+};
+
+/** One layer of the spec: the shadcn slots, the library's own tokens, or the shared `theme` block. */
+export type TokenGroup = {
+  id: "slots" | "extension" | "shared";
+  title: string;
+  note: string;
+  rows: TokenRow[];
+};
+
+/** One row of a theme's finish table: the spec's words, and the tokens the theme draws it from. */
+export type FinishRow = {
+  role: string;
+  /** What it draws, in the spec's words. */
+  draws: string;
+  /** Who reads it: the components the spec names, or its dash for one the library leaves out. */
+  reads: string;
+  /** Every token any of its values names, in the order they appear. */
+  tokens: string[];
 };
 
 /** One palette as the themes page shows it. */
@@ -36,8 +84,10 @@ export type ThemePage = {
   name: string;
   /** The registry item that installs it beside the build-time theme (`add <item>`). */
   item: string;
-  /** One row per role, in `theme.json`'s order. */
-  roles: ThemeRole[];
+  /** The theme's tokens, one group per layer of the spec. */
+  tokens: TokenGroup[];
+  /** The theme's finishes, in the spec's order. */
+  finishes: FinishRow[];
 };
 
 /** `packages/theme/themes/<id>/theme.json`, every one of them, as the build reads them. */
@@ -46,6 +96,15 @@ const FILES = import.meta.glob("../../../../packages/theme/themes/*/theme.json",
   import: "default",
 }) as Record<string, ThemeFile>;
 
+/** `packages/theme/themes/<id>/finishes.json`, every one of them. */
+const FINISHES = import.meta.glob("../../../../packages/theme/themes/*/finishes.json", {
+  eager: true,
+  import: "default",
+}) as Record<string, FinishesFile>;
+
+/** The spec, as the page reads it: the A and C layers and every finish's row. */
+const SPEC = specParts(specText);
+
 /** The theme file of a palette: `themes/<id>/theme.json` below `packages/theme`. */
 function themeFile(id: string): ThemeFile {
   const file = FILES[`../../../../packages/theme/themes/${id}/theme.json`];
@@ -53,9 +112,16 @@ function themeFile(id: string): ThemeFile {
   return file;
 }
 
+/** The finishes of a palette: `themes/<id>/finishes.json` below `packages/theme`. */
+function finishesFile(id: string): FinishesFile {
+  const file = FINISHES[`../../../../packages/theme/themes/${id}/finishes.json`];
+  if (!file) throw new Error(`no finishes file for palette "${id}"`);
+  return file;
+}
+
 /**
  * A value with the theme's own references filled in (`var(--card)`), so a swatch can draw it: the
- * appearance's map first, then the `theme` block (a radius-free role may live there). Values the
+ * appearance's map first, then the `theme` block (a radius-free token may live there). Values the
  * theme does not define are left as written.
  */
 function filled(value: string, vars: Record<string, string>): string {
@@ -71,40 +137,139 @@ function filled(value: string, vars: Record<string, string>): string {
   return out;
 }
 
-/** The roles of a theme file, light and dark, in the order the file lists them. */
-function rolesOf(file: ThemeFile): ThemeRole[] {
-  const lightVars = { ...file.cssVars.theme, ...file.cssVars.light };
-  const darkVars = { ...file.cssVars.theme, ...file.cssVars.dark };
-  const names = new Set([...Object.keys(file.cssVars.light), ...Object.keys(file.cssVars.dark)]);
-  return [...names].map((role) => {
-    const light = file.cssVars.light[role] ?? "";
-    const dark = file.cssVars.dark[role] ?? "";
+/** A theme's variables for one appearance: its `theme` block, then that appearance over it. */
+function varsOf(file: ThemeFile, scheme: "light" | "dark"): Record<string, string> {
+  return { ...file.cssVars.theme, ...file.cssVars[scheme] };
+}
+
+/** The token a written value is, when it is a bare reference: `var(--background)` → `background`. */
+function aliasOf(value: string): string | null {
+  return /^var\(--([\w-]+)\)$/.exec(value)?.[1] ?? null;
+}
+
+/** The rows of one group, each read from its appearance (the shared block from either). */
+function tokenRows(file: ThemeFile, names: string[], shared: boolean): TokenRow[] {
+  const light = varsOf(file, "light");
+  const dark = varsOf(file, "dark");
+  return names.map((name) => {
+    const lightValue = shared ? file.cssVars.theme[name] : file.cssVars.light[name];
+    const darkValue = shared ? file.cssVars.theme[name] : file.cssVars.dark[name];
+    if (lightValue === undefined || darkValue === undefined)
+      throw new Error(`theme "${file.name}" states no "${name}", which the spec names`);
     return {
-      role,
-      light,
-      dark,
-      lightSwatch: filled(light, lightVars),
-      darkSwatch: filled(dark, darkVars),
+      name,
+      light: lightValue,
+      dark: darkValue,
+      lightSwatch: filled(lightValue, light),
+      darkSwatch: filled(darkValue, dark),
+      aliasOf: aliasOf(lightValue),
     };
   });
 }
 
-/** Every palette the demos offer, with its theme file read. */
+/** The tokens a finish names across its values, in the order they first appear. */
+function tokensOf(finishes: FinishesFile, role: string): string[] {
+  const names = new Set<string>();
+  for (const scheme of ["light", "dark"] as const) {
+    const finish = finishes[scheme][role];
+    if (!finish) continue;
+    for (const field of FINISH_FIELDS) {
+      const value = finish[field];
+      if (value === undefined) continue;
+      for (const match of value.matchAll(/var\(--([\w-]+)\)/g)) names.add(match[1]!);
+    }
+  }
+  return [...names];
+}
+
+/** Every palette the demos offer, with its theme and finishes read. */
 export function themePages(): ThemePage[] {
   return PALETTES.map((palette) => {
     const file = themeFile(palette.id);
+    const finishes = finishesFile(palette.id);
+    const extension = Object.keys(file.cssVars.light).filter((name) => !SPEC.slots.includes(name));
     return {
       palette,
       name: file.name,
       item: `theme-${palette.id}`,
-      roles: rolesOf(file),
+      tokens: [
+        {
+          id: "slots",
+          title: "The slots NSH resolves",
+          note: `shadcn's ${SPEC.slots.length}, the names an app's components ask the theme for.`,
+          rows: tokenRows(file, SPEC.slots, false),
+        },
+        {
+          id: "extension",
+          title: "The library's own tokens",
+          note: "What this library's components ask for beside the slots.",
+          rows: tokenRows(file, extension, false),
+        },
+        {
+          id: "shared",
+          title: "The shared values",
+          note: "The same in both appearances: a number, or a colour that does not turn.",
+          rows: tokenRows(file, Object.keys(file.cssVars.theme), true),
+        },
+      ],
+      finishes: SPEC.finishes.map(({ role, draws, reads }) => ({
+        role,
+        draws,
+        reads,
+        tokens: tokensOf(finishes, role),
+      })),
     };
   });
 }
 
 /**
- * The site's own colours (`--color-fd-<name>`, Fumadocs' names) and the theme role each one is
- * drawn from: the docs chrome is drawn in the palette the demos are. Mostly the role of the same
+ * The stylesheet the finish samples draw with: one rule per finish of every theme, its values
+ * taken from that theme's `finishes.json` with the references filled in, and a ground of that
+ * theme's `background` for the sample to sit on. Both follow `html.dark`, so a sample on the page
+ * shows the theme it names in the appearance the site is in — not the site's own palette.
+ */
+export function finishSampleCss(): string {
+  const rules: string[] = [];
+  for (const palette of PALETTES) {
+    const file = themeFile(palette.id);
+    const finishes = finishesFile(palette.id);
+    const ground = (scheme: "light" | "dark") => {
+      const vars = varsOf(file, scheme);
+      return `background-color:${filled(vars.background ?? "transparent", vars)};`;
+    };
+    rules.push(`[data-ground="${palette.id}"]{${ground("light")}}`);
+    rules.push(`html.dark [data-ground="${palette.id}"]{${ground("dark")}}`);
+    for (const scheme of ["light", "dark"] as const) {
+      const vars = varsOf(file, scheme);
+      const prefix = scheme === "dark" ? "html.dark " : "";
+      for (const [role, finish] of Object.entries(finishes[scheme])) {
+        const declarations: string[] = [];
+        const value = (field: (typeof FINISH_FIELDS)[number]) => {
+          const written = finish[field];
+          return written === undefined ? undefined : filled(written, vars);
+        };
+        const backgroundColor = value("backgroundColor");
+        const backgroundImage = value("backgroundImage");
+        const boxShadow = value("boxShadow");
+        const backdropFilter = value("backdropFilter");
+        const borderColor = value("borderColor");
+        if (backgroundColor !== undefined)
+          declarations.push(`background-color:${backgroundColor};`);
+        if (backgroundImage !== undefined)
+          declarations.push(`background-image:${backgroundImage};`);
+        if (boxShadow !== undefined) declarations.push(`box-shadow:${boxShadow};`);
+        if (backdropFilter !== undefined) declarations.push(`backdrop-filter:${backdropFilter};`);
+        if (borderColor !== undefined) declarations.push(`border:1px solid ${borderColor};`);
+        rules.push(`${prefix}[data-sample="${palette.id}-${role}"]{${declarations.join("")}}`);
+      }
+    }
+  }
+  return rules.join("\n");
+}
+
+/**
+ * The site's own colours (`--color-fd-<name>`, Fumadocs' names) and the theme token each one is
+ * drawn from: the docs chrome is drawn in the palette the demos are. Mostly the token of the same
  * name; Fumadocs' primary is ink too (the current page's link, the outline's marker), so it is the
  * theme's `brand`, the accent that reads as text — the theme's `primary` is a fill (the default
  * theme's is a pale citrus no text could be on a light page) — and what sits on it is the page's
@@ -131,7 +296,7 @@ const SITE_ROLES: [site: string, role: string][] = [
 
 /**
  * The stylesheet that draws the site in each palette: `html[data-palette="<id>"]` sets the
- * Fumadocs colours from the theme's light roles, `.dark` from its dark ones. The sidebar is named
+ * Fumadocs colours from the theme's light tokens, `.dark` from its dark ones. The sidebar is named
  * too, since Fumadocs' preset sets a few of its colours there again. `palette.ts` sets the
  * attribute: an inline script before the first paint, then every choice.
  */
@@ -139,7 +304,7 @@ export function sitePaletteCss(): string {
   return PALETTES.map((palette) => {
     const file = themeFile(palette.id);
     const block = (scheme: "light" | "dark", selector: string) => {
-      const vars = { ...file.cssVars.theme, ...file.cssVars[scheme] };
+      const vars = varsOf(file, scheme);
       const lines = SITE_ROLES.filter(([, role]) => vars[role]).map(
         ([site, role]) => `--color-fd-${site}:${filled(vars[role]!, vars)};`,
       );
