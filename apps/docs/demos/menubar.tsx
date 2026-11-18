@@ -76,7 +76,7 @@ function App() {
           <MenubarMenu onOpenChange={changed("File")}>
             <MenubarTrigger>File</MenubarTrigger>
             <MenubarContent>
-              <MenubarLabel text="Document" />
+              <MenubarLabel>Document</MenubarLabel>
               <MenubarItem onSelect={() => choose("New document")}>
                 {keyed("New document", "⌘N")}
               </MenubarItem>
@@ -110,7 +110,7 @@ function App() {
                 </MenubarCheckboxItem>
               </MenubarGroup>
               <MenubarSeparator />
-              <MenubarLabel text="Zoom" />
+              <MenubarLabel>Zoom</MenubarLabel>
               {ZOOMS.map((step) => (
                 <MenubarRadioItem checked={zoom() === step} onSelect={() => zoom.set(step)}>
                   {step}

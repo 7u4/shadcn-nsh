@@ -6,6 +6,7 @@ import { context, split, View } from "nsh";
 import {
   Collapsible as BaseCollapsible,
   type CollapsibleProps as BaseCollapsibleProps,
+  type OpenChangeReason,
 } from "nsh/base";
 
 import {
@@ -18,14 +19,17 @@ import { labelOf } from "./lib/label";
 import { createOpenState, createSlot, type OpenState, type Slot } from "./lib/open-state";
 import { RowLabel } from "./lib/surface";
 
+/** Why a collapsible opened or closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */
+export type CollapsibleOpenChangeReason = OpenChangeReason;
+
 /** The root: it owns whether the panel is open, and the trigger slot. */
 export type CollapsibleProps = {
   /** Controlled; leave it out and the root keeps the state (`defaultOpen`). */
   open?: boolean | null;
   defaultOpen?: boolean;
   children?: JSX.Element;
-  /** Told whenever it opens or closes; the reason is `nsh/base`'s, as a string. */
-  onOpenChange?: (event: { open: boolean; reason?: string }) => void;
+  /** Told whenever it opens or closes, and why. */
+  onOpenChange?: (event: { open: boolean; reason: CollapsibleOpenChangeReason }) => void;
 };
 
 /** `nsh/base` Collapsible as content. `children` become the revealed panel. */
@@ -66,7 +70,7 @@ function useCollapsible() {
 
 /** Owns open state for `CollapsibleTrigger` and `CollapsibleContent`. */
 export function Collapsible(props: CollapsibleProps) {
-  const state = createOpenState(props);
+  const state = createOpenState<CollapsibleOpenChangeReason>(props);
   const trigger = createSlot<JSX.Element>();
   return (
     <CollapsibleContext.Provider value={{ ...state, trigger }}>

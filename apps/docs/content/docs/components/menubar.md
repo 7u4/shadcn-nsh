@@ -75,7 +75,7 @@ import { menuItemLabel } from "@/components/ui/menu";
 `MenubarShortcut`, `MenubarGroup` and `MenubarSub` / `MenubarSubTrigger` / `MenubarSubContent` are
 [`Menu`](./menu)'s parts under the bar's names: a row of a bar wears what a row of a menu wears, down
 to its danger tone, its check and its dot. `MenubarShortcut` is `MenuShortcut` (the row's trailing
-note), and `MenubarLabel` takes `text`, as `MenuLabel` does.
+note), and `MenubarLabel` is `MenuLabel`: its child is the title.
 
 ```tsx
 <MenubarMenu>
@@ -85,7 +85,7 @@ note), and `MenubarLabel` takes `text`, as `MenuLabel` does.
       Show sidebar
     </MenubarCheckboxItem>
     <MenubarSeparator />
-    <MenubarLabel text="Zoom" />
+    <MenubarLabel>Zoom</MenubarLabel>
     <MenubarRadioItem checked={zoom() === "125%"} onSelect={() => zoom.set("125%")}>
       125%
     </MenubarRadioItem>

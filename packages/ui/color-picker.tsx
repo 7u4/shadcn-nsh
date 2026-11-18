@@ -10,7 +10,7 @@ import {
   TERMINAL_ROW,
 } from "@shadcn-nsh/theme";
 import { Check, ChevronDown, Copy, Pipette } from "lucide";
-import type { InputStyle, JSX, ViewStyle } from "nsh";
+import type { InputStyle, JSX, StyleProp, ViewStyle } from "nsh";
 import { Clipboard, platform, signal, Text, token, View } from "nsh";
 import {
   Button as BaseButton,
@@ -494,7 +494,7 @@ export function ColorPanel(props: ColorPanelProps) {
 export function ColorTrigger(props: {
   open: boolean;
   value: string;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 }): JSX.Element {
   const checker = colorChecker();
   return (
@@ -528,8 +528,8 @@ export interface ColorPopoverProps {
   format: ColorFormat;
   /** The opacity too: its slider and field, and a wider popover for the field. */
   alpha?: boolean;
-  /** The trigger's style (its width). */
-  style?: ViewStyle;
+  /** The trigger's own style (its width), over the look's. */
+  style?: StyleProp<ViewStyle>;
   onChange: (value: string) => void;
   onFormatChange: (format: ColorFormat) => void;
   onChangeEnd?: (formatted: string) => void;

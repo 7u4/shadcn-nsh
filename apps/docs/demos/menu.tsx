@@ -125,7 +125,7 @@ function App() {
                 Show hidden files
               </MenuCheckboxItem>
               <MenuSeparator />
-              <MenuLabel text="Sort by" />
+              <MenuLabel>Sort by</MenuLabel>
               {/* One choice of a group: choosing closes the menu. */}
               {SORTS.map((by) => (
                 <MenuRadioItem checked={sort() === by} onSelect={() => sort.set(by)}>

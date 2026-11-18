@@ -2,7 +2,7 @@
 // list and the mark of a checkable menu item.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { finish, radius, terminal } from "@shadcn-nsh/theme";
-import type { JSX, MotionSpec, ViewStyle } from "nsh";
+import type { JSX, MotionSpec, StyleProp, ViewStyle } from "nsh";
 import { createMotion, Easing, reduceMotion, View } from "nsh";
 
 import { CheckMark } from "./icons";
@@ -103,7 +103,7 @@ export function popInStyles(
 export function PopIn(props: {
   side?: PopupSide;
   class?: string;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   children: JSX.Element;
 }) {
   const m = createMotion({ enter: popIn(props.side) });

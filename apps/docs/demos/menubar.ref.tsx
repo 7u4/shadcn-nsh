@@ -134,7 +134,7 @@ function App() {
             trigger={<Trigger name="File" open={() => which() === "File"} />}
             onOpenChange={({ open, reason }) => changed("File")({ open, reason })}
           >
-            <MenuLabel text="Document" />
+            <MenuLabel>Document</MenuLabel>
             <Item label="New document" keys="⌘N" onSelect={() => choose("New document")} />
             <Item label="Open…" keys="⌘O" onSelect={() => choose("Open…")} />
             <Submenu
@@ -178,7 +178,7 @@ function App() {
               onSelect={() => ruler.set(!ruler())}
             />
             <MenuSeparator style={menuSeparator()} />
-            <MenuLabel text="Zoom" />
+            <MenuLabel>Zoom</MenuLabel>
             {ZOOMS.map((step) => (
               <Item label={step} radio checked={zoom() === step} onSelect={() => zoom.set(step)} />
             ))}

@@ -176,7 +176,7 @@ export function chipLook(o?: ChipLookOptions) {
     get removeStyle(): ViewStyle | undefined {
       return terminal ? undefined : { width: remove, height: remove };
     },
-    get removeFocusVisible(): ViewStyle {
+    get focusVisibleStyle(): ViewStyle {
       return focusRing();
     },
     get removeGlyph(): JSX.Element {
@@ -475,7 +475,7 @@ export function ComboboxChip(props: ComboboxChipProps) {
           disabled={ctx.root.disabled}
           class={look.removeClass}
           style={look.removeStyle}
-          focusVisibleStyle={look.removeFocusVisible}
+          focusVisibleStyle={look.focusVisibleStyle}
           onPress={remove}
         >
           {look.removeGlyph}

@@ -184,7 +184,20 @@ const overrides: Record<string, Override> = {
   select: { steps: (app) => app.press("label:Language") },
   "date-picker": { steps: (app) => app.press("No due date") },
   // The pages whose photos come over the network mark themselves once every image is there.
-  carousel: { photos: true, steps: photosReady },
+  carousel: {
+    photos: true,
+    steps: photosReady,
+    // Measured: 2 pairs in 26 differed, always the same 57 pixels, the worst channel 11/255, every
+    // one of them on the card's four rounded corners where its clip cuts the photo (x 21-29 and
+    // 332-337, y 126-134 and 266-273): the rasterizer's rounded clip, a level apart between two page
+    // instances, as the avatar's edge is. The photo's middle, the dots and the labels never moved,
+    // and a layout change moves far more than 60 pixels, so it still fails.
+    tolerance: {
+      pixels: 60,
+      delta: 32,
+      why: "a rounded card's clip over its photo is antialiased a little apart between two page instances",
+    },
+  },
   // The picture it holds comes over the network, as the carousel's do.
   pressable: { photos: true, steps: photosReady },
   spinner: { selfReference: "upstream's own Spinner, with no shell to compare against" },

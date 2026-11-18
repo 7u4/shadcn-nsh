@@ -34,7 +34,7 @@ import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 <MenuCheckboxItem checked={on} closeOnSelect={false} onSelect={toggle}>
   Show sidebar
 </MenuCheckboxItem>
-<MenuLabel text="Sort by" />
+<MenuLabel>Sort by</MenuLabel>
 <MenuRadioItem checked={sort === "Name"} onSelect={() => setSort("Name")}>
   Name
 </MenuRadioItem>
@@ -78,7 +78,7 @@ Looks are `menuItemLook`, `menuPopup`, `menuSeparator`, `MenuLabel`, `SubmenuRow
 | `MenuItem`                    | String → `menuItemLabel`; `variant`; `inset` lines a plain row up with checkable ones |
 | `MenuCheckboxItem`            | Checkable row                                                                         |
 | `MenuRadioItem`               | One of a group                                                                        |
-| `MenuLabel`                   | Group title (`text`, `inset`)                                                         |
+| `MenuLabel`                   | Group title (`children`, `inset`)                                                     |
 | `MenuSeparator`               | Hairline                                                                              |
 | `MenuShortcut`                | Trailing note                                                                         |
 | `MenuSub` / Trigger / Content | Nested submenu; the trigger takes `inset`                                             |
