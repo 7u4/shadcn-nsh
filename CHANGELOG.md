@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.8.0 — NSH 0.6, the `@/` alias and quieter list highlights
+
 ### Added
 
 - **`init` sets up the `@/` import alias in an app.** The docs' snippets import
@@ -12,6 +14,11 @@
   `nsh.json`, which `nsh run`/`build`/`test` read. Existing `@/*` paths or `@` alias are left
   alone with a warning; running `init` again changes nothing. Monorepos import from
   `@workspace/ui` instead and are not touched.
+- **The docs site has a home page.** Fumadocs' home layout in place of a docs page with three
+  lines: what the library is, the `init` command, the component and theme counts, the theme
+  showcase running live, and where to start.
+- **Every install command is npm, pnpm and bun tabs.** The commands are Fumadocs' code block and
+  tabs (`npx`, `pnpm dlx`, `bunx --bun`); the choice is shared by every block and kept across pages.
 
 ### Changed
 
@@ -20,6 +27,43 @@
   opens as a popup on an iPad at regular width (`menuIsPopup`), and the rich editor's task
   checkbox answers the pointer — a hover rim and fill, a pressed scale. The demo packaging
   follows 0.6's slimmer web template, whose start logic is its own hashed script.
+- **A list's highlight is a quiet fill, not a chosen-looking frame.** Select, Combobox and Command
+  rows were highlighted in the brand tint with a brand edge, so the first match a combobox
+  highlights as one types read as already chosen. The highlight is now shadcn's `accent` fill with
+  no edge; the chosen rows keep their check. The calendar's keyboard day keeps the tint and edge,
+  since a day's quiet fill already means today and the hover.
+- **A field's label in a row keeps its width.** `fieldFamilyLook().labelInRow` no longer shrinks:
+  on a narrow phone it was cut mid-word ("Ema / il"); the control beside it gives up the room
+  instead (`content` gains `minWidth: 0`). `FieldError`'s messages wrap beside their bullet through
+  a new look key, `errorMessage` — a copy that spreads its own `FieldFamilyLook` adds it.
+- **The docs site's component pages follow one outline** — Installation, Usage, Examples, an
+  optional Differences from shadcn/ui, API — and the components are grouped as Base (dressing an
+  NSH element) and Enhanced (a shadcn composite or this library's own). An Icons page explains
+  `Icon`, the lucide names and each component's glyph helper. The site itself stays in the shadcn
+  theme; the palette switch changes the previews only.
+
+### Fixed
+
+- **The docs site's previews load again.** The site's prerender crawled each packaged demo and
+  wrote it back without the script the preview reads (`window.nshDemo`), so every preview said
+  "This app could not be loaded".
+- **The calendar's preview spans a phone's width.** The demo set each calendar in a row that shrank
+  it to its content; the calendar itself already fills the width it is given.
+- **The Menu page's context menu lines its rows up.** Copy, Rename and Delete sat left of the
+  checkable Pinned row's label; they now take `inset`, as the ContextMenu page's rows already did.
+- **An OTP input fits a narrow phone.** Its cells kept their width and pushed the code past its
+  card; the cells, the groups and the code now narrow together when the room is short
+  (`otpCells` gains `shrink min-w-0`, and `OtpInput` puts `max-w-full shrink min-w-0` in front of
+  its `class` and `groupClass`).
+- **The Skeleton preview stays inside its card.** Its lines had fixed widths up to 320 points; they
+  now stop at their column's width (`maxWidth: "100%"`), as a page's placeholders should.
+- **The docs site no longer zooms into a field.** iOS Safari zoomed the page whenever an input under
+  16 points took the focus, which every preview's input is; the site and the packaged demos set
+  `maximum-scale=1`, and pinching still zooms.
+- **Every preview fits a 320-point phone.** The Card, Attachment, Spinner and Tabs previews ran past
+  their cards on an iPhone SE's width; the cards shrink, the picture strip scrolls inside its card,
+  the surfaces wrap, and the tabs' rule stays on the card's edge. `bun run check:narrow` now
+  renders every demo at 320 points and names one that runs into the page's margin.
 
 ## 0.7.0 — conversations, navigation and a third theme
 
