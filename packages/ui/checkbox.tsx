@@ -137,7 +137,7 @@ export function ChoiceLight(props: { on: AnimatedValue; radius: number }) {
 
 /** The stroke of a checkbox's check and dash (about 2 points at the desktop
  * size): the bold pen of every check that marks something done. */
-export const MARK_WEIGHT = 3.84;
+const MARK_WEIGHT = 3.84;
 
 /**
  * What a checkbox's box shows (its `indicator`): citrus with a check or a
