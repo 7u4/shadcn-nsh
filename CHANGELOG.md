@@ -179,6 +179,11 @@
 - **A shell's default classes and an app's `classes` meet by one rule.** `data-table`, `text-view`
   and `code-editor` shared a private copy each; `mergeClasses` in `lib/utils.ts` is the one: a
   string goes after ours, `null` drops ours. `add` of any of the three brings that item.
+- **The baseline is NSH v0.6.0; the library needs NSH CLI v0.6.0.** The ported look follows
+  upstream's: the listbox and date-picker popups animate in (`popupStartingStyle`), a menu
+  opens as a popup on an iPad at regular width (`menuIsPopup`), and the rich editor's task
+  checkbox answers the pointer — a hover rim and fill, a pressed scale. The demo packaging
+  follows 0.6's slimmer web template, whose start logic is its own hashed script.
 
 ### Fixed
 
