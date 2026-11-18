@@ -25,12 +25,14 @@ export default defineConfig({
     tailwindcss(),
     tanstackStart({
       router: { basepath: BASE.replace(/\/+$/, "") },
-      spa: {
+      spa: { enabled: true },
+      prerender: {
         enabled: true,
-        prerender: {
-          enabled: true,
-          crawlLinks: true,
-        },
+        crawlLinks: true,
+        // The demo panel links each packaged demo (`demos/<name>/index.html`); the crawler would
+        // follow it and write the page back without the script `player-options.ts` put in its
+        // head, so every preview failed on `window.nshDemo`. Those pages are built, not rendered.
+        filter: ({ path }) => !path.includes("/demos/"),
       },
       // The search index is a prerendered response (`/api/search`), the only server route the
       // static site keeps: `src/routes/api/search.ts` answers it with `staticGET`.
