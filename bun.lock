@@ -53,7 +53,7 @@
     },
     "packages/cli": {
       "name": "shadcn-nsh",
-      "version": "0.6.1",
+      "version": "0.7.0",
       "bin": {
         "shadcn-nsh": "dist/index.js",
       },
