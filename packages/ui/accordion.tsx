@@ -21,7 +21,7 @@ import {
 import { joinClass } from "./lib/classes";
 import { Icon } from "./lib/icons";
 import { labelOf } from "./lib/label";
-import { controlSize, listRow, RowDivider, RowLabel, type ListRowOptions } from "./lib/surface";
+import { controlSize, listRow, RowLabel, type ListRowOptions } from "./lib/surface";
 
 // @port look/disclosure.tsx
 /** Options of `disclosureTriggerLook`: a row's (`listRow`). */
@@ -141,12 +141,6 @@ export type AccordionPanelProps = BaseAccordionPanelProps & {
   gap?: number;
 };
 
-/** Hairline between items (among an item's children, not on the first). */
-export type AccordionDividerProps = {
-  /** Draw it: false on the item first in the stack. */
-  show: boolean;
-};
-
 /** The stack of items. */
 export function Accordion(props: AccordionProps) {
   return <BaseAccordion {...props} />;
@@ -221,9 +215,4 @@ export function AccordionPanel(props: AccordionPanelProps) {
       <View style={disclosurePanel({ start: props.start, gap: props.gap })}>{props.children}</View>
     </BaseAccordionPanel>
   );
-}
-
-/** Hairline above an item when it is not the first. */
-export function AccordionDivider(props: AccordionDividerProps) {
-  return <RowDivider show={props.show} />;
 }
