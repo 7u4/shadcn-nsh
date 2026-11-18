@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+### Added
+
+- **`init` sets up the `@/` import alias in an app.** The docs' snippets import
+  `@/components/ui/<name>` and `@/lib/theme`; a fresh app could not resolve them. `init` now
+  merges `"@/*": ["./*"]` into `tsconfig.json`'s `compilerOptions.paths` — restating the NSH
+  mappings `.nsh/tsconfig.json` declares, because a child's `paths` replace the base's, and
+  writing the file when there is none — and adds `"resolve": { "alias": { "@": "./" } }` to
+  `nsh.json`, which `nsh run`/`build`/`test` read. Existing `@/*` paths or `@` alias are left
+  alone with a warning; running `init` again changes nothing. Monorepos import from
+  `@workspace/ui` instead and are not touched.
+
 ### Changed
 
 - **The baseline is NSH v0.6.0; the library needs NSH CLI v0.6.0.** The ported look follows

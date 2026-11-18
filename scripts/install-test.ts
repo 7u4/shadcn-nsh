@@ -269,47 +269,47 @@ async function same(a: string, b: string, name: string): Promise<boolean> {
 const SAMPLES: { item: string; import: string; jsx: string }[] = [
   {
     item: "avatar",
-    import: 'import { Avatar } from "./components/ui/avatar";',
+    import: 'import { Avatar } from "@/components/ui/avatar";',
     jsx: '<Avatar name="Ada Lovelace" />',
   },
   {
     item: "badge",
-    import: 'import { Badge } from "./components/ui/badge";',
+    import: 'import { Badge } from "@/components/ui/badge";',
     jsx: "<Badge>Badge</Badge>",
   },
   {
     item: "button",
-    import: 'import { Button } from "./components/ui/button";',
+    import: 'import { Button } from "@/components/ui/button";',
     jsx: '<Button variant="default">Primary</Button>',
   },
   {
     item: "checkbox",
-    import: 'import { Checkbox } from "./components/ui/checkbox";',
+    import: 'import { Checkbox } from "@/components/ui/checkbox";',
     jsx: "<Checkbox checked={false} />",
   },
   {
     item: "input",
-    import: 'import { Input } from "./components/ui/input";',
+    import: 'import { Input } from "@/components/ui/input";',
     jsx: '<Input value="" />',
   },
   {
     item: "progress",
-    import: 'import { Progress } from "./components/ui/progress";',
+    import: 'import { Progress } from "@/components/ui/progress";',
     jsx: "<Progress value={0.5} />",
   },
   {
     item: "spinner",
-    import: 'import { Spinner } from "./components/ui/spinner";',
+    import: 'import { Spinner } from "@/components/ui/spinner";',
     jsx: '<Spinner size={16} tint="#000000" />',
   },
   {
     item: "switch",
-    import: 'import { Switch } from "./components/ui/switch";',
+    import: 'import { Switch } from "@/components/ui/switch";',
     jsx: "<Switch checked={false} />",
   },
   {
     item: "toggle",
-    import: 'import { Toggle } from "./components/ui/toggle";',
+    import: 'import { Toggle } from "@/components/ui/toggle";',
     jsx: "<Toggle>Toggle</Toggle>",
   },
 ];
@@ -318,13 +318,14 @@ const SAMPLES: { item: string; import: string; jsx: string }[] = [
 function allPage(items: Item[]): string {
   const sampled = new Map(SAMPLES.map((sample) => [sample.item, sample]));
   const imports = items
-    .map((item) => sampled.get(item.name)?.import ?? `import "./${moduleOf(item)}";`)
+    .map((item) => sampled.get(item.name)?.import ?? `import "@/${moduleOf(item)}";`)
     .sort();
   const rendered = items
     .filter((item) => sampled.has(item.name))
     .map((item) => `      ${sampled.get(item.name)!.jsx}`);
   return `// Written by scripts/install-test.ts; this app is temporary.
 import { mount, Text, View } from "nsh";
+import { colors } from "@/lib/theme";
 
 ${imports.join("\n")}
 
@@ -332,7 +333,7 @@ ${imports.join("\n")}
 function All() {
   return (
     <View class="items-center gap-4">
-      <Text>all items mounted</Text>
+      <Text style={{ color: colors.text }}>all items mounted</Text>
 ${rendered.join("\n")}
     </View>
   );
@@ -430,7 +431,7 @@ async function installNeutralTheme(template: string, dir: string, items: Item[],
 const THEMES_PAGE = `// Written by scripts/install-test.ts; this app is temporary.
 import { mount, Storage, Text, View } from "nsh";
 
-import { currentTheme, selectTheme } from "./lib/theme";
+import { currentTheme, selectTheme } from "@/lib/theme";
 import { shadcn } from "./themes/shadcn";
 
 const themes = [shadcn];
@@ -463,7 +464,7 @@ mount(Page);
 const TWO_THEMES_PAGE = `// Written by scripts/install-test.ts; this app is temporary.
 import { mount, Storage, Text, View } from "nsh";
 
-import { currentTheme, selectTheme, type AppTheme } from "./lib/theme";
+import { currentTheme, selectTheme, type AppTheme } from "@/lib/theme";
 import { defaultTheme } from "./themes/default";
 import { shadcn } from "./themes/shadcn";
 

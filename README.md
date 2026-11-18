@@ -15,12 +15,12 @@ Docs, every component with its props and a live demo: **https://aningdev.github.
 Your app needs `nsh.json` (from `nsh init`):
 
 ```sh
-npx shadcn-nsh init                 # nsh-ui.json, the theme, nsh.json pointed at it
+npx shadcn-nsh init                 # nsh-ui.json, the theme, nsh.json pointed at it, the @/ alias
 npx shadcn-nsh add button           # one item, with the files it depends on
 npx shadcn-nsh add --all            # every component
 ```
 
-`init` records the choice in `nsh-ui.json`, installs the theme at `theme.json` + `lib/finishes.json` and points each `nsh.json` at it; `add` copies files and installs the packages an item declares (`lucide` among them) with your package manager. From then on the files are yours to change.
+`init` records the choice in `nsh-ui.json`, installs the theme at `theme.json` + `lib/finishes.json`, points each `nsh.json` at it, and sets up the `@/` import alias in an app (`"@/*": ["./*"]` in `tsconfig.json`'s paths, `"resolve": { "alias": { "@": "./" } }` in `nsh.json`) so the docs' snippets — `@/components/ui/<name>`, `@/lib/theme` — resolve; `add` copies files and installs the packages an item declares (`lucide` among them) with your package manager. From then on the files are yours to change.
 
 `list`, `view` and `diff` inspect the registry without writing: `npx shadcn-nsh list`, `view button`, `diff` (exits 1 when the app's copies differ). Every command takes `-c <dir>`, `add` also `--dry-run` and `--overwrite`. The [CLI reference](https://aningdev.github.io/shadcn-nsh/docs/cli) has the flags and defaults.
 

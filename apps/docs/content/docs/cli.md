@@ -9,7 +9,7 @@ description: Every shadcn-nsh@latest command, with its flags and defaults.
 
 ## init
 
-Writes `nsh-ui.json`, installs the theme and points every `nsh.json` at it. Run it once in an app that already has `nsh.json`.
+Writes `nsh-ui.json`, installs the theme, points every `nsh.json` at it, and sets up the `@/` import alias in an app. Run it once in an app that already has `nsh.json`.
 
 ```sh
 shadcn-nsh@latest init [options]
@@ -28,6 +28,8 @@ npx shadcn-nsh@latest init -c apps/web
 ```
 
 It writes `theme.json`, `lib/finishes.json` and `lib/theme.ts` into the app (under `packages/ui` in a monorepo), and a `tsconfig.json` when the app has none. Those two data files are the theme the app is **built** with; which one they hold is recorded in `nsh-ui.json` (`"theme": "theme"`, or `"theme-shadcn"` for `--theme shadcn`), and `add` resolves a component's `theme` dependency to it, so taking a component later — `--overwrite` included — never writes the default theme back. `--theme shadcn` also writes `themes/shadcn/`, the same palette as a theme the app can switch to while it runs.
+
+In an app, `init` also sets up the `@/` import alias the docs' snippets use (`@/components/ui/<name>`, `@/lib/theme`): `tsconfig.json` gains `"@/*": ["./*"]` under `compilerOptions.paths` — restating the NSH mappings `.nsh/tsconfig.json` declares, because a child's `paths` replace the base's — and `nsh.json` gains `"resolve": { "alias": { "@": "./" } }` for `nsh run`/`build`/`test`, which read `nsh.json`, not tsconfig. Values it finds already there are left alone with a warning. A monorepo imports from `@workspace/ui` instead, so it is not touched.
 
 ## add
 

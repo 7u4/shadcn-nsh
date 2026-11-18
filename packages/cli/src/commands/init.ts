@@ -1,4 +1,3 @@
-import fs from "node:fs/promises";
 import path from "node:path";
 
 import { Command } from "commander";
@@ -8,6 +7,8 @@ import { findNshJson, readJson, writeConfig, writeJson } from "../utils/config";
 import { installDependencies } from "../utils/deps";
 import { installItems } from "../utils/install";
 import { resolveTree } from "../utils/registry";
+import { isRecord } from "../utils/registry-schema";
+import { ensureAtPaths } from "../utils/tsconfig";
 import { resolveWorkspace, themePathForApp } from "../utils/workspace";
 
 export async function runInit(opts: {
@@ -51,6 +52,25 @@ export async function runInit(opts: {
     if (!nshJsonPath) continue;
     const nsh = await readJson<Record<string, unknown>>(nshJsonPath);
     nsh.theme = ws.kind === "monorepo" ? themePathForApp(appDir, ws.uiRoot) : "./theme.json";
+    if (ws.kind === "app") {
+      // The bundler's half of the alias: `nsh run`/`build`/`test` read `nsh.json`, never
+      // tsconfig. A monorepo imports from `@workspace/ui` instead, so it is left alone.
+      const existing =
+        isRecord(nsh.resolve) && isRecord(nsh.resolve.alias) ? nsh.resolve.alias["@"] : undefined;
+      if (existing === undefined) {
+        const resolve = isRecord(nsh.resolve) ? nsh.resolve : {};
+        const alias = isRecord(resolve.alias) ? resolve.alias : {};
+        alias["@"] = "./";
+        resolve.alias = alias;
+        nsh.resolve = resolve;
+        console.log(`update ${path.relative(cwd, nshJsonPath) || "nsh.json"} alias @ → ./`);
+      } else if (existing !== "./") {
+        console.error(
+          `shadcn-nsh: nsh.json maps @ to ${JSON.stringify(existing)}, not ./ — kept. ` +
+            `The docs' snippets import @/components/ui/… and @/lib/…, which need "@": "./".`,
+        );
+      }
+    }
     await writeJson(nshJsonPath, nsh);
     console.log(
       `update ${path.relative(cwd, nshJsonPath) || "nsh.json"} theme → ${String(nsh.theme)}`,
@@ -58,16 +78,26 @@ export async function runInit(opts: {
   }
 
   if (ws.kind === "app") {
-    const tsconfig = path.join(cwd, "tsconfig.json");
-    try {
-      await fs.access(tsconfig);
-    } catch {
-      await writeJson(tsconfig, {
-        extends: "./.nsh/tsconfig.json",
-        include: ["**/*.ts", "**/*.tsx"],
-      });
-      console.log("write tsconfig.json");
-    }
+    // The type checker's half: `nsh check` and the editors resolve `@/` through tsconfig
+    // paths — and a child's paths replace the base's, so the NSH mappings ride along.
+    const at = await ensureAtPaths(cwd);
+    if (at.status === "wrote") console.log("write tsconfig.json");
+    else if (at.status === "merged")
+      console.log(
+        `update tsconfig.json paths (@/* → ./*${at.detail === "base" ? ", plus .nsh/tsconfig.json's own" : ""})`,
+      );
+    else if (at.status === "present") console.log("skip tsconfig.json paths (@/* → ./* already)");
+    else if (at.status === "conflict")
+      console.error(
+        `shadcn-nsh: tsconfig.json maps @/* to ${at.detail}, not ./* — kept. ` +
+          `The docs' snippets import @/components/ui/… and @/lib/…, which need "@/*": ["./*"].`,
+      );
+    else
+      console.error(
+        `shadcn-nsh: tsconfig.json ${at.detail} — left alone. ` +
+          `Add "@/*": ["./*"] under compilerOptions.paths yourself; a child's paths replace ` +
+          `the base's, so keep the mappings .nsh/tsconfig.json declares too.`,
+      );
   }
 
   return config;
@@ -75,7 +105,9 @@ export async function runInit(opts: {
 
 export const init = new Command()
   .name("init")
-  .description("Initialize shadcn-nsh (writes nsh-ui.json + theme; monorepo → packages/ui)")
+  .description(
+    "Initialize shadcn-nsh (writes nsh-ui.json + theme + the @/ alias in an app; monorepo → packages/ui)",
+  )
   .option("-c, --cwd <cwd>", "app or monorepo directory", process.cwd())
   .option("-y, --yes", "skip confirmation", false)
   .option("--overwrite", "overwrite existing files", false)

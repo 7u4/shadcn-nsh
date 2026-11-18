@@ -12,20 +12,20 @@ npx shadcn-nsh@latest init
 npx shadcn-nsh@latest add button
 ```
 
-`init` writes `nsh-ui.json`, installs the theme and points each `nsh.json` at `theme.json`; in an app it also writes a `tsconfig.json` when there is none. `add` copies the component and its `registryDependencies` (the theme and the shared look files it imports) into the app; from then on the files are the app's own. [CLI](./cli) has every command, flag and default.
+`init` writes `nsh-ui.json`, installs the theme and points each `nsh.json` at `theme.json`; in an app it also sets up the `@/` import alias the docs' snippets use — `"@/*": ["./*"]` in `tsconfig.json`'s `compilerOptions.paths` (writing the file when there is none) and `"resolve": { "alias": { "@": "./" } }` in `nsh.json` — leaving values already there alone with a warning. `add` copies the component and its `registryDependencies` (the theme and the shared look files it imports) into the app; from then on the files are the app's own. [CLI](./cli) has every command, flag and default.
 
 Consumer monorepo scaffolding (`shadcn-nsh create`) is not built. `init` and `add` work in a workspace that already has `apps/*` and a `packages/ui` named `@workspace/ui` (or already holding `nsh-ui.json`).
 
 ## Commands
 
-| Command           | What it does                                                         |
-| ----------------- | -------------------------------------------------------------------- |
-| `init`            | Writes `nsh-ui.json`, installs a theme, points each `nsh.json` at it |
-| `add [items…]`    | Copies items and their `registryDependencies` into the app           |
-| `list`            | The registry's items, `✓` on the ones the app has                    |
-| `view <items…>`   | The files `add` would write: target paths and contents               |
-| `diff [items…]`   | The app's files against the registry's; exits 1 when they differ     |
-| `build` / `serve` | Build `registry.json` into `public/r`, or serve it locally           |
+| Command           | What it does                                                                                 |
+| ----------------- | -------------------------------------------------------------------------------------------- |
+| `init`            | Writes `nsh-ui.json`, installs a theme, points each `nsh.json` at it, sets up `@/` in an app |
+| `add [items…]`    | Copies items and their `registryDependencies` into the app                                   |
+| `list`            | The registry's items, `✓` on the ones the app has                                            |
+| `view <items…>`   | The files `add` would write: target paths and contents                                       |
+| `diff [items…]`   | The app's files against the registry's; exits 1 when they differ                             |
+| `build` / `serve` | Build `registry.json` into `public/r`, or serve it locally                                   |
 
 Every command takes `-c, --cwd <dir>` (default: the current directory). `init`, `add`, `list`, `view` and `diff` also take `--registry <url>`, a template with `{name}` in it. [CLI](./cli) has every flag and default.
 
