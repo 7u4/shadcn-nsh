@@ -7,6 +7,7 @@ import { colors } from "../../packages/theme";
 import {
   Carousel,
   CarouselContent,
+  CarouselDot,
   CarouselItem,
   CarouselNext,
   CarouselPagination,
@@ -66,9 +67,11 @@ function slide(name: string) {
   );
 }
 
-function dot(which: string, index: number) {
+function dot(which: string, index: number, current: number) {
   return (
-    <CarouselPaginationItem index={index} accessibilityLabel={`${which} slide ${index + 1}`} />
+    <CarouselPaginationItem index={index} accessibilityLabel={`${which} slide ${index + 1}`}>
+      <CarouselDot selected={index === current} />
+    </CarouselPaginationItem>
   );
 }
 
@@ -85,7 +88,7 @@ function Slides(props: { which: string; index: number; looping?: boolean }) {
       >
         <CarouselPrevious accessibilityLabel={`Previous ${props.which}`} />
         <CarouselPagination accessibilityLabel={`Choose ${props.which}`}>
-          {NAMES.map((_, i) => dot(props.which, i))}
+          {NAMES.map((_, i) => dot(props.which, i, props.index))}
         </CarouselPagination>
         <CarouselNext accessibilityLabel={`Next ${props.which}`} />
       </View>
