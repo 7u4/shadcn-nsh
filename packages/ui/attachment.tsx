@@ -301,9 +301,12 @@ export function AttachmentMedia(props: AttachmentMediaProps) {
   );
 }
 
+/** The text's props: a view's. */
+export type AttachmentContentProps = ViewProps;
+
 /** The text of an attachment: its title and its description, in a column that takes the room
  * left. */
-export function AttachmentContent(props: ViewProps) {
+export function AttachmentContent(props: AttachmentContentProps) {
   const attachment = AttachmentContext() ?? unattached;
   const [, rest] = split(props, ["children", "style"]);
   return (
@@ -338,9 +341,12 @@ export function AttachmentDescription(props: AttachmentDescriptionProps) {
   );
 }
 
+/** The actions' props: a view's. */
+export type AttachmentActionsProps = ViewProps;
+
 /** The actions on an attachment: a remove, a retry, a preview. They sit beside the text, or in the
  * corner of a vertical attachment. */
-export function AttachmentActions(props: ViewProps) {
+export function AttachmentActions(props: AttachmentActionsProps) {
   const attachment = AttachmentContext() ?? unattached;
   const [, rest] = split(props, ["children", "style"]);
   return (

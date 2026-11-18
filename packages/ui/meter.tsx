@@ -8,16 +8,21 @@ import { progressFill, progressGlide, progressRail, progressRemaining } from "./
 
 // @port index.tsx
 
+/** The props of `Meter`. */
+export type MeterProps = {
+  /** How full the bar is, 0 to 1 (clamped). */
+  value: number;
+  /** The fill's tone: the citrus run by default (`accent` is the run too); a function is read where the bar is drawn. */
+  tone?: Live<Tone>;
+  /** Where the limit stands, 0 to 1; a hairline past the rail, and a bar of its own in the terminal. */
+  marker?: number;
+};
+
 /** A horizontal meter with an optional marker (a limit), `value` from 0
  * to 1: a progress bar's rail and fill (`look/meter.ts`), the fill gliding
  * to each new value; half a row in the terminal, so its fill is a solid bar
  * rather than a rule. */
-export function Meter(props: {
-  value: number;
-  /** The fill's tone: the citrus run by default (`accent` is the run too); a function is read where the bar is drawn. */
-  tone?: Live<Tone>;
-  marker?: number;
-}) {
+export function Meter(props: MeterProps) {
   /** The fill's tone, read where the fill is drawn. */
   const tone = () => read(props.tone);
   /** The terminal's solid fill: a tone's color, or the citrus run's (`accent` and no tone alike). */
