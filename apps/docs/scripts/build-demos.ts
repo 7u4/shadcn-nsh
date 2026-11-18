@@ -11,7 +11,7 @@
  *
  *   bun apps/docs/scripts/build-demos.ts [--only <id>,<id>]   # one or a few, while iterating
  */
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -118,6 +118,15 @@ async function runPool(files: string[], limit: number) {
   });
   await Promise.all(workers);
   return failed;
+}
+
+// The web runtime first, once: `nsh package --target web` adds it itself when it is missing, and
+// several packages starting together on a fresh machine (CI) each add it and remove one another's
+// half-written directory ("remove ~/.nsh/runtime/web: Directory not empty").
+const runtime = spawnSync("nsh", ["component", "add", "web"], { stdio: "inherit" });
+if (runtime.status !== 0) {
+  console.error("nsh component add web failed. Is `nsh` installed?");
+  process.exit(1);
 }
 
 const started = Date.now();
