@@ -4,6 +4,11 @@
 
 ### Added
 
+- **`theme-solid-glass`.** Solid Glass ([deeplethe/solid-glass](https://github.com/deeplethe/solid-glass),
+  MIT) as one more theme: panes of thick smoky glass — a rim of light along each top edge, a hairline
+  round it, a shadow underneath. It installs into `themes/solid-glass/` (`theme.json`,
+  `finishes.json` and an `index.ts` for `selectTheme`), so an app switches to it while it runs;
+  `init --theme solid-glass` is the same palette as the theme the app is built with.
 - **`message`.** One row of a conversation: `MessageGroup`, `Message`, `MessageAvatar`,
   `MessageContent`, `MessageHeader` and `MessageFooter`. `align="end"` mirrors the row, so the
   bubbles inside follow the message; the avatar is this library's `Avatar` at 32 points (36 on a
@@ -53,7 +58,7 @@
   keeps the state where it keeps the rest. A folded row names itself in a tooltip, an action steps
   past a badge instead of drawing over it, and the phone's sheet is this library's `Sheet`. `add
   sidebar` brings `button`, `input`, `separator`, `sheet`, `skeleton`, `tooltip`, `icons`,
-  `label-of`, `press`, `surface` and `theme`.
+  `press`, `surface`, `theme` and `utils`.
 - **`navigation-menu`.** A row of triggers, each opening a panel of anything — a link grid, a card
   with a description — under the bar: `NavigationMenu`, `NavigationMenuList`, `NavigationMenuItem`,
   `NavigationMenuTrigger`, `NavigationMenuContent`, `NavigationMenuLink`. One panel at a time, owned
@@ -62,7 +67,7 @@
   300, both `Infinity`-able). Each panel is a `nsh/base` Popover placed against its trigger: a
   trigger is 36 points high and 16 in either side (44 with a touch screen), the open one on the
   `accent` fill at half with its chevron turned. There is no viewport, so no bar-wide panel and no
-  size animation. `add navigation-menu` brings `popup`, `icons`, `label-of`, `press` and `theme`.
+  size animation. `add navigation-menu` brings `popup`, `icons`, `press`, `theme` and `utils`.
 - **`menubar`.** A row of menus: `Menubar`, `MenubarMenu`, `MenubarTrigger`, `MenubarContent`, and
   the menu's rows under the bar's names (`MenubarItem`, `MenubarCheckboxItem`, `MenubarRadioItem`,
   `MenubarLabel`, `MenubarSeparator`, `MenubarShortcut`, `MenubarGroup`, `MenubarSub`,
@@ -74,7 +79,7 @@
   `DrawerHeader`, `DrawerTitle`, `DrawerDescription`, `DrawerFooter`, `DrawerClose`. Against `sheet`
   it is the phone's panel: bottom by default, a 100-point grabber at its top edge (`drawerGrabber`),
   `closeOnSwipe` on by default, its actions stacked. The panel is `sheet`'s, the scrim is
-  `lib/overlay`'s, the title and text are `dialog`'s, so `add drawer` brings `dialog` with it.
+  `lib/popup`'s, the title and text are `dialog`'s, so `add drawer` brings `dialog` with it.
 - **`breadcrumb`.** A trail from the app's root to the page it shows: `Breadcrumb` and its parts
   (`List`, `Item`, `Link`, `Page`, `Separator`, `Ellipsis`), the steps small and muted with a chevron
   between them, a step's link taking the text color under the pointer and the theme's focus ring
@@ -93,7 +98,7 @@
   its cursor half the text color. `variant` is `default` (the well) or `ghost` (no fill, no edge, no
   padding: an app whose window is the terminal gives the surface). The program stays the app's
   (`write` on the ref, `onData` and `onResize` on events) and the text is the theme's monospaced
-  family; NSH interprets the escape sequences and draws the cells. `add terminal` brings `theme`.
+  family; NSH interprets the escape sequences and draws the cells. `add terminal` brings `theme` and `utils`.
 - **`code-editor`.** A code file as a field: `CodeEditor` is `nsh/base`'s Editor on the theme's well
   — the field's fill, its hairline edge and the control tier's corners (`codeEditorFrame()`) — with
   its parts painted by `codeEditorClasses`: a gutter on the muted fill, line numbers and fold markers
@@ -103,10 +108,33 @@
   for a warning, `info` for information, `muted-foreground` for a hint). Every `nsh/base` prop passes
   through — text, language, folding, search, the editing keys, diagnostics; an app's `classes` go
   over ours and its `style` over the frame. Syntax highlighting is NSH's own colors. `add
-  code-editor` brings `theme`.
+  code-editor` brings `theme` and `utils`.
 
 ### Changed
 
+- **Breaking:** **the registry's shared items are `utils` and `popup`.** `label-of` is gone: `labelOf`
+  is in `lib/utils`, with `Live` / `read` (a tone written as a value or as a function) and
+  `mergeClasses`. `overlay` is gone too: its `backdrop` is in `lib/popup`, beside the placement the
+  popup already knew. There is no alias, so a `registryDependencies` entry naming either one does not
+  resolve. **To migrate:** `add utils` replaces `add label-of`, `add popup` replaces `add overlay`,
+  and an import of `lib/label` or `lib/overlay` reads `lib/utils` or `lib/popup`.
+- **Breaking:** **`MenuLabel` takes its title as children.** Every other part of the menu family
+  takes `children`; `MenuLabel` read `text`, which is gone — its title is `children`, through a named
+  `MenuLabelProps` that `menubar` and `context-menu` re-export as `MenubarLabelProps` and
+  `ContextMenuLabelProps`. `MenuShortcut`'s `style` is `StyleProp<TextStyle>` — a text style is
+  a view style, so the casts it needed are gone; a style written as a list is taken as one.
+  `ContextMenuItemVariant` joins the family's names, as `MenubarItemVariant` did. **To migrate:**
+  `<MenuLabel text="More" />` becomes `<MenuLabel>More</MenuLabel>`.
+- **Breaking:** **the library gives up the tables and helpers only its own parts read.** Exported
+  until now, and read by nothing but the component beside them: `toggleSizes`, `MARK_WEIGHT` (the
+  checkbox's pen), `treeIndent`, `treeRowHeight`, `menuPressed`, `menubarSize`,
+  `ghostFill` and `solidTint` (`theme.ts`; they live beside their one reader, `button` and
+  `diff-view`), `LABEL_WIDTH`, `labelColumn` and `ROW_BLEED` (`surface.tsx`), and `ghostOutdent`,
+  which had no caller at all. `AccordionDivider` and `AccordionDividerProps` are gone: the hairline an
+  accordion wants is `surface`'s `RowDivider`, placed where the stack wants it. `MenuItemLookOptions`
+  loses `tall` — no page passed it, and a row is one line of `menuItemSize.height` everywhere.
+  **To migrate:** these are the component's own numbers; an app that needs one copies it from the
+  file it now sits in, and an accordion divider is a `RowDivider`.
 - **Breaking:** **`editor` is the rich editor only.** `Editor` and `EditorProps` moved to
   `code-editor` as `CodeEditor` and `CodeEditorProps`; `editor` keeps `RichEditor`,
   `richEditorClasses` and `RichEditorProps`, with no alias left behind. **To migrate:** an app
@@ -125,7 +153,7 @@
   `style`; the root loses `onOpen`, `onClose` and `onCancel`; `AlertDialogChangeReason` is now
   `"triggerPress" | "select" | "cancel"` (`"select"` when a button was chosen, `"cancel"` when it
   closed without one). `AlertDialogCancel` is new: an action with `role="cancel"` whose `id` is
-  `"cancel"` unless the app names another. `add alert-dialog` no longer brings `dialog`, `overlay` or
+  `"cancel"` unless the app names another. `add alert-dialog` no longer brings `dialog`, `popup` or
   `theme`; it brings `button` and `open-state`. The box stays one while it is up: a part that renders
   again with the alert still open (a page whose layout rebuilds its children) stacks nothing.
   **To migrate:** a confirmation with content of the app's own, in the app's look, is a `dialog`.
@@ -142,12 +170,37 @@
   copy of `Chevron`. **To migrate:** an app that imported them from `components/ui/select` or
   `components/ui/combobox` imports them from `lib/listbox`, which `add select` already installs;
   `add combobox` no longer brings `icons` or `lucide` of its own.
+- **A part's props have a name to import, and a press's target one home.** `MeterProps`,
+  `AttachmentContentProps`, `AttachmentActionsProps`, `PaginationItemClassOptions` and
+  `CollapsibleOpenChangeReason` were inline or unnamed; each is a named type now, described where it
+  is used. The 44-point touch target and the arithmetic that widens a small control's hit area are
+  `lib/press`'s (`TOUCH_TARGET`, read from the switch's geometry, and `touchSlop`), read by `button`,
+  `toggle` and the switch instead of written out three times. The pixels are unchanged.
 - **A shell's default classes and an app's `classes` meet by one rule.** `data-table`, `text-view`
-  and `code-editor` shared a private copy each; `mergeClasses` in `lib/classes.ts` is the one: a
-  string goes after ours, `null` drops ours. `add` of any of the three brings it.
+  and `code-editor` shared a private copy each; `mergeClasses` in `lib/utils.ts` is the one: a
+  string goes after ours, `null` drops ours. `add` of any of the three brings that item.
 
 ### Fixed
 
+- **The CLI reads the registry of its own release.** `add`, `list`, `view` and `diff` fetched
+  `main`'s `public/r`, so an app on an older CLI could install files written against a newer one.
+  They read `https://raw.githubusercontent.com/aningdev/shadcn-nsh/v<version>/public/r/{name}.json`
+  now — the registry published with the tag the CLI came from — as the README promised; an app
+  already installed keeps what it has, and `--registry` still points elsewhere.
+- **A `tone` is written one way, and a style may be a list.** `tone` is `Live<Tone>` everywhere
+  (`Tone` or a function read where the control draws), including `status`, `stat` and `diff-view`'s
+  `DiffHunkActions`, which wrote the union out; `otp-input`'s `tone` is `Live<Tone | undefined>`.
+  `Picker`, `SelectTrigger`, `DatePickerTrigger`, `ColorTrigger`, `ColorPopover` and `PopIn` took a
+  single `ViewStyle`, so `style={[a, b]}`, which every other part takes, was a type error; they take
+  `StyleProp<ViewStyle>`.
+- **A `CarouselPaginationItem` with no child draws nothing.** It drew a dark dot of its own for
+  whatever it was given, and `nsh/base` keeps the current slide to itself (it reports it through
+  `onChange`), so the dot pointed at no slide: the app passes the dot and says which slide it is on.
+  A disabled `SplitButtonSegment` dims at half, as a disabled button's label does — the segment had
+  gone without the look's disabled style. A `MenuSubTrigger` given a string now wears the `style` it
+  is handed, as its element form did. A `MenuGroup` is a `group` to a screen reader, and a
+  `Collapsible`'s trigger is one element there, not two. A `ColorPicker`'s format button no longer
+  leaves 12 points and a gap for the icon a terminal draws nothing for.
 - **A `sidebar` mounted closed is folded from its first frame.** A column with
   `defaultOpen={false}` (or an `open` that is false at the first frame) drew its rows expanded until
   something changed: its rows now draw the icon alone, the search field, a group's action, a row's
