@@ -113,44 +113,16 @@
       ]
     },
     {
-      "name": "live",
+      "name": "utils",
       "type": "registry:lib",
-      "title": "Live values",
-      "description": "A value a look takes as it is, or as a function reading it where the look is applied.",
+      "title": "Utils",
+      "description": "The small tools the shells share: a look's value or accessor, the name a control gives screen readers, and how an app's part classes meet ours.",
       "registryDependencies": [],
       "files": [
         {
-          "path": "packages/ui/lib/live.ts",
+          "path": "packages/ui/lib/utils.ts",
           "type": "registry:lib",
-          "target": "lib/live.ts"
-        }
-      ]
-    },
-    {
-      "name": "merge-classes",
-      "type": "registry:lib",
-      "title": "Merge classes",
-      "description": "How a component's default part classes meet an app's classes.",
-      "registryDependencies": [],
-      "files": [
-        {
-          "path": "packages/ui/lib/classes.ts",
-          "type": "registry:lib",
-          "target": "lib/classes.ts"
-        }
-      ]
-    },
-    {
-      "name": "label-of",
-      "type": "registry:lib",
-      "title": "Label",
-      "description": "The name screen readers say of a control whose content is a text label.",
-      "registryDependencies": [],
-      "files": [
-        {
-          "path": "packages/ui/lib/label.ts",
-          "type": "registry:lib",
-          "target": "lib/label.ts"
+          "target": "lib/utils.ts"
         }
       ]
     },
@@ -235,7 +207,7 @@
       "type": "registry:lib",
       "title": "Surface",
       "description": "Density, section surfaces, and list rows whose hover fill bleeds.",
-      "registryDependencies": ["live", "theme"],
+      "registryDependencies": ["theme", "utils"],
       "files": [
         {
           "path": "packages/ui/lib/surface.tsx",
@@ -277,7 +249,7 @@
       "type": "registry:ui",
       "title": "Badge",
       "description": "A small capsule label in neutral, toned, or outline styles.",
-      "registryDependencies": ["live", "theme"],
+      "registryDependencies": ["theme", "utils"],
       "files": [
         {
           "path": "packages/ui/badge.tsx",
@@ -291,7 +263,7 @@
       "type": "registry:ui",
       "title": "Button",
       "description": "A button, an icon button, a round button, and a split button.",
-      "registryDependencies": ["label-of", "live", "press", "spinner", "theme"],
+      "registryDependencies": ["press", "spinner", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/button.tsx",
@@ -333,7 +305,7 @@
       "type": "registry:ui",
       "title": "Toggle",
       "description": "A two-state button, bare or outlined, with a label or an icon.",
-      "registryDependencies": ["label-of", "live", "press", "theme"],
+      "registryDependencies": ["press", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/toggle.tsx",
@@ -347,7 +319,7 @@
       "type": "registry:ui",
       "title": "Checkbox",
       "description": "A sunk box that fills in citrus, with a check or a dash springing in.",
-      "registryDependencies": ["icons", "label-of", "live", "surface", "theme"],
+      "registryDependencies": ["icons", "surface", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/checkbox.tsx",
@@ -362,7 +334,7 @@
       "type": "registry:ui",
       "title": "Radio Group",
       "description": "A sunk ring that fills in citrus, with a dot growing in — alone or as a choice tile.",
-      "registryDependencies": ["checkbox", "label-of", "live", "press", "surface", "theme"],
+      "registryDependencies": ["checkbox", "press", "surface", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/radio-group.tsx",
@@ -404,7 +376,7 @@
       "type": "registry:ui",
       "title": "Input",
       "description": "A text field — sunk, ghost, multiline, masked, or invalid.",
-      "registryDependencies": ["live", "theme"],
+      "registryDependencies": ["theme", "utils"],
       "files": [
         {
           "path": "packages/ui/input.tsx",
@@ -433,7 +405,7 @@
       "type": "registry:ui",
       "title": "OTP Input",
       "description": "One-time code cells that lift out of sunk wells as digits fill in.",
-      "registryDependencies": ["input", "live", "theme"],
+      "registryDependencies": ["input", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/otp-input.tsx",
@@ -548,11 +520,11 @@
       "registryDependencies": [
         "button",
         "icons",
-        "label-of",
         "open-state",
         "overlay",
         "popup",
-        "theme"
+        "theme",
+        "utils"
       ],
       "files": [
         {
@@ -601,10 +573,10 @@
         "icons",
         "input",
         "listbox",
-        "live",
         "open-state",
         "surface",
-        "theme"
+        "theme",
+        "utils"
       ],
       "files": [
         {
@@ -625,10 +597,10 @@
         "icons",
         "input",
         "listbox",
-        "live",
         "open-state",
         "surface",
-        "theme"
+        "theme",
+        "utils"
       ],
       "files": [
         {
@@ -663,11 +635,11 @@
         "calendar",
         "input",
         "listbox",
-        "live",
         "open-state",
         "overlay",
         "select",
-        "theme"
+        "theme",
+        "utils"
       ],
       "files": [
         {
@@ -683,7 +655,7 @@
       "type": "registry:ui",
       "title": "Tabs",
       "description": "A pill track or underlined row with a traveling indicator.",
-      "registryDependencies": ["icons", "label-of", "live", "surface", "theme"],
+      "registryDependencies": ["icons", "surface", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/tabs.tsx",
@@ -698,7 +670,7 @@
       "type": "registry:ui",
       "title": "Segmented",
       "description": "A sunk track whose raised thumb springs to the selected segment.",
-      "registryDependencies": ["label-of", "live", "tabs", "theme"],
+      "registryDependencies": ["tabs", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/segmented.tsx",
@@ -712,7 +684,7 @@
       "type": "registry:ui",
       "title": "Accordion",
       "description": "List rows that reveal panels with a turning chevron.",
-      "registryDependencies": ["icons", "label-of", "merge-classes", "surface", "theme"],
+      "registryDependencies": ["icons", "surface", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/accordion.tsx",
@@ -727,7 +699,7 @@
       "type": "registry:ui",
       "title": "Collapsible",
       "description": "A disclosure row that reveals a panel beneath it.",
-      "registryDependencies": ["accordion", "label-of", "open-state", "surface"],
+      "registryDependencies": ["accordion", "open-state", "surface", "utils"],
       "files": [
         {
           "path": "packages/ui/collapsible.tsx",
@@ -741,7 +713,7 @@
       "type": "registry:ui",
       "title": "Carousel",
       "description": "Snapping slides with round arrows and a traveling dot pill.",
-      "registryDependencies": ["icons", "merge-classes", "press", "theme"],
+      "registryDependencies": ["icons", "press", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/carousel.tsx",
@@ -756,7 +728,7 @@
       "type": "registry:ui",
       "title": "Link",
       "description": "A text link with underline motion, on the shared nav look.",
-      "registryDependencies": ["icons", "label-of", "theme"],
+      "registryDependencies": ["icons", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/link.tsx",
@@ -786,7 +758,7 @@
       "type": "registry:ui",
       "title": "Progress",
       "description": "A determinate or indeterminate bar on the shared meter rail.",
-      "registryDependencies": ["live", "theme"],
+      "registryDependencies": ["theme", "utils"],
       "files": [
         {
           "path": "packages/ui/progress.tsx",
@@ -800,7 +772,7 @@
       "type": "registry:ui",
       "title": "Meter",
       "description": "A horizontal meter with optional limit marker.",
-      "registryDependencies": ["live", "progress", "theme"],
+      "registryDependencies": ["progress", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/meter.tsx",
@@ -814,7 +786,7 @@
       "type": "registry:ui",
       "title": "Stat",
       "description": "A label above a value for metric grids.",
-      "registryDependencies": ["live", "theme"],
+      "registryDependencies": ["theme", "utils"],
       "files": [
         {
           "path": "packages/ui/stat.tsx",
@@ -828,7 +800,7 @@
       "type": "registry:ui",
       "title": "Status",
       "description": "A dot and label for quiet row or header state.",
-      "registryDependencies": ["live", "theme"],
+      "registryDependencies": ["theme", "utils"],
       "files": [
         {
           "path": "packages/ui/status.tsx",
@@ -870,7 +842,7 @@
       "type": "registry:ui",
       "title": "DataTable",
       "description": "A card-styled spreadsheet with sorting, selection, and resize.",
-      "registryDependencies": ["merge-classes", "theme"],
+      "registryDependencies": ["theme", "utils"],
       "files": [
         {
           "path": "packages/ui/data-table.tsx",
@@ -884,7 +856,7 @@
       "type": "registry:ui",
       "title": "Table",
       "description": "A composition table wearing the shared data-table classes.",
-      "registryDependencies": ["data-table", "merge-classes"],
+      "registryDependencies": ["data-table", "utils"],
       "files": [
         {
           "path": "packages/ui/table.tsx",
@@ -898,7 +870,7 @@
       "type": "registry:ui",
       "title": "Tree",
       "description": "A card-framed tree with chevron rows and folder icons.",
-      "registryDependencies": ["icons", "merge-classes", "surface", "theme"],
+      "registryDependencies": ["icons", "surface", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/tree.tsx",
@@ -913,7 +885,7 @@
       "type": "registry:ui",
       "title": "Command",
       "description": "A command palette with search, groups, and shortcut keys.",
-      "registryDependencies": ["icons", "kbd", "merge-classes", "surface", "theme"],
+      "registryDependencies": ["icons", "kbd", "surface", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/command.tsx",
@@ -928,7 +900,7 @@
       "type": "registry:ui",
       "title": "Scrollbar",
       "description": "Hover-reveal scroll bars for scroll views and lists.",
-      "registryDependencies": ["merge-classes"],
+      "registryDependencies": ["utils"],
       "files": [
         {
           "path": "packages/ui/scrollbar.tsx",
@@ -956,7 +928,7 @@
       "type": "registry:ui",
       "title": "Resizable",
       "description": "Resize handles with a quiet hairline and a growing thumb.",
-      "registryDependencies": ["merge-classes"],
+      "registryDependencies": ["utils"],
       "files": [
         {
           "path": "packages/ui/resizable.tsx",
@@ -970,7 +942,7 @@
       "type": "registry:ui",
       "title": "DockArea",
       "description": "Dockable workspace chrome: tabs, splits, and edge docks.",
-      "registryDependencies": ["merge-classes", "resizable", "theme"],
+      "registryDependencies": ["resizable", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/dock-area.tsx",
@@ -984,7 +956,7 @@
       "type": "registry:ui",
       "title": "DiffView",
       "description": "Up/down tints for additions and deletions, with hunk actions.",
-      "registryDependencies": ["button", "icons", "live", "theme"],
+      "registryDependencies": ["button", "icons", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/diff-view.tsx",
@@ -999,7 +971,7 @@
       "type": "registry:ui",
       "title": "TextView",
       "description": "Brand links and a streaming caret for Markdown documents.",
-      "registryDependencies": ["merge-classes"],
+      "registryDependencies": ["utils"],
       "files": [
         {
           "path": "packages/ui/text-view.tsx",
@@ -1042,7 +1014,7 @@
       "type": "registry:ui",
       "title": "Code Editor",
       "description": "A code editor on the field's well, with line numbers and diagnostics.",
-      "registryDependencies": ["merge-classes", "theme"],
+      "registryDependencies": ["theme", "utils"],
       "files": [
         {
           "path": "packages/ui/code-editor.tsx",
@@ -1123,7 +1095,7 @@
       "type": "registry:ui",
       "title": "Pressable",
       "description": "A region that takes presses and adds only the feedback: hover, the press's sink, the focus ring.",
-      "registryDependencies": ["label-of", "live", "press", "theme"],
+      "registryDependencies": ["press", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/pressable.tsx",
@@ -1235,7 +1207,7 @@
       "type": "registry:ui",
       "title": "InputGroup",
       "description": "A field's frame around an input and what sits beside it — an icon, a unit, a button.",
-      "registryDependencies": ["button", "input", "live", "theme"],
+      "registryDependencies": ["button", "input", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/input-group.tsx",
@@ -1249,7 +1221,7 @@
       "type": "registry:ui",
       "title": "Breadcrumb",
       "description": "The trail from the app's root to the page it shows: links a chevron parts, the page itself last.",
-      "registryDependencies": ["icons", "label-of", "theme"],
+      "registryDependencies": ["icons", "theme", "utils"],
       "dependencies": ["lucide@^1.66.0"],
       "files": [
         {
@@ -1306,7 +1278,7 @@
       "type": "registry:ui",
       "title": "Menubar",
       "description": "A row of menus whose triggers stand in one bar.",
-      "registryDependencies": ["live", "menu", "open-state", "popup", "theme"],
+      "registryDependencies": ["menu", "open-state", "popup", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/menubar.tsx",
@@ -1392,15 +1364,7 @@
       "type": "registry:ui",
       "title": "NavigationMenu",
       "description": "A row of triggers, each opening a panel of anything under the bar — one at a time.",
-      "registryDependencies": [
-        "icons",
-        "label-of",
-        "live",
-        "open-state",
-        "popup",
-        "press",
-        "theme"
-      ],
+      "registryDependencies": ["icons", "open-state", "popup", "press", "theme", "utils"],
       "dependencies": ["lucide@^1.66.0"],
       "files": [
         {
@@ -1419,15 +1383,14 @@
         "button",
         "icons",
         "input",
-        "label-of",
-        "live",
         "press",
         "separator",
         "sheet",
         "skeleton",
         "surface",
         "theme",
-        "tooltip"
+        "tooltip",
+        "utils"
       ],
       "dependencies": ["lucide@^1.66.0"],
       "files": [
@@ -1443,7 +1406,7 @@
       "type": "registry:ui",
       "title": "Terminal",
       "description": "A program's output on the theme's field surface, the keys typed back to it.",
-      "registryDependencies": ["live", "theme"],
+      "registryDependencies": ["theme", "utils"],
       "files": [
         {
           "path": "packages/ui/terminal.tsx",

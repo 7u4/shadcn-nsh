@@ -68,7 +68,7 @@ _Avoid_: `kind`, `primary` / `accent` / `danger`, `small` / `regular` / `large`,
 _Avoid_: 用它给控件命名、把它当成 `labelOf`
 
 **Accessible Name（无障碍名）**:
-屏幕阅读器念出的控件名字。`lib/label.ts` 的 `labelOf(调用方的 accessibilityLabel, children)` 是外壳共享的一条规则：调用方给了就用它，否则用字符串 child；与可见的 `Label` 是两件事，只是词碰巧同形。
+屏幕阅读器念出的控件名字。`lib/utils.ts` 的 `labelOf(调用方的 accessibilityLabel, children)` 是外壳共享的一条规则：调用方给了就用它，否则用字符串 child；与可见的 `Label` 是两件事，只是词碰巧同形。
 _Avoid_: 把 `Label` 组件当作无障碍名、在每个外壳里重写一遍这条规则
 
 **Behavior Authority**:

@@ -5,9 +5,8 @@ import type { JSX, TextStyle, ViewStyle } from "nsh";
 import { platform, split, Text } from "nsh";
 import { Toggle as BaseToggle, type ToggleProps as BaseToggleProps } from "nsh/base";
 
-import { labelOf } from "./lib/label";
-import { type Live, read } from "./lib/live";
 import { pressSink, pressTransition } from "./lib/press";
+import { labelOf, type Live, read } from "./lib/utils";
 
 // @port look/tool.ts
 /** A toggle's size: 24 / 28 / 34 points with a pointer, 32 / 38 / 44 on a touch screen. */

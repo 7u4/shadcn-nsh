@@ -13,7 +13,7 @@ import {
 import type { ViewStyle } from "nsh";
 import { platform, Text, token, View, windowSize } from "nsh";
 
-import { type Live, read } from "./live";
+import { type Live, read } from "./utils";
 
 // @port look/surface.tsx
 const pointer = platform.desktop;

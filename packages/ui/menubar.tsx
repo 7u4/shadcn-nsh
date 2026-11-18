@@ -318,4 +318,4 @@ export {
   type MenuSubProps as MenubarSubProps,
   type MenuSubTriggerProps as MenubarSubTriggerProps,
 } from "./menu";
-import { type Live, read } from "./lib/live";
+import { type Live, read } from "./lib/utils";

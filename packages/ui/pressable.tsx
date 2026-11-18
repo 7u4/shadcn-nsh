@@ -6,9 +6,8 @@ import type { JSX, ViewStyle } from "nsh";
 import { split, Text } from "nsh";
 import { Button as BaseButton, type ButtonProps as BaseButtonProps } from "nsh/base";
 
-import { labelOf } from "./lib/label";
-import { type Live, read } from "./lib/live";
 import { pressSink, pressTransition } from "./lib/press";
+import { labelOf, type Live, read } from "./lib/utils";
 
 /** Options of `pressableLook`. */
 export interface PressableLookOptions {

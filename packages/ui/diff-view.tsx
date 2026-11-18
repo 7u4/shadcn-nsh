@@ -12,7 +12,7 @@ import {
 
 import { buttonGlyph, buttonLabel, buttonLook, type ButtonVariant } from "./button";
 import { Icon } from "./lib/icons";
-import { read } from "./lib/live";
+import { read } from "./lib/utils";
 
 // @port look/workspace.tsx
 

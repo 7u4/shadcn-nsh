@@ -25,7 +25,7 @@ const fixture = (): Fixture =>
       "press",
       "spinner",
       "button",
-      "label-of",
+      "utils",
     ],
   });
 

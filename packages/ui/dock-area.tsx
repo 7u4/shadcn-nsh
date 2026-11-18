@@ -19,7 +19,7 @@ import {
   type DockTarget,
 } from "nsh/base";
 
-import { joinClass } from "./lib/classes";
+import { joinClass } from "./lib/utils";
 import { handleThumb, RESIZE_HANDLE_LABEL } from "./resizable";
 
 // @port look/workspace.tsx

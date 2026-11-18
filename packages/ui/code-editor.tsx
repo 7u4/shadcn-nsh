@@ -9,7 +9,7 @@ import {
   type EditorProps as BaseEditorProps,
 } from "nsh/base";
 
-import { mergeClasses } from "./lib/classes";
+import { mergeClasses } from "./lib/utils";
 
 /**
  * A code editor's parts, as classes: line numbers and fold markers muted, the lines with a caret

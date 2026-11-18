@@ -198,8 +198,8 @@
         "ChoiceLight": "packages/ui/checkbox.tsx",
         "MARK_WEIGHT": "packages/ui/checkbox.tsx",
         "CheckboxMark": "packages/ui/checkbox.tsx",
-        "Live": "packages/ui/lib/live.ts",
-        "read": "packages/ui/lib/live.ts",
+        "Live": "packages/ui/lib/utils.ts",
+        "read": "packages/ui/lib/utils.ts",
         "RadioRing": "packages/ui/radio-group.tsx",
         "ChoiceTileOptions": "packages/ui/radio-group.tsx",
         "ChoiceTileLook": "packages/ui/radio-group.tsx",
@@ -225,8 +225,8 @@
           "packages/ui/number-input.tsx",
           "packages/ui/otp-input.tsx"
         ],
-        "Live": "packages/ui/lib/live.ts",
-        "read": "packages/ui/lib/live.ts",
+        "Live": "packages/ui/lib/utils.ts",
+        "read": "packages/ui/lib/utils.ts",
         "fieldSize": "packages/ui/input.tsx",
         "FieldLookOptions": "packages/ui/input.tsx",
         "EdgeOptions": "packages/ui/input.tsx",
@@ -257,8 +257,8 @@
           "packages/ui/combobox.tsx",
           "packages/ui/calendar.tsx"
         ],
-        "Live": "packages/ui/lib/live.ts",
-        "read": "packages/ui/lib/live.ts",
+        "Live": "packages/ui/lib/utils.ts",
+        "read": "packages/ui/lib/utils.ts",
         "ListboxPopupOptions": "packages/ui/lib/listbox.tsx",
         "listboxPopup": "packages/ui/lib/listbox.tsx",
         "optionClass": "packages/ui/lib/listbox.tsx",
@@ -331,8 +331,8 @@
         "progressSweep": "packages/ui/progress.tsx",
         "ProgressLookOptions": "packages/ui/progress.tsx",
         "progressLook": "packages/ui/progress.tsx",
-        "Live": "packages/ui/lib/live.ts",
-        "read": "packages/ui/lib/live.ts"
+        "Live": "packages/ui/lib/utils.ts",
+        "read": "packages/ui/lib/utils.ts"
       }
     },
     "look/nav.tsx": {
@@ -380,14 +380,14 @@
         "SegmentedLookOptions": "packages/ui/segmented.tsx",
         "segmentedLook": "packages/ui/segmented.tsx",
         "pointer": "packages/ui/segmented.tsx",
-        "Live": "packages/ui/lib/live.ts",
-        "read": "packages/ui/lib/live.ts"
+        "Live": "packages/ui/lib/utils.ts",
+        "read": "packages/ui/lib/utils.ts"
       }
     },
     "look/tool.ts": {
       "symbols": {
         "ToggleSize": "packages/ui/toggle.tsx",
-        "Live": "packages/ui/lib/live.ts",
+        "Live": "packages/ui/lib/utils.ts",
         "ToggleLookOptions": "packages/ui/toggle.tsx",
         "ToggleDimensions": "packages/ui/toggle.tsx",
         "pointer": "packages/ui/toggle.tsx",
@@ -396,7 +396,7 @@
         "slop": "packages/ui/toggle.tsx",
         "sink": "packages/ui/toggle.tsx",
         "transition": "packages/ui/toggle.tsx",
-        "read": "packages/ui/lib/live.ts",
+        "read": "packages/ui/lib/utils.ts",
         "dimensions": "packages/ui/toggle.tsx",
         "toggleLook": "packages/ui/toggle.tsx",
         "ink": "packages/ui/toggle.tsx",

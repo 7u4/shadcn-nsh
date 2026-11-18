@@ -22,9 +22,9 @@ import {
   type CarouselProps as BaseCarouselProps,
 } from "nsh/base";
 
-import { joinClass } from "./lib/classes";
 import { Icon } from "./lib/icons";
 import { pressSink, pressTransition } from "./lib/press";
+import { joinClass } from "./lib/utils";
 
 // @port look/nav.tsx
 /** A pointer, where a carousel's controls are compact; a touch screen gets roomier ones. */

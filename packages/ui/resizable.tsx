@@ -8,7 +8,7 @@ import {
   type ResizablePanelProps as BasePanelProps,
 } from "nsh/base";
 
-import { joinClass } from "./lib/classes";
+import { joinClass } from "./lib/utils";
 
 // @port look/workspace.tsx
 /**

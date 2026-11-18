@@ -66,7 +66,7 @@ export type LabelProps = Omit<ViewProps, "children"> & {
  *
  * It names nothing for screen readers: nsh has no `htmlFor` and no `labelledBy`, so give the
  * control beside it an `accessibilityLabel` — a `Checkbox` or a `TextField` reads it as its name,
- * and `lib/label.ts`'s `labelOf` derives one from a string child where a component has one.
+ * and `lib/utils.ts`'s `labelOf` derives one from a string child where a component has one.
  */
 export function Label(props: LabelProps) {
   const [, rest] = split(props, ["children", "disabled", "style"]);

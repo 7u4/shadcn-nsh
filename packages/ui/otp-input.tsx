@@ -6,7 +6,7 @@ import { platform, split } from "nsh";
 import { OtpInput as BaseOtpInput, type OtpInputProps as BaseOtpInputProps } from "nsh/base";
 
 import { edgeClass } from "./input";
-import { type Live, read } from "./lib/live";
+import { type Live, read } from "./lib/utils";
 
 // @port look/field.tsx
 const pointer = platform.desktop;

@@ -3,7 +3,7 @@
 import { colors, terminal, toneColor, type Tone } from "@shadcn-nsh/theme";
 import { Text, View } from "nsh";
 
-import { read } from "./lib/live";
+import { read } from "./lib/utils";
 
 // @port index.tsx
 

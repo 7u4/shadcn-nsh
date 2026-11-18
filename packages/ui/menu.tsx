@@ -18,10 +18,10 @@ import {
 
 import { Button, type ButtonVariant } from "./button";
 import { Icon } from "./lib/icons";
-import { labelOf } from "./lib/label";
 import { createOpenState, createSlot, type OpenState, type Slot } from "./lib/open-state";
 import { backdrop } from "./lib/overlay";
 import { MenuMark, menuIndicator, popInStyles, type PopupSide, popupSurface } from "./lib/popup";
+import { labelOf } from "./lib/utils";
 
 // @port look/menu.tsx
 const pointer = platform.desktop;

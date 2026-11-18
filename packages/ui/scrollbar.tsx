@@ -7,7 +7,7 @@ import {
   type ScrollbarTheme,
 } from "nsh/base";
 
-import { joinClass } from "./lib/classes";
+import { joinClass } from "./lib/utils";
 
 // @port scrollbar-theme.ts
 /** Whether the screen is a finger's, which takes a thinner bar and its smaller inset. */

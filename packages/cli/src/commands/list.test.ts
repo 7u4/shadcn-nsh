@@ -4,7 +4,7 @@ import { captured, makeFixture, type Fixture } from "../testing/fixture";
 import { runList } from "./list";
 
 const fixture = (files?: Record<string, string>): Fixture =>
-  makeFixture({ items: ["theme", "press", "spinner", "button", "label-of"], files });
+  makeFixture({ items: ["theme", "press", "spinner", "button", "utils"], files });
 
 let current: Fixture | null = null;
 
@@ -50,7 +50,7 @@ describe("list", () => {
       "press",
       "spinner",
       "button",
-      "label-of",
+      "utils",
     ]);
     expect(catalog.items.find((item) => item.name === "button")?.installed).toBe(true);
     expect(catalog.items.find((item) => item.name === "spinner")?.installed).toBe(false);
