@@ -62,7 +62,7 @@ export type OtpInputProps = BaseOtpInputProps & {
   /** A cell's size classes (`otpCells` by default). */
   cells?: string;
   /** A verdict: every cell edged and tinted in its tone. */
-  tone?: Tone | (() => Tone | undefined);
+  tone?: Live<Tone | undefined>;
 };
 
 /** A one-time code's cells. */

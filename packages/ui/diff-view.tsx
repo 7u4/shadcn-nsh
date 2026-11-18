@@ -12,7 +12,7 @@ import {
 
 import { buttonGlyph, buttonLabel, buttonLook, type ButtonVariant } from "./button";
 import { Icon } from "./lib/icons";
-import { read } from "./lib/utils";
+import { type Live, read } from "./lib/utils";
 
 /** How much of a tone a solid tint carries: 10 % over a light base, 16 % over a dark one, where the
  * same mix would read fainter. */
@@ -126,7 +126,7 @@ export function DiffHunkActions(props: {
   index: number;
   iconOnly?: boolean;
   /** The tone of the row it sits on (`diffHunkTone` says which), usual `up` / `down`; a function is read where the backing is drawn. */
-  tone?: Tone | (() => Tone);
+  tone?: Live<Tone>;
   onRevert: () => void;
   onKeep: () => void;
 }) {

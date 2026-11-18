@@ -2,7 +2,7 @@
 import { colors, terminal, toneColor, type Tone } from "@shadcn-nsh/theme";
 import { Text, View } from "nsh";
 
-import { read } from "./lib/utils";
+import { type Live, read } from "./lib/utils";
 
 // @port index.tsx
 
@@ -19,7 +19,7 @@ const toneTransition = 160;
 export function Status(props: {
   label: string;
   /** The dot's and the word's tone: the text's quiet colors by default; a function is read where they are drawn. */
-  tone?: Tone | (() => Tone);
+  tone?: Live<Tone>;
 }) {
   // Read where the dot and the word are drawn, so a function follows a value the app changes.
   // Only a tone that matters tints them: the neutral one stays quiet.

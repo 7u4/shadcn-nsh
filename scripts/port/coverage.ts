@@ -10,7 +10,7 @@
  * interfaces (`ColorPanelProps extends ColorFieldsProps`). A union imported from another module
  * is that module's axis and is covered by that module's demo: a menu trigger's `variant` is the
  * button's `ButtonVariant`. The theme's `Tone` is the exception, because it is shared rather than a
- * component's own palette: a props member that names it (`tone?: Tone`, `Tone | (() => Tone)`)
+ * component's own palette: a props member that names it (`tone?: Live<Tone>`, `Live<Tone | undefined>`)
  * must show every one of its values, read from `packages/theme/theme.ts`, and each of its demos
  * shows the same seven tones. A numeric axis (a round button's `size`) has no values to cover.
  *
@@ -228,7 +228,7 @@ function functionsIn(node: Node, out: Node[] = []): Node[] {
 /** The module the shared `Tone` comes from. */
 const THEME = "@shadcn-nsh/theme";
 
-/** Whether a type names the theme's shared `Tone`, imported into this module (`Tone`, `Tone | (() => Tone)`). */
+/** Whether a type names the theme's shared `Tone`, imported into this module (`Tone`, `Live<Tone>`). */
 function namesTone(node: Node, module: Module): boolean {
   if (!node || typeof node !== "object") return false;
   if (node.type === "TSTypeReference") {
