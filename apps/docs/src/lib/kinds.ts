@@ -13,8 +13,8 @@ export type ComponentKindId = "official" | "own";
 
 /** What a kind is called in the sidebar, on the index and on the coverage page. */
 export const KIND_LABELS: Record<ComponentKindId, string> = {
-  official: "NSH Base",
-  own: "Shadcn Copy",
+  official: "Base",
+  own: "Enhanced",
 };
 
 /** The kinds, in the order they are listed everywhere. */

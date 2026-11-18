@@ -8,7 +8,7 @@ import { components } from "../../src/lib/components";
 import { url } from "../../src/lib/site";
 
 {components.length} components, one page each: Installation, Usage, Examples and API. They are
-grouped in two: <strong>NSH Base</strong>, aligned with an NSH element, and <strong>Shadcn Copy</strong>,
+grouped in two: <strong>Base</strong>, aligned with an NSH element, and <strong>Enhanced</strong>,
 this library's additions with no NSH element of their own. Behavior, keyboard support and the full
 unstyled props live on <a href="https://nsh.dev/elements">nsh.dev/elements</a>; each page links its
 base element and the shadcn/ui component it stands in for.
@@ -17,12 +17,12 @@ The list is generated from `registry.json` and these pages, so every `registry:u
 and every page has an item. The group comes from{" "}
 
 <a href={url("docs/components/coverage")}>Coverage</a>: a page registered in one of its NSH rows is
-NSH Base, one in none is Shadcn Copy. Add one with `npx shadcn-nsh@latest add <name>`.
+Base, one in none is Enhanced. Add one with `npx shadcn-nsh@latest add <name>`.
 
-## NSH Base
+## Base
 
 <ComponentsIndex kind="official" />
 
-## Shadcn Copy
+## Enhanced
 
 <ComponentsIndex kind="own" />
