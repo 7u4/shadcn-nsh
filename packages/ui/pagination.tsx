@@ -23,6 +23,12 @@ const arrowSize = pointer ? 14 : 16;
 /** A pagination's variants: `default`, quiet items; `outline`, an edge on each. */
 export type PaginationVariant = "default" | "outline";
 
+/** What `paginationItemClass` takes: the variant it draws for. */
+export interface PaginationItemClassOptions {
+  /** `default`: quiet items; `outline`: an edge on each, padded wider. */
+  variant?: PaginationVariant;
+}
+
 /** What every pagination item shares: quiet until hovered, the current page
  * lit as a primary button is, citrus under its dark text (`selected:`), with
  * a color fade (still with reduced motion), the ends dimmed (`disabled:`),
@@ -38,7 +44,7 @@ const pageItem =
  * compact pager's Previous and Next, or every item on a touch screen) on the
  * border's edge, padded wider, 40 points tall with a pointer.
  */
-export function paginationItemClass(o?: { variant?: PaginationVariant }): string {
+export function paginationItemClass(o?: PaginationItemClassOptions): string {
   const bordered = o?.variant === "outline";
   const box = pointer ? (bordered ? "min-w-8 h-10" : "min-w-8 h-8") : "min-w-11 h-11";
   return `${box} ${pageItem}${bordered ? " px-3 border border-border" : ""}`;

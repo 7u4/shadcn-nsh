@@ -54,4 +54,5 @@ Uses `paginationItemClass` and `paginationArrows` by default. Every prop of [`ns
 | `compact` | `boolean`           | Label slot between ends             |
 | `page`    | `number`            | Current page (1-based)              |
 
-`PaginationVariant` is `"default" | "outline"`; `paginationItemClass` takes the same word (`{ variant }`).
+`PaginationVariant` is `"default" | "outline"`; `paginationItemClass` takes the same word, as
+`PaginationItemClassOptions`' `variant`.
