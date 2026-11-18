@@ -712,7 +712,7 @@
       "type": "registry:ui",
       "title": "Accordion",
       "description": "List rows that reveal panels with a turning chevron.",
-      "registryDependencies": ["icons", "label-of", "surface", "theme"],
+      "registryDependencies": ["icons", "label-of", "merge-classes", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/accordion.tsx",
@@ -741,7 +741,7 @@
       "type": "registry:ui",
       "title": "Carousel",
       "description": "Snapping slides with round arrows and a traveling dot pill.",
-      "registryDependencies": ["icons", "press", "theme"],
+      "registryDependencies": ["icons", "merge-classes", "press", "theme"],
       "files": [
         {
           "path": "packages/ui/carousel.tsx",
@@ -884,7 +884,7 @@
       "type": "registry:ui",
       "title": "Table",
       "description": "A composition table wearing the shared data-table classes.",
-      "registryDependencies": ["data-table"],
+      "registryDependencies": ["data-table", "merge-classes"],
       "files": [
         {
           "path": "packages/ui/table.tsx",
@@ -898,7 +898,7 @@
       "type": "registry:ui",
       "title": "Tree",
       "description": "A card-framed tree with chevron rows and folder icons.",
-      "registryDependencies": ["icons", "surface", "theme"],
+      "registryDependencies": ["icons", "merge-classes", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/tree.tsx",
@@ -913,7 +913,7 @@
       "type": "registry:ui",
       "title": "Command",
       "description": "A command palette with search, groups, and shortcut keys.",
-      "registryDependencies": ["icons", "kbd", "surface", "theme"],
+      "registryDependencies": ["icons", "kbd", "merge-classes", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/command.tsx",
@@ -928,7 +928,7 @@
       "type": "registry:ui",
       "title": "Scrollbar",
       "description": "Hover-reveal scroll bars for scroll views and lists.",
-      "registryDependencies": [],
+      "registryDependencies": ["merge-classes"],
       "files": [
         {
           "path": "packages/ui/scrollbar.tsx",
@@ -956,7 +956,7 @@
       "type": "registry:ui",
       "title": "Resizable",
       "description": "Resize handles with a quiet hairline and a growing thumb.",
-      "registryDependencies": [],
+      "registryDependencies": ["merge-classes"],
       "files": [
         {
           "path": "packages/ui/resizable.tsx",
@@ -970,7 +970,7 @@
       "type": "registry:ui",
       "title": "DockArea",
       "description": "Dockable workspace chrome: tabs, splits, and edge docks.",
-      "registryDependencies": ["resizable", "theme"],
+      "registryDependencies": ["merge-classes", "resizable", "theme"],
       "files": [
         {
           "path": "packages/ui/dock-area.tsx",

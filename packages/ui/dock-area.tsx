@@ -19,6 +19,7 @@ import {
   type DockTarget,
 } from "nsh/base";
 
+import { joinClass } from "./lib/classes";
 import { handleThumb } from "./resizable";
 
 // @port look/workspace.tsx
@@ -99,10 +100,6 @@ export function DockDragPreview(props: { title: string }) {
   );
 }
 // @port end
-
-function mergeClass(base: string, extra?: string | null): string {
-  return extra ? `${base} ${extra}` : base;
-}
 
 /** Every prop of `nsh/base` DockArea. */
 export type DockAreaProps = BaseDockAreaProps;
@@ -200,21 +197,21 @@ export function DockArea(props: DockAreaProps) {
       class={props.class}
       style={props.style}
       handleAccessibilityLabel={props.handleAccessibilityLabel ?? "Resize"}
-      groupClass={mergeClass(dockClasses.groupClass, props.groupClass)}
+      groupClass={joinClass(dockClasses.groupClass, props.groupClass)}
       groupStyle={props.groupStyle}
-      tabBarClass={mergeClass(dockClasses.tabBarClass, props.tabBarClass)}
+      tabBarClass={joinClass(dockClasses.tabBarClass, props.tabBarClass)}
       tabBarStyle={props.tabBarStyle}
-      tabClass={mergeClass(dockClasses.tabClass, props.tabClass)}
+      tabClass={joinClass(dockClasses.tabClass, props.tabClass)}
       tabStyle={props.tabStyle}
-      contentClass={mergeClass(dockClasses.contentClass, props.contentClass)}
+      contentClass={joinClass(dockClasses.contentClass, props.contentClass)}
       contentStyle={props.contentStyle}
-      handleClass={mergeClass(dockClasses.handleClass, props.handleClass)}
+      handleClass={joinClass(dockClasses.handleClass, props.handleClass)}
       handleStyle={props.handleStyle}
-      handleThumbClass={mergeClass(dockClasses.handleThumbClass, props.handleThumbClass)}
+      handleThumbClass={joinClass(dockClasses.handleThumbClass, props.handleThumbClass)}
       handleThumbStyle={props.handleThumbStyle}
-      dockClass={mergeClass(dockClasses.dockClass, props.dockClass)}
+      dockClass={joinClass(dockClasses.dockClass, props.dockClass)}
       dockStyle={props.dockStyle}
-      dropIndicatorClass={mergeClass(dockClasses.dropIndicatorClass, props.dropIndicatorClass)}
+      dropIndicatorClass={joinClass(dockClasses.dropIndicatorClass, props.dropIndicatorClass)}
       dropIndicatorStyle={props.dropIndicatorStyle}
       drawerClass={props.drawerClass ?? dockClasses.drawerClass}
       drawerStyle={props.drawerStyle}

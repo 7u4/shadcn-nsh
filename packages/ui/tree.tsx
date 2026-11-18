@@ -5,6 +5,7 @@ import { ChevronRight, File, Folder, FolderOpen, type IconNode } from "lucide";
 import { platform, split, Text, View } from "nsh";
 import { Tree as BaseTree, type TreeEntry, type TreeProps as BaseTreeProps } from "nsh/base";
 
+import { joinClass } from "./lib/classes";
 import { Icon } from "./lib/icons";
 import { controlSize } from "./lib/surface";
 
@@ -129,10 +130,6 @@ function TerminalTreeRow(props: { entry: TreeEntry; detail?: string }) {
 
 const treeFrameClass = "overflow-hidden rounded-lg border border-border bg-card";
 
-function mergeClass(base: string, extra?: string | null): string {
-  return extra ? `${base} ${extra}` : base;
-}
-
 /** `nsh/base` Tree with row chrome and `TreeRow` by default. */
 export type TreeProps = BaseTreeProps;
 
@@ -150,9 +147,9 @@ export function Tree(props: TreeProps) {
     <BaseTree
       {...rest}
       reveal={props.reveal ?? true}
-      class={mergeClass(treeFrameClass, props.class)}
-      listClass={mergeClass(terminal ? "" : "p-1.5", props.listClass)}
-      itemClass={mergeClass(treeItemClass, props.itemClass)}
+      class={joinClass(treeFrameClass, props.class)}
+      listClass={joinClass(terminal ? "" : "p-1.5", props.listClass)}
+      itemClass={joinClass(treeItemClass, props.itemClass)}
       renderItem={
         props.renderItem === undefined ? (entry) => <TreeRow entry={entry} /> : props.renderItem
       }

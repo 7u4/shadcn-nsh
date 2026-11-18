@@ -7,6 +7,8 @@ import {
   type ScrollbarTheme,
 } from "nsh/base";
 
+import { joinClass } from "./lib/classes";
+
 // @port scrollbar-theme.ts
 /** Whether the screen is a finger's, which takes a thinner bar and its smaller inset. */
 const touch = !platform.desktop;
@@ -44,11 +46,6 @@ export const scrollbarTheme: ScrollbarTheme = {
 };
 // @port end
 
-/** `base` and then `extra`, when it has a class of its own. */
-function mergeClass(base: string, extra?: string | null): string {
-  return extra ? `${base} ${extra}` : base;
-}
-
 /** Theme layer on `nsh/base` Scrollbar. Every base prop passes through. */
 export type ScrollbarProps = BaseScrollbarProps;
 
@@ -63,8 +60,8 @@ function Bar(props: ScrollbarProps) {
       axis={axis}
       mode={props.mode ?? scrollbarTheme.mode}
       motion={props.motion ?? scrollbarTheme.motion}
-      class={mergeClass(part.class ?? "", props.class)}
-      thumbClass={mergeClass(part.thumbClass ?? "", props.thumbClass)}
+      class={joinClass(part.class ?? "", props.class)}
+      thumbClass={joinClass(part.thumbClass ?? "", props.thumbClass)}
     />
   );
 }
