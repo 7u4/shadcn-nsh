@@ -31,7 +31,17 @@ export function InstallTabs({ command }: { command: string }) {
         <CodeBlockTab key={manager.name} value={manager.name}>
           <CodeBlock>
             <Pre>
-              <code>{manager.command(command)}</code>
+              {/* One `line` span per line, as Shiki writes a fence: the code block pads its lines. */}
+              <code>
+                {manager
+                  .command(command)
+                  .split("\n")
+                  .map((line, index) => (
+                    <span key={index} className="line">
+                      {line}
+                    </span>
+                  ))}
+              </code>
             </Pre>
           </CodeBlock>
         </CodeBlockTab>
