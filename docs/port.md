@@ -102,7 +102,7 @@ bun run port:new alert --view --family   # 有零件（Title / Description…）
 
 | 章节                            | 内容                                                                                                               |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `## Installation`               | `npx shadcn-nsh@latest add <id>`                                                                                   |
+| `## Installation`               | 一个标成 `npm` 的代码块：`npx shadcn-nsh@latest add <id>`（Fumadocs 画成 npm / pnpm / bun 三个标签，不手写三条）   |
 | `## Usage`                      | import 和一段最简用法                                                                                              |
 | `## Examples`                   | 每个轴一个 `###`，只写代码（顶部的 Preview 已是整个演示，示例不各配预览）                                          |
 | `## Differences from shadcn/ui` | 可选：与 shadcn/ui 同名组件相比，少了什么、多了什么、行为哪里不同；没有 shadcn 对应或没有差异时不写                |
