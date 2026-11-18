@@ -36,23 +36,6 @@ import {
 
 ## Examples
 
-### Controlled
-
-`value` is the open items; `onChange` reports the next list.
-
-```tsx
-<Accordion value={open()} onChange={({ value }) => open.set(value)}>
-  <AccordionItem value="shipping">
-    <AccordionHeader>
-      <AccordionTrigger first>How long does shipping take?</AccordionTrigger>
-    </AccordionHeader>
-    <AccordionPanel>
-      Orders leave within a day and arrive in two to five working days.
-    </AccordionPanel>
-  </AccordionItem>
-</Accordion>
-```
-
 ### Disabled row
 
 ```tsx
@@ -74,11 +57,31 @@ import {
 </AccordionPanel>
 ```
 
+### Controlled
+
+`value` is the open items; `onChange` reports the next list.
+
+```tsx
+<Accordion value={open()} onChange={({ value }) => open.set(value)}>
+  <AccordionItem value="shipping">
+    <AccordionHeader>
+      <AccordionTrigger first>How long does shipping take?</AccordionTrigger>
+    </AccordionHeader>
+    <AccordionPanel>
+      Orders leave within a day and arrive in two to five working days.
+    </AccordionPanel>
+  </AccordionItem>
+</Accordion>
+```
+
 ## API
 
 Uses `disclosureTriggerLook`, `DisclosureChevron`, and `disclosurePanel`. Every prop of [`nsh/base` Accordion](https://nsh.dev/elements/accordion) parts passes through.
 
-| Prop (on `AccordionTrigger`) | Type      | Default |
-| ---------------------------- | --------- | ------- |
-| `first`                      | `boolean` |         |
-| `start`                      | `number`  |         |
+| Part               | Props                                    | Description                                                 |
+| ------------------ | ---------------------------------------- | ----------------------------------------------------------- |
+| `Accordion`        | —                                        | The stack of items.                                         |
+| `AccordionHeader`  | —                                        | The heading around the trigger.                             |
+| `AccordionItem`    | —                                        | One section.                                                |
+| `AccordionPanel`   | `reveal` (on by default), `start`, `gap` | Revealed content, in `disclosurePanel` padding.             |
+| `AccordionTrigger` | `first`, `start`                         | The title row, with a chevron that turns as the item opens. |

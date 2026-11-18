@@ -32,6 +32,13 @@ The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for 
 
 ## Examples
 
+### Disabled and clearable
+
+```tsx
+<Combobox disabled>…</Combobox>
+<Combobox cleanable>…</Combobox>
+```
+
 ### Several values
 
 `multiple` toggles an item and keeps the list open; the field shows the chosen titles.
@@ -95,26 +102,22 @@ A string child is a `Button`; anything else is drawn as given.
 </ComboboxTrigger>
 ```
 
-### Disabled and clearable
+## Differences from shadcn/ui
 
-```tsx
-<Combobox disabled>…</Combobox>
-<Combobox cleanable>…</Combobox>
-```
+- No `ComboboxChipsInput` and no `useComboboxAnchor`: the input is `nsh/base`'s own, drawn beside the prefix, and the popup's anchor is the field.
 
 ## API
 
 The root owns the open flag and the chosen values; `ComboboxContent` mounts [`nsh/base` Combobox](https://nsh.dev/elements/combobox) and every base prop passes through except those. `comboboxLook`, `listboxProps` and `OptionRow` fill the field, the popup and the rows by default.
 
-| Part                              | Notes                                                                                                                                                             |
-| --------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Combobox`                        | `value` / `defaultValue`, `multiple`, `open` / `defaultOpen`, `disabled`, `cleanable`, `placeholder`, `onChange`, `onOpenChange`, `onOpen`, `onClose`, `onCancel` |
-| `ComboboxTrigger`                 | The disclosure at the field's end (a `ComboToggle` by default); `variant`, `disabled`, `testID`, `style`                                                          |
-| `ComboboxContent`                 | The field and its list: `items` instead of `ComboboxItem` children, `minWidth`                                                                                    |
-| `ComboboxItem`                    | `value`, `disabled`, `group`; a string child is its title                                                                                                         |
-| `ComboboxChips`                   | The chosen values as chips at the field's start (NSH's `prefix`); `children` is a `(value) => JSX.Element` that draws each one, a `ComboboxChip` by default       |
-| `ComboboxChip`                    | One value: `value`, `children` (its text, the item's title by default), `lead`, `showRemove` (`true`), `style`                                                    |
-| `ComboboxGroup` / `ComboboxLabel` | A section and its name                                                                                                                                            |
-| `ComboboxEmpty`                   | What the list shows while the query matches nothing (`children` is the message)                                                                                   |
-
-There is no `ComboboxChipsInput` and no `useComboboxAnchor`: the input is `nsh/base`'s own, drawn beside the prefix, and the popup's anchor is the field — shadcn's separate chip input and hand-held anchor have nothing to do here.
+| Part              | Props                                                                                                                                                             | Description                                                       |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `Combobox`        | `value` / `defaultValue`, `multiple`, `open` / `defaultOpen`, `disabled`, `cleanable`, `placeholder`, `onChange`, `onOpenChange`, `onOpen`, `onClose`, `onCancel` | The root: it owns the open flag and the chosen values.            |
+| `ComboboxTrigger` | `children`, `variant`, `disabled`, `testID`, `style`                                                                                                              | The disclosure at the field's end (a `ComboToggle` by default).   |
+| `ComboboxContent` | `items` (instead of `ComboboxItem` children), `minWidth`, `children`                                                                                              | The field and its list; it mounts `nsh/base` Combobox.            |
+| `ComboboxItem`    | `value`, `disabled`, `group`, `children` (a string is its title)                                                                                                  | One choice in the list.                                           |
+| `ComboboxChips`   | `children`: a `(value) => JSX.Element` that draws each one, a `ComboboxChip` by default                                                                           | The chosen values as chips at the field's start (NSH's `prefix`). |
+| `ComboboxChip`    | `value`, `children` (its text, the item's title by default), `lead`, `showRemove` (default `true`), `style`                                                       | One value's chip.                                                 |
+| `ComboboxGroup`   | `children`                                                                                                                                                        | A section of the list.                                            |
+| `ComboboxLabel`   | `children` (a string)                                                                                                                                             | A section's name.                                                 |
+| `ComboboxEmpty`   | `children` (the message)                                                                                                                                          | What the list shows while the query matches nothing.              |

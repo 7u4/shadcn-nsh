@@ -105,15 +105,15 @@ of [`nsh` Text](https://nsh.dev/elements/text) on `BreadcrumbPage`; `BreadcrumbL
 [`nsh/base`'s Link](https://nsh.dev/elements/link) with all its props (`href`, `openWith`, `onOpen`,
 `onPress`, `disabled`, `hitSlop`, …). Style props go over the look's.
 
-| Part                  | Renders           | Look                                  |
-| --------------------- | ----------------- | ------------------------------------- |
-| `Breadcrumb`          | `View`            | `breadcrumbLook().root`               |
-| `BreadcrumbList`      | `View`            | `breadcrumbLook().list`               |
-| `BreadcrumbItem`      | `View`            | `breadcrumbLook().item`               |
-| `BreadcrumbLink`      | `nsh/base`'s Link | `breadcrumbLook().link`, `.linkClass` |
-| `BreadcrumbPage`      | `Text`            | `breadcrumbLook().page`               |
-| `BreadcrumbSeparator` | `View`            | `breadcrumbLook().separator`          |
-| `BreadcrumbEllipsis`  | `View`            | `breadcrumbLook().ellipsis`           |
+| Part                  | Props                                  | Description                                                                                                   |
+| --------------------- | -------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `Breadcrumb`          | `accessibilityLabel`                   | The trail from where the app starts to the page it shows: `breadcrumbLook().root`.                            |
+| `BreadcrumbList`      | —                                      | The steps as a row that wraps when the window is narrow: `breadcrumbLook().list`.                             |
+| `BreadcrumbItem`      | —                                      | One step: `breadcrumbLook().item`.                                                                            |
+| `BreadcrumbLink`      | `children`, every `nsh/base` Link prop | A step with a destination: `breadcrumbLook().link`, `.linkClass`.                                             |
+| `BreadcrumbPage`      | —                                      | The step the trail ends at, in the page's text color and current for screen readers: `breadcrumbLook().page`. |
+| `BreadcrumbSeparator` | `children`                             | The mark between steps, a chevron unless given children: `breadcrumbLook().separator`.                        |
+| `BreadcrumbEllipsis`  | `accessibilityLabel`                   | The steps a long trail leaves out, named `"More"`: `breadcrumbLook().ellipsis`.                               |
 
 | Prop                 | On                    | Type                    | Default        |
 | -------------------- | --------------------- | ----------------------- | -------------- |

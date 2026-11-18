@@ -92,8 +92,7 @@ glyph without context otherwise.
 ### A turn that acts
 
 Give `BubbleContent` `onPress` for a quick reply or a suggestion: the pointer over it is a hand.
-shadcn/ui's `asChild` (rendering the content as a link or a button) has no equivalent here — NSH
-has no `Slot` — so the frame itself takes the press.
+The frame itself takes the press.
 
 ```tsx
 <Bubble variant="muted" align="end">
@@ -101,18 +100,27 @@ has no `Slot` — so the frame itself takes the press.
 </Bubble>
 ```
 
+## Differences from shadcn/ui
+
+- **`asChild` on `BubbleContent`.** shadcn renders the content as a link or a button; NSH has no
+  `Slot`, so a frame that acts takes `onPress` on itself.
+- **The hover fill of an interactive content**, picked by the bubble's variant (`hover:bg-primary/80`
+  and its siblings). A pressable frame keeps its fill under the pointer; the hand is the cue.
+- **`has-[button]:p-0` on the reaction row.** NSH has no `:has()`; a row that holds a button keeps
+  the pill's padding.
+
 ## API
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `BubbleGroup`,
 `Bubble` and `BubbleContent`; `BubbleContent` draws a string child as
 [`nsh` Text](https://nsh.dev/elements/text). Style props go over the look's.
 
-| Part              | Renders | Look                                  |
-| ----------------- | ------- | ------------------------------------- |
-| `BubbleGroup`     | `View`  | `bubbleLook().group`                  |
-| `Bubble`          | `View`  | `bubbleLook().root(variant, align)`   |
-| `BubbleContent`   | `View`  | `bubbleLook().content(variant)`       |
-| `BubbleReactions` | `View`  | `bubbleLook().reactions(side, align)` |
+| Part              | Props              | Description                                                                                  |
+| ----------------- | ------------------ | -------------------------------------------------------------------------------------------- |
+| `BubbleGroup`     | —                  | Consecutive bubbles from one sender, 8 points apart: `bubbleLook().group`.                   |
+| `Bubble`          | `variant`, `align` | One turn's frame, as wide as what it holds up to 80% of its column: `.root(variant, align)`. |
+| `BubbleContent`   | `children`         | The words, a string drawn as `Text`: `bubbleLook().content(variant)`.                        |
+| `BubbleReactions` | `side`, `align`    | The pill hung three quarters of its height off the bubble's edge: `.reactions(side, align)`. |
 
 | Prop       | On                | Type                                                                                       | Default   |
 | ---------- | ----------------- | ------------------------------------------------------------------------------------------ | --------- |
@@ -128,11 +136,3 @@ leading, in the ink the fill carries — `primary-foreground` on `default`, the 
 the neutral fills, `destructive` on `destructive`. Reactions are 6 points either side, 3 above and
 below, 4 apart, ringed 3 points in the card's color. `bubbleLook()` is exported for a frame an app
 draws itself.
-
-shadcn/ui's bubble is not reproduced in three places:
-
-- **`asChild` on `BubbleContent`.** A frame that acts takes `onPress` on itself.
-- **The hover fill of an interactive content**, picked by the bubble's variant (`hover:bg-primary/80`
-  and its siblings). A pressable frame keeps its fill under the pointer; the hand is the cue.
-- **`has-[button]:p-0` on the reaction row.** NSH has no `:has()`; a row that holds a button keeps
-  the pill's padding.

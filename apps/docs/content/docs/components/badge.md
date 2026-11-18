@@ -48,14 +48,17 @@ import { Badge } from "@/components/ui/badge";
 </Badge>
 ```
 
+## Differences from shadcn/ui
+
+- shadcn's `ghost`, `link` and `secondary` variants have no look here: `BadgeVariant` is
+  `"default" | "outline"`.
+
 ## API
 
 Gallery atom: no `nsh/base` counterpart. The children are the label, and the axes take the vocabulary of [`api-unify.md`](https://github.com/aningdev/shadcn-nsh/blob/main/docs/specs/api-unify.md).
 
-| Prop       | Type                   | Default     |
-| ---------- | ---------------------- | ----------- |
-| `children` | `string`               | (required)  |
-| `tone`     | `Tone \| (() => Tone)` | `"neutral"` |
-| `variant`  | `BadgeVariant`         | `"default"` |
+| Part    | Props                                                                                                                                  | Description                                                  |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `Badge` | `children` (a string, required); `tone`: `Tone \| (() => Tone)` (default `"neutral"`); `variant`: `BadgeVariant` (default `"default"`) | A small capsule label in a neutral, toned, or outline style. |
 
-`BadgeVariant` is `"default" | "outline"`: the two the capsule's look has (shadcn's `ghost`, `link` and `secondary` have no look here).
+`BadgeVariant` is `"default" | "outline"`: the two the capsule's look has.

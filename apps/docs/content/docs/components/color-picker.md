@@ -78,3 +78,13 @@ import {
 ## API
 
 Look helpers: `colorAreaLook`, `colorSliderLook`, `colorChecker`, `ColorFields`, `ColorTrigger`, `ColorSwatches`, `ColorCopy`, `ColorDropper`, `colorFormats`. Behavior stays in [`nsh/base` ColorPicker](https://nsh.dev/elements/color-picker) parts.
+
+| Part            | Props                                                                                    | Description                                                |
+| --------------- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `ColorFields`   | `value`, `name`, `format`, `onFormatChange`, `alpha`                                     | The fields of a color, with the format's menu.             |
+| `ColorPanel`    | every `ColorFields` prop, `swatches`                                                     | The fields with a row of swatches under them.              |
+| `ColorPopover`  | `name`, `value`, `format`, `alpha`, `style`, `onChange`, `onFormatChange`, `onChangeEnd` | The panel wrapped in a field trigger.                      |
+| `ColorTrigger`  | `open`, `value`, `style`                                                                 | The field that shows the color and opens the panel.        |
+| `ColorSwatches` | `colors`                                                                                 | The row of swatches, one of them chosen.                   |
+| `ColorCopy`     | `name`, `text`                                                                           | Copies the value; a check shows for a moment.              |
+| `ColorDropper`  | `name`                                                                                   | The system eyedropper, hidden where the platform has none. |
