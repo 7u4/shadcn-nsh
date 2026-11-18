@@ -198,8 +198,9 @@ function App() {
             </Attachment>
           </DemoSection>
 
+          {/* A strip that scrolls sideways when the card is narrower than it (`AttachmentGroup`). */}
           <DemoSection title="Pictures in a strip" axis="block">
-            <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
+            <AttachmentGroup>
               <Attachment orientation="vertical">
                 <AttachmentMedia variant="image">
                   <Icon
@@ -236,7 +237,7 @@ function App() {
                   <AttachmentDescription>Uploading · 18%</AttachmentDescription>
                 </AttachmentContent>
               </Attachment>
-            </View>
+            </AttachmentGroup>
           </DemoSection>
 
           <DemoSection title="A frame that opens" axis="block">

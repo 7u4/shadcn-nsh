@@ -98,7 +98,8 @@ function App() {
             </View>
           </DemoSection>
           <DemoSection title="Surface">
-            <View style={{ flexDirection: "row", gap: 12 }}>
+            {/* Three fixed 88-point surfaces: they wrap in a card narrower than the row. */}
+            <View style={{ flexDirection: "row", flexWrap: "wrap", maxWidth: "100%", gap: 12 }}>
               <Surface style={{ backgroundColor: colors.raised }}>
                 <Spinner size={16} tint={colors.text} />
               </Surface>
