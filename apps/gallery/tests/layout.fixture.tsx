@@ -4,6 +4,7 @@ import type { DockAreaLayout } from "nsh/base";
 import {
   Carousel,
   CarouselContent,
+  CarouselDot,
   CarouselItem,
   CarouselNext,
   CarouselPagination,
@@ -36,9 +37,11 @@ function slide(which: string, name: string, index: number) {
   );
 }
 
-function dot(which: string, index: number) {
+function dot(which: string, index: number, current: () => number) {
   return (
-    <CarouselPaginationItem index={index} accessibilityLabel={`${which} slide ${index + 1}`} />
+    <CarouselPaginationItem index={index} accessibilityLabel={`${which} slide ${index + 1}`}>
+      <CarouselDot selected={index === current()} />
+    </CarouselPaginationItem>
   );
 }
 
@@ -60,7 +63,9 @@ function Photos(props: {
       </CarouselContent>
       <View style={{ flexDirection: "row", gap: 8 }}>
         <CarouselPrevious accessibilityLabel={`Previous ${props.which}`} />
-        <CarouselPagination>{NAMES.map((_, i) => dot(props.which, i))}</CarouselPagination>
+        <CarouselPagination>
+          {NAMES.map((_, i) => dot(props.which, i, props.index))}
+        </CarouselPagination>
         <CarouselNext accessibilityLabel={`Next ${props.which}`} />
       </View>
     </Carousel>

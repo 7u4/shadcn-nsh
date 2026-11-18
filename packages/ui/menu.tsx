@@ -247,16 +247,17 @@ function SubmenuRowFrame(props: {
 /**
  * The row that opens a submenu (a `Submenu`'s `trigger`): `menuItemLook`'s
  * row, `lead` (an icon) before the label and a faint chevron at its end;
- * disabled, 35%.
+ * disabled, 35%. `style` goes over the row's own.
  */
 export function SubmenuRow(props: {
   label: string;
   lead?: JSX.Element;
   disabled?: boolean;
   inset?: boolean;
+  style?: StyleProp<ViewStyle>;
 }) {
   return (
-    <SubmenuRowFrame disabled={props.disabled} inset={props.inset}>
+    <SubmenuRowFrame disabled={props.disabled} inset={props.inset} style={props.style}>
       {props.lead}
       <Text style={menuItemLabel()}>{props.label}</Text>
       <Icon icon={ChevronRight} size={submenuChevron} tint={colors.faint} />
@@ -334,7 +335,8 @@ export type MenuRadioItemProps = Omit<MenuItemProps, "checked"> & {
   checked?: boolean | null;
 };
 
-/** A group of rows: `nsh/base` has no group part, so this is the library's own view. */
+/** A group of rows: `nsh/base` has no group part, so this is the library's own view, `group` to
+ * screen readers so its rows are announced as one set. */
 export type MenuGroupProps = {
   children?: JSX.Element;
   style?: StyleProp<ViewStyle>;
@@ -550,7 +552,11 @@ export function MenuRadioItem(props: MenuRadioItemProps) {
 
 /** Groups related rows. */
 export function MenuGroup(props: MenuGroupProps) {
-  return <View style={props.style}>{props.children}</View>;
+  return (
+    <View role="group" style={props.style}>
+      {props.children}
+    </View>
+  );
 }
 
 /** A hairline between groups. */
@@ -603,7 +609,9 @@ export function MenuSubTrigger(props: MenuSubTriggerProps) {
     const disabled = Boolean(props.disabled ?? ctx.disabled);
     ctx.label.value = typeof children === "string" ? children : undefined;
     if (typeof children === "string") {
-      return <SubmenuRow label={children} disabled={disabled} inset={props.inset} />;
+      return (
+        <SubmenuRow label={children} disabled={disabled} inset={props.inset} style={props.style} />
+      );
     }
     return (
       <SubmenuRowFrame disabled={disabled} inset={props.inset} style={props.style}>

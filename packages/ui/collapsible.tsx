@@ -95,6 +95,7 @@ export function CollapsibleTrigger(props: CollapsibleTriggerProps) {
 
     return (
       <View
+        accessible
         role="button"
         accessibilityLabel={labelOf(props.accessibilityLabel, children) ?? undefined}
         accessibilityState={{ expanded: ctx.open(), disabled }}

@@ -65,7 +65,9 @@ import {
 
 ### Pagination
 
-The indicator travels to `index`; each item shows a `CarouselDot`.
+The indicator travels to `index`; each item shows the `CarouselDot` you give it. The carousel keeps
+the slide shown to itself (`nsh/base` only reports it through `onChange`), so an item with no child
+draws nothing: pass the dot, and tell it which slide it is on.
 
 ```tsx
 <CarouselPagination accessibilityLabel="Choose a slide">

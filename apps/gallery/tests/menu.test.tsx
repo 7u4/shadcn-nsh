@@ -23,6 +23,22 @@ test("custom trigger is a button that opens", async () => {
   await app.waitFor("text:Item N");
 });
 
+test("a string submenu trigger wears the style it is given", async () => {
+  const app = await open("./menu.fixture.tsx");
+  await app.press("text:Open M");
+  await app.waitFor("text:More");
+  // The fixture's second submenu trigger is hidden by its own `style`.
+  expect(app.shows("text:Gone")).toBe(false);
+});
+
+test("a menu group is a group to screen readers", async () => {
+  const app = await open("./menu.fixture.tsx");
+  expect(app.count("role:group")).toBe(0);
+  await app.press("text:Open K");
+  await app.waitFor("text:Key A");
+  expect(app.count("role:group")).toBe(1);
+});
+
 test("submenu opens from its trigger", async () => {
   const app = await open("./menu.fixture.tsx");
   await app.press("text:Open M");

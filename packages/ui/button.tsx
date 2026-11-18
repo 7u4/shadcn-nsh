@@ -468,6 +468,7 @@ export function splitButtonLook(variant: Live<ButtonVariant> = "default", o?: Bu
         get focusVisibleStyle(): ViewStyle {
           return focusRing(-2);
         },
+        disabledStyle: { opacity: 0.5 },
         // Taller only: the halves touch, so a finger's slop stays off their shared edge.
         get hitSlop() {
           const v = slop(dimensions(o).height);
@@ -693,7 +694,7 @@ export function SplitButtonSegment(props: SplitButtonSegmentProps) {
       hoverStyle={[segment.hoverStyle ?? null, props.hoverStyle ?? null]}
       activeStyle={[segment.activeStyle ?? null, props.activeStyle ?? null]}
       focusVisibleStyle={[segment.focusVisibleStyle, props.focusVisibleStyle ?? null]}
-      disabledStyle={[props.disabledStyle ?? null]}
+      disabledStyle={[segment.disabledStyle, props.disabledStyle ?? null]}
     >
       {typeof props.children === "string" ? (
         <Text style={buttonLabel(ctx.variant, ctx.options)}>{props.children}</Text>

@@ -88,6 +88,7 @@ function App() {
             }
           >
             <View
+              accessible
               role="button"
               accessibilityState={{ expanded: storage() }}
               onPress={() => {
@@ -126,6 +127,7 @@ function App() {
             }
           >
             <View
+              accessible
               role="button"
               accessibilityState={{ expanded: advanced() }}
               onPress={() => {

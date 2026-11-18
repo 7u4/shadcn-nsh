@@ -5,6 +5,7 @@ import {
   Menu,
   MenuCheckboxItem,
   MenuContent,
+  MenuGroup,
   MenuItem,
   MenuRadioItem,
   MenuSub,
@@ -28,15 +29,17 @@ function App() {
       <Menu>
         <MenuTrigger>Open K</MenuTrigger>
         <MenuContent>
-          <MenuItem onSelect={() => picked.set("A")}>
-            <Text>Key A</Text>
-          </MenuItem>
-          <MenuItem disabled onSelect={() => picked.set("B")}>
-            <Text>Key B</Text>
-          </MenuItem>
-          <MenuItem onSelect={() => picked.set("C")}>
-            <Text>Key C</Text>
-          </MenuItem>
+          <MenuGroup>
+            <MenuItem onSelect={() => picked.set("A")}>
+              <Text>Key A</Text>
+            </MenuItem>
+            <MenuItem disabled onSelect={() => picked.set("B")}>
+              <Text>Key B</Text>
+            </MenuItem>
+            <MenuItem onSelect={() => picked.set("C")}>
+              <Text>Key C</Text>
+            </MenuItem>
+          </MenuGroup>
           <MenuCheckboxItem
             checked={sidebar()}
             closeOnSelect={false}
@@ -82,6 +85,14 @@ function App() {
             <MenuSubContent>
               <MenuItem>
                 <Text>Sub item</Text>
+              </MenuItem>
+            </MenuSubContent>
+          </MenuSub>
+          <MenuSub>
+            <MenuSubTrigger style={{ display: "none" }}>Gone</MenuSubTrigger>
+            <MenuSubContent>
+              <MenuItem>
+                <Text>Gone item</Text>
               </MenuItem>
             </MenuSubContent>
           </MenuSub>

@@ -327,7 +327,12 @@ export function CarouselPagination(props: CarouselPaginationProps) {
   );
 }
 
-/** One dot of the row: its `index`, and a dot unless given a child. */
+/**
+ * One dot of the row: its `index`, and whatever you draw in it — give it a `CarouselDot`,
+ * `selected` from the slide shown. `nsh/base` keeps the current slide to itself (it only reports
+ * it through the carousel's `onChange`), so the item cannot draw a dot that stays right: given no
+ * child it draws nothing, rather than a dot that never lights.
+ */
 export function CarouselPaginationItem(props: CarouselPaginationItemProps) {
   const [, rest] = split(props, [
     "class",
@@ -345,7 +350,7 @@ export function CarouselPaginationItem(props: CarouselPaginationItemProps) {
       style={over(look.style, props.style)}
       focusVisibleStyle={over(look.focusVisibleStyle, props.focusVisibleStyle)}
     >
-      {props.children ?? <CarouselDot selected={false} />}
+      {props.children}
     </BasePaginationItem>
   );
 }
