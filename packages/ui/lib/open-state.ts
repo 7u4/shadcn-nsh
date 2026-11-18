@@ -31,15 +31,18 @@ export function createOpenState<Reason extends string = string>(options: {
   };
 }
 
-/** Mutable slot filled by a Trigger part before Content reads it (menus, selects). */
-export type Slot = {
-  get: () => (() => unknown) | undefined;
-  set: (accessor: () => unknown) => void;
+/**
+ * Mutable slot filled by a Trigger part before Content reads it (menus, selects). `T` is what the
+ * accessor yields when the Content part calls it: the part as drawn, a style worked out there.
+ */
+export type Slot<T = unknown> = {
+  get: () => (() => T) | undefined;
+  set: (accessor: () => T) => void;
 };
 
 /** A mutable slot: the Trigger part fills it, the Content part reads it when it lays out. */
-export function createSlot(): Slot {
-  let accessor: (() => unknown) | undefined;
+export function createSlot<T = unknown>(): Slot<T> {
+  let accessor: (() => T) | undefined;
   return {
     get: () => accessor,
     set: (next) => {

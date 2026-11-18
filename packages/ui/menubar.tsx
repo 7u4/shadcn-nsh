@@ -168,7 +168,7 @@ export type MenubarTriggerProps = {
 };
 
 type MenubarMenuContextValue = OpenState & {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   onOpen?: () => void;
   onClose?: () => void;
   onCancel?: () => void;
@@ -194,7 +194,7 @@ export function Menubar(props: MenubarProps) {
 /** One menu of the bar: it owns whether it is open, and the trigger slot. */
 export function MenubarMenu(props: MenubarMenuProps) {
   const state = createOpenState<OpenChangeReason>(props);
-  const triggerSlot = createSlot();
+  const triggerSlot = createSlot<JSX.Element>();
   return (
     <MenubarMenuContext.Provider
       value={{
@@ -270,7 +270,7 @@ export function MenubarContent(props: MenubarContentProps) {
     <BaseMenu
       {...rest}
       open={ctx.open()}
-      trigger={(triggerAccessor?.() as JSX.Element) ?? <View />}
+      trigger={triggerAccessor?.() ?? <View />}
       placement={props.placement ?? "bottom"}
       align={props.align ?? "start"}
       offset={props.offset ?? 8}

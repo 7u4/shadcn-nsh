@@ -145,7 +145,7 @@ export type DatePickerTriggerProps = {
 };
 
 type DatePickerContextValue = OpenState & {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   value: () => DatePickerValue;
   change: (event: { value: DatePickerValue }) => void;
   root: DatePickerProps;
@@ -186,7 +186,7 @@ function triggerOf(ctx: DatePickerContextValue): JSX.Element {
 /** The root of a date picker's parts. Put `DatePickerTrigger` before `DatePickerContent`. */
 export function DatePicker(props: DatePickerProps) {
   const state = createOpenState<OpenChangeReason>(props);
-  const trigger = createSlot();
+  const trigger = createSlot<JSX.Element>();
   const picked = signal(false);
   const chosen = signal<DatePickerValue>(null);
   const value = () => {

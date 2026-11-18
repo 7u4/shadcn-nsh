@@ -357,9 +357,9 @@ function splitTriggerStyle(style: ViewStyle | undefined): { layout: ViewStyle; l
 
 type SelectContextValue = OpenState & {
   items: ItemRegistry<SelectItemData>;
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   /** Where the trigger sits: `SelectTrigger`'s layout, for `SelectContent`'s view to wear. */
-  triggerLayout: Slot;
+  triggerLayout: Slot<ViewStyle>;
   value: () => string | null;
   change: (event: { value: string | null }) => void;
   /** The placeholder: `SelectValue`'s, else the root's, else "Select…". */
@@ -408,8 +408,8 @@ function triggerOf(ctx: SelectContextValue): JSX.Element {
 export function Select(props: SelectProps) {
   const state = createOpenState<OpenChangeReason>(props);
   const items = createItemRegistry<SelectItemData>([]);
-  const trigger = createSlot();
-  const triggerLayout = createSlot();
+  const trigger = createSlot<JSX.Element>();
+  const triggerLayout = createSlot<ViewStyle>();
   const prompt = signal<string | undefined>(undefined);
   const picked = signal(false);
   const chosen = signal<string | null>(null);
@@ -507,7 +507,7 @@ export function SelectContent(props: SelectContentProps) {
   return (
     // The select's box in the app's layout: `nsh/base`'s Select fills it, and the trigger's own
     // layout goes on it, since base's view sizes to its content.
-    <View style={ctx.triggerLayout.get()?.() as ViewStyle | undefined}>
+    <View style={ctx.triggerLayout.get()?.()}>
       {props.children}
       {() => {
         const chrome = listboxProps({ minWidth: props.minWidth });

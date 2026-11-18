@@ -102,8 +102,8 @@ export type TooltipContentProps = Omit<BaseTooltipProps, "children"> & {
 };
 
 type TooltipContextValue = OpenState & {
-  trigger: Slot;
-  content: Slot;
+  trigger: Slot<JSX.Element>;
+  content: Slot<TooltipContentProps>;
   placement?: BaseTooltipProps["placement"];
   align?: BaseTooltipProps["align"];
   offset?: number;
@@ -141,8 +141,8 @@ function Bubble(props: TooltipContentProps) {
 /** The root of a tooltip's parts. */
 export function Tooltip(props: TooltipProps) {
   const state = createOpenState<OpenChangeReason>(props);
-  const trigger = createSlot();
-  const content = createSlot();
+  const trigger = createSlot<JSX.Element>();
+  const content = createSlot<TooltipContentProps>();
   return (
     <TooltipContext.Provider
       value={{
@@ -226,7 +226,7 @@ function TooltipAnchor() {
   if (!ctx) return null;
   const build = ctx.trigger.get();
   if (!build) return null;
-  const content = ctx.content.get() as (() => TooltipContentProps) | undefined;
+  const content = ctx.content.get();
   if (!content) return build() as JSX.Element;
   return (
     <View tooltip={<AnchorBubble content={content()} ctx={ctx} />}>{build() as JSX.Element}</View>

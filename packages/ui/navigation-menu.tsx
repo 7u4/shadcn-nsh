@@ -366,7 +366,7 @@ type NavigationMenuItemContextValue = {
   /** The pointer came onto (`over` true) or left (`false`) the trigger or the panel. */
   pointerOver: (part: "trigger" | "panel", over: boolean) => void;
   /** The trigger the content draws, filled by `NavigationMenuTrigger`. */
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
 };
 
 const NavigationMenuContext = context<NavigationMenuContextValue | null>(null);
@@ -457,7 +457,7 @@ export function NavigationMenuList(props: NavigationMenuListProps) {
 export function NavigationMenuItem(props: NavigationMenuItemProps) {
   const root = useNavigationMenu();
   const value = props.value ?? `navigation-menu-item-${madeUpCount++}`;
-  const trigger = createSlot();
+  const trigger = createSlot<JSX.Element>();
   // Where the pointer is (off both parts, the panel closes after `closeDelay`) and the one timer
   // waiting on its next move.
   const pointerState: {
@@ -585,7 +585,7 @@ export function NavigationMenuContent(props: NavigationMenuContentProps) {
     <BasePopover
       {...rest}
       open={item.open()}
-      trigger={(triggerAccessor?.() as JSX.Element) ?? <View />}
+      trigger={triggerAccessor?.() ?? <View />}
       placement={placement()}
       align={props.align ?? "start"}
       offset={props.offset ?? 6}
