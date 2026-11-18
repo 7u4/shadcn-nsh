@@ -219,7 +219,7 @@ function FormatButton(props: { label: string }) {
       <Text style={{ fontSize: 12, fontWeight: "500", color: colors.text }}>
         {terminal ? `${props.label} ▾` : props.label}
       </Text>
-      <Icon icon={ChevronDown} size={12} tint={colors.muted} />
+      {terminal ? null : <Icon icon={ChevronDown} size={12} tint={colors.muted} />}
     </View>
   );
 }
