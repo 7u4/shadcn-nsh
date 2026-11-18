@@ -16,7 +16,7 @@
  */
 import specText from "../../../../docs/specs/theme-roles.md?raw";
 import { specParts } from "../../../../scripts/theme/spec";
-import { PALETTES, type Palette } from "../../demos/palettes";
+import { PALETTES, type Palette, type PaletteId } from "../../demos/palettes";
 
 /** A theme file in shadcn's `cssVars` shape, as `theme.json` writes it. */
 export type ThemeFile = {
@@ -305,23 +305,22 @@ const SITE_ROLES: [site: string, role: string][] = [
   ["ring", "ring"],
 ];
 
+/** The palette the site itself is drawn in, whatever the demos are switched to. */
+const SITE_PALETTE: PaletteId = "shadcn";
+
 /**
- * The stylesheet that draws the site in each palette: `html[data-palette="<id>"]` sets the
- * Fumadocs colours from the theme's light tokens, `.dark` from its dark ones. The sidebar is named
- * too, since Fumadocs' preset sets a few of its colours there again. `palette.ts` sets the
- * attribute: an inline script before the first paint, then every choice.
+ * The stylesheet that draws the site: the Fumadocs colours from the shadcn theme's light tokens,
+ * `.dark` from its dark ones. The sidebar is named too, since Fumadocs' preset sets a few of its
+ * colours there again. The demo theme switch does not reach it: it changes the demos only.
  */
 export function sitePaletteCss(): string {
-  return PALETTES.map((palette) => {
-    const file = themeFile(palette.id);
-    const block = (scheme: "light" | "dark", selector: string) => {
-      const vars = varsOf(file, scheme);
-      const lines = SITE_ROLES.filter(([, role]) => vars[role]).map(
-        ([site, role]) => `--color-fd-${site}:${filled(vars[role]!, vars)};`,
-      );
-      return `${selector},${selector} #nd-sidebar{${lines.join("")}}`;
-    };
-    const at = `html[data-palette="${palette.id}"]`;
-    return block("light", at) + block("dark", `${at}.dark`);
-  }).join("\n");
+  const file = themeFile(SITE_PALETTE);
+  const block = (scheme: "light" | "dark", selector: string) => {
+    const vars = varsOf(file, scheme);
+    const lines = SITE_ROLES.filter(([, role]) => vars[role]).map(
+      ([site, role]) => `--color-fd-${site}:${filled(vars[role]!, vars)};`,
+    );
+    return `${selector},${selector} #nd-sidebar{${lines.join("")}}`;
+  };
+  return block("light", "html") + block("dark", "html.dark");
 }

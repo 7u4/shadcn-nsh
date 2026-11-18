@@ -142,7 +142,7 @@ export const NSH_ELEMENTS: readonly NshEntry[] = [
   { id: "hover-card", group: "base", ours: ["hover-card"] },
   { id: "input", group: "base", ours: ["input", "textarea"] },
   { id: "link", group: "base", ours: ["link"] },
-  { id: "menu", group: "base", ours: ["menu", "context-menu", "menubar"] },
+  { id: "menu", group: "base", ours: ["menu", "context-menu"] },
   { id: "nav-stack", group: "base", ours: ["nav-stack"] },
   { id: "number-input", group: "base", ours: ["number-input"] },
   { id: "otp-input", group: "base", ours: ["otp-input"] },

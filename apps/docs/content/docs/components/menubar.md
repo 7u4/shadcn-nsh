@@ -103,7 +103,10 @@ Two more differences: shadcn moves the open menu to the neighbour when the point
 another trigger; here a press opens one menu and a press closes it, and the bar is a `menubar` whose
 triggers are `menuitem`s, so the pointer moves within the open popup as it does in [`Menu`](./menu).
 And nothing here is a native menu bar: [`nsh/desktop`](https://nsh.dev/modules/nsh-desktop)'s app menu is
-the platform's, and this is one drawn in the app.
+the platform's, and this is one drawn in the app. Nor is it an NSH element: `nsh/base` has no menubar
+(its menu bar is [`Menu`](https://nsh.dev/elements/menu)s whose triggers are items of one
+[`Toolbar`](https://nsh.dev/elements/toolbar)), so this page is shadcn/ui's menubar over
+[`menu.tsx`](./menu)'s look.
 
 ## API
 

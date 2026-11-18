@@ -2,13 +2,12 @@ import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-r
 import { RootProvider } from "fumadocs-ui/provider/tanstack";
 
 import SearchDialog from "@/components/fd/search";
-import { PALETTE_SCRIPT } from "@/lib/palette";
 import { BASE, SITE_DESCRIPTION, SITE_TITLE } from "@/lib/site";
 import { sitePaletteCss } from "@/lib/themes";
 
 import appCss from "@/styles/fd.css?url";
 
-/** The site in each palette the demos offer (`src/lib/themes.ts`), read once. */
+/** The site in the shadcn theme (`src/lib/themes.ts`), read once. */
 const PALETTE_CSS = sitePaletteCss();
 
 export const Route = createRootRoute({
@@ -30,10 +29,8 @@ export const Route = createRootRoute({
 
 function RootComponent() {
   return (
-    <html data-palette="default" suppressHydrationWarning>
+    <html suppressHydrationWarning>
       <head>
-        {/* The palette before the first paint: the site is drawn in the demos' palette. */}
-        <script dangerouslySetInnerHTML={{ __html: PALETTE_SCRIPT }} />
         <style dangerouslySetInnerHTML={{ __html: PALETTE_CSS }} />
         <HeadContent />
       </head>

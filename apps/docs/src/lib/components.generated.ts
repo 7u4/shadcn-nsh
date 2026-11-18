@@ -205,14 +205,6 @@ export const components: ComponentDoc[] = [
     description: "A menu of items, separators and submenus on the shared menu look.",
   },
   {
-    slug: "menubar",
-    title: "Menubar",
-    kind: "official",
-    shadcn: "menubar",
-    nshElement: "menu",
-    description: "A row of menus whose triggers stand in one bar, as a desktop app's menu bar.",
-  },
-  {
     slug: "nav-stack",
     title: "NavStack",
     kind: "official",
@@ -564,6 +556,14 @@ export const components: ComponentDoc[] = [
     nshElement: null,
     description:
       "A line in a conversation that is not a message: a status, a note, a labeled separator.",
+  },
+  {
+    slug: "menubar",
+    title: "Menubar",
+    kind: "own",
+    shadcn: "menubar",
+    nshElement: null,
+    description: "A row of menus whose triggers stand in one bar, as a desktop app's menu bar.",
   },
   {
     slug: "message",

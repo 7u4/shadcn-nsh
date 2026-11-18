@@ -116,8 +116,8 @@ const LEAD: Record<CoverageGroup, ReactNode> = {
   ),
   base: (
     <>
-      One element can give more than one page — <code>menu</code> also gives the context menu and
-      the menu bar, <code>button</code> the pressable.
+      One element can give more than one page — <code>menu</code> also gives the context menu,
+      <code>button</code> the pressable.
     </>
   ),
   primitives: (

@@ -10,7 +10,8 @@ import {
   DocsTitle,
   MarkdownCopyButton,
 } from "fumadocs-ui/layouts/docs/page";
-import { Suspense, use } from "react";
+import { ArrowUpRight } from "lucide-react";
+import { Suspense, use, type ReactNode } from "react";
 
 import { DemoPanel } from "@/components/fd/demo-panel";
 import { useMDXComponents } from "@/components/fd/mdx";
@@ -86,9 +87,9 @@ const loader = createServerFn({ method: "GET" })
 
 /**
  * What a page shows around its markdown, none of it written in the `.md`: the title and the
- * description, then straight away the Preview panel (a component page is read by looking at it
- * first), then the page's own sections, then the official docs it answers to, "Behavior & a11y"
- * and "Source".
+ * description with links to the NSH element and the shadcn/ui component it answers to, then
+ * straight away the Preview panel (a component page is read by looking at it first), then the
+ * page's own sections, "Behavior & a11y" and "Source".
  */
 function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
   const page = docs.getPage(path);
@@ -113,6 +114,8 @@ function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
       <DocsDescription>{page.description}</DocsDescription>
       <div className="flex flex-wrap items-center gap-2">
         <MarkdownCopyButton markdownUrl={markdownUrl} />
+        {nshHref ? <DocLink href={nshHref}>NSH</DocLink> : null}
+        {shadcnHref ? <DocLink href={shadcnHref}>shadcn/ui</DocLink> : null}
       </div>
       <DocsBody>
         {demo ? (
@@ -121,32 +124,6 @@ function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
           </div>
         ) : null}
         <MDX components={useMDXComponents()} />
-        {componentDoc && (shadcnHref || nshHref) ? (
-          <>
-            <h2 id="official">Official docs</h2>
-            <ul>
-              {shadcnHref ? (
-                <li>
-                  <a href={shadcnHref} rel="noopener noreferrer">
-                    shadcn/ui · {componentDoc.shadcn}
-                  </a>
-                </li>
-              ) : null}
-              {nshHref ? (
-                <li>
-                  <a href={nshHref} rel="noopener noreferrer">
-                    NSH · nsh.dev/elements/{componentDoc.nshElement}
-                  </a>{" "}
-                  (
-                  <a href={`${nshHref}.md`} rel="noopener noreferrer">
-                    .md
-                  </a>
-                  )
-                </li>
-              ) : null}
-            </ul>
-          </>
-        ) : null}
         {componentDoc && nshHref ? (
           <>
             <h2 id="behavior-a11y">Behavior &amp; a11y</h2>
@@ -192,5 +169,21 @@ function Page() {
         <Content path={path} markdownUrl={markdownUrl} />
       </Suspense>
     </DocsLayout>
+  );
+}
+
+/** A link to the page a component answers to elsewhere, as shadcn's docs show Radix's: a small
+ * badge beside the copy button. */
+function DocLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="bg-fd-secondary text-fd-secondary-foreground hover:bg-fd-accent inline-flex h-6 items-center gap-1 rounded-full px-2.5 text-xs font-medium no-underline"
+    >
+      {children}
+      <ArrowUpRight aria-hidden="true" className="size-3" />
+    </a>
   );
 }
