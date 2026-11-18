@@ -164,7 +164,7 @@ function App() {
               onSelect={() => hidden.set(!hidden())}
             />
             <MenuSeparator style={menuSeparator()} />
-            <MenuLabel text="Sort by" />
+            <MenuLabel>Sort by</MenuLabel>
             {/* One choice of a group: choosing closes the menu. */}
             {SORTS.map((by) => (
               <Item label={by} radio checked={sort() === by} onSelect={() => sort.set(by)} />

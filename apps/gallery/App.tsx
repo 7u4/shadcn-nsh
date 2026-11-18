@@ -361,7 +361,7 @@ function App() {
               <Menu>
                 <MenuTrigger>Menu</MenuTrigger>
                 <MenuContent>
-                  <MenuLabel text="Actions" />
+                  <MenuLabel>Actions</MenuLabel>
                   <MenuItem onSelect={() => count.set(count() + 1)}>
                     <Text>Increment</Text>
                   </MenuItem>

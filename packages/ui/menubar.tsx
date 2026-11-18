@@ -310,6 +310,7 @@ export {
   type MenuGroupProps as MenubarGroupProps,
   type MenuItemProps as MenubarItemProps,
   type MenuItemVariant as MenubarItemVariant,
+  type MenuLabelProps as MenubarLabelProps,
   type MenuRadioItemProps as MenubarRadioItemProps,
   type MenuSeparatorProps as MenubarSeparatorProps,
   type MenuShortcutProps as MenubarShortcutProps,

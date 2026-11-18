@@ -151,6 +151,8 @@ export {
   type MenuCheckboxItemProps as ContextMenuCheckboxItemProps,
   type MenuGroupProps as ContextMenuGroupProps,
   type MenuItemProps as ContextMenuItemProps,
+  type MenuItemVariant as ContextMenuItemVariant,
+  type MenuLabelProps as ContextMenuLabelProps,
   type MenuRadioItemProps as ContextMenuRadioItemProps,
   type MenuSeparatorProps as ContextMenuSeparatorProps,
   type MenuShortcutProps as ContextMenuShortcutProps,

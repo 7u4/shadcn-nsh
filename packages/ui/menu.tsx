@@ -184,8 +184,16 @@ export function menuPopup(o?: MenuPopupOptions) {
   };
 }
 
-/** A group's title in a menu: not an item, nothing to press; 11 points semibold with a pointer, 13 on a touch screen, faint. `inset` lines it up with checkable rows' labels. */
-export function MenuLabel(props: { text: string; inset?: boolean }) {
+/** The props of `MenuLabel`. */
+export type MenuLabelProps = {
+  /** The title itself. */
+  children?: string;
+  /** Lines it up with checkable rows' labels, past the mark they hold. */
+  inset?: boolean;
+};
+
+/** A group's title in a menu: not an item, nothing to press; 11 points semibold with a pointer, 13 on a touch screen, faint. */
+export function MenuLabel(props: MenuLabelProps) {
   return (
     <Text
       style={{
@@ -199,7 +207,7 @@ export function MenuLabel(props: { text: string; inset?: boolean }) {
         paddingBottom: 2,
       }}
     >
-      {props.text}
+      {props.children}
     </Text>
   );
 }
@@ -348,7 +356,8 @@ export type MenuSeparatorProps = BaseMenuSeparatorProps;
 /** A shortcut shown at a row's trailing edge (`menuItemNote`); anything but a string is drawn as given. */
 export type MenuShortcutProps = {
   children?: string | JSX.Element;
-  style?: StyleProp<TextStyle | ViewStyle>;
+  /** The note's own style. A shortcut is type: a `TextStyle` is a `ViewStyle`, so an element child takes the same. */
+  style?: StyleProp<TextStyle>;
 };
 
 /** The root of a nested menu: it holds the submenu's trigger, its label and its disabled state. */
@@ -568,14 +577,10 @@ export function MenuSeparator(props: MenuSeparatorProps = {}) {
 /** The shortcut shown at a row's trailing edge. */
 export function MenuShortcut(props: MenuShortcutProps) {
   if (typeof props.children !== "string" && props.children != null) {
-    return (
-      <View style={[{ marginLeft: "auto" }, props.style as StyleProp<ViewStyle>]}>
-        {props.children}
-      </View>
-    );
+    return <View style={[{ marginLeft: "auto" }, props.style ?? null]}>{props.children}</View>;
   }
   return (
-    <Text style={[menuItemNote(), { marginLeft: "auto" }, props.style as StyleProp<TextStyle>]}>
+    <Text style={[menuItemNote(), { marginLeft: "auto" }, props.style ?? null]}>
       {props.children}
     </Text>
   );

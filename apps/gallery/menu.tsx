@@ -42,7 +42,7 @@ mount(() => (
         <Menu defaultOpen>
           <MenuTrigger>File</MenuTrigger>
           <MenuContent popupStyle={popup}>
-            <MenuLabel text="File" />
+            <MenuLabel>File</MenuLabel>
             <MenuItem>
               New window
               <MenuShortcut>⌘N</MenuShortcut>
@@ -63,7 +63,7 @@ mount(() => (
             <MenuCheckboxItem checked={false}>
               <Text>Show minimap</Text>
             </MenuCheckboxItem>
-            <MenuLabel text="Sort by" />
+            <MenuLabel>Sort by</MenuLabel>
             <MenuRadioItem checked>
               <Text>Name</Text>
             </MenuRadioItem>
@@ -103,7 +103,7 @@ mount(() => (
           </View>
         </ContextMenuTrigger>
         <ContextMenuContent popupStyle={popup}>
-          <ContextMenuLabel text="Edit" />
+          <ContextMenuLabel>Edit</ContextMenuLabel>
           <ContextMenuItem>
             <Text>Copy</Text>
             <ContextMenuShortcut>⌘C</ContextMenuShortcut>
