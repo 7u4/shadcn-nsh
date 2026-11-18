@@ -46,18 +46,19 @@ demoHeight: 480 # optional, overlays only
 
 `component` names the registry item when the page is a component page (`content/docs/components/<slug>.md`); `demo` names `demos/<slug>.tsx` and turns on the Preview. Quote a `description` that contains a colon.
 
-A component page's body has four sections, in this order, and nothing else at `##`:
+A component page's body has these sections, in this order, and nothing else at `##` (the full rule, with the order of Examples' subsections, is [`docs/port.md`](../../docs/port.md) § 文档页):
 
 1. **Installation** — one `sh` fence: `npx shadcn-nsh@latest add <slug>`.
 2. **Usage** — the import from `@/components/ui/<slug>`, then one minimal use.
-3. **Examples** — one `###` per variant, size, state or common use, each with a short `tsx` snippet. The sections show what `apps/docs/demos/<slug>.tsx` shows, and every prop is one the component really has.
-4. **API** — only the props and parts this package adds; one sentence points to [`nsh/base`](https://nsh.dev/elements/<element>) for the rest. Composites list their parts.
+3. **Examples** — one `###` per variant, size, state or common use, each with a short `tsx` snippet, in that order: `Variant` / `Tone`, `Size`, the states (`Disabled`, `Invalid`, `Read-only`, `Loading`), everything else, `Controlled` / `Uncontrolled` last. The sections show what `apps/docs/demos/<slug>.tsx` shows, and every prop is one the component really has.
+4. **Differences from shadcn/ui** — optional: what the shadcn/ui component of the same name has that this does not, what this adds, and where behavior differs. Every comparison with shadcn lives here, nowhere else on the page.
+5. **API** — opens with the parts table, header `| Part | Props | Description |`; only the props and parts this package adds; one sentence points to [`nsh/base`](https://nsh.dev/elements/<element>) for the rest.
 
 Do **not**:
 
 - put `# Title` in the body (the route renders `h1` from frontmatter);
-- write `## Preview`, `## Behavior & a11y` or `## Source` (the route injects them);
-- use the old `## Install`, `## Composition`, `## Differences` or `## Not forwarded` sections;
+- write `## Preview` (the route injects it), `## Behavior & a11y` or `## Source` (behavior is NSH's, one badge away);
+- use the old `## Install`, `## Composition`, `## Differences`, `## Not forwarded` or `## Accessibility` sections (screen-reader names go in the example or the API they belong to);
 - invent props or paste another library's API. Read `packages/ui/<slug>.tsx` and `apps/docs/demos/<slug>.tsx` first.
 
 Import snippets use the registry import path:
@@ -103,11 +104,11 @@ Do not edit the generated file. `src/lib/components.ts` keeps the helpers. `bun 
 
 ## Kinds and coverage
 
-There are two kinds, and neither is filed by hand. `Official` is a page that an `NSH_ELEMENTS` row of `src/lib/official.ts` (one per `references/nsh/website/elements/*.md`) names in its `ours` — it dresses an NSH element. `Our own` is a page no NSH row names: this library's addition, whether or not shadcn/ui has one. `src/lib/kinds.ts` derives the kind from those rows and holds the two labels and their order (`Official`, then `Our own`, alphabetically by title inside each); a new component lands in the right group the moment its row exists.
+There are two kinds, and neither is filed by hand. `Base` is a page that an `NSH_ELEMENTS` row of `src/lib/official.ts` (one per `references/nsh/website/elements/*.md`) names in its `ours` — it dresses an NSH element. `Enhanced` is a page no NSH row names: a shadcn composite over an element (Menubar, InputGroup) or this library's addition. `src/lib/kinds.ts` derives the kind from those rows and holds the two labels and their order (`Base`, then `Enhanced`, alphabetically by title inside each); a new component lands in the right group the moment its row exists.
 
-`src/lib/official.ts` answers for both official sets: `SHADCN_UI` is one row per `references/shadcn-ui/apps/v4/registry/new-york-v4/ui/*.tsx`, `NSH_ELEMENTS` one row per `references/nsh/website/elements/*.md`. A row lists the pages here that serve it (`ours`, closest first) and, when nothing does, a `status` (`planned`, `missing`, `not-doing`, `primitive`) and a one-line `note`. Reversed, the same rows give each page its header links (`Official: shadcn/ui · dropdown-menu | NSH · nsh.dev/elements/menu`) and its base element, so a page never writes them itself. A `planned` row becomes a link by itself once its page exists.
+`src/lib/official.ts` answers for both official sets: `SHADCN_UI` is one row per `references/shadcn-ui/apps/v4/registry/new-york-v4/ui/*.tsx`, `NSH_ELEMENTS` one row per `references/nsh/website/elements/*.md`. A row lists the pages here that serve it (`ours`, closest first) and, when nothing does, a `status` (`planned`, `missing`, `not-doing`, `primitive`) and a one-line `note`. Reversed, the same rows give each page its header badges (`NSH ↗`, `shadcn/ui ↗`) and its base element, so a page never writes them itself. A `planned` row becomes a link by itself once its page exists.
 
-Adding a component: add or extend the official row if one of theirs answers it (a component no NSH row names is Our own), add its line to `public/llms.txt`, then `bun run docs:components`. The coverage page is generated from these tables; do not write it by hand.
+Adding a component: add or extend the official row if one of theirs answers it (a component no NSH row names is Enhanced), add its line to `public/llms.txt`, then `bun run docs:components`. The coverage page is generated from these tables; do not write it by hand.
 
 ## Search
 
