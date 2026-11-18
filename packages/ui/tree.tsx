@@ -34,10 +34,10 @@ export const treeItemClass =
   "selected:bg-brand-tint focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-ring disabled:opacity-50";
 
 /** How far each level is indented, in points. */
-export const treeIndent = 14;
+const treeIndent = 14;
 
 /** A row's height: 4 points under a pointer's 32-point row, or a touch screen's 44-point target whole. */
-export const treeRowHeight = desktop ? size.rowSm - 4 : size.rowSm;
+const treeRowHeight = desktop ? size.rowSm - 4 : size.rowSm;
 
 /**
  * A row's content: its chevron (folders), its icon (`icon`, else a folder
