@@ -6,10 +6,11 @@
 import { Image, mount, signal, Text, View } from "nsh";
 import { AvatarGroup } from "nsh/base";
 
-import { AVATAR_BROKEN, Avatar, avatarPortrait } from "@/packages/ui/avatar";
+import { Avatar } from "@/packages/ui/avatar";
 import { Button } from "@/packages/ui/button";
 import { listRow, RowLabel, sectionSurface } from "@/packages/ui/lib/surface";
 
+import { AVATAR_BROKEN, avatarPortrait } from "./avatar-data";
 import { DemoPage } from "./kit";
 import { desktop, Log, Panel, Segmented, Split, ui } from "./stage";
 

@@ -14,11 +14,11 @@ npx shadcn-nsh@latest add avatar
 ## Usage
 
 ```tsx
-import { Avatar, avatarPortrait } from "@/components/ui/avatar";
+import { Avatar } from "@/components/ui/avatar";
 ```
 
 ```tsx
-<Avatar name="Jason Lee" src={avatarPortrait("Jason Lee")} style={{ width: 36, height: 36 }} />
+<Avatar name="Ada Lovelace" style={{ width: 36, height: 36 }} />
 ```
 
 ## Examples
@@ -31,17 +31,22 @@ import { Avatar, avatarPortrait } from "@/components/ui/avatar";
 <Avatar name="Alan Turing" style={{ width: 40, height: 40 }} />
 ```
 
-### Maintainer portraits
+### Picture
+
+`src` is the picture; `name`'s initials cover it while it loads, and stay if it never arrives.
 
 ```tsx
-import { avatarPortrait, MAINTAINERS } from "@/components/ui/avatar";
+const portraits = { ada: "https://example.com/ada.png" };
+
+<Avatar name="Ada Lovelace" src={portraits.ada} style={{ width: 40, height: 40 }} />;
 ```
 
 ### Broken image
 
+A picture that fails to load leaves the initials on the ring, as a gone picture should.
+
 ```tsx
-import { AVATAR_BROKEN } from "@/components/ui/avatar";
-<Avatar name="Barbara Liskov" src={AVATAR_BROKEN} />;
+<Avatar name="Ada Lovelace" src="/missing.png" />
 ```
 
 ### Group
@@ -50,7 +55,7 @@ Overlap and `limit` use `nsh/base` `AvatarGroup`; size each `Avatar` the same.
 
 ## API
 
-Uses `avatarIdentity`, `avatarPortrait`, and `avatarHue`. Every prop of [`nsh/base` Avatar](https://nsh.dev/elements/avatar) passes through.
+Uses `avatarIdentity` and `avatarHue`. Every prop of [`nsh/base` Avatar](https://nsh.dev/elements/avatar) passes through.
 
 | Prop   | Type     | Notes                    |
 | ------ | -------- | ------------------------ |
