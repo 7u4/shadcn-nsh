@@ -108,7 +108,8 @@ const TRIGGER_PAD_END = 10;
 
 /** The clear button's inset from a trigger's end: centered where the chevron's lane is. The button is in the
  * select's view, outside the trigger, so its inset counts the trigger's 1-point border too. */
-const clearInset = TRIGGER_BORDER + TRIGGER_PAD_END + controlSize.check / 4 - controlSize.clear / 2;
+export const clearInset =
+  TRIGGER_BORDER + TRIGGER_PAD_END + controlSize.check / 4 - controlSize.clear / 2;
 
 /** Options of `clearButtonLook`. */
 export interface ClearButtonOptions {

@@ -11,6 +11,7 @@ import {
 } from "nsh/base";
 
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import type { TabLook, TabState } from "./tabs";
 
 /**
@@ -30,12 +31,6 @@ const hoverOf = (state: TabState) => {
 
 // @port look/tabs.tsx
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** A segmented control's size: `default` 24 / 30 points with a pointer, 32 / 36 on a touch screen. */
 export type SegmentedSize = "sm" | "default";

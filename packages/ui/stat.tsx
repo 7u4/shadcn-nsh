@@ -3,12 +3,9 @@
 import { colors, terminal, toneColor, type Tone } from "@shadcn-nsh/theme";
 import { Text, View } from "nsh";
 
-// @port index.tsx
-/** A value, or a function reading it where the stat is drawn (a signal). */
-type Live<T> = T | (() => T);
+import { read } from "./lib/live";
 
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
+// @port index.tsx
 
 /** The figure's type: a small muted label over a value a step larger, so the value leads. */
 const type = { label: 12, value: 15 };

@@ -6,15 +6,10 @@ import { platform, split } from "nsh";
 import { OtpInput as BaseOtpInput, type OtpInputProps as BaseOtpInputProps } from "nsh/base";
 
 import { edgeClass } from "./input";
+import { type Live, read } from "./lib/live";
 
 // @port look/field.tsx
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** The cells of a code of six: 36 × 44 with a pointer, 44 × 52 on a touch screen. */
 export const otpCells = pointer ? "w-9 h-11 text-lg" : "w-11 h-13 text-xl";

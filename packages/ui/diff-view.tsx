@@ -12,13 +12,9 @@ import {
 
 import { buttonGlyph, buttonLabel, buttonLook, type ButtonVariant } from "./button";
 import { Icon } from "./lib/icons";
+import { read } from "./lib/live";
 
 // @port look/workspace.tsx
-/** A value, or a function reading it where the actions are drawn (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** One action on a diff's change: a chip 20 points high, its label 11
  * points in the interface's font (the diff's text is monospaced), or only

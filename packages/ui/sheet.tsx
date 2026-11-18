@@ -9,7 +9,7 @@ import {
   type SheetProps as BaseSheetProps,
 } from "nsh/base";
 
-import { Button, type ButtonVariant } from "./button";
+import { Action, type ButtonVariant } from "./button";
 import { createOpenState, type OpenState } from "./lib/open-state";
 import { backdrop } from "./lib/overlay";
 
@@ -155,32 +155,6 @@ export function Sheet(props: SheetProps) {
     >
       {props.children}
     </SheetContext.Provider>
-  );
-}
-
-function Action(props: SheetTriggerProps & { onPress: () => void }) {
-  if (typeof props.children === "string") {
-    return (
-      <Button
-        variant={props.variant ?? "secondary"}
-        disabled={props.disabled}
-        style={props.style}
-        onPress={props.onPress}
-      >
-        {props.children}
-      </Button>
-    );
-  }
-  return (
-    <View
-      accessible
-      role="button"
-      accessibilityState={{ disabled: props.disabled }}
-      onPress={props.disabled ? undefined : props.onPress}
-      style={props.style}
-    >
-      {props.children}
-    </View>
   );
 }
 

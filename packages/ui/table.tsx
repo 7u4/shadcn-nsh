@@ -22,6 +22,7 @@ import {
 } from "nsh/base";
 
 import { dataTableClasses } from "./data-table";
+import { joinClass } from "./lib/classes";
 
 /** Rows ease their fill. `motion-reduce` drops it. */
 export const tableRowClass = "transition-colors duration-150 motion-reduce:transition-none";
@@ -59,13 +60,6 @@ export type TableCaptionProps = Omit<BaseTableCaptionProps, "children"> & {
   children?: string | JSX.Element;
 };
 
-function mergeClass(base?: string | null, extra?: string | null): string | undefined {
-  const a = base ?? undefined;
-  const b = extra ?? undefined;
-  if (a && b) return `${a} ${b}`;
-  return b ?? a;
-}
-
 /** A string child's type, by the part it is drawn in. */
 const textClass = {
   head: "text-sm font-medium text-muted-foreground",
@@ -84,13 +78,13 @@ function textOf(children: string | JSX.Element | undefined, kind: keyof typeof t
 /** A table of the app's rows: a bordered card. Screen readers hear the base roles. */
 export function Table(props: TableProps) {
   const [, rest] = split(props, ["class"]);
-  return <BaseTable {...rest} class={mergeClass(dataTableClasses.root, props.class)} />;
+  return <BaseTable {...rest} class={joinClass(dataTableClasses.root, props.class)} />;
 }
 
 /** The header band. */
 export function TableHeader(props: TableHeaderProps) {
   const [, rest] = split(props, ["class"]);
-  return <BaseTableHeader {...rest} class={mergeClass(dataTableClasses.header, props.class)} />;
+  return <BaseTableHeader {...rest} class={joinClass(dataTableClasses.header, props.class)} />;
 }
 
 /** The body group. */
@@ -105,7 +99,7 @@ export function TableFooter(props: TableFooterProps) {
   return (
     <BaseTableFooter
       {...rest}
-      class={mergeClass(`${dataTableClasses.header} border-border border-t`, props.class)}
+      class={joinClass(`${dataTableClasses.header} border-border border-t`, props.class)}
     />
   );
 }
@@ -113,18 +107,18 @@ export function TableFooter(props: TableFooterProps) {
 /** A row: a hairline and an optional selected fill. */
 export function TableRow(props: TableRowProps) {
   const [, rest] = split(props, ["class", "selected"]);
-  const rowClass = mergeClass(
+  const rowClass = joinClass(
     `${tableRowClass} ${dataTableClasses.row}`,
     props.selected ? dataTableClasses.rowSelected : undefined,
   );
-  return <BaseTableRow {...rest} class={mergeClass(rowClass, props.class)} />;
+  return <BaseTableRow {...rest} class={joinClass(rowClass, props.class)} />;
 }
 
 /** A column's header cell. */
 export function TableHead(props: TableHeadProps) {
   const [, rest] = split(props, ["class", "children"]);
   return (
-    <BaseTableHead {...rest} class={mergeClass(cellClass, props.class)}>
+    <BaseTableHead {...rest} class={joinClass(cellClass, props.class)}>
       {textOf(props.children, "head")}
     </BaseTableHead>
   );
@@ -136,7 +130,7 @@ export function TableCell(props: TableCellProps) {
   return (
     // No width of its own: a column's width is the app's, set on its head and its cells
     // alike (`w-24`, `flex-1`), so the two rows line up.
-    <BaseTableCell {...rest} class={mergeClass(cellClass, props.class)}>
+    <BaseTableCell {...rest} class={joinClass(cellClass, props.class)}>
       {textOf(props.children, "cell")}
     </BaseTableCell>
   );
@@ -146,7 +140,7 @@ export function TableCell(props: TableCellProps) {
 export function TableCaption(props: TableCaptionProps) {
   const [, rest] = split(props, ["class", "children"]);
   return (
-    <BaseTableCaption {...rest} class={mergeClass("px-2 py-2", props.class)}>
+    <BaseTableCaption {...rest} class={joinClass("px-2 py-2", props.class)}>
       {textOf(props.children, "caption")}
     </BaseTableCaption>
   );

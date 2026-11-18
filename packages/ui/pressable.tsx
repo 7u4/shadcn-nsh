@@ -7,15 +7,8 @@ import { split, Text } from "nsh";
 import { Button as BaseButton, type ButtonProps as BaseButtonProps } from "nsh/base";
 
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import { pressSink, pressTransition } from "./lib/press";
-
-/**
- * A value, or a function reading it where the look is applied (a signal).
- */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** Options of `pressableLook`. */
 export interface PressableLookOptions {

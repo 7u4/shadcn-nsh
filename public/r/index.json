@@ -108,6 +108,19 @@
       ]
     },
     {
+      "name": "live",
+      "type": "registry:lib",
+      "title": "Live values",
+      "description": "A value a look takes as it is, or as a function reading it where the look is applied.",
+      "files": [
+        {
+          "path": "packages/ui/lib/live.ts",
+          "type": "registry:lib",
+          "target": "lib/live.ts"
+        }
+      ]
+    },
+    {
       "name": "merge-classes",
       "type": "registry:lib",
       "title": "Merge classes",

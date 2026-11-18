@@ -3,14 +3,10 @@
 import { colors, terminal, TERMINAL_ROW, toneColor, type Tone } from "@shadcn-nsh/theme";
 import { View } from "nsh";
 
+import { type Live, read } from "./lib/live";
 import { progressFill, progressGlide, progressRail, progressRemaining } from "./progress";
 
 // @port index.tsx
-/** A value, or a function reading it where the meter is drawn (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** A horizontal meter with an optional marker (a limit), `value` from 0
  * to 1: a progress bar's rail and fill (`look/meter.ts`), the fill gliding

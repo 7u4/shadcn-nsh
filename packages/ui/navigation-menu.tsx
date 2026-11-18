@@ -15,18 +15,13 @@ import {
 
 import { Icon } from "./lib/icons";
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import { createSlot, type Slot } from "./lib/open-state";
 import { PopIn, popupSurface, type PopupSide } from "./lib/popup";
 import { pressSink, pressTransition } from "./lib/press";
 
 /** A pointer's compact bar; a touch screen's roomier one, a finger's target in every trigger. */
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /**
  * A bar's measurements: a trigger's height, its inset from its sides, the gap between triggers,
@@ -371,7 +366,7 @@ type NavigationMenuItemContextValue = {
   /** The pointer came onto (`over` true) or left (`false`) the trigger or the panel. */
   pointerOver: (part: "trigger" | "panel", over: boolean) => void;
   /** The trigger the content draws, filled by `NavigationMenuTrigger`. */
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
 };
 
 const NavigationMenuContext = context<NavigationMenuContextValue | null>(null);
@@ -462,7 +457,7 @@ export function NavigationMenuList(props: NavigationMenuListProps) {
 export function NavigationMenuItem(props: NavigationMenuItemProps) {
   const root = useNavigationMenu();
   const value = props.value ?? `navigation-menu-item-${madeUpCount++}`;
-  const trigger = createSlot();
+  const trigger = createSlot<JSX.Element>();
   // Where the pointer is (off both parts, the panel closes after `closeDelay`) and the one timer
   // waiting on its next move.
   const pointerState: {
@@ -590,7 +585,7 @@ export function NavigationMenuContent(props: NavigationMenuContentProps) {
     <BasePopover
       {...rest}
       open={item.open()}
-      trigger={(triggerAccessor?.() as JSX.Element) ?? <View />}
+      trigger={triggerAccessor?.() ?? <View />}
       placement={placement()}
       align={props.align ?? "start"}
       offset={props.offset ?? 6}

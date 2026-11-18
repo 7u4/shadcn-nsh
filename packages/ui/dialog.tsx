@@ -1,7 +1,7 @@
 // A card dialog: the look (`dialogCard`, `dialogTitle`, `dialogText`) at the top, and the parts that
 // wear it below. `nsh/base`'s `Dialog` is the box; what this file adds is its card.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
-import { colors, finish, focusRing, radius, terminal } from "@shadcn-nsh/theme";
+import { colors, finish, radius, terminal } from "@shadcn-nsh/theme";
 import type { JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
 import { context, platform, split, Text, View } from "nsh";
 import {
@@ -10,7 +10,7 @@ import {
   type DialogProps as BaseDialogProps,
 } from "nsh/base";
 
-import { Button, type ButtonVariant } from "./button";
+import { Action, type ButtonVariant } from "./button";
 import { createOpenState, type OpenState } from "./lib/open-state";
 import { backdrop } from "./lib/overlay";
 
@@ -134,34 +134,6 @@ export function Dialog(props: DialogProps) {
     >
       {props.children}
     </DialogContext.Provider>
-  );
-}
-
-/** A button of the card, or its trigger: a `Button` for a string, else a pressable view. */
-function Action(props: DialogTriggerProps & { onPress: () => void }) {
-  if (typeof props.children === "string") {
-    return (
-      <Button
-        variant={props.variant ?? "secondary"}
-        disabled={props.disabled}
-        style={props.style}
-        onPress={props.onPress}
-      >
-        {props.children}
-      </Button>
-    );
-  }
-  return (
-    <View
-      accessible
-      role="button"
-      accessibilityState={{ disabled: props.disabled }}
-      focusVisibleStyle={focusRing()}
-      onPress={props.disabled ? undefined : props.onPress}
-      style={props.style}
-    >
-      {props.children}
-    </View>
   );
 }
 

@@ -41,7 +41,7 @@ export type ContextMenuTriggerProps = {
 };
 
 type ContextMenuContextValue = OpenState & {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   disabled?: boolean;
   onOpen?: () => void;
   onClose?: () => void;
@@ -59,7 +59,7 @@ function useContextMenu() {
 /** Composition root: a menu opened at the pointer. */
 export function ContextMenu(props: ContextMenuProps) {
   const state = createOpenState<OpenChangeReason>(props);
-  const triggerSlot = createSlot();
+  const triggerSlot = createSlot<JSX.Element>();
   return (
     <ContextMenuContext.Provider
       value={{
@@ -114,7 +114,7 @@ export function ContextMenuContent(props: ContextMenuContentProps) {
       {...rest}
       open={ctx.open()}
       disabled={ctx.disabled}
-      trigger={(triggerAccessor?.() as JSX.Element) ?? <View />}
+      trigger={triggerAccessor?.() ?? <View />}
       offset={props.offset ?? 4}
       onOpenChange={({ open, reason }) => ctx.setOpen(open, reason)}
       onOpen={ctx.onOpen}

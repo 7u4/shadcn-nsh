@@ -102,7 +102,7 @@ export type PopoverTitleProps = {
 export type PopoverDescriptionProps = PopoverTitleProps;
 
 type PopoverContextValue = OpenState & {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   onOpen?: () => void;
   onClose?: () => void;
   onCancel?: () => void;
@@ -119,7 +119,7 @@ function usePopover() {
 /** The root of a popover's parts. */
 export function Popover(props: PopoverProps) {
   const state = createOpenState<OpenChangeReason>(props);
-  const trigger = createSlot();
+  const trigger = createSlot<JSX.Element>();
   return (
     <PopoverContext.Provider
       value={{
@@ -189,7 +189,7 @@ export function PopoverContent(props: PopoverContentProps) {
     <BasePopover
       {...rest}
       open={ctx.open()}
-      trigger={(triggerAccessor?.() as JSX.Element) ?? <View />}
+      trigger={triggerAccessor?.() ?? <View />}
       placement={placement()}
       align={props.align}
       offset={props.offset}

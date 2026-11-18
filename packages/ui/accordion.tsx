@@ -18,6 +18,7 @@ import {
   type AccordionTriggerProps as BaseAccordionTriggerProps,
 } from "nsh/base";
 
+import { joinClass } from "./lib/classes";
 import { Icon } from "./lib/icons";
 import { labelOf } from "./lib/label";
 import { controlSize, listRow, RowDivider, RowLabel, type ListRowOptions } from "./lib/surface";
@@ -112,10 +113,6 @@ export function disclosurePanel(o?: DisclosurePanelOptions): ViewStyle {
 }
 // @port end
 
-function mergeClass(base: string, extra?: string | null): string {
-  return extra ? `${base} ${extra}` : base;
-}
-
 /** `nsh/base`'s Accordion. Every base prop passes through. */
 export type AccordionProps = BaseAccordionProps;
 
@@ -198,7 +195,7 @@ export function AccordionTrigger(props: AccordionTriggerProps) {
   return (
     <BaseAccordionTrigger
       {...rest}
-      class={mergeClass(look.class, props.class)}
+      class={joinClass(look.class, props.class)}
       accessibilityLabel={labelOf(props.accessibilityLabel, props.children)}
       style={[look.style, props.style ?? null]}
       hoverStyle={[look.hoverStyle ?? null, props.hoverStyle ?? null]}

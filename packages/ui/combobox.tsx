@@ -34,6 +34,7 @@ import {
   ListboxHeader,
   OptionRow,
 } from "./lib/listbox";
+import { type Live, read } from "./lib/live";
 import {
   createItemRegistry,
   createOpenState,
@@ -46,12 +47,6 @@ import { controlSize, narrowWindow } from "./lib/surface";
 
 // @port look/listbox.tsx
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** Options of `comboboxLook`. */
 export interface ComboboxLookOptions {
@@ -332,9 +327,9 @@ export type ComboboxLabelProps = {
 
 type ComboboxContextValue = OpenState & {
   items: ItemRegistry<SelectItemData>;
-  trigger: Slot;
-  chips: Slot;
-  empty: Slot;
+  trigger: Slot<JSX.Element>;
+  chips: Slot<JSX.Element>;
+  empty: Slot<JSX.Element>;
   value: () => string[];
   change: (event: { value: string[] }) => void;
   /** The input's text: the chosen titles, or the root's placeholder. */
@@ -379,9 +374,9 @@ function triggerOf(ctx: ComboboxContextValue): JSX.Element {
 export function Combobox(props: ComboboxProps) {
   const state = createOpenState<OpenChangeReason>(props);
   const items = createItemRegistry<SelectItemData>([]);
-  const trigger = createSlot();
-  const chips = createSlot();
-  const empty = createSlot();
+  const trigger = createSlot<JSX.Element>();
+  const chips = createSlot<JSX.Element>();
+  const empty = createSlot<JSX.Element>();
   const picked = signal(false);
   const chosen = signal<string[]>([]);
   const value = () => {
@@ -526,7 +521,7 @@ export function ComboboxContent(props: ComboboxContentProps) {
         // The clear button of a cleanable field: in the row, after the input.
         const clear = clearButtonLook();
         const empty = ctx.empty.get();
-        const chips = ctx.chips.get()?.() as JSX.Element | undefined;
+        const chips = ctx.chips.get()?.();
         return (
           <BaseCombobox
             {...rest}
@@ -557,7 +552,7 @@ export function ComboboxContent(props: ComboboxContentProps) {
             itemClass={props.itemClass ?? chrome.itemClass}
             renderItem={props.renderItem ?? ((item) => <OptionRow item={item} />)}
             renderGroup={props.renderGroup ?? ((group) => <ListboxHeader group={group} />)}
-            empty={(empty?.() as JSX.Element) ?? props.empty ?? <ListboxEmpty label="No results" />}
+            empty={empty?.() ?? props.empty ?? <ListboxEmpty label="No results" />}
             onChange={ctx.change}
             onOpenChange={({ open, reason }) => ctx.setOpen(open, reason)}
             onOpen={ctx.root.onOpen}

@@ -374,7 +374,7 @@ export type MenuSubContentProps = Omit<BaseSubmenuProps, "trigger" | "children">
 };
 
 type MenuContextValue = OpenState & {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   onOpen?: () => void;
   onClose?: () => void;
   onCancel?: () => void;
@@ -389,7 +389,7 @@ function useMenu() {
 }
 
 type SubContextValue = {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   label: { value?: string };
   disabled?: boolean;
 };
@@ -398,7 +398,7 @@ const SubContext = context<SubContextValue | null>(null);
 /** Composition root: owns the open state the parts below read. */
 export function Menu(props: MenuProps) {
   const state = createOpenState<OpenChangeReason>(props);
-  const triggerSlot = createSlot();
+  const triggerSlot = createSlot<JSX.Element>();
   return (
     <MenuContext.Provider
       value={{
@@ -472,7 +472,7 @@ export function MenuContent(props: MenuContentProps) {
     <BaseMenu
       {...rest}
       open={ctx.open()}
-      trigger={(triggerAccessor?.() as JSX.Element) ?? <View />}
+      trigger={triggerAccessor?.() ?? <View />}
       placement={props.placement ?? "bottom"}
       align={props.align ?? "start"}
       offset={props.offset ?? 4}
@@ -581,7 +581,7 @@ export function MenuShortcut(props: MenuShortcutProps) {
 
 /** The root of a submenu. */
 export function MenuSub(props: MenuSubProps) {
-  const triggerSlot = createSlot();
+  const triggerSlot = createSlot<JSX.Element>();
   const label: { value?: string } = {};
   return (
     <SubContext.Provider
@@ -624,7 +624,7 @@ export function MenuSubContent(props: MenuSubContentProps) {
   if (!ctx) throw new Error("MenuSubContent must be used within <MenuSub>");
   const triggerAccessor = ctx.trigger.get();
   const [, rest] = split(props, ["children", "disabled", "back"]);
-  const trigger = (triggerAccessor?.() as JSX.Element) ?? <View />;
+  const trigger = triggerAccessor?.() ?? <View />;
   const name = ctx.label.value;
   const back =
     props.back !== undefined ? (

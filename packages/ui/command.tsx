@@ -13,6 +13,7 @@ import {
 } from "nsh/base";
 
 import { Kbd } from "./kbd";
+import { joinClass } from "./lib/classes";
 import { Icon } from "./lib/icons";
 import { controlSize } from "./lib/surface";
 
@@ -126,10 +127,6 @@ export function CommandEmpty(props: { label: string }) {
 }
 // @port end
 
-function mergeClass(base: string, extra?: string | null): string {
-  return extra ? `${base} ${extra}` : base;
-}
-
 /** Every prop of `nsh/base` Command. */
 export type CommandProps = BaseCommandProps;
 
@@ -166,13 +163,13 @@ export function Command(props: CommandProps) {
   return (
     <BaseCommand
       {...rest}
-      class={mergeClass(commandClasses.root, props.class)}
-      searchBarClass={mergeClass(commandClasses.searchBar, props.searchBarClass)}
-      searchClass={mergeClass(commandClasses.search, props.searchClass)}
-      listClass={mergeClass(commandClasses.list, props.listClass)}
-      itemClass={mergeClass(commandClasses.item, props.itemClass)}
-      groupClass={mergeClass(commandClasses.group, props.groupClass)}
-      separatorClass={mergeClass(commandClasses.separator, props.separatorClass)}
+      class={joinClass(commandClasses.root, props.class)}
+      searchBarClass={joinClass(commandClasses.searchBar, props.searchBarClass)}
+      searchClass={joinClass(commandClasses.search, props.searchClass)}
+      listClass={joinClass(commandClasses.list, props.listClass)}
+      itemClass={joinClass(commandClasses.item, props.itemClass)}
+      groupClass={joinClass(commandClasses.group, props.groupClass)}
+      separatorClass={joinClass(commandClasses.separator, props.separatorClass)}
       placeholder={props.placeholder ?? "Type a command or search…"}
       searchPrefix={
         props.searchPrefix === undefined ? (

@@ -13,14 +13,10 @@ import {
 import type { ViewStyle } from "nsh";
 import { platform, Text, token, View, windowSize } from "nsh";
 
+import { type Live, read } from "./live";
+
 // @port look/surface.tsx
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /**
  * The page's density: compact with a pointer (desktops), roomier on a touch
@@ -161,6 +157,9 @@ export function insetSurface(): ViewStyle {
     ...finish.inset,
   };
 }
+
+/** A pill's corners: half the tallest it gets, so any height rounds to a pill. */
+export const PILL_RADIUS = 999;
 
 /** How far a row's hover fill reaches past its content on each side, and its
  * corners: none in the terminal, where a negative margin rounds away but

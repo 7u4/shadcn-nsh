@@ -18,6 +18,7 @@ import { context, platform, split, Text, token, View } from "nsh";
 import { Button as BaseButton, type ButtonProps as BaseButtonProps } from "nsh/base";
 
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import { pressSink, pressTransition } from "./lib/press";
 import { Spinner } from "./spinner";
 
@@ -34,9 +35,6 @@ export type ButtonVariant = "default" | "secondary" | "ghost" | "destructive";
 
 /** A button's size: 24 / 28 / 34 points with a pointer, 36 / 40 / 48 on a touch screen. */
 export type ButtonSize = "sm" | "default" | "lg";
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
 
 /** Options of `buttonLook`, `buttonLabel` and `buttonGlyph` (the same object for all three). */
 export interface ButtonLookOptions {
@@ -107,9 +105,6 @@ const sink = (scale: number): ViewStyle => pressSink(scale).activeStyle;
 /** The properties a button's states change, eased over 150 ms: the press's
  * sink (Design Guides, "Motion") and the hover's and press's colors. */
 const transition = pressTransition("background-color, border-color, box-shadow, opacity");
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** The style props a look fills: the shell writes each as its own prop, never as a
  * spread object, which is read once and keeps the appearance it was built in. */
@@ -726,4 +721,47 @@ export function SplitButtonSegment(props: SplitButtonSegmentProps) {
 export function SplitButtonDivider(props: SplitButtonDividerProps = {}) {
   const ctx = useSplit();
   return <View style={[ctx.look.divider, props.style ?? null]} />;
+}
+
+/** What a trigger's action takes: a string child wears the button, anything else presses where it is. */
+export interface ActionProps {
+  children?: string | JSX.Element;
+  /** The button's variant, for a string child (default `secondary`). */
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  style?: StyleProp<ViewStyle>;
+  /** Runs when it is pressed; a disabled one does not. */
+  onPress: () => void;
+}
+
+/**
+ * A trigger's action: a string presses as a `Button` of its variant; anything else (an icon, a
+ * glyph of its own) presses where it lies, in a view a screen reader still calls a button and the
+ * keyboard still rings.
+ */
+export function Action(props: ActionProps) {
+  if (typeof props.children === "string") {
+    return (
+      <Button
+        variant={props.variant ?? "secondary"}
+        disabled={props.disabled}
+        style={props.style}
+        onPress={props.onPress}
+      >
+        {props.children}
+      </Button>
+    );
+  }
+  return (
+    <View
+      accessible
+      role="button"
+      accessibilityState={{ disabled: props.disabled }}
+      focusVisibleStyle={focusRing()}
+      onPress={props.disabled ? undefined : props.onPress}
+      style={props.style}
+    >
+      {props.children}
+    </View>
+  );
 }

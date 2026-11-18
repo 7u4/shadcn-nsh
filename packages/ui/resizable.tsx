@@ -8,6 +8,8 @@ import {
   type ResizablePanelProps as BasePanelProps,
 } from "nsh/base";
 
+import { joinClass } from "./lib/classes";
+
 // @port look/workspace.tsx
 /**
  * The thumb of a resize handle (`handleThumbClass`), as gpui-component
@@ -36,9 +38,8 @@ export function resizableHandleLook(axis: "horizontal" | "vertical") {
 }
 // @port end
 
-function mergeClass(base: string, extra?: string | null): string {
-  return extra ? `${base} ${extra}` : base;
-}
+/** What a resize handle announces when its group is given no label of its own. */
+export const RESIZE_HANDLE_LABEL = "Resize";
 
 /** Every prop of `nsh/base` ResizablePanelGroup, plus the handle's look. */
 export type ResizablePanelGroupProps = BaseGroupProps;
@@ -64,12 +65,12 @@ export function ResizablePanelGroup(props: ResizablePanelGroupProps) {
     <BaseGroup
       {...rest}
       axis={props.axis}
-      handleAccessibilityLabel={props.handleAccessibilityLabel ?? "Resize"}
+      handleAccessibilityLabel={props.handleAccessibilityLabel ?? RESIZE_HANDLE_LABEL}
       class={props.class}
       style={props.style}
-      handleClass={mergeClass(look.handleClass, props.handleClass)}
+      handleClass={joinClass(look.handleClass, props.handleClass)}
       handleStyle={props.handleStyle}
-      handleThumbClass={mergeClass(look.handleThumbClass, props.handleThumbClass)}
+      handleThumbClass={joinClass(look.handleThumbClass, props.handleThumbClass)}
       handleThumbStyle={props.handleThumbStyle}
     />
   );

@@ -12,12 +12,6 @@ import { menuHighlight, menuItemSize, menuPopup } from "./menu";
 
 const pointer = platform.desktop;
 
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
-
 /** A bar's height, its padding and the gap between its triggers, and a trigger's height: with a
  * pointer a 36-point bar around 26-point triggers (shadcn's `h-9` and `h-7`), on a touch screen 50
  * and 40, a finger's target. */
@@ -174,7 +168,7 @@ export type MenubarTriggerProps = {
 };
 
 type MenubarMenuContextValue = OpenState & {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   onOpen?: () => void;
   onClose?: () => void;
   onCancel?: () => void;
@@ -200,7 +194,7 @@ export function Menubar(props: MenubarProps) {
 /** One menu of the bar: it owns whether it is open, and the trigger slot. */
 export function MenubarMenu(props: MenubarMenuProps) {
   const state = createOpenState<OpenChangeReason>(props);
-  const triggerSlot = createSlot();
+  const triggerSlot = createSlot<JSX.Element>();
   return (
     <MenubarMenuContext.Provider
       value={{
@@ -276,7 +270,7 @@ export function MenubarContent(props: MenubarContentProps) {
     <BaseMenu
       {...rest}
       open={ctx.open()}
-      trigger={(triggerAccessor?.() as JSX.Element) ?? <View />}
+      trigger={triggerAccessor?.() ?? <View />}
       placement={props.placement ?? "bottom"}
       align={props.align ?? "start"}
       offset={props.offset ?? 8}
@@ -323,3 +317,4 @@ export {
   type MenuSubProps as MenubarSubProps,
   type MenuSubTriggerProps as MenubarSubTriggerProps,
 } from "./menu";
+import { type Live, read } from "./lib/live";

@@ -54,7 +54,7 @@ export type HoverCardTriggerProps = {
 };
 
 type HoverCardContextValue = OpenState & {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   /** The trigger is disabled: the card stays closed. Reads the trigger's latest value. */
   disabled: () => boolean;
   setDisabled: (read: () => boolean) => void;
@@ -73,7 +73,7 @@ function useHoverCard() {
 /** The root of a hover card's parts. */
 export function HoverCard(props: HoverCardProps) {
   const state = createOpenState<OpenChangeReason>(props);
-  const trigger = createSlot();
+  const trigger = createSlot<JSX.Element>();
   // The trigger registers whether it is disabled; the card reads it when it would open.
   const disabledTrigger = { read: () => false };
   return (
@@ -147,7 +147,7 @@ export function HoverCardContent(props: HoverCardContentProps) {
     <BaseHoverCard
       {...rest}
       open={ctx.disabled() ? false : ctx.open()}
-      trigger={(triggerAccessor?.() as JSX.Element) ?? <View />}
+      trigger={triggerAccessor?.() ?? <View />}
       placement={placement()}
       align={props.align}
       offset={props.offset}

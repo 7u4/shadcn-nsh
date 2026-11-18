@@ -22,6 +22,7 @@ import {
   type CarouselProps as BaseCarouselProps,
 } from "nsh/base";
 
+import { joinClass } from "./lib/classes";
 import { Icon } from "./lib/icons";
 import { pressSink, pressTransition } from "./lib/press";
 
@@ -157,12 +158,6 @@ export function CarouselDot(props: { selected: boolean }) {
 }
 // @port end
 
-/** A class with `extra` after it, or the base alone when there is nothing extra. */
-function mergeClass(base: string, extra?: string | null): string | undefined {
-  if (extra == null) return base;
-  return `${base} ${extra}`;
-}
-
 /** `top` over `under` as two styles, or `under` alone when there is nothing over it. */
 function over(under: StyleProp<ViewStyle>, top: StyleProp<ViewStyle>): StyleProp<ViewStyle> {
   return top == null ? under : [under, top];
@@ -240,7 +235,7 @@ export function CarouselItem(props: CarouselItemProps) {
   return (
     <BaseItem
       {...rest}
-      class={mergeClass("w-full", props.class)}
+      class={joinClass("w-full", props.class)}
       style={over({ flexShrink: 0, alignItems: "center", justifyContent: "center" }, props.style)}
     />
   );
@@ -346,7 +341,7 @@ export function CarouselPaginationItem(props: CarouselPaginationItemProps) {
     <BasePaginationItem
       {...rest}
       accessibilityLabel={props.accessibilityLabel ?? `Slide ${props.index + 1}`}
-      class={mergeClass(look.class, props.class)}
+      class={joinClass(look.class, props.class)}
       style={over(look.style, props.style)}
       focusVisibleStyle={over(look.focusVisibleStyle, props.focusVisibleStyle)}
     >

@@ -53,7 +53,7 @@ export type CollapsibleTriggerProps = {
 };
 
 type CollapsibleContextValue = OpenState & {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
 };
 
 const CollapsibleContext = context<CollapsibleContextValue | null>(null);
@@ -67,7 +67,7 @@ function useCollapsible() {
 /** Owns open state for `CollapsibleTrigger` and `CollapsibleContent`. */
 export function Collapsible(props: CollapsibleProps) {
   const state = createOpenState(props);
-  const trigger = createSlot();
+  const trigger = createSlot<JSX.Element>();
   return (
     <CollapsibleContext.Provider value={{ ...state, trigger }}>
       {props.children}
@@ -130,7 +130,7 @@ export function CollapsibleContent(props: CollapsibleContentProps) {
       style={[{ alignItems: "stretch" }, props.style ?? null]}
       content={<View style={disclosurePanel(panel)}>{props.children}</View>}
     >
-      {(trigger?.() as JSX.Element) ?? <View />}
+      {trigger?.() ?? <View />}
     </BaseCollapsible>
   );
 }

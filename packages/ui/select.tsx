@@ -18,11 +18,13 @@ import { Icon } from "./lib/icons";
 import {
   Chevron,
   clearButtonLook,
+  clearInset,
   listboxProps,
   ListboxEmpty,
   ListboxHeader,
   OptionRow,
 } from "./lib/listbox";
+import { type Live, read } from "./lib/live";
 import {
   createItemRegistry,
   createOpenState,
@@ -36,12 +38,6 @@ import { controlSize } from "./lib/surface";
 // @port look/listbox.tsx
 const pointer = platform.desktop;
 
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
-
 /** A trigger's least width with a pointer: room for the list's rows, which are as wide as it. */
 const minTriggerWidth = 180;
 
@@ -54,10 +50,6 @@ const edgeFade = 120;
 
 /** How far a pressed trigger sinks to, as a button's does. */
 const pressedOpacity = 0.7;
-
-/** The clear button's inset from a trigger's end: centered where the chevron's lane is. The button is in the
- * select's view, outside the trigger, so its inset counts the trigger's 1-point border too. */
-const clearInset = 1 + 10 + controlSize.check / 4 - controlSize.clear / 2;
 
 /** A trigger's variants: `default` shadcn's field, `outline` an outline button of shadcn's, on the raised finish. */
 export type PickerVariant = "default" | "outline";
@@ -365,9 +357,9 @@ function splitTriggerStyle(style: ViewStyle | undefined): { layout: ViewStyle; l
 
 type SelectContextValue = OpenState & {
   items: ItemRegistry<SelectItemData>;
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   /** Where the trigger sits: `SelectTrigger`'s layout, for `SelectContent`'s view to wear. */
-  triggerLayout: Slot;
+  triggerLayout: Slot<ViewStyle>;
   value: () => string | null;
   change: (event: { value: string | null }) => void;
   /** The placeholder: `SelectValue`'s, else the root's, else "Select…". */
@@ -416,8 +408,8 @@ function triggerOf(ctx: SelectContextValue): JSX.Element {
 export function Select(props: SelectProps) {
   const state = createOpenState<OpenChangeReason>(props);
   const items = createItemRegistry<SelectItemData>([]);
-  const trigger = createSlot();
-  const triggerLayout = createSlot();
+  const trigger = createSlot<JSX.Element>();
+  const triggerLayout = createSlot<ViewStyle>();
   const prompt = signal<string | undefined>(undefined);
   const picked = signal(false);
   const chosen = signal<string | null>(null);
@@ -515,7 +507,7 @@ export function SelectContent(props: SelectContentProps) {
   return (
     // The select's box in the app's layout: `nsh/base`'s Select fills it, and the trigger's own
     // layout goes on it, since base's view sizes to its content.
-    <View style={ctx.triggerLayout.get()?.() as ViewStyle | undefined}>
+    <View style={ctx.triggerLayout.get()?.()}>
       {props.children}
       {() => {
         const chrome = listboxProps({ minWidth: props.minWidth });

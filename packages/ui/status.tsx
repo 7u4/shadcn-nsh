@@ -2,12 +2,9 @@
 import { colors, terminal, toneColor, type Tone } from "@shadcn-nsh/theme";
 import { Text, View } from "nsh";
 
-// @port index.tsx
-/** A value, or a function reading it where the status is drawn (a signal). */
-type Live<T> = T | (() => T);
+import { read } from "./lib/live";
 
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
+// @port index.tsx
 
 /** The dot's diameter; half of it is its corner, a full circle. */
 const dotSide = 7;

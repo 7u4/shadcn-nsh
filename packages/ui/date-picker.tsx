@@ -15,16 +15,12 @@ import {
 import { CalendarItem, calendarLook, TimeSegment } from "./calendar";
 import { timeFieldClass } from "./input";
 import { clearButtonLook, listboxPopup } from "./lib/listbox";
+import { type Live, read } from "./lib/live";
 import { createOpenState, createSlot, type OpenState, type Slot } from "./lib/open-state";
 import { backdrop } from "./lib/overlay";
 import { Picker, type PickerProps } from "./select";
 
 // @port look/listbox.tsx
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /**
  * A date picker's trigger (`DatePicker`'s `trigger`), shadcn's: `Picker`
@@ -149,7 +145,7 @@ export type DatePickerTriggerProps = {
 };
 
 type DatePickerContextValue = OpenState & {
-  trigger: Slot;
+  trigger: Slot<JSX.Element>;
   value: () => DatePickerValue;
   change: (event: { value: DatePickerValue }) => void;
   root: DatePickerProps;
@@ -190,7 +186,7 @@ function triggerOf(ctx: DatePickerContextValue): JSX.Element {
 /** The root of a date picker's parts. Put `DatePickerTrigger` before `DatePickerContent`. */
 export function DatePicker(props: DatePickerProps) {
   const state = createOpenState<OpenChangeReason>(props);
-  const trigger = createSlot();
+  const trigger = createSlot<JSX.Element>();
   const picked = signal(false);
   const chosen = signal<DatePickerValue>(null);
   const value = () => {
