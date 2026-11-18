@@ -335,7 +335,8 @@ export type MenuRadioItemProps = Omit<MenuItemProps, "checked"> & {
   checked?: boolean | null;
 };
 
-/** A group of rows: `nsh/base` has no group part, so this is the library's own view. */
+/** A group of rows: `nsh/base` has no group part, so this is the library's own view, `group` to
+ * screen readers so its rows are announced as one set. */
 export type MenuGroupProps = {
   children?: JSX.Element;
   style?: StyleProp<ViewStyle>;
@@ -551,7 +552,11 @@ export function MenuRadioItem(props: MenuRadioItemProps) {
 
 /** Groups related rows. */
 export function MenuGroup(props: MenuGroupProps) {
-  return <View style={props.style}>{props.children}</View>;
+  return (
+    <View role="group" style={props.style}>
+      {props.children}
+    </View>
+  );
 }
 
 /** A hairline between groups. */
