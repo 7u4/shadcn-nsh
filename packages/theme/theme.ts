@@ -280,6 +280,21 @@ export const colors: Palette = tokens<keyof Palette>({
 });
 
 /**
+ * The window buttons an app draws for a frameless window on macOS (the
+ * traffic lights): close, minimize and zoom in the system's hues, the
+ * glyphs' ink over them, their hairline edge, and `off`, all three while
+ * the window is in the background.
+ */
+export const windowControls = tokens<"close" | "minimize" | "zoom" | "ink" | "edge" | "off">({
+  close: "window-close",
+  minimize: "window-minimize",
+  zoom: "window-zoom",
+  ink: "window-control-ink",
+  edge: "window-control-edge",
+  off: "window-control-off",
+});
+
+/**
  * `color` at opacity `a` (0 to 1): a `color-mix` over nothing, for a fill or a text color that is
  * the theme's at a lighter weight. Clamped, so a ratio past its ends is still a color.
  */
