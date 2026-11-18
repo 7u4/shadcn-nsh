@@ -23,7 +23,7 @@ shadcn-nsh@latest init [options]
 | `--theme <name>`   | Theme to install: `default`, `shadcn` or `solid-glass`. | `default`             |
 | `--registry <url>` | Registry URL template containing `{name}`.              | The public registry   |
 
-```sh
+```npm
 npx shadcn-nsh@latest init -c apps/web
 ```
 
@@ -49,7 +49,7 @@ Name at least one item, or pass `--all`.
 | `--dry-run`        | Print what would be written; write nothing.  | `false`                                       |
 | `--registry <url>` | Registry URL template containing `{name}`.   | `nsh-ui.json`'s registry, else the public one |
 
-```sh
+```npm
 npx shadcn-nsh@latest add button
 npx shadcn-nsh@latest add --all
 npx shadcn-nsh@latest add button --dry-run
@@ -76,7 +76,7 @@ shadcn-nsh@latest list [options]
 | `--json`           | Print the catalog as JSON.                 | `false`                                       |
 | `--registry <url>` | Registry URL template containing `{name}`. | `nsh-ui.json`'s registry, else the public one |
 
-```sh
+```npm
 npx shadcn-nsh@latest list
 ```
 
@@ -95,7 +95,7 @@ shadcn-nsh@latest view [options] <items...>
 | `-c, --cwd <cwd>`  | App or monorepo directory.                 | The current directory                         |
 | `--registry <url>` | Registry URL template containing `{name}`. | `nsh-ui.json`'s registry, else the public one |
 
-```sh
+```npm
 npx shadcn-nsh@latest view button
 ```
 
@@ -112,14 +112,14 @@ shadcn-nsh@latest diff [options] [items...]
 | `-c, --cwd <cwd>`  | App or monorepo directory.                 | The current directory                         |
 | `--registry <url>` | Registry URL template containing `{name}`. | `nsh-ui.json`'s registry, else the public one |
 
-```sh
+```npm
 npx shadcn-nsh@latest diff
 npx shadcn-nsh@latest diff button
 ```
 
 Without an item it lists the installed items that differ; with one it prints the changed lines. `-` is a line of the app's file that overwriting would drop, `+` one it would add. A recolored `theme.json` is not a difference; a missing key is.
 
-```sh
+```npm
 npx shadcn-nsh@latest diff || echo "run shadcn-nsh@latest add <item> --overwrite"
 ```
 
@@ -144,7 +144,7 @@ The argument is the registry file (default `./registry.json`). It fails when an 
 | `-o, --output <path>` | Output directory.  | `./public/r`          |
 | `-c, --cwd <cwd>`     | Working directory. | The current directory |
 
-```sh
+```npm
 npx shadcn-nsh@latest build
 ```
 
@@ -162,7 +162,7 @@ shadcn-nsh@latest serve [options]
 | `-d, --dir <path>`  | Registry directory. | `./public/r`          |
 | `-c, --cwd <cwd>`   | Working directory.  | The current directory |
 
-```sh
+```npm
 npx shadcn-nsh@latest serve
 npx shadcn-nsh@latest add button --registry "http://127.0.0.1:4173/{name}.json"
 ```

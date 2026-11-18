@@ -7,7 +7,7 @@ demo: message
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add message
 ```
 

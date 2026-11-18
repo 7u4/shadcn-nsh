@@ -7,7 +7,7 @@ demo: attachment
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add attachment
 ```
 

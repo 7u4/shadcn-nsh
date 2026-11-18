@@ -7,7 +7,7 @@ demo: nav-stack
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add nav-stack
 ```
 

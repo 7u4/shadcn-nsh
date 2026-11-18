@@ -48,7 +48,7 @@ demoHeight: 480 # optional, overlays only
 
 A component page's body has these sections, in this order, and nothing else at `##` (the full rule, with the order of Examples' subsections, is [`docs/port.md`](../../docs/port.md) § 文档页):
 
-1. **Installation** — one `sh` fence: `npx shadcn-nsh@latest add <slug>`.
+1. **Installation** — one fence tagged `npm`: `npx shadcn-nsh@latest add <slug>`. Fumadocs' `remarkNpm` (configured in `vite.config.ts`) draws it as the npm / pnpm / bun tabs; don't write the three commands by hand.
 2. **Usage** — the import from `@/components/ui/<slug>`, then one minimal use.
 3. **Examples** — one `###` per variant, size, state or common use, each with a short `tsx` snippet, in that order: `Variant` / `Tone`, `Size`, the states (`Disabled`, `Invalid`, `Read-only`, `Loading`), everything else, `Controlled` / `Uncontrolled` last. The sections show what `apps/docs/demos/<slug>.tsx` shows, and every prop is one the component really has.
 4. **Differences from shadcn/ui** — optional: what the shadcn/ui component of the same name has that this does not, what this adds, and where behavior differs. Every comparison with shadcn lives here, nowhere else on the page.

@@ -7,7 +7,7 @@ demo: hover-card
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add hover-card
 ```
 

@@ -5,6 +5,8 @@ import { fumadocsMdx } from "fumadocs-mdx/vite";
 import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 
+import { PACKAGE_MANAGER_GROUP, PACKAGE_MANAGERS } from "./src/lib/package-managers";
+
 /** The prefix GitHub Pages serves the site under; `src/lib/site.ts` reads it back from Vite. */
 const BASE = "/shadcn-nsh/";
 
@@ -21,7 +23,19 @@ export default defineConfig({
     port: 4321,
   },
   plugins: [
-    fumadocsMdx(),
+    // A command fenced as `npm` becomes a Fumadocs `CodeBlockTabs` group whose tabs are this site's
+    // three package managers; the shared `groupId` + `persist` keeps the choice across blocks and
+    // pages. `remarkNpmOptions` is the only MDX option the site sets, so the default preset stays.
+    fumadocsMdx({
+      globalOptions: {
+        mdxOptions: {
+          remarkNpmOptions: {
+            persist: { id: PACKAGE_MANAGER_GROUP },
+            packageManagers: PACKAGE_MANAGERS,
+          },
+        },
+      },
+    }),
     tailwindcss(),
     tanstackStart({
       router: { basepath: BASE.replace(/\/+$/, "") },

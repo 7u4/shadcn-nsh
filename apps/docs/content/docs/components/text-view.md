@@ -7,7 +7,7 @@ demo: text-view
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add text-view
 ```
 

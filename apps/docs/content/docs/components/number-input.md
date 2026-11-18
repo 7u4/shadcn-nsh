@@ -7,7 +7,7 @@ demo: number-input
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add number-input
 ```
 

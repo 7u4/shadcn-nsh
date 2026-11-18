@@ -7,7 +7,7 @@ demo: skeleton
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add skeleton
 ```
 

@@ -7,7 +7,7 @@ demo: plot
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add plot
 ```
 

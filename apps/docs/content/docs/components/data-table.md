@@ -7,7 +7,7 @@ demo: data-table
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add data-table
 ```
 

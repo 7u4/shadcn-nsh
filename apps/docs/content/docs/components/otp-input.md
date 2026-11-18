@@ -7,7 +7,7 @@ demo: otp-input
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add otp-input
 ```
 

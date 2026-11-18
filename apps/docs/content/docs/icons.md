@@ -7,7 +7,7 @@ The icons are [lucide](https://lucide.dev/icons)'s, drawn by `Icon` from `lib/ic
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add icons
 ```
 

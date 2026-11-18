@@ -8,7 +8,7 @@ demoHeight: 460
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add navigation-menu
 ```
 

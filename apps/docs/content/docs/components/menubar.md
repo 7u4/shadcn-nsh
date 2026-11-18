@@ -7,7 +7,7 @@ demo: menubar
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add menubar
 ```
 

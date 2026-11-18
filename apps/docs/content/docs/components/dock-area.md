@@ -7,7 +7,7 @@ demo: dock-area
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add dock-area
 ```
 
