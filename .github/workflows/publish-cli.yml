@@ -1,21 +1,13 @@
 name: Publish shadcn-nsh CLI
 
+# A release is a `v*` tag on a commit whose `packages/cli/package.json` has that version
+# (docs/release.md). The CLI reads the registry at its own tag, so the tag is what ships.
+# A manual run only rehearses: it packs and runs `npm publish --dry-run`.
 on:
-  workflow_dispatch:
-    inputs:
-      dry_run:
-        description: "npm publish --dry-run (no upload)"
-        type: boolean
-        default: false
-      tag:
-        description: "npm dist-tag (empty = latest)"
-        required: false
-        type: string
-        default: ""
   push:
     tags:
       - "v*"
-      - "cli-v*"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -25,8 +17,17 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # The same gate as a pull request: what the tag points at must pass it.
+  check:
+    uses: ./.github/workflows/check.yml
+
   publish:
+    needs: check
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # npm provenance: the package says which workflow run built it.
+      id-token: write
     defaults:
       run:
         working-directory: packages/cli
@@ -37,17 +38,27 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: latest
+          bun-version-file: package.json
 
       - name: Setup Node
         uses: actions/setup-node@v7
         with:
-          node-version: latest
+          node-version: 26
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
         working-directory: .
         run: bun install --frozen-lockfile
+
+      # The tag names the version the CLI reports and the registry it reads: they must agree.
+      - name: Tag matches the CLI version
+        if: github.event_name == 'push'
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
+            echo "::error::tag ${GITHUB_REF_NAME} is not v${version} (packages/cli/package.json)"
+            exit 1
+          fi
 
       - name: Build CLI
         run: bun run build
@@ -59,17 +70,16 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
+          if [ "${{ github.event_name }}" != "push" ]; then
+            npm publish --access public --provenance --dry-run
+            exit 0
+          fi
           if [ -z "${NODE_AUTH_TOKEN}" ]; then
-            echo "NPM_TOKEN secret is missing; cannot publish."
+            echo "::error::NPM_TOKEN secret is missing; cannot publish."
             exit 1
           fi
-
-          EXTRA_ARGS=()
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "${{ inputs.dry_run }}" = "true" ]; then
-            EXTRA_ARGS+=(--dry-run)
-          fi
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ inputs.tag }}" ]; then
-            EXTRA_ARGS+=(--tag "${{ inputs.tag }}")
-          fi
-
-          npm publish --access public "${EXTRA_ARGS[@]}"
+          # A pre-release version (1.2.0-beta.1) goes to the `next` dist-tag, never `latest`.
+          case "${GITHUB_REF_NAME}" in
+            *-*) npm publish --access public --provenance --tag next ;;
+            *) npm publish --access public --provenance ;;
+          esac

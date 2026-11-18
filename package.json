@@ -1,6 +1,7 @@
 {
   "name": "shadcn-nsh-monorepo",
   "private": true,
+  "license": "MIT",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -47,5 +48,6 @@
     "oxc-parser": "^0.158.0",
     "typescript": "7.1.0-beta",
     "vite-plus": "^1.4.0"
-  }
+  },
+  "packageManager": "bun@1.4.4"
 }
