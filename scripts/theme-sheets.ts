@@ -17,7 +17,7 @@ import path from "node:path";
 import { shotsDir } from "./audit/targets";
 import { repo } from "./port/lib";
 
-/** The components `docs/specs/theme-shadcn.md` compares, and the kind (or of them) a row shows. */
+/** The components `docs/archive/theme-shadcn.md` compares, and the kind (or of them) a row shows. */
 const LIST = [
   "button",
   "toggle",

@@ -13,7 +13,7 @@
  * per appearance. Screenshots land in `apps/docs/demos/shots-audit/theme/` as
  * `<id>-<name>-<kind>-<layout>-<appearance>.png`, out of the audit's own names.
  *
- * `docs/specs/theme-shadcn.md` is what this was run for; it is not part of the check pipeline.
+ * `docs/archive/theme-shadcn.md` is what this was run for; it is not part of the check pipeline.
  */
 import { spawnSync } from "node:child_process";
 import fs from "node:fs";

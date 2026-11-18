@@ -3,7 +3,7 @@
 import { colors, terminal, toneColor, type Tone } from "@shadcn-nsh/theme";
 import { Text, View } from "nsh";
 
-import { read } from "./lib/utils";
+import { type Live, read } from "./lib/utils";
 
 // @port index.tsx
 
@@ -17,7 +17,7 @@ export function Stat(props: {
   label: string;
   value: string;
   /** The value's tone: the text's color by default; a function is read where the figure is drawn. */
-  tone?: Tone | (() => Tone);
+  tone?: Live<Tone>;
   width?: `${number}%`;
   truncate?: boolean;
 }) {

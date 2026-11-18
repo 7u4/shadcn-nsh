@@ -1,6 +1,6 @@
 /**
  * Writes `packages/theme/themes/shadcn/theme.json` and `finishes.json` from the shadcn default
- * theme: the two files the experiment in `docs/specs/theme-shadcn.md` runs on.
+ * theme: the two files the experiment in `docs/archive/theme-shadcn.md` runs on.
  *
  *   bun scripts/theme/generate-shadcn.ts          # writes them, prints the palette's sRGB
  *

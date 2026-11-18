@@ -228,7 +228,7 @@ bun scripts/audit/sheet.ts --out sheet.png --cols 3 a.png b.png c.png   # 拼对
 > | `dialog` 的 `presentation="pageSheet"` 没有面板外观                        | 上游也没有（`el-dialog.tsx:120-152` 自带 style），保留演示的应用样式                          |
 > | `data-table` 触屏行高 44，官方是 32                                        | 交给 base 的默认 32（`el-data-table.tsx` 不传 `rowHeight`）                                   |
 >
-> 这些都不改变"六个已知问题的根因在套件与演示写法"：它们在 `docs/specs/demo-parity.md` 的"完成情况"里逐条附了证据。
+> 这些都不改变"六个已知问题的根因在套件与演示写法"：它们在 `docs/archive/demo-parity.md` 的"完成情况"里逐条附了证据。
 
 ### 3.3 任务 4：官方示例移植（按家族）
 

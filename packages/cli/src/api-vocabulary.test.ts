@@ -89,18 +89,14 @@ const glossary = () => readFileSync(new URL("docs/GLOSSARY.md", root), "utf8");
 
 /**
  * The components that take the theme's `Tone` (`docs/specs/api-unify.md` §4.3 R9): one type, one
- * writing on a prop, a value or a function read where the control draws (`Tone | (() => Tone)`).
- * A look's option keeps `Live<Tone | undefined>` (§4.4), and `otp-input` reads a verdict that may
- * be absent, so its function form may return `undefined` too.
+ * writing on a prop, a value or a function read where the control draws (`Live<Tone>`, which
+ * `lib/utils` defines as `Tone | (() => Tone)`). `otp-input` reads a verdict that may be absent,
+ * so a tone a look or a prop may not have is `Live<Tone | undefined>` (§4.4).
  */
 const TONE_WRITERS = ["badge", "meter", "stat", "status", "progress", "diff-view"];
 
-/** The three ways a `tone` is written: a props', a look option's, and `otp-input`'s. */
-const TONE_WRITINGS = [
-  "tone?: Tone | (() => Tone);",
-  "tone?: Live<Tone | undefined>;",
-  "tone?: Tone | (() => Tone | undefined);",
-];
+/** The two ways a `tone` is written: one that is always there, and one that may be absent. */
+const TONE_WRITINGS = ["tone?: Live<Tone>;", "tone?: Live<Tone | undefined>;"];
 
 /** The `tone` members a module declares, trimmed. */
 const tonePropsOf = (file: string) =>
@@ -144,9 +140,9 @@ describe("the API's vocabulary", () => {
     }
   });
 
-  test("every component's `tone` is `Tone | (() => Tone)`, read where the control draws", () => {
+  test("every component's `tone` is `Live<Tone>`, read where the control draws", () => {
     for (const id of TONE_WRITERS) {
-      expect(tonePropsOf(`packages/ui/${id}.tsx`), id).toContain("tone?: Tone | (() => Tone);");
+      expect(tonePropsOf(`packages/ui/${id}.tsx`), id).toContain("tone?: Live<Tone>;");
     }
   });
 

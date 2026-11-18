@@ -1,3 +1,5 @@
+import packageJson from "../package.json" with { type: "json" };
+
 export type RegistryFile = {
   path: string;
   type: string;
@@ -50,8 +52,11 @@ export type NshUiConfig = {
   };
 };
 
-export const DEFAULT_REGISTRY =
-  "https://raw.githubusercontent.com/aningdev/shadcn-nsh/main/public/r/{name}.json";
+/**
+ * The registry published with the release this CLI came from: the files it reads are the ones its
+ * own version wrote, so a newer release never changes what an installed app's `add` fetches.
+ */
+export const DEFAULT_REGISTRY = `https://raw.githubusercontent.com/aningdev/shadcn-nsh/v${packageJson.version}/public/r/{name}.json`;
 
 /** The theme item every component depends on, and the one an app gets when it names none. */
 export const DEFAULT_THEME = "theme";
