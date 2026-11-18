@@ -86,6 +86,14 @@ bun run port:new alert --view --family   # 有零件（Title / Description…）
 
 页面看到的窗口与官方一致：Phone 是 390 × 640 的 phone idiom（`platform.desktop` 为假），Desktop 是 1024 宽的 desktop idiom（列宽不够时取列宽，不缩放）；切换布局重载 frame（idiom 启动时定下），主题变化发给运行中的应用（详见 `apps/docs/scripts/player-options.ts`）。
 
+**窄屏**：每个演示放得进 320 宽的手机（iPhone SE），不越出卡片、不伸进页边。`bun run check:narrow` 在 320 × 2000 下截每页的首帧，页面右边 16 点必须是空白页面，否则点名。写演示时：
+
+- 固定宽度（骨架线、卡片、一行几格）同时写 `maxWidth: "100%"`，窄时随父级收窄；
+- 行里的文字列（图标 + 两行字、标签 + 输入）写 `flexShrink: 1, minWidth: 0`，让它换行而不是撑宽一行；
+- 一行放不下的几个块（三格表面、两个按钮）用 `flexWrap: "wrap"` 或改成 `axis="block"`。
+
+占满整屏、自带边距的演示（`nav-stack`）在 `scripts/port/narrow.ts` 的 `FILLS_THE_SCREEN` 里登记并写明理由。参照页跟着同样改，`port:render` 才对得上。
+
 ## 文档页
 
 照 shadcn 的篇幅与顺序。页面外壳由 `apps/docs/src/routes/docs/$.tsx` 生成：标题、描述，一排徽章（Copy Markdown、`NSH ↗`、`shadcn/ui ↗`，有对应才出现），然后是 Preview 面板。行为、键盘与无障碍、完整的无样式 API 都在 NSH 页上，本页不重复，也不列源码路径。
@@ -144,6 +152,7 @@ bun run port:new alert --view --family   # 有零件（Title / Description…）
 | `bun run port:render`       | P4 的指针一半：web，亮 / 暗；每对逐字节比较；跑完与 `apps/docs/demos/baseline/` 逐字节比较（仅 macOS；CI 加 `--no-baseline`）；`--only <id,...>` 按 id 精确只跑这几个。**唯一的例外**：`render-cases.ts` 里写了 `tolerance` 的页（目前只有 `avatar`，圆形照片的边缘）由 `render.ts` 按"至多 30 个像素、每个通道至多 32/255"比较，布局变化仍必失败，数字与实测写在该 case 的注释里 | 提交前、CI                    |
 | `bun run port:render:touch` | P4 的触屏一半：iOS 模拟器，亮 / 暗（同样由 `render-touch.ts` 按字节或抗锯齿预算比较）；之后跑外观切换检查                                                                                                                                                                                                                                                                         | 提交前（本地）                |
 | `bun run port:render:theme` | shadcn 主题下的渲染：`render-theme.ts` 把演示复制一份（`apps/docs/demos-themed/`，被忽略），每页在 `mount` 之前 `selectTheme(shadcn)`，同一批页与参照页按同样的预算比较（112 对）；**不进基线**——截图留在 `apps/docs/demos/shots-theme/`，`port:sheet` 有图时多出两列；`--only` 同 `port:render`                                                                                  | 改主题数据后                  |
+| `bun run check:narrow`      | 每个演示的首帧放得进 320 宽：页面右边距是空白页面（`scripts/port/narrow.ts`，`--only` 同 `port:render`）；整屏演示的豁免带理由登记在脚本里                                                                                                                                                                                                                                        | 改演示布局后、发版前          |
 | `bun run registry:build`    | P6：依赖等于 import，相对 import 都有条目分发                                                                                                                                                                                                                                                                                                                                     | 改组件后                      |
 | `bun run test:unit`         | CLI 与主题；`ui-guards.test.ts` 扫 `packages/ui`、`lib`、主题读取层、`apps/docs/demos` 全集的颜色字面量（P3，含 Port Region）；有理由的豁免写在测试里                                                                                                                                                                                                                             | 每次                          |
 | `bun run test:gallery`      | 原生行为：按键、取值、禁用                                                                                                                                                                                                                                                                                                                                                        | 改行为后                      |
