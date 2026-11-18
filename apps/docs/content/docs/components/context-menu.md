@@ -91,13 +91,20 @@ with it — as shadcn's `inset`. `ContextMenuLabel` and `ContextMenuSubTrigger` 
 <ContextMenu onOpenChange={({ open, reason }) => log(open, reason)}>…</ContextMenu>
 ```
 
+## Differences from shadcn/ui
+
+- No `ContextMenuPortal`: `nsh/base` draws the popup over the screen.
+- No `ContextMenuRadioGroup`: `ContextMenuGroup` holds the rows, and each `ContextMenuRadioItem` carries its own `checked`.
+- No `asChild`: `ContextMenuTrigger` wraps its children, in a `View` when it takes a `style`.
+- `onOpenChange` reports `{ open, reason }`.
+
 ## API
 
 Row and popup looks come from Menu. Items, separators, labels and submenus are re-exported as `ContextMenu*` parts.
 
-| Part                 | Notes                           |
-| -------------------- | ------------------------------- |
-| `ContextMenu`        | Open state + trigger slot       |
-| `ContextMenuTrigger` | Secondary click / long-press    |
-| `ContextMenuContent` | Popup / sheet; default offset 4 |
-| `ContextMenuItem` …  | Same as Menu counterparts       |
+| Part                 | Props                                                                                                                                                    | Description                           |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| `ContextMenu`        | `open`, `defaultOpen`, `disabled`, `onOpenChange({ open, reason })`, `onOpen`, `onClose`, `onCancel`                                                     | Open state and the trigger slot       |
+| `ContextMenuTrigger` | `children`, `style`                                                                                                                                      | Secondary click or long press         |
+| `ContextMenuContent` | every `nsh/base` ContextMenu prop but open state, `disabled`, `trigger` and the lifecycle callbacks; `offset` (default 4), `popupStyle`, `backdropStyle` | The popup or sheet                    |
+| `ContextMenuItem` …  | as the Menu counterparts                                                                                                                                 | Rows, labels, separators and submenus |

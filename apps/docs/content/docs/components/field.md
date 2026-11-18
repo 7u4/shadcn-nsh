@@ -71,6 +71,11 @@ row, the label as wide as its text and the control taking the rest.
 of a horizontal field. A label inside `FieldContent` keeps the label's width rather than the
 room left by the control, whatever the field's orientation.
 
+A label is not associated with its control: NSH has no `<label for>`, so a screen reader hears the
+control's own `accessibilityLabel`, then the `FieldLabel` as separate text. Give the control the
+same words: `<Input accessibilityLabel="Email" />` beside `<FieldLabel>Email</FieldLabel>`. A
+control that carries its own label (`<Checkbox>Hard disks</Checkbox>`) needs neither.
+
 ### Responsive
 
 `orientation="responsive"` is `vertical` in a narrow window — a phone, or a narrow desktop
@@ -123,38 +128,31 @@ A `FieldSeparator` is a hairline between fields; with children it is a hairline 
 </Field>
 ```
 
-## Accessibility
-
-- **A label is not associated with its control.** NSH has no `<label for>`: a screen reader hears
-  the control's own `accessibilityLabel`, then the `FieldLabel` as separate text. Give the control
-  the same words: `<Input accessibilityLabel="Email" />` beside `<FieldLabel>Email</FieldLabel>`.
-  A control that carries its own label (`<Checkbox>Hard disks</Checkbox>`) needs neither.
-- **An error is announced where the platform does it by itself.** `FieldError` is a view with
-  `role="alert"` (macOS and the web read it when it appears) and TalkBack's live region
-  (`accessibilityLiveRegion: "assertive"` on Android). iOS has no live region: `UIAccessibility`'s
-  announcement is the app's call, and NSH does not expose it — put the message in the control's
-  `accessibilityHint` there as well if it must be heard the moment it appears.
-- **Mark the control invalid, not just the field.** Pass `invalid` to the control (an `Input`, a
-  `Select`'s trigger): `role="alert"` tells a reader that something is wrong, not which field.
-- A `Field` and a `FieldSet` are `role="group"`: a reader can move by group, and a legend names it.
+An error is announced where the platform does it by itself. `FieldError` is a view with
+`role="alert"` (macOS and the web read it when it appears) and TalkBack's live region
+(`accessibilityLiveRegion: "assertive"` on Android). iOS has no live region: `UIAccessibility`'s
+announcement is the app's call, and NSH does not expose it — put the message in the control's
+`accessibilityHint` there as well if it must be heard the moment it appears. Mark the control
+invalid, not just the field: pass `invalid` to the control (an `Input`, a `Select`'s trigger),
+because `role="alert"` tells a reader that something is wrong, not which field.
 
 ## API
 
+| Part               | Props                                                                          | Description                                               |
+| ------------------ | ------------------------------------------------------------------------------ | --------------------------------------------------------- |
+| `FieldSet`         | every view prop                                                                | `role="group"`, named by its legend                       |
+| `FieldLegend`      | `variant`: `"legend"` (default) or `"label"`; every text prop                  | The set's legend, one step smaller as a label             |
+| `FieldGroup`       | every view prop                                                                | A column of fields, 16 points apart                       |
+| `Field`            | `orientation`: `"vertical"`, `"horizontal"` or `"responsive"`; every view prop | One label and its control, `role="group"`                 |
+| `FieldContent`     | every view prop                                                                | A column that takes the room left                         |
+| `FieldLabel`       | every text prop                                                                | The control's visible name, in a row, as wide as its text |
+| `FieldTitle`       | every text prop                                                                | A label over a group of choices                           |
+| `FieldDescription` | every text prop                                                                | The word under the label (`density.note`, muted)          |
+| `FieldSeparator`   | `children`: the word between the hairlines; every view prop                    | A hairline between fields                                 |
+| `FieldError`       | `errors`, `role="alert"`; every view prop                                      | The messages, read out where the platform does it         |
+
 Every view prop passes through the parts drawn as views, and every text prop the parts drawn as
 texts. `style` goes over the look's, so a width or a gap on a part wins.
-
-| Part               | Renders | Adds                                                          |
-| ------------------ | ------- | ------------------------------------------------------------- |
-| `FieldSet`         | `View`  | `role="group"`                                                |
-| `FieldLegend`      | `Text`  | `variant`: `"legend"` (default) or `"label"`                  |
-| `FieldGroup`       | `View`  | a column, 16 points apart                                     |
-| `Field`            | `View`  | `orientation`: `"vertical"`, `"horizontal"` or `"responsive"` |
-| `FieldContent`     | `View`  | a column that takes the room left                             |
-| `FieldLabel`       | `Text`  | in a row, as wide as its text                                 |
-| `FieldTitle`       | `Text`  | a label over a group of choices                               |
-| `FieldDescription` | `Text`  | `density.note`, muted                                         |
-| `FieldSeparator`   | `View`  | `children`: the word between the hairlines                    |
-| `FieldError`       | `View`  | `errors`, `role="alert"`                                      |
 
 `FieldError`'s `errors` is `Array<{ message?: string } | undefined>`, as a form library reports them
 (a field may collect several). `fieldFamilyLook()` is exported for a field the app draws itself —

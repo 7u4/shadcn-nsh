@@ -61,4 +61,8 @@ columns.map((column) => ({ ...column, fitPadding: dataTableFitPadding }));
 
 ## API
 
+| Part        | Props                                                              | Description                             |
+| ----------- | ------------------------------------------------------------------ | --------------------------------------- |
+| `DataTable` | every `nsh/base` DataTable prop; `classes` over `dataTableClasses` | A striped table, sortable and resizable |
+
 Uses `dataTableClasses` and `dataTableFitPadding`. Every prop of [`nsh/base` DataTable](https://nsh.dev/elements/data-table) passes through.

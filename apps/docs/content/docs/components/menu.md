@@ -66,19 +66,28 @@ import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 
 A string child is the row's label and its name for screen readers; `accessibilityLabel` wins when it should differ. Children drawn as given derive no name.
 
+## Differences from shadcn/ui
+
+- No portal part (`DropdownMenuPortal` in shadcn): `nsh/base` draws the popup.
+- No radio group part (`DropdownMenuRadioGroup` in shadcn): `MenuGroup` holds the rows, and each `MenuRadioItem` carries its own `checked`.
+- No `asChild`: a string child of `MenuTrigger` is a `Button` (`variant`, `secondary` by default), anything else a pressable view.
+- `onOpenChange` reports `{ open, reason }`.
+
 ## API
 
 Looks are `menuItemLook`, `menuPopup`, `menuSeparator`, `MenuLabel`, `SubmenuRow` and `SubmenuBack` from the upstream menu look. Every prop of [`nsh/base` Menu](https://nsh.dev/elements/menu) on `MenuContent` passes through except open state and `trigger`.
 
-| Part                          | Notes                                                                                 |
-| ----------------------------- | ------------------------------------------------------------------------------------- |
-| `Menu`                        | Open state + trigger slot                                                             |
-| `MenuTrigger`                 | Registers the trigger; string → Button                                                |
-| `MenuContent`                 | Popup / sheet; defaults bottom / start / 4                                            |
-| `MenuItem`                    | String → `menuItemLabel`; `variant`; `inset` lines a plain row up with checkable ones |
-| `MenuCheckboxItem`            | Checkable row                                                                         |
-| `MenuRadioItem`               | One of a group                                                                        |
-| `MenuLabel`                   | Group title (`children`, `inset`)                                                     |
-| `MenuSeparator`               | Hairline                                                                              |
-| `MenuShortcut`                | Trailing note                                                                         |
-| `MenuSub` / Trigger / Content | Nested submenu; the trigger takes `inset`                                             |
+| Part               | Props                                                                                    | Description                                         |
+| ------------------ | ---------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| `Menu`             | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onOpen`, `onClose`, `onCancel` | Open state and the trigger slot                     |
+| `MenuTrigger`      | `children`, `variant`, `disabled`, `style`                                               | Registers the trigger; a string child is a `Button` |
+| `MenuContent`      | every `nsh/base` Menu prop but open state and `trigger`; defaults bottom / start / 4     | The popup or sheet                                  |
+| `MenuItem`         | every `nsh/base` MenuItem prop; `variant`, `inset`; a string child is the label          | A row                                               |
+| `MenuCheckboxItem` | as `MenuItem`, plus `checked`                                                            | A checkable row                                     |
+| `MenuRadioItem`    | as `MenuItem`, plus `checked`                                                            | One of a group                                      |
+| `MenuLabel`        | `children`, `inset`                                                                      | A group's title                                     |
+| `MenuSeparator`    | every `nsh/base` MenuSeparator prop                                                      | A hairline                                          |
+| `MenuShortcut`     | `children`, `style`                                                                      | A trailing note                                     |
+| `MenuSub`          | `children`, `disabled`                                                                   | A nested menu's root                                |
+| `MenuSubTrigger`   | `children`, `inset`, `disabled`, `style`                                                 | The row that opens a submenu                        |
+| `MenuSubContent`   | every `nsh/base` Submenu prop but `trigger`; `back` on a touch screen                    | The nested menu's popup                             |

@@ -79,12 +79,12 @@ and no edge.
 
 ## API
 
-Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on both parts (`style`, `accessibilityLabel`, …); `style` goes over the look's.
+| Part       | Props                                                                            | Description         |
+| ---------- | -------------------------------------------------------------------------------- | ------------------- |
+| `Kbd`      | `children`: `string \| JSX.Element`; every `nsh` View prop; look `kbdLook().kbd` | A key of a shortcut |
+| `KbdGroup` | every `nsh` View prop; look `kbdLook().group`                                    | Keys side by side   |
 
-| Part       | Renders | Look              |
-| ---------- | ------- | ----------------- |
-| `Kbd`      | `View`  | `kbdLook().kbd`   |
-| `KbdGroup` | `View`  | `kbdLook().group` |
+Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on both parts (`style`, `accessibilityLabel`, …); `style` goes over the look's.
 
 | Prop       | Type                    | Default |
 | ---------- | ----------------------- | ------- |

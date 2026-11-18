@@ -23,11 +23,16 @@ import { Input } from "@/components/ui/input";
 
 ## Examples
 
-### Multiline
+### Variant
+
+No fill and no edge until the keys are in it, with the text, the placeholder and the focus ring as they are: a search field, a title that turns into a field. Disabled still dims, and invalid still shows the danger edge.
 
 ```tsx
-<Input multiline value={notes()} onChange={({ value }) => notes.set(value)} />
+<Input variant="ghost" placeholder="Search" accessibilityLabel="Search" />
+<Input variant="ghost" value="Untitled note" style={{ fontSize: 17, fontWeight: "600" }} />
 ```
+
+A ghost input is the field itself: it keeps its own focus edge and ring, so it is not what a frame you draw around it wants. For an input in a frame of your own — a search field with a magnifier, a composer with a send button — use [`InputGroup`](./input-group) instead: the group draws the frame and the input in it draws nothing, so the focus ring follows the group's radius.
 
 ### Invalid
 
@@ -42,16 +47,11 @@ import { Input } from "@/components/ui/input";
 <Input value="Ada" disabled />
 ```
 
-### Ghost
-
-No fill and no edge until the keys are in it, with the text, the placeholder and the focus ring as they are: a search field, a title that turns into a field. Disabled still dims, and invalid still shows the danger edge.
+### Multiline
 
 ```tsx
-<Input variant="ghost" placeholder="Search" accessibilityLabel="Search" />
-<Input variant="ghost" value="Untitled note" style={{ fontSize: 17, fontWeight: "600" }} />
+<Input multiline value={notes()} onChange={({ value }) => notes.set(value)} />
 ```
-
-A ghost input is the field itself: it keeps its own focus edge and ring, so it is not what a frame you draw around it wants. For an input in a frame of your own — a search field with a magnifier, a composer with a send button — use [`InputGroup`](./input-group) instead: the group draws the frame and the input in it draws nothing, so the focus ring follows the group's radius.
 
 ### The look alone
 
@@ -60,11 +60,15 @@ A ghost input is the field itself: it keeps its own focus edge and ring, so it i
 <Input {...inputLook({ variant: "ghost" })} />
 ```
 
+## Differences from shadcn/ui
+
+- Adds `variant` (`default` | `ghost`) and `invalid`; shadcn styles those with classes and `aria-invalid`.
+- `multiline` turns the same component into a text area; shadcn's is a separate `Textarea`.
+
 ## API
 
-Every prop of [`nsh/base` Input](https://nsh.dev/elements/input) passes through. `class`, `style` and `disabledStyle` go over the look's. Focus and hover edges are classes on the look.
+| Part    | Props                                                                                                                                                            | Description                                                  |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `Input` | `variant`: `"default" \| "ghost"` (default `"default"`), `invalid`: `boolean`; every `nsh/base` Input prop; `class`, `style` and `disabledStyle` over the look's | A text field, `default` or `ghost`, single-line or multiline |
 
-| Prop      | Type                   | Default     |
-| --------- | ---------------------- | ----------- |
-| `variant` | `"default" \| "ghost"` | `"default"` |
-| `invalid` | `boolean`              |             |
+Every prop of [`nsh/base` Input](https://nsh.dev/elements/input) passes through. `class`, `style` and `disabledStyle` go over the look's. Focus and hover edges are classes on the look.
