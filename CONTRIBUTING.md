@@ -1,0 +1,85 @@
+# 参与贡献
+
+谢谢你看这个库。欢迎的事：**本库还没有的组件**（上游有）、某个控件外观或行为的修正、文档与演示的改进、报告 bug。
+
+先花十分钟读这几份，改动才不会撞上既有规则：
+
+- [`AGENTS.md`](AGENTS.md) —— 各方的角色、能做什么、不能做什么。
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) —— 目录、分层、规则 P1–P6、归属。
+- [`docs/port.md`](docs/port.md) —— 加一个组件要走的路：外壳怎么写、`// @port` 区域怎么标、怎么检查。
+- [`docs/GLOSSARY.md`](docs/GLOSSARY.md) —— token / finish / alias 这些词在库里指什么。
+
+## 环境
+
+需要 [Bun](https://bun.sh) 与 NSH CLI。NSH CLI 只用于类型检查与运行演示，**不编译 NSH**。
+
+```sh
+git submodule update --init --recursive   # references/ 是只读参考
+bun install
+bun run nsh:bootstrap                     # 校验 CLI 与 references/nsh 在基线，生成各 .nsh 的类型
+```
+
+`bun run nsh:bootstrap` 会打印安装命令；CLI 的版本跟 `port-map.json` 的 `upstream.cli` 与 `upstream.commit` 走。细节见 [`docs/toolchain.md`](docs/toolchain.md)。
+
+## 常用命令
+
+| 命令                                      | 做什么                                                |
+| ----------------------------------------- | ----------------------------------------------------- |
+| `bun run dev:docs`                        | 文档站（含组件演示）                                  |
+| `bun run dev:gallery`                     | gallery：原生行为测试的页面                           |
+| `nsh run apps/docs/demos/button.tsx`      | 跑单个演示                                            |
+| `bun run port:new <id> --from <上游文件>` | 新组件脚手架（路由、外壳、演示、文档、registry）      |
+| `bun run port:new <id> --base <符号>`     | 不来自上游的自有组件（不写路由、不 vendor）           |
+| `bun run port:new <id> --view`            | 只排版上色的自有组件（画在 `View` / `Text` 上）       |
+| `bun run port:vendor <id>`                | 从上游抽取初稿（只在新增时用，不覆盖已有代码）        |
+| `bun run port:check`                      | 上游变化提醒、清单完整、CLI 不落后于基线              |
+| `bun run port:review`                     | 审阅完上游的变化后记下来                              |
+| `bun run port:render`                     | 渲染比对：组件与"look 展开在 `nsh/base` 上"的截图相同 |
+| `bun run registry:build`                  | 由 `registry.json` 重建 `public/r`                    |
+| `bun run registry:serve`                  | 本地起一个 registry，试装用                           |
+
+## 提 PR 前
+
+一条命令覆盖大部分：**`bun run check`**（会 `vp check --fix` 改格式，所以先提交或先看 diff）。它跑
+
+```text
+vp check --fix                    格式化、lint、工具面的类型
+bun run catalog --check           演示、参照页、文档页、导出是否一致
+bun run check:theme               主题数据是否符合 docs/specs/theme-roles.md
+bun run registry:build --check    public/r 是否与 registry.json 同步
+bun run port:check                上游变化与清单完整性
+bun run port:coverage             每个组件有没有演示、文档页、参照
+nsh check apps/docs/demos         演示与 UI 的类型
+nsh check apps/gallery            gallery 的类型
+bun run check:pages               文档站的页面与链接
+bun run check:docs                文档站自身
+```
+
+按改动涉及的东西再补：
+
+- **改组件或演示** → `bun run port:render`，四张截图人眼看过。
+- **改行为** → `bun run test:gallery`（原生行为测试）。
+- **改 registry 条目或 CLI** → `bun run test:install`（在真实 NSH 应用里 `init` / `add`，逐条目）。
+- **改过 `registry.json` 或组件文件** → `bun run registry:build`，把 `public/r` 的改动一起提交；`check` 里的 `registry:build --check` 会拦下没重建的提交。
+
+## 提交信息
+
+英文、约定式：`type(scope): summary`。类型用 `feat`、`fix`、`docs`、`chore`、`refactor`、`test`；scope 是组件 id、区域或 `cli`：
+
+```text
+fix(menu): keep the sub menu inside the window
+feat(terminal): draw the program's output on the theme's well
+docs(readme): point the registry URL at the released tag
+```
+
+一个家族一个提交，正文说**为什么**改、改之前是什么样。PR 里的模板会问你三件事：改了什么、为什么、上面哪些检查跑过。
+
+## 加一个组件
+
+1. `bun run port:new <id> --from <上游文件>` 生成骨架（外壳、演示、文档页、registry 条目、路由）。
+2. `bun run port:vendor <id>` 把上游的那段抽进 `// @port <上游文件>` 与 `// @port end` 之间；**这两个标记之间归本库**，可以直接改。
+3. 颜色只来自主题（`theme.json` 的 token 与 `finishes.json` 的 finish），组件文件里不写颜色字面量；外观上的决定写进对应文档。
+4. 补演示（手机与桌面两种画布）与文档页；`bun run catalog --check` 会查它们与导出是否齐全。
+5. `bun run registry:build`，然后按上一节跑检查。
+
+维护者发版的步骤见 [`docs/release.md`](docs/release.md)。

@@ -2,90 +2,87 @@
 
 [English](./README.md)
 
-为 [Native Shell (NSH)](https://github.com/longbridge/nsh) 构建的 styled UI 体系：在 `nsh/base` 之上提供可复制进应用的组件与分发体验，模式对齐 [shadcn/ui](https://github.com/shadcn-ui/ui)。
+给 [Native Shell (NSH)](https://github.com/longbridge/nsh) 的带样式组件：画在 `nsh/base` 上，以**你自己的文件**交给应用 —— 组件、主题，以及一个把它们复制下来的 registry。形状与 [shadcn/ui](https://github.com/shadcn-ui/ui) 给 React 的一样。
 
-Agent 与贡献约定见 [`AGENTS.md`](AGENTS.md)。词汇见 [`docs/GLOSSARY.md`](docs/GLOSSARY.md)，架构见 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)，规则与决策见 [`packages/ui/README.zh.md`](packages/ui/README.zh.md)（组件）和 [`packages/theme/README.zh.md`](packages/theme/README.zh.md)（主题、动效）。参考源码以 git submodule 挂在 [`references/`](references/)。
+文档站，每个组件的属性与可运行演示：**https://aningdev.github.io/shadcn-nsh/**
 
-## 前置
+- **复制即拥有。** `add` 把组件、它的主题和它用到的共享外观写进你的应用，然后放手：没有我们的运行时包，也没有需要跟着升级的东西。
+- **外观是数据。** 组件只从 `theme.json` 与 `finishes.json` 读颜色与表面，从不写死，所以换一套主题数据就换整套外观。
+- **该原生处原生。** 行为、无障碍与平台差异都来自 `nsh/base`；外壳只决定长什么样，并在手机、桌面、终端三种形态下自适应。
 
-- [Bun](https://bun.com)
-- [NSH CLI](https://nsh.dev/docs/installation)（`nsh`）**安装而来，从不编译**：装 [`port-map.json`](port-map.json) 的 `upstream.cli` 指定的版本（当前 `v0.5.1`），`curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.5.1 sh`。它打印的提交就是**基线**，即 [`port-map.json`](port-map.json) 的 `upstream.commit`；nightly 动了，`bun run port:bump` 把基线一起移动。两者不同时 `port:check` 只警告、不失败（[`docs/toolchain.md`](docs/toolchain.md)）。搬入的代码用的是基线运行时的能力，所以早于基线的 CLI 都是错的。
-- 别的都不用：运行时随安装的 CLI 而来（缺哪个 target 的它会自己装），没有 `NSH_RUNTIME` 要导出。
+## 快速开始
+
+应用里先有 `nsh.json`（`nsh init` 生成）：
 
 ```sh
-# 子模块：上游基线与 shadcn 参考
+npx shadcn-nsh init                 # 写 nsh-ui.json、装主题、让 nsh.json 指向它
+npx shadcn-nsh add button           # 一个条目，连同它依赖的文件
+npx shadcn-nsh add --all            # 全部组件
+```
+
+`init` 的选择记在 `nsh-ui.json`，主题写在 `theme.json` + `lib/finishes.json`，并把每个 `nsh.json` 指过去；`add` 复制文件，并用你的包管理器装上条目声明的包（含 `lucide`）。从此这些文件归你改。
+
+`list`、`view`、`diff` 只读不写：`npx shadcn-nsh list`、`view button`、`diff`（应用的副本与 registry 不同时退出码 1）。每个命令都接受 `-c <dir>`，`add` 另有 `--dry-run` 与 `--overwrite`。参数与默认值见 [CLI 参考](https://aningdev.github.io/shadcn-nsh/docs/cli)。
+
+## 主题
+
+`init` 装的是本库自己的主题。另外两套以主题条目提供：
+
+```sh
+npx shadcn-nsh init --theme shadcn                      # 用 shadcn 的中性配色构建
+npx shadcn-nsh add theme-solid-glass                    # 多带一套，运行时切换
+```
+
+`init --theme <default|shadcn|solid-glass>` 决定应用**构建时**用的主题；`add theme-<name>` 则**多装一套**到 `themes/<name>/`，供应用运行时用 `selectTheme` 切换（`selectTheme(null)` 回到构建时那套）。`nsh-ui.json` 记着构建时用的是哪一套，所以 `add` 不会把别的主题写回去。token、finish 与切换示例见[主题](https://aningdev.github.io/shadcn-nsh/docs/themes)。
+
+## Registry
+
+`init`、`add`、`list`、`view`、`diff` 读的是**与你这个 CLI 同版本**发布的 registry：
+
+`https://raw.githubusercontent.com/aningdev/shadcn-nsh/v<version>/public/r/{name}.json`
+
+即 `shadcn-nsh@0.6.1` 读 `v0.6.1` 的 registry：文件与你在跑的 CLI 对得上，新版本发布也不会悄悄改掉已装应用的源码。`--registry <template>`（含 `{name}`）可以指向别处 —— 分支、本地 `serve`、fork。
+
+## 兼容矩阵
+
+本库每个版本对应一个 NSH CLI 版本。装了更新的 CLI 不会让旧版本变错，只是那些组件是照着当时 `nsh/base` 的样子写的。
+
+| shadcn-nsh | NSH CLI |
+| ---------- | ------- |
+| 0.6.x      | v0.5.1  |
+
+## 参与与声明
+
+- 贡献 —— 开发环境、提交前要跑的检查、提交信息格式：[`CONTRIBUTING.md`](CONTRIBUTING.md)。
+- 项目怎么搭起来、代码守哪些规则：[`AGENTS.md`](AGENTS.md)、[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)，词汇见 [`docs/GLOSSARY.md`](docs/GLOSSARY.md)。
+- 安全问题上报：[`SECURITY.md`](SECURITY.md)。
+- 许可：MIT；改编自 NSH 的部分为 Apache-2.0，Solid Glass 主题附其 MIT 文本 —— [`NOTICE`](NOTICE)、[`LICENSE`](LICENSE)。
+
+## 在本仓库开发
+
+需要 Bun 与 NSH CLI（只安装，不编译），然后：
+
+```sh
 git submodule update --init --recursive
-
-# CLI：安装，不编译
-curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.5.1 sh   # port-map.json 的 upstream.cli
-export PATH="$HOME/.local/bin:$PATH"   # 安装器把 nsh 链到这里
-
 bun install
-bun run nsh:bootstrap   # 校验 CLI 与 references/nsh 都在基线，生成各 .nsh
+bun run nsh:bootstrap   # 校验 CLI 与 references/nsh 在基线，生成各 .nsh
+bun run dev:docs        # 文档站
+bun run check           # CI 跑的那一串
 ```
 
-## 在已有 NSH app 中使用
+完整环境、一次改动要过的检查、怎么移植一个组件，见 [`CONTRIBUTING.md`](CONTRIBUTING.md)。
 
-目录需已有 `nsh.json`（`nsh init`）。消费方 monorepo 脚手架（`create`）暂缓。
+## 目录
 
-组件从 [`lucide`](https://lucide.dev) 引入图标；`init` / `add` 用应用自己的包管理器（按锁文件取 `bun`、`pnpm`、`yarn`，否则 npm）装着条目声明的包。没有 `package.json` 的应用会得到一个最小的；`--dry-run` 只打印命令。
-
-```sh
-# 本地 registry（开发本仓时）
-bun run registry:build
-bun run registry:serve   # 另开终端
-
-bun run shadcn-nsh -- init -c /path/to/app --registry 'http://127.0.0.1:4173/{name}.json'
-bun run shadcn-nsh -- add button -c /path/to/app --registry 'http://127.0.0.1:4173/{name}.json'
-```
-
-push 到 GitHub 后可省略 `--registry`，默认：
-
-`https://raw.githubusercontent.com/aningdev/shadcn-nsh/main/public/r/{name}.json`
-
-### 主题
-
-`init` 装本库自己的主题。`init --theme shadcn` 改装 [shadcn 的 neutral
-主题](docs/specs/theme-shadcn.md)：同样三个文件（`theme.json`、`lib/finishes.json`、
-`lib/theme.ts`），数据不同。
-
-```sh
-bun run shadcn-nsh -- init -c /path/to/app --theme shadcn
-```
-
-`nsh-ui.json` 记下应用装的是哪个主题（`"theme": "theme-shadcn"`；文件里没有这个字段就是
-`theme`，老应用不用动），`add` 把组件的 `theme` 依赖解析成它。所以装了 neutral 的应用不会因为
-`add` 退回默认主题：`add button --overwrite`、`add --all --overwrite` 都只写组件，不写默认主题。
-`add theme-shadcn` / `add theme` 换主题，文件与记录一起换。
-
-## 本仓开发
-
-工具链：Bun + [Vite+](https://viteplus.dev)（`vp fmt` / `vp lint` / `vp check`）。
-
-```sh
-bun run check
-bun run check:gallery
-bun run dev:gallery
-bun run dev:docs
-bun run docs:demos      # 可选：打包 docs 内 NSH web 预览
-bun run registry:build
-```
-
-改 `packages/ui` 或 `packages/theme` 后务必 `bun run registry:build`，再提交 `public/r`。
-
-移植流程、规范与检查：[`docs/port.md`](docs/port.md)、[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)。
-
-## 布局
-
-| 路径                         | 包名 / 角色           | 说明                                                                                                                                     |
-| ---------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `packages/theme`             | `@shadcn-nsh/theme`   | `theme.json`、`finishes.json`、`theme.ts`（本库主题，颜色一律 `oklch()`）；`themes/<name>/` 是其他主题的数据，经 `theme-<name>` 条目分发 |
-| `packages/ui`                | `@shadcn-nsh/ui`      | 移植组件：`// @port` 区域 + 外壳                                                                                                         |
-| `apps/docs/demos`            | —                     | 验收演示、参照页、`port:render`                                                                                                          |
-| `apps/docs/content/docs`     | —                     | 文档页（`/docs/…`）与组件页                                                                                                              |
-| `apps/gallery`               | `@shadcn-nsh/gallery` | 原生行为测试与冒烟页                                                                                                                     |
-| `packages/cli`               | `shadcn-nsh`（npm）   | `init` / `add` / `build` / `serve`                                                                                                       |
-| `registry.json` → `public/r` | —                     | registry 源 → 提交进 git 的 HTTP 产物                                                                                                    |
-| `scripts/port`               | —                     | `port:new` / `port:vendor` / `port:check` / `port:render` / `port:bump`                                                                  |
-| `port-map.json`              | —                     | 上游每个文件、每个声明的去向                                                                                                             |
-| `references/`                | —                     | 只读子模块：上游基线、shadcn 参考                                                                                                        |
+| 路径                         | 包 / 角色             | 说明                                                                                                                                        |
+| ---------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| `packages/theme`             | `@shadcn-nsh/theme`   | `theme.json`、`finishes.json`、`theme.ts` —— 主题（本库所有，oklch）；`themes/<name>/` 是另一套主题的数据，作为它的 `theme-<name>` 条目发布 |
+| `packages/ui`                | `@shadcn-nsh/ui`      | 一个组件一个文件：外观（`// @port` 区域）+ 外壳                                                                                             |
+| `apps/docs/demos`            | —                     | 验收演示、参照页、`port:render`                                                                                                             |
+| `apps/docs/content/docs`     | —                     | 文档页（`/docs/…`），由 `src/routes/docs/$.tsx` 渲染                                                                                        |
+| `apps/gallery`               | `@shadcn-nsh/gallery` | 原生行为测试与冒烟页                                                                                                                        |
+| `packages/cli`               | `shadcn-nsh`（npm）   | `init` / `add` / `list` / `view` / `diff` / `build` / `serve`                                                                               |
+| `registry.json` → `public/r` | —                     | registry 源 → 提交的 HTTP 产物                                                                                                              |
+| `scripts/port`               | —                     | `port:new` / `port:vendor` / `port:check` / `port:review` / `port:render` / `port:bump`                                                     |
+| `port-map.json`              | —                     | 上游每个文件与声明的去向                                                                                                                    |
+| `references/`                | —                     | 只读 submodule：上游基线、shadcn 参考                                                                                                       |

@@ -2,14 +2,99 @@
 
 ## Unreleased
 
-- **`terminal`.** A program's output on the theme's surface, the keys typed back to it:
-  `nsh/base`'s `Terminal` wearing a well — the field's fill and edge, the theme's inner corners and a
-  padding — its cursor half the text color. `variant` is `default` (the well) or `ghost` (no fill, no
-  edge, no padding: an app whose window is the terminal gives the surface). The program stays the
-  app's (`write` on the ref, `onData` and `onResize` on events) and the text is the theme's
-  monospaced family; NSH interprets the escape sequences and draws the cells. `add terminal` brings
+### Added
+
+- **`message`.** One row of a conversation: `MessageGroup`, `Message`, `MessageAvatar`,
+  `MessageContent`, `MessageHeader` and `MessageFooter`. `align="end"` mirrors the row, so the
+  bubbles inside follow the message; the avatar is this library's `Avatar` at 32 points (36 on a
+  touch screen), `name` giving it initials on an identity hue; the header and footer are small and
+  medium in the muted ink. `add message` brings `avatar`.
+- **`bubble`.** The framed surface of one turn: `BubbleGroup`, `Bubble`, `BubbleContent` and
+  `BubbleReactions`. Seven fills (`default`, `secondary`, `muted`, `tinted`, `outline`, `ghost`,
+  `destructive`), `align` on the sender's side, a bubble as wide as it holds (80% of the column at
+  most, all of it when `ghost`), and a reaction pill that hangs off either edge. `onPress` on the
+  content makes a turn act.
+- **`marker`.** One line in a conversation that is not a message: `Marker`, `MarkerIcon` and
+  `MarkerContent` — inline, with a hairline under it (`variant="border"`), or the label between two
+  rules (`variant="separator"`). The line is in the muted ink at the body's size, its icon 16
+  points; `onPress` makes a marker act (underlined, the hand over it).
+- **`attachment`.** A file or a picture a message or a composer carries: `Attachment`,
+  `AttachmentGroup`, `AttachmentMedia`, `AttachmentContent`, `AttachmentTitle`,
+  `AttachmentDescription`, `AttachmentActions`, `AttachmentAction` and `AttachmentTrigger`. Five
+  states (`idle`, `uploading`, `processing`, `error`, `done`), three sizes, a horizontal frame and a
+  vertical one for pictures, and a trigger that opens the file from anywhere on the frame. `add
+  attachment` brings `button`.
+- **`message-scroller`.** A conversation that scrolls and keeps up with itself: `MessageScroller`,
+  `MessageScrollerViewport`, `MessageScrollerContent`, `MessageScrollerItem` and
+  `MessageScrollerButton`. New turns follow the newest message while the reader is at the end and
+  stay put when they have scrolled up; `initialScroll` says where it opens; a button floats over the
+  viewport while there is somewhere to go. State lives inside, so there is no provider or hook.
+- **`nav-stack`.** Pages pushed on a stack, after `nsh/base`'s `NavStack`: `NavStack`, `NavPage` and
+  `createNavStack` re-exported, with the header a page shows on the desktops and the web — the back
+  button while there is a page below, the page's `title`, and `headerRight` at its trailing edge —
+  drawn from the theme's header roles with a `colors.border` hairline under it. The header is 48
+  points with a pointer (52 on a touch screen), and a page may replace it whole with `header`. iOS
+  and Android draw their system header instead, which takes the same `title` and `headerRight`; there
+  this component draws nothing of its own. The platform's back (Escape, Alt+Left, the mouse's back
+  button, the browser's back, the swipe back on iOS) pops through `nsh/base`, and the back button
+  honours `popOnBack` and reports `onBackPress`. `add nav-stack` brings `button`, `icons` and
   `theme`.
-- **`code-editor`.** A code file as a field: `CodeEditor`, `nsh/base`'s Editor on the theme's well
+- **`sidebar`.** An app's navigation column beside its page: `SidebarProvider`, `useSidebar`,
+  `Sidebar`, `SidebarTrigger`, `SidebarRail`, `SidebarInset`, `SidebarInput`, `SidebarHeader`,
+  `SidebarFooter`, `SidebarSeparator`, `SidebarContent`, `SidebarGroup`, `SidebarGroupLabel`,
+  `SidebarGroupAction`, `SidebarGroupContent`, `SidebarMenu`, `SidebarMenuItem`, `SidebarMenuButton`,
+  `SidebarMenuAction`, `SidebarMenuBadge`, `SidebarMenuSkeleton`, `SidebarMenuSub`,
+  `SidebarMenuSubItem` and `SidebarMenuSubButton`. Three axes: `side` (`left` / `right`), `variant`
+  (`sidebar` / `floating` / `inset`) and `collapsible` (`offcanvas` / `icon` / `none`); 256 points
+  wide, 48 folded to its icons (the fold is instant — the platform transitions colors, opacity and
+  transforms, not layout), and a sheet 288 wide on a touch screen or under 600 points. The provider
+  owns the state (`open` / `defaultOpen`, `onOpenChange({ open, reason })` with `triggerPress`,
+  `railPress` and `shortcut`); ⌘B / Ctrl+B is `nsh`'s `keymap`; nothing is written down, so the app
+  keeps the state where it keeps the rest. A folded row names itself in a tooltip, an action steps
+  past a badge instead of drawing over it, and the phone's sheet is this library's `Sheet`. `add
+  sidebar` brings `button`, `input`, `separator`, `sheet`, `skeleton`, `tooltip`, `icons`,
+  `label-of`, `press`, `surface` and `theme`.
+- **`navigation-menu`.** A row of triggers, each opening a panel of anything — a link grid, a card
+  with a description — under the bar: `NavigationMenu`, `NavigationMenuList`, `NavigationMenuItem`,
+  `NavigationMenuTrigger`, `NavigationMenuContent`, `NavigationMenuLink`. One panel at a time, owned
+  by the root (`value` / `defaultValue`, `onValueChange({ value, reason })`); a press opens and
+  closes one, and on a desktop the pointer's rest opens it too (`delayDuration` 200, `closeDelay`
+  300, both `Infinity`-able). Each panel is a `nsh/base` Popover placed against its trigger: a
+  trigger is 36 points high and 16 in either side (44 with a touch screen), the open one on the
+  `accent` fill at half with its chevron turned. There is no viewport, so no bar-wide panel and no
+  size animation. `add navigation-menu` brings `popup`, `icons`, `label-of`, `press` and `theme`.
+- **`menubar`.** A row of menus: `Menubar`, `MenubarMenu`, `MenubarTrigger`, `MenubarContent`, and
+  the menu's rows under the bar's names (`MenubarItem`, `MenubarCheckboxItem`, `MenubarRadioItem`,
+  `MenubarLabel`, `MenubarSeparator`, `MenubarShortcut`, `MenubarGroup`, `MenubarSub`,
+  `MenubarSubTrigger`, `MenubarSubContent`). The bar is 36 points high with a pointer (50 on a touch
+  screen) inside a 1-point edge, its triggers 26 (40) tall, the trigger of the open menu on the
+  neutral `accent` fill. Rows, submenus and the popup are `menu`'s looks, so `add menubar` brings
+  `menu` with it.
+- **`drawer`.** A panel from the bottom edge: `Drawer`, `DrawerTrigger`, `DrawerContent`,
+  `DrawerHeader`, `DrawerTitle`, `DrawerDescription`, `DrawerFooter`, `DrawerClose`. Against `sheet`
+  it is the phone's panel: bottom by default, a 100-point grabber at its top edge (`drawerGrabber`),
+  `closeOnSwipe` on by default, its actions stacked. The panel is `sheet`'s, the scrim is
+  `lib/overlay`'s, the title and text are `dialog`'s, so `add drawer` brings `dialog` with it.
+- **`breadcrumb`.** A trail from the app's root to the page it shows: `Breadcrumb` and its parts
+  (`List`, `Item`, `Link`, `Page`, `Separator`, `Ellipsis`), the steps small and muted with a chevron
+  between them, a step's link taking the text color under the pointer and the theme's focus ring
+  with the keyboard on it. A step is `nsh/base`'s Link, so `href` / `openWith` work as everywhere
+  else; the page is announced as the current one; the separator and the ellipsis are their marks
+  (`›`, `…`) in a terminal, which draws no icons.
+- **`aspect-ratio`.** A box as wide as its column and as tall as its `ratio` says (`16 / 9`, a
+  square, CSS's `"16 / 9"`), its content clipped to it: pictures keep their shape on every screen.
+- **`textarea`.** A field of several lines: `nsh/base`'s Input with `multiline` on, in the look of
+  `input.tsx` (`inputLook`, reused, not copied) — the same fill, edge, text and placeholder, the
+  focus edge while it has the keys, 50% while disabled, and `invalid` for the danger edge. It sits
+  as tall as a one-line input at least; a box that follows its text keeps `onContentSizeChange`'s
+  height plus the look's padding.
+- **`terminal`.** A program's output on the theme's surface, the keys typed back to it: `nsh/base`'s
+  `Terminal` wearing a well — the field's fill and edge, the theme's inner corners and a padding —
+  its cursor half the text color. `variant` is `default` (the well) or `ghost` (no fill, no edge, no
+  padding: an app whose window is the terminal gives the surface). The program stays the app's
+  (`write` on the ref, `onData` and `onResize` on events) and the text is the theme's monospaced
+  family; NSH interprets the escape sequences and draws the cells. `add terminal` brings `theme`.
+- **`code-editor`.** A code file as a field: `CodeEditor` is `nsh/base`'s Editor on the theme's well
   — the field's fill, its hairline edge and the control tier's corners (`codeEditorFrame()`) — with
   its parts painted by `codeEditorClasses`: a gutter on the muted fill, line numbers and fold markers
   muted, the caret's line a faint band and its number in the text color, selected text a tint of the
@@ -19,62 +104,15 @@
   through — text, language, folding, search, the editing keys, diagnostics; an app's `classes` go
   over ours and its `style` over the frame. Syntax highlighting is NSH's own colors. `add
   code-editor` brings `theme`.
-- **`merge-classes`.** How a shell's default part classes meet an app's `classes` — a string goes
-  after ours, `null` drops ours — is one rule in `lib/classes.ts` (`mergeClasses`) rather than a
-  private copy in each of `data-table`, `text-view` and `code-editor`; `add` of any of the three
-  brings it.
-- **`editor` is the rich editor only — a breaking change.** `Editor` and `EditorProps` moved to
+
+### Changed
+
+- **Breaking:** **`editor` is the rich editor only.** `Editor` and `EditorProps` moved to
   `code-editor` as `CodeEditor` and `CodeEditorProps`; `editor` keeps `RichEditor`,
-  `richEditorClasses` and `RichEditorProps`, with no alias left behind. An app importing `Editor`
-  from `components/ui/editor` imports `CodeEditor` from `components/ui/code-editor` instead.
-- **`nav-stack`.** Pages pushed on a stack, after `nsh/base`'s `NavStack`: `NavStack`,
-  `NavPage` and `createNavStack` re-exported, with the header a page shows on the desktops and the
-  web — the back button while there is a page below, the page's `title`, and `headerRight` at its
-  trailing edge — drawn from the theme's header roles (`header.headerStyle`: the page's fill, the
-  text color, the accent for the back button's tint) with a `colors.border` hairline under it. The
-  header is 48 points with a pointer (52 on a touch screen), and a page may replace it whole with
-  `header`. iOS and Android draw their system header instead, which takes the same `title` and
-  `headerRight`; there this component draws nothing of its own. The platform's back (Escape /
-  Alt+Left / the mouse's back button / the browser's back, the swipe back on iOS) pops through
-  `nsh/base`, and the back button honours `popOnBack` and reports `onBackPress`. `add nav-stack`
-  brings `button`, `icons` and `theme`.
-
-- **`sidebar`.** An app's navigation column beside its page, after shadcn/ui's sidebar — its own
-  component, drawn on `nsh`'s `View`: `SidebarProvider`, `useSidebar`, `Sidebar`,
-  `SidebarTrigger`, `SidebarRail`, `SidebarInset`, `SidebarInput`, `SidebarHeader`, `SidebarFooter`,
-  `SidebarSeparator`, `SidebarContent`, `SidebarGroup`, `SidebarGroupLabel`, `SidebarGroupAction`,
-  `SidebarGroupContent`, `SidebarMenu`, `SidebarMenuItem`, `SidebarMenuButton`, `SidebarMenuAction`,
-  `SidebarMenuBadge`, `SidebarMenuSkeleton`, `SidebarMenuSub`, `SidebarMenuSubItem` and
-  `SidebarMenuSubButton`. Three axes: `side` (`left` / `right`), `variant` (`sidebar` / `floating`
-  / `inset`) and `collapsible` (`offcanvas` / `icon` / `none`); 256 points wide, 48 folded to its
-  icons (the fold is instant — the platform transitions colors, opacity and transforms, not layout),
-  and a sheet 288 wide on a touch screen or under 600 points. The provider owns the state (`open` /
-  `defaultOpen`, `onOpenChange({ open, reason })` with `triggerPress`, `railPress` and `shortcut`);
-  ⌘B / Ctrl+B is `nsh`'s `keymap`; nothing is written down, so the app keeps the state where it
-  keeps the rest. A folded row names itself in a tooltip, an action steps past a badge instead of
-  drawing over it, and the phone's sheet is this library's `Sheet`. `add sidebar` brings `button`,
-  `input`, `separator`, `sheet`, `skeleton`, `tooltip`, `icons`, `label-of`, `press`, `surface` and
-  `theme`.
-- **`sidebar` folds as it starts, and a `none` column keeps its frame.** A column mounted closed
-  (`defaultOpen={false}`, or an `open` that is false at the first frame) is folded from that frame:
-  its rows draw the icon alone, the search field, a group's action, a row's badge and action and an
-  open sub menu are gone, and a folded row keeps the 8-point gap so a trailing icon is clipped at
-  the 48-point rail instead of hanging beside the icon. The parts read the column's axes where they
-  wear them, so a closed column no longer draws its rows expanded. A `collapsible="none"` column
-  keeps its frame — the 8 points of room `floating` and `inset` give a card, on top of the column's
-  256 — so beside an `inset` page both cards stand on the sidebar's ground with their gutters.
-
-- **`navigation-menu`.** A row of triggers, each opening a panel of anything — a link grid, a card
-  with a description — under the bar: `NavigationMenu`, `NavigationMenuList`, `NavigationMenuItem`,
-  `NavigationMenuTrigger`, `NavigationMenuContent`, `NavigationMenuLink`. One panel at a time, owned
-  by the root (`value` / `defaultValue`, `onValueChange({ value, reason })`); a press opens and
-  closes one, and on a desktop the pointer's rest opens it too (`delayDuration` 200, `closeDelay`
-  300, both `Infinity`-able). Each panel is [`nsh/base` Popover](https://nsh.dev/elements/popover)
-  placed against its trigger: a trigger is 36 points high and 16 in either side (44 with a touch
-  screen), the open one on the `accent` fill at half with its chevron turned. No viewport (so no
-  bar-wide panel and no size animation), no indicator arrow, no `asChild`. `add navigation-menu`
-  brings `popup`, `icons`, `label-of`, `press` and `theme`.
-- **`alert-dialog` is the platform's alert now — a breaking change.** `AlertDialogContent` shows
+  `richEditorClasses` and `RichEditorProps`, with no alias left behind. **To migrate:** an app
+  importing `Editor` from `components/ui/editor` imports `CodeEditor` from
+  `components/ui/code-editor` instead, and `add code-editor` brings the file.
+- **Breaking:** **`alert-dialog` is the platform's alert now.** `AlertDialogContent` shows
   `nsh/base`'s `AlertDialog.show` instead of drawing a card on `Dialog`: the box is the system's
   (UIAlertController on iOS, NSAlert on macOS, NSH's drawing of the same box on the web, the
   platform dialog on Android), so it does not follow the theme, it shows plain text only (no views,
@@ -84,79 +122,41 @@
   and `AlertDialogFooter` draw nothing. `AlertDialogContent` takes what `AlertDialogOptions` has
   besides the content — `presentation`, `closeOnEscape`, `closeOnBackdropPress` — and loses `width`,
   `animation`, `style`, `backdropStyle` and `closeOnSwipe`; `AlertDialogAction` loses `disabled` and
-  `style`; the root loses `onOpen`, `onClose` and `onCancel`, and `AlertDialogChangeReason` is now
+  `style`; the root loses `onOpen`, `onClose` and `onCancel`; `AlertDialogChangeReason` is now
   `"triggerPress" | "select" | "cancel"` (`"select"` when a button was chosen, `"cancel"` when it
   closed without one). `AlertDialogCancel` is new: an action with `role="cancel"` whose `id` is
-  `"cancel"` unless the app names another. `add alert-dialog` no longer brings `dialog`, `overlay`
-  or `theme`; it brings `button` and `open-state`. A confirmation card with content of the app's
-  own, in the app's look, stays `dialog`. The box stays one while it is up: a part that renders
+  `"cancel"` unless the app names another. `add alert-dialog` no longer brings `dialog`, `overlay` or
+  `theme`; it brings `button` and `open-state`. The box stays one while it is up: a part that renders
   again with the alert still open (a page whose layout rebuilds its children) stacks nothing.
-- **`message-scroller`.** A conversation that scrolls and keeps up with itself: `MessageScroller`,
-  `MessageScrollerViewport`, `MessageScrollerContent`, `MessageScrollerItem` and
-  `MessageScrollerButton`, after shadcn/ui's message scroller, on `nsh`'s `Scroll`. New turns follow
-  the newest message while the reader is at the end and stay put when they have scrolled up;
-  `initialScroll` says where it opens; a button floats over the viewport while there is somewhere
-  to go. No provider or hooks (state lives inside), no scroll anchoring, no `content-visibility`.
-- **`attachment`.** A file or a picture a message or a composer carries: `Attachment`,
-  `AttachmentGroup`, `AttachmentMedia`, `AttachmentContent`, `AttachmentTitle`,
-  `AttachmentDescription`, `AttachmentActions`, `AttachmentAction` and `AttachmentTrigger`, after
-  shadcn/ui's attachment. Five states (`idle`, `uploading`, `processing`, `error`, `done`), three
-  sizes, a horizontal frame and a vertical one for pictures, and a trigger that opens the file from
-  anywhere on the frame. `add attachment` brings `button`.
-- **`message`.** One row of a conversation: `MessageGroup`, `Message`, `MessageAvatar`,
-  `MessageContent`, `MessageHeader` and `MessageFooter`, after shadcn/ui's message. The row mirrors
-  for `align="end"`, so the bubbles inside follow the message; the avatar is this library's
-  `Avatar` at 32 points (36 on a touch screen), `name` giving it initials on an identity hue, and
-  the header and footer are small and medium in the muted ink. `add message` brings `avatar`.
-- **`bubble`.** The framed surface of one turn of a conversation: `BubbleGroup`, `Bubble`,
-  `BubbleContent` and `BubbleReactions`, after shadcn/ui's bubble. Seven fills (`default`,
-  `secondary`, `muted`, `tinted`, `outline`, `ghost`, `destructive`), `align` on the sender's side,
-  a bubble as wide as it holds (80% of the column at most, all of it when `ghost`), and a reaction
-  pill that hangs off either edge. `onPress` on the content makes a turn act, where shadcn/ui's
-  `asChild` would.
-- **`marker`.** One line in a conversation that is not a message: `Marker`, `MarkerIcon` and
-  `MarkerContent` — inline, with a hairline under it (`variant="border"`), or the label between two
-  rules (`variant="separator"`). The line is in the muted ink at the body's size, its icon 16 points;
-  `onPress` makes a marker act (underlined, the hand over it), where shadcn/ui's `asChild` would.
-- **`menubar`.** A row of menus: `Menubar`, `MenubarMenu`, `MenubarTrigger`, `MenubarContent`, and
-  the menu's rows under the bar's names (`MenubarItem`, `MenubarCheckboxItem`, `MenubarRadioItem`,
-  `MenubarLabel`, `MenubarSeparator`, `MenubarShortcut`, `MenubarGroup`, `MenubarSub`,
-  `MenubarSubTrigger`, `MenubarSubContent`). The bar is 36 points high with a pointer (50 on a touch
-  screen) inside a 1-point edge, its triggers 26 (40) tall, the trigger of the open menu on the
-  neutral `accent` fill. Rows, submenus and the popup are `menu`'s looks, so `add menubar` brings
-  `menu` with it.
-- **`drawer`.** A panel from the bottom edge with the parts a card's panel wears around it:
-  `Drawer`, `DrawerTrigger`, `DrawerContent`, `DrawerHeader`, `DrawerTitle`, `DrawerDescription`,
-  `DrawerFooter`, `DrawerClose`. Against `sheet` it is the phone's panel: bottom by default, a
-  100-point grabber at its top edge (`drawerGrabber`), `closeOnSwipe` on by default, its actions
-  stacked. The panel is `sheet`'s (`sheetPanel(side)`), the scrim is `lib/overlay`'s and the title
-  and text are `dialog`'s (`dialogTitle`, `dialogText`), so `add drawer` brings `dialog` with it.
-- **`textarea`.** A field of several lines: `nsh/base`'s Input with `multiline` on, in the look of
-  `input.tsx` (`inputLook`, reused, not copied) — the same fill, edge, text and placeholder, the
-  focus edge while it has the keys, 50% while disabled, and `invalid` for the danger edge. It sits
-  as tall as a one-line input at least; a box that follows its text keeps `onContentSizeChange`'s
-  height plus the look's padding (shadcn's `field-sizing-content`, written out in the page).
-- **`breadcrumb`.** A trail from the app's root to the page it shows: `Breadcrumb` and its parts
-  (`List`, `Item`, `Link`, `Page`, `Separator`, `Ellipsis`), the steps small and muted with a chevron
-  between them, a step's link taking the text color under the pointer and the theme's focus ring with
-  the keyboard on it. A step is `nsh/base`'s Link, so `href` / `openWith` work as everywhere else; the
-  page is announced as the current one; a separator and the ellipsis are their marks (`›`, `…`) in a
-  terminal, which draws no icons.
-- **`aspect-ratio`.** A box as wide as its column and as tall as its `ratio` says (`16 / 9`, a square,
-  CSS's `"16 / 9"`), its content clipped to it: pictures keep their shape on every screen.
-- **Hover, focus halo and a slider's thumb come from the theme.** `hovered()` reads the theme's
-  `hover` token, and `focusRing()` the new `ring-halo` token; `finishes.json` gains a `handle`
-  role, the slider's thumb, apart from the switch's `knob`. The default theme keeps its look
-  (`ring-halo` is the ring at 14%, `handle` the knob); the shadcn theme hovers in `accent`, rings
-  focus at `ring/50` and draws the thumb white with a `primary` edge. An app with its own
-  `theme.json` and `finishes.json` adds `ring-halo` to both appearances and a `handle` finish
-  (a copy of its `knob` keeps the look).
-- **The listbox parts come from `lib/listbox`.** `select` and `combobox` no longer re-export the
-  shared listbox look (`OptionRow`, `ListboxHeader`, `ListboxEmpty`, `listboxProps`,
-  `listboxSearch`, `listboxFooter`, `clearButtonLook` and their option types), and each drops its
-  own copy of `Chevron`. An app that imported them from `components/ui/select` or
-  `components/ui/combobox` imports them from `lib/listbox`, which `add select` already installs.
+  **To migrate:** a confirmation with content of the app's own, in the app's look, is a `dialog`.
+- **Breaking:** **the theme says how a control hovers, rings and where a slider's thumb comes from.**
+  `hovered()` reads the theme's `hover` token, `focusRing()` the new `ring-halo` token, and
+  `finishes.json` gains a `handle` role for the slider's thumb, apart from the switch's `knob`. The
+  default theme keeps its look (`ring-halo` is the ring at 14%, `handle` the knob); the shadcn theme
+  hovers in `accent`, rings focus at `ring/50` and draws the thumb white with a `primary` edge. **To
+  migrate:** an app with its own `theme.json` and `finishes.json` adds `ring-halo` to both
+  appearances and a `handle` finish (a copy of its `knob` keeps the look).
+- **Breaking:** **`select` and `combobox` no longer re-export the shared listbox look.** `OptionRow`,
+  `ListboxHeader`, `ListboxEmpty`, `listboxProps`, `listboxSearch`, `listboxFooter`,
+  `clearButtonLook` and their option types live in `lib/listbox`, and each component drops its own
+  copy of `Chevron`. **To migrate:** an app that imported them from `components/ui/select` or
+  `components/ui/combobox` imports them from `lib/listbox`, which `add select` already installs;
   `add combobox` no longer brings `icons` or `lucide` of its own.
+- **A shell's default classes and an app's `classes` meet by one rule.** `data-table`, `text-view`
+  and `code-editor` shared a private copy each; `mergeClasses` in `lib/classes.ts` is the one: a
+  string goes after ours, `null` drops ours. `add` of any of the three brings it.
+
+### Fixed
+
+- **A `sidebar` mounted closed is folded from its first frame.** A column with
+  `defaultOpen={false}` (or an `open` that is false at the first frame) drew its rows expanded until
+  something changed: its rows now draw the icon alone, the search field, a group's action, a row's
+  badge and action and an open sub menu are gone, and a folded row keeps the 8-point gap so a
+  trailing icon is clipped at the 48-point rail instead of hanging beside the icon. The parts read
+  the column's axes where they wear them, so a closed column no longer draws its rows expanded.
+- **A `collapsible="none"` sidebar keeps its frame** — the 8 points of room `floating` and `inset`
+  give a card, on top of the column's 256 — so beside an `inset` page both cards stand on the
+  sidebar's ground with their gutters.
 
 ## 0.6.1 — the app's theme, kept
 

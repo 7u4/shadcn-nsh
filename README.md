@@ -2,83 +2,75 @@
 
 [中文](./README.zh.md)
 
-Styled UI for [Native Shell (NSH)](https://github.com/longbridge/nsh): copy-into-app components and distribution on top of `nsh/base`, patterned after [shadcn/ui](https://github.com/shadcn-ui/ui).
+Styled UI for [Native Shell (NSH)](https://github.com/longbridge/nsh), built on `nsh/base` and handed to your app as files you own: components, a theme, and a registry to copy them from — the shape [shadcn/ui](https://github.com/shadcn-ui/ui) gives React.
 
-Agent and contribution rules: [`AGENTS.md`](AGENTS.md). Vocabulary: [`docs/GLOSSARY.md`](docs/GLOSSARY.md). Architecture: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Rules and decisions: [`packages/ui/README.md`](packages/ui/README.md) (components) and [`packages/theme/README.md`](packages/theme/README.md) (theme, motion). Reference sources live as git submodules under [`references/`](references/).
+Docs, every component with its props and a live demo: **https://aningdev.github.io/shadcn-nsh/**
 
-## Prerequisites
+- **Copy-into-app.** `add` writes the component, its theme and the shared looks it imports into your app, then forgets them: no runtime package of ours, nothing to keep in sync.
+- **The appearance is data.** Components read colours and surfaces from `theme.json` and `finishes.json` — never from literals — so a theme swaps the whole look.
+- **Native where it matters.** Behaviour, accessibility and platform idioms come from `nsh/base`; the shells only decide how they look, and adapt to phone, desktop and the terminal.
 
-- [Bun](https://bun.com)
-- [NSH CLI](https://nsh.dev/docs/installation) (`nsh`), **installed, never built**: the version in [`port-map.json`](port-map.json)'s `upstream.cli` (today `v0.5.1`), `curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.5.1 sh`. The commit it prints is the **baseline**, [`port-map.json`](port-map.json)'s `upstream.commit`; when you install a newer CLI, `bun run port:bump` moves the baseline (and `upstream.cli`) with it. `port:check` warns — it does not fail — when the two differ ([`docs/toolchain.md`](docs/toolchain.md)). The ported code uses what the baseline's runtime has, so a CLI older than the baseline is the wrong one.
-- Nothing else: the installed CLI carries the runtimes (and fetches the ones a target needs), so there is no `NSH_RUNTIME` to export.
+## Quick start
 
-```sh
-# The submodules hold the upstream baseline and the shadcn reference.
-git submodule update --init --recursive
-
-# The CLI: installed, never built.
-curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.5.1 sh   # port-map.json upstream.cli
-export PATH="$HOME/.local/bin:$PATH"   # where the installer links nsh
-
-bun install
-bun run nsh:bootstrap   # checks CLI + references/nsh are at the baseline, writes each .nsh
-```
-
-## Use in an existing NSH app
-
-The directory must already have `nsh.json` (`nsh init`). Consumer monorepo scaffolding (`create`) is deferred.
-
-Components import their icons from [`lucide`](https://lucide.dev), and `init` / `add` install the
-packages an item declares with the app's own package manager (`bun`, `pnpm`, `yarn` by its lock file,
-else npm). An app without a `package.json` gets a minimal one; `--dry-run` prints the command instead
-of running it.
+Your app needs `nsh.json` (from `nsh init`):
 
 ```sh
-# Local registry (when developing this repo)
-bun run registry:build
-bun run registry:serve   # separate terminal
-
-bun run shadcn-nsh -- init -c /path/to/app --registry 'http://127.0.0.1:4173/{name}.json'
-bun run shadcn-nsh -- add button -c /path/to/app --registry 'http://127.0.0.1:4173/{name}.json'
+npx shadcn-nsh init                 # nsh-ui.json, the theme, nsh.json pointed at it
+npx shadcn-nsh add button           # one item, with the files it depends on
+npx shadcn-nsh add --all            # every component
 ```
 
-After push to GitHub you can omit `--registry`. Default:
+`init` records the choice in `nsh-ui.json`, installs the theme at `theme.json` + `lib/finishes.json` and points each `nsh.json` at it; `add` copies files and installs the packages an item declares (`lucide` among them) with your package manager. From then on the files are yours to change.
 
-`https://raw.githubusercontent.com/aningdev/shadcn-nsh/main/public/r/{name}.json`
+`list`, `view` and `diff` inspect the registry without writing: `npx shadcn-nsh list`, `view button`, `diff` (exits 1 when the app's copies differ). Every command takes `-c <dir>`, `add` also `--dry-run` and `--overwrite`. The [CLI reference](https://aningdev.github.io/shadcn-nsh/docs/cli) has the flags and defaults.
 
-### Themes
+## Themes
 
-`init` installs the library's own theme. `init --theme shadcn` installs [shadcn's neutral
-theme](docs/specs/theme-shadcn.md) instead — the same three files (`theme.json`,
-`lib/finishes.json`, `lib/theme.ts`), different data:
+The library's own theme comes with `init`. Two more ship as themes:
 
 ```sh
-bun run shadcn-nsh -- init -c /path/to/app --theme shadcn
+npx shadcn-nsh init --theme shadcn                      # built with shadcn's neutral palette
+npx shadcn-nsh add theme-solid-glass                    # one more theme to switch to at run time
 ```
 
-`nsh-ui.json` records which theme the app has (`"theme": "theme-shadcn"`; a file without the
-field is on `theme`, so an older app needs nothing), and `add` resolves a component's `theme`
-dependency to the one recorded. An app on the neutral theme therefore stays on it: `add button
---overwrite` and `add --all --overwrite` write components, not the default theme back. `add
-theme` is the recorded theme too, and `add theme-shadcn` installs one more theme to switch to
-while the app runs; changing the build-time theme is `init --theme <name> --overwrite`.
+`init --theme <default|shadcn|solid-glass>` decides the theme the app is **built** with; `add theme-<name>` installs **one more** into `themes/<name>/`, for `selectTheme` to switch to while the app runs (`selectTheme(null)` goes back to the built-in one). `nsh-ui.json` records which theme the app was built with, so `add` never writes another one over it. Tokens, finishes and the switching example: [themes](https://aningdev.github.io/shadcn-nsh/docs/themes).
+
+## Registry
+
+`init`, `add`, `list`, `view` and `diff` read the registry published with the release your CLI came from:
+
+`https://raw.githubusercontent.com/aningdev/shadcn-nsh/v<version>/public/r/{name}.json`
+
+So `shadcn-nsh@0.6.1` reads `v0.6.1`'s registry: the files match the CLI you are running, and a new release never changes an installed app's source. `--registry <template>` (with `{name}` in it) points them anywhere else — a branch, a local `serve`, a fork.
+
+## Compatibility
+
+Each release of this library tracks one NSH CLI version; installing a newer CLI does not make an older library wrong, it only means its components were written against what that CLI's `nsh/base` had.
+
+| shadcn-nsh | NSH CLI |
+| ---------- | ------- |
+| 0.6.x      | v0.5.1  |
+
+## Community
+
+- Contributing — development setup, checks before a pull request, commit format: [`CONTRIBUTING.md`](CONTRIBUTING.md).
+- How the project is put together, and the rules the code keeps: [`AGENTS.md`](AGENTS.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md), vocabulary in [`docs/GLOSSARY.md`](docs/GLOSSARY.md).
+- Security reports: [`SECURITY.md`](SECURITY.md).
+- Licence: MIT, with the parts adapted from NSH under Apache-2.0 and the Solid Glass theme's MIT text — [`NOTICE`](NOTICE), [`LICENSE`](LICENSE).
 
 ## Develop in this repo
 
-Toolchain: Bun + [Vite+](https://viteplus.dev) (`vp fmt` / `vp lint` / `vp check`).
+Bun and the NSH CLI (installed, never built), then:
 
 ```sh
-bun run check
-bun run check:gallery
-bun run dev:gallery
-bun run dev:docs
-bun run docs:demos      # optional: package NSH web previews for docs
-bun run registry:build
+git submodule update --init --recursive
+bun install
+bun run nsh:bootstrap   # checks the CLI and references/nsh against the baseline, writes each .nsh
+bun run dev:docs        # the docs site
+bun run check           # what CI runs, in one command
 ```
 
-After changing `packages/ui` or `packages/theme`, run `bun run registry:build` and commit `public/r`.
-
-Porting a component, rules and checks: [`docs/port.md`](docs/port.md), [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+[`CONTRIBUTING.md`](CONTRIBUTING.md) has the full setup, the checks a change must pass and how to port a component.
 
 ## Layout
 
@@ -89,7 +81,7 @@ Porting a component, rules and checks: [`docs/port.md`](docs/port.md), [`docs/AR
 | `apps/docs/demos`            | —                     | acceptance demos, reference pages, `port:render`                                                                                                      |
 | `apps/docs/content/docs`     | —                     | docs pages (`/docs/…`), rendered by `src/routes/docs/$.tsx`                                                                                           |
 | `apps/gallery`               | `@shadcn-nsh/gallery` | native behavior tests and smoke pages                                                                                                                 |
-| `packages/cli`               | `shadcn-nsh` (npm)    | `init` / `add` / `build` / `serve`                                                                                                                    |
+| `packages/cli`               | `shadcn-nsh` (npm)    | `init` / `add` / `list` / `view` / `diff` / `build` / `serve`                                                                                         |
 | `registry.json` → `public/r` | —                     | registry source → committed HTTP artifacts                                                                                                            |
 | `scripts/port`               | —                     | `port:new` / `port:vendor` / `port:check` / `port:review` / `port:render` / `port:bump`                                                               |
 | `port-map.json`              | —                     | where every upstream file and declaration goes                                                                                                        |

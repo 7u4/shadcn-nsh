@@ -1,15 +1,21 @@
 # shadcn 默认主题实验
 
-> **现在可以安装了。** neutral 已作为 registry 条目 `theme-shadcn` 发布：`shadcn-nsh init --theme shadcn`
+> **已完成，留作记录（最后编辑 2026-11-18）。** neutral 已作为 registry 主题条目 `theme-shadcn` 发布：`init --theme shadcn`
 > 把它作为**构建时主题**写进应用（`theme.json`、`lib/finishes.json`，并把选择记进 `nsh-ui.json` 的
 > `theme`），`add theme-shadcn` 则是**多装一套**到 `themes/shadcn/`，应用运行时用 `selectTheme` 切过去
-> （见 [`runtime-themes.md`](runtime-themes.md)）。此后 `add` 按应用的构建时主题解析 `theme` 依赖，
-> `--overwrite` 也不会把默认主题写回来。本文余下部分是当初那次实验的记录——预览脚本、对照图、
-> 限制清单——仍然有效。
+> （见 [`runtime-themes.md`](runtime-themes.md)）。之后 `add` 按应用的构建时主题解析 `theme` 依赖，
+> `--overwrite` 也不会把默认主题写回来。
+>
+> 本文余下部分是当初那次实验的记录——主题数据、换算表、预览工具、对照图、限制清单——数值仍然有效。
+> 现在的做法与对外说明见 [themes](https://aningdev.github.io/shadcn-nsh/docs/themes) 与
+> [`packages/theme/README.md`](../../packages/theme/README.md)；规范见 [`theme-roles.md`](../specs/theme-roles.md)。
+> 文中「第 N 批」是当时的分批实现：**第 2 批 = `0.6.0` 的内容**（`press.scale`、单色 `fill`、
+> `insetEdge`、圆角 token、`theme-default`），**第 3 批 = 未发布段的「悬停、焦点光环与滑块手柄来自主题」**
+> （`ring-halo`、`handle`）。
 
 ## 结论
 
-把主题数据换掉，**16 个组件全部照常渲染，颜色、圆角、层次都跟着走了**：组件只经 `finish.*` 与 `theme.json` 的 token 取色，这一点成立。剩下的差异集中在**主题数据够不到的地方**：按下缩放（`pressSink`）、写死的焦点光环 rgba、组件里固定的 alpha、不在 token 里的圆角，以及 `finish.fill` 必须给渐变这一结构约束。逐条见[限制清单](#5-限制清单换数据换不掉的)。其中最后一条如今不再是缺陷：`finish` 的形状（每个 finish 都给出 `backgroundImage`，平涂写一种颜色在两个 stop）由 [`theme-roles.md`](theme-roles.md) 定为规矩，不再是“换数据换不掉”的东西。
+把主题数据换掉，**16 个组件全部照常渲染，颜色、圆角、层次都跟着走了**：组件只经 `finish.*` 与 `theme.json` 的 token 取色，这一点成立。剩下的差异集中在**主题数据够不到的地方**：按下缩放（`pressSink`）、写死的焦点光环 rgba、组件里固定的 alpha、不在 token 里的圆角，以及 `finish.fill` 必须给渐变这一结构约束。逐条见[限制清单](#5-限制清单换数据换不掉的)。其中最后一条如今不再是缺陷：`finish` 的形状（每个 finish 都给出 `backgroundImage`，平涂写一种颜色在两个 stop）由 [`theme-roles.md`](../specs/theme-roles.md) 定为规矩，不再是“换数据换不掉”的东西。
 
 看下来的观感：shadcn 的 neutral 是**单色**主题（唯一有彩的是 `destructive` 红），所以本库的"柠檬绿主操作 + 绿色 accent"全部退成灰阶；主按钮在浅色是近黑 `#171717`，在深色是浅灰 `#e5e5e5`。浅色下 `background` 与 `card` 都是纯白，面与面只靠 1px `#e5e5e5` 边和 `shadow-sm` 分开，所以整页比现在"平"得多，也更依赖边框。
 
@@ -143,7 +149,7 @@ bun scripts/theme/generate-shadcn.ts   # shadcn 的 oklch() 规范化后，按�
 
 ### 2.4 finishes 对照表
 
-20 个 finish，每个都是**一条 shadcn 外观**，全部平面化：没有渐变高光、没有内高光、没有内阴影。平面化的写法不是删掉 `backgroundImage`，而是让它在两个 stop 上写同一个颜色（`linear-gradient(180deg, var(--x) 0%, var(--x) 100%)`）：字段在主题之间不变，渲染才不需要分支，见 [`theme-roles.md`](theme-roles.md) 第 3 节。
+20 个 finish，每个都是**一条 shadcn 外观**，全部平面化：没有渐变高光、没有内高光、没有内阴影。平面化的写法不是删掉 `backgroundImage`，而是让它在两个 stop 上写同一个颜色（`linear-gradient(180deg, var(--x) 0%, var(--x) 100%)`）：字段在主题之间不变，渲染才不需要分支，见 [`theme-roles.md`](../specs/theme-roles.md) 第 3 节。
 
 | finish    | shadcn 的样子                                                                  | 本主题的值（亮 / 暗）                                                               |
 | --------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
@@ -207,7 +213,9 @@ bun scripts/theme-sheets.ts   [id,id]        # 对照页
 
 ## 5 限制清单（换数据换不掉的）
 
-按影响排序。`// @port` 区域里的改动都要在 `port-map.json` 的 `replace` 里登记并写 `why`（规则 P3），下面注明"要不要动 port 区"。
+按影响排序。按当时的规定，`// @port` 区域里的改动要在 `port-map.json` 的 `replace` 里登记并写 `why`；
+`replace` 已随「组件归本库」的改造废弃，现在是 `port:check` 提醒、审阅后采纳（见
+[`ownership.md`](../specs/ownership.md)）。下面注明"要不要动 port 区"。
 
 **第 2 批（#20b）解决了第 2、5、6、9 条，运行时主题（#20b）解决了第 1 条，第 3 批解决了第 3、4、12 条**：表中现象划掉的那几条，做法写在「怎么去掉」列里。其余各条仍然成立；表里的行号是实验当时的，代码后来动过，位置以名字为准。
 

@@ -5,17 +5,26 @@ This project adapts the shared UI layer of NSH (Native Shell):
 
   Source:   https://github.com/longbridge/nsh
   Path:     examples/nsh-gallery-ui/
-  Baseline: 30f87b7c (the commit pinned in port-map.json)
+  Baseline: the commit `port-map.json` records in `upstream.commit`
   Copyright 2026 Longbridge <https://longbridge.com>
   License:  Apache License, Version 2.0
             https://www.apache.org/licenses/LICENSE-2.0
 
 What was changed: the looks of the shared controls (their state design and
-geometry) are re-expressed as copy-into-app components over `nsh/base`, with the
-shadcn neutral palette in place of the original colours, the Terminal idiom,
-sounds and the website playground adapters left out, and a Composition Facade
-API. Each adapted file names its source file and the baseline commit in a header
-comment, and keeps this notice's license: Apache-2.0 for the adapted parts.
+geometry) are re-expressed as copy-into-app components over `nsh/base`, with this
+library's own theme in place of the original colours — the theme's data is the
+library's (`packages/theme/theme.json` and `finishes.json`, stored in `oklch()`),
+and shadcn's neutral palette is an alternative theme installed by
+`init --theme shadcn`, not the default one. The Terminal idiom, the sounds and the
+website playground adapters are left out, and the API is named and composed the way
+shadcn/ui names and composes its own: a family keeps shadcn's part roles
+(`Trigger`, `Content`, `Item`, …) and the axes it writes (`variant`, `size`,
+`tone`).
+
+Each adapted file says where it came from: a header line citing this notice, and a
+`// @port <file in examples/nsh-gallery-ui>` marker (up to `// @port end`) around
+the region taken from that file. The adapted parts keep this notice's license:
+Apache-2.0. Which file came from which is `port-map.json`'s to say.
 
 The Solid Glass theme (`packages/theme/themes/solid-glass/`) is derived from the
 colour and finish values of Solid Glass's stylesheet:

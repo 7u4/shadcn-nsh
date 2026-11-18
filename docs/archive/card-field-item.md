@@ -1,5 +1,9 @@
 # Card、Field、Item：三个组合组件（#19）
 
+> **已完成，留作记录（最后编辑 2026-11-18）：`card`、`field`、`item` 三个条目随 `0.3.0` 发布。**
+> 组件的对外说明以文档页为准（`apps/docs/content/docs/components/`），代码规则见 [`AGENTS.md`](../../AGENTS.md)
+> 与 [`ARCHITECTURE.md`](../ARCHITECTURE.md)。
+
 ## 目标
 
 MyAid 改用本库后，复制进来的文件不改、外观只经主题。应用里最常见的容器、表单行和列表行如果不由本库提供，应用就得自己给文字和表面上色，绕过主题。
