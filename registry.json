@@ -103,7 +103,7 @@
       "type": "registry:lib",
       "title": "Press",
       "description": "A press's feedback: the theme's sink and its ease.",
-      "registryDependencies": ["theme"],
+      "registryDependencies": ["switch-geometry", "theme"],
       "files": [
         {
           "path": "packages/ui/lib/press.ts",

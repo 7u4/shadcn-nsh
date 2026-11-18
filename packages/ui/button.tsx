@@ -17,7 +17,7 @@ import type { JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
 import { context, platform, split, Text, token, View } from "nsh";
 import { Button as BaseButton, type ButtonProps as BaseButtonProps } from "nsh/base";
 
-import { pressSink, pressTransition } from "./lib/press";
+import { pressSink, pressTransition, touchSlop } from "./lib/press";
 import { labelOf, type Live, read } from "./lib/utils";
 import { Spinner } from "./spinner";
 
@@ -74,16 +74,6 @@ export const buttonSizes: Record<ButtonSize, ButtonDimensions> = pointer
       default: { height: 40, font: 15, icon: 16, pad: 16 },
       lg: { height: 48, font: 17, icon: 18, pad: 20 },
     };
-
-/** The smallest target a finger gets (Accessibility, "Touch targets"). */
-const TOUCH_TARGET = 44;
-
-/** How far presses count past a control `height` tall, so a finger gets 44
- * points without the control looking bigger: none with a pointer. */
-const slop = (height: number): number | undefined => {
-  if (pointer || terminal || height >= TOUCH_TARGET) return undefined;
-  return (TOUCH_TARGET - height) / 2;
-};
 
 /** How far a press sinks a button (`activeStyle`): none with reduced motion. */
 const sink = (scale: number): ViewStyle => pressSink(scale).activeStyle;
@@ -185,7 +175,7 @@ export function buttonLook(variant: Live<ButtonVariant> = "secondary", o?: Butto
     },
     disabledStyle: { opacity: 0.5 },
     get hitSlop(): number | undefined {
-      return slop(dimensions(o).height);
+      return touchSlop(dimensions(o).height);
     },
   };
 }
@@ -303,7 +293,7 @@ export function iconButtonLook(o: IconButtonLookOptions = {}) {
     },
     disabledStyle: { opacity: 0.5 },
     get hitSlop(): number | undefined {
-      return slop(iconButtonSide(o));
+      return touchSlop(iconButtonSide(o));
     },
   };
 }
@@ -381,7 +371,7 @@ export function roundButtonLook(
     },
     disabledStyle: { opacity: 0.5 },
     get hitSlop(): number | undefined {
-      return slop(roundSide(o));
+      return touchSlop(roundSide(o));
     },
   };
 }
@@ -470,7 +460,7 @@ export function splitButtonLook(variant: Live<ButtonVariant> = "default", o?: Bu
         disabledStyle: { opacity: 0.5 },
         // Taller only: the halves touch, so a finger's slop stays off their shared edge.
         get hitSlop() {
-          const v = slop(dimensions(o).height);
+          const v = touchSlop(dimensions(o).height);
           return v ? { top: v, bottom: v } : undefined;
         },
       };
