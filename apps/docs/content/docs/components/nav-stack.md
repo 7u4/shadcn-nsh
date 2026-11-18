@@ -129,11 +129,11 @@ the accent, which is what the desktop header wears already.
 [`nsh/base`'s NavStack and NavPage](https://nsh.dev/elements/nav-stack); `style` goes over the look's. `createNavStack`,
 `NavStackState` and `NavStackChangeEvent` are `nsh/base`'s, re-exported.
 
-| Part             | Notes                                                                           |
-| ---------------- | ------------------------------------------------------------------------------- |
-| `NavStack`       | `state` from `createNavStack`, `children(route, index)`, `onChange({ routes })` |
-| `NavPage`        | `title`, `headerRight`, `header`; the page's header on the desktops and the web |
-| `createNavStack` | `routes`, `push`, `pop`, `popToRoot`, `replace`, `setRoutes`, `remove`          |
+| Part             | Props                                                                  | Description                                                                     |
+| ---------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `NavStack`       | `state`, `children`, `onChange`                                        | `state` from `createNavStack`; `children(route, index)`; `onChange({ routes })` |
+| `NavPage`        | `title`, `headerRight`, `header`                                       | The page's header on the desktops and the web                                   |
+| `createNavStack` | `routes`, `push`, `pop`, `popToRoot`, `replace`, `setRoutes`, `remove` | `nsh/base`'s, re-exported                                                       |
 
 The looks — spread them on the views they name, or read their words for content of your own:
 `navStackLook()` (`root`) and `navPageLook()` (`page`, `header`, `title`, `backGlyph`).

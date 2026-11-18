@@ -93,30 +93,7 @@ of the viewport, and shows only while there is somewhere to go that way. It says
 `MessageScrollerContent` is the column the turns are in, 32 points apart and at least as tall as
 the viewport; `MessageScrollerItem` wraps one turn. What a turn is, is `Message`'s business.
 
-## API
-
-Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `MessageScroller`,
-`MessageScrollerContent` and `MessageScrollerItem`; `MessageScrollerViewport` takes a
-[`Scroll`](https://nsh.dev/elements/scroll)'s (`scrollbar`, `contentInset`, `onScroll`, …) less the
-direction it keeps (a conversation scrolls up and down), and `MessageScrollerButton` takes this
-library's [`Button`](https://nsh.dev/elements/button) props.
-
-| Part                      | Renders  | Look                                    |
-| ------------------------- | -------- | --------------------------------------- |
-| `MessageScroller`         | `View`   | `messageScrollerLook().root`            |
-| `MessageScrollerViewport` | `Scroll` | `messageScrollerLook().viewport`        |
-| `MessageScrollerContent`  | `View`   | `messageScrollerLook().content`         |
-| `MessageScrollerItem`     | `View`   | `messageScrollerLook().item`            |
-| `MessageScrollerButton`   | `Button` | `messageScrollerLook().slot(direction)` |
-
-| Prop            | On                      | Type               | Default |
-| --------------- | ----------------------- | ------------------ | ------- |
-| `initialScroll` | `MessageScroller`       | `"start" \| "end"` | `end`   |
-| `direction`     | `MessageScrollerButton` | `"start" \| "end"` | `end`   |
-
-The frame fills its parent, clips what is in it, and holds its viewport and its buttons; the
-content column is 32 points apart; a button floats 16 points from its edge. `messageScrollerLook()`
-is exported for a frame an app draws itself.
+## Differences from shadcn/ui
 
 shadcn/ui's message scroller is a wrapper over `@shadcn/react/message-scroller`, a React library of
 state and hooks. This one is the frame and the behaviour on `nsh`'s `Scroll`, and differs in five
@@ -135,3 +112,28 @@ places:
   springs animate the opacity (`follow`).
 - **No scrollbar gutter or faded edge.** shadcn/ui reserves the scrollbar's room and fades the
   content at the top edge (`scroll-fade-b`); the platform's scrollbar is the one you get.
+
+## API
+
+Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `MessageScroller`,
+`MessageScrollerContent` and `MessageScrollerItem`; `MessageScrollerViewport` takes a
+[`Scroll`](https://nsh.dev/elements/scroll)'s (`scrollbar`, `contentInset`, `onScroll`, …) less the
+direction it keeps (a conversation scrolls up and down), and `MessageScrollerButton` takes this
+library's [`Button`](https://nsh.dev/elements/button) props.
+
+| Part                      | Props           | Description                                                |
+| ------------------------- | --------------- | ---------------------------------------------------------- |
+| `MessageScroller`         | `initialScroll` | Renders `View` (`messageScrollerLook().root`)              |
+| `MessageScrollerViewport` |                 | Renders `Scroll` (`messageScrollerLook().viewport`)        |
+| `MessageScrollerContent`  |                 | Renders `View` (`messageScrollerLook().content`)           |
+| `MessageScrollerItem`     |                 | Renders `View` (`messageScrollerLook().item`)              |
+| `MessageScrollerButton`   | `direction`     | Renders `Button` (`messageScrollerLook().slot(direction)`) |
+
+| Prop            | On                      | Type               | Default |
+| --------------- | ----------------------- | ------------------ | ------- |
+| `initialScroll` | `MessageScroller`       | `"start" \| "end"` | `end`   |
+| `direction`     | `MessageScrollerButton` | `"start" \| "end"` | `end`   |
+
+The frame fills its parent, clips what is in it, and holds its viewport and its buttons; the
+content column is 32 points apart; a button floats 16 points from its edge. `messageScrollerLook()`
+is exported for a frame an app draws itself.

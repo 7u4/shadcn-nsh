@@ -48,11 +48,9 @@ import { paginationArrows, paginationItemClass } from "@/components/ui/paginatio
 
 Uses `paginationItemClass` and `paginationArrows` by default. Every prop of [`nsh/base` Pagination](https://nsh.dev/elements/pagination) passes through.
 
-| Prop      | Type                | Notes                               |
-| --------- | ------------------- | ----------------------------------- |
-| `variant` | `PaginationVariant` | `default`, or `outline` on the ends |
-| `compact` | `boolean`           | Label slot between ends             |
-| `page`    | `number`            | Current page (1-based)              |
+| Part         | Props                                                                                                                                                          | Description                                                  |
+| ------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
+| `Pagination` | `variant` (`PaginationVariant`; `default`, or `outline` on the ends), `compact` (`boolean`; label slot between ends), `page` (`number`; current page, 1-based) | Uses `paginationItemClass` and `paginationArrows` by default |
 
 `PaginationVariant` is `"default" | "outline"`; `paginationItemClass` takes the same word, as
 `PaginationItemClassOptions`' `variant`.

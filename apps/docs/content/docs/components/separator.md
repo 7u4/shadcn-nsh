@@ -39,8 +39,7 @@ is as tall as its row, so the row has to have a height (its own, or one its cont
 
 ### Space around it
 
-The separator is the line and nothing else: the room above and below it is the caller's, as
-shadcn's `my-4` is.
+The separator is the line and nothing else: the room above and below it is the caller's.
 
 ```tsx
 <Separator style={{ marginVertical: 12 }} />
@@ -62,10 +61,9 @@ boundary between groups); give it an `accessibilityLabel` saying what it divides
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through (`style`, `role`,
 `accessibilityLabel`, …); `style` goes over the look's.
 
-| Prop          | Type                         | Default        |
-| ------------- | ---------------------------- | -------------- |
-| `orientation` | `"horizontal" \| "vertical"` | `"horizontal"` |
-| `decorative`  | `boolean`                    | `true`         |
+| Part        | Props                                                                                                          | Description                                     |
+| ----------- | -------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
+| `Separator` | `orientation` (`"horizontal" \| "vertical"`, default `"horizontal"`), `decorative` (`boolean`, default `true`) | The line is one point of the theme's edge color |
 
 The line is one point of the theme's edge color (`colors.border`, `theme.json`'s `border`), with
 no other look: a corner is the caller's `style`, and so is its room. `separatorLook(orientation)`
