@@ -22,6 +22,7 @@ const fixture = (): Fixture =>
       "theme-default",
       "theme-shadcn",
       "theme-solid-glass",
+      "switch-geometry",
       "press",
       "spinner",
       "button",
