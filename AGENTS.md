@@ -74,6 +74,7 @@ registry.json → public/r → shadcn-nsh add
 - 一个家族一个 commit；提交前 `port:check`、`nsh check apps/docs/demos`、`port:render`、`vp check` 全部通过，四张截图人眼看过。
 - `// @port` 区域可以直接改；有意的外观决定写进对应文档。上游有变化时 `port:check` 会列出待审阅项，审阅后采纳或忽略；`bun run port:review` 把审阅到的上游提交记进 `port-map.json`。
 - 改 `registry.json` 或组件文件后运行 `bun run registry:build` 更新 `public/r`；`bun run check` 里的 `registry:build --check` 会拦下没重建的提交。
+- 发版按 [`docs/release.md`](docs/release.md) 走：改版号、切 CHANGELOG、重建 registry、打 `v*` 标签。
 
 ## 工具链
 
