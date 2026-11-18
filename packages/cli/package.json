@@ -20,7 +20,7 @@
     "directory": "packages/cli"
   },
   "bin": {
-    "shadcn-nsh": "./dist/index.js"
+    "shadcn-nsh": "dist/index.js"
   },
   "files": [
     "dist"
