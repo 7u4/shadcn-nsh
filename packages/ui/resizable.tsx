@@ -38,6 +38,9 @@ export function resizableHandleLook(axis: "horizontal" | "vertical") {
 }
 // @port end
 
+/** What a resize handle announces when its group is given no label of its own. */
+export const RESIZE_HANDLE_LABEL = "Resize";
+
 /** Every prop of `nsh/base` ResizablePanelGroup, plus the handle's look. */
 export type ResizablePanelGroupProps = BaseGroupProps;
 
@@ -62,7 +65,7 @@ export function ResizablePanelGroup(props: ResizablePanelGroupProps) {
     <BaseGroup
       {...rest}
       axis={props.axis}
-      handleAccessibilityLabel={props.handleAccessibilityLabel ?? "Resize"}
+      handleAccessibilityLabel={props.handleAccessibilityLabel ?? RESIZE_HANDLE_LABEL}
       class={props.class}
       style={props.style}
       handleClass={joinClass(look.handleClass, props.handleClass)}

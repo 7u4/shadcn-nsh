@@ -20,7 +20,7 @@ import {
 } from "nsh/base";
 
 import { joinClass } from "./lib/classes";
-import { handleThumb } from "./resizable";
+import { handleThumb, RESIZE_HANDLE_LABEL } from "./resizable";
 
 // @port look/workspace.tsx
 /**
@@ -196,7 +196,7 @@ export function DockArea(props: DockAreaProps) {
       {...rest}
       class={props.class}
       style={props.style}
-      handleAccessibilityLabel={props.handleAccessibilityLabel ?? "Resize"}
+      handleAccessibilityLabel={props.handleAccessibilityLabel ?? RESIZE_HANDLE_LABEL}
       groupClass={joinClass(dockClasses.groupClass, props.groupClass)}
       groupStyle={props.groupStyle}
       tabBarClass={joinClass(dockClasses.tabBarClass, props.tabBarClass)}
