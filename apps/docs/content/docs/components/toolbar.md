@@ -50,3 +50,11 @@ import { Toolbar, ToolbarGroup, ToolbarSeparator } from "@/components/ui/toolbar
 ## API
 
 Every prop of [`nsh/base` Toolbar](https://nsh.dev/elements/toolbar), `ToolbarGroup` and `ToolbarSeparator` passes through. `style` goes over the look's. Items keep their own look (`Button`, `Toggle`, …).
+
+| Part               | Props                                     | Description                                                                    |
+| ------------------ | ----------------------------------------- | ------------------------------------------------------------------------------ |
+| `Toolbar`          | `axis`, and every `nsh/base` Toolbar prop | The bar: one toolbar for screen readers, arrow keys along `axis`, on the track |
+| `ToolbarGroup`     | every `nsh/base` ToolbarGroup prop        | A named run of items; its direction follows the bar                            |
+| `ToolbarSeparator` | every `nsh/base` ToolbarSeparator prop    | The hairline between runs, never a tab stop                                    |
+
+`toolbarTrack({ vertical })` and `toolbarRule(vertical)` are the look, for a bar of your own.

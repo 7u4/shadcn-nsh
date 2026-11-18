@@ -39,7 +39,6 @@ import { Status } from "@/components/ui/status";
 
 Gallery atom: no `nsh/base` counterpart.
 
-| Prop    | Type                   | Default    |
-| ------- | ---------------------- | ---------- |
-| `label` | `string`               | (required) |
-| `tone`  | `Tone \| (() => Tone)` |            |
+| Part     | Props           | Description                                                                       |
+| -------- | --------------- | --------------------------------------------------------------------------------- |
+| `Status` | `label`, `tone` | A dot and a word, 12 points; a tone that matters tints both, neutral stays quiet. |

@@ -77,6 +77,6 @@ padding where it needs another.
 The 16 ANSI colors are NSH's own palette; text a program leaves uncolored is the theme's
 `foreground`, and cells it leaves without a background show the terminal's own surface.
 
-| Prop      | Type                   | Default     |
-| --------- | ---------------------- | ----------- |
-| `variant` | `"default" \| "ghost"` | `"default"` |
+| Part       | Props                                                                                                      | Description                                                                                |
+| ---------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `Terminal` | `variant`, and every `nsh/base` Terminal prop (`onData`, `onResize`, `style`, …); the ref is `TerminalRef` | A program's output on the theme's field surface; `variant="ghost"` draws no surface at all |

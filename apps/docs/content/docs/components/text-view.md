@@ -47,3 +47,10 @@ import { TextView, textViewCaretClass, textViewLinkClasses } from "@/components/
 ## API
 
 `TextView.parse`, `parseHtml`, and `plainText` are re-exported from base. Every prop of [`nsh/base` TextView](https://nsh.dev/elements/text-view) passes through.
+
+| Part                                       | Props                                     | Description                                                                     |
+| ------------------------------------------ | ----------------------------------------- | ------------------------------------------------------------------------------- |
+| `TextView`                                 | every `nsh/base` TextView prop; `classes` | A Markdown, HTML or block document; `classes` merges over `textViewLinkClasses` |
+| `TextView.parse`, `parseHtml`, `plainText` | base's parsers                            | A document, parsed ahead of drawing                                             |
+| `textViewLinkClasses`                      | `{ link }`                                | The link classes the view merges in: the brand color over a faint underline     |
+| `textViewCaretClass`                       | —                                         | The streaming caret: a brand block a line high, pulsing                         |

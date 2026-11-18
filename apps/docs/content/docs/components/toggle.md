@@ -42,18 +42,18 @@ import { Toggle } from "@/components/ui/toggle";
 
 A size is compact with a pointer (24 / 28 / 34 points) and roomier on a touch screen (32 / 38 / 44), where a hit slop makes the target 44 points.
 
+### Disabled
+
+```tsx
+<Toggle disabled>Bold</Toggle>
+```
+
 ### Pressed
 
 ```tsx
 <Toggle pressed={on()} onChange={({ pressed }) => on.set(pressed)}>
   Bold
 </Toggle>
-```
-
-### Disabled
-
-```tsx
-<Toggle disabled>Bold</Toggle>
 ```
 
 ### Names for screen readers
@@ -74,8 +74,8 @@ The look is a function, for a pressable of your own.
 
 Every prop of [`nsh/base` Toggle](https://nsh.dev/elements/toggle) passes through. `style`, `hoverStyle`, `activeStyle`, `focusVisibleStyle`, `pressedStyle` and `disabledStyle` go over the look's.
 
-| Prop       | Type                        | Default     |
-| ---------- | --------------------------- | ----------- |
-| `variant`  | `"default" \| "outline"`    | `"default"` |
-| `size`     | `"sm" \| "default" \| "lg"` | `"default"` |
-| `children` | `string \| JSX.Element`     |             |
+| Part     | Props                                                                                               | Description                                                       |
+| -------- | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `Toggle` | `variant`, `size`, `children`, and every `nsh/base` Toggle prop (`pressed`, `onChange`, `disabled`) | A two-state button; a string child is its name for screen readers |
+
+`toggleLook`, `toggleLabel` and `toggleGlyph` are the look's parts, for a pressable of your own.

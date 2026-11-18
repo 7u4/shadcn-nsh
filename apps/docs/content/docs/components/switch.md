@@ -25,6 +25,23 @@ import { Switch } from "@/components/ui/switch";
 
 ## Examples
 
+### Size
+
+`size` is read on a touch screen; with a pointer both sizes are 28 × 16.
+
+```tsx
+<Switch size="sm" checked={on()} onChange={({ checked }) => on.set(checked)} />
+<Switch size="default" checked={on()} onChange={({ checked }) => on.set(checked)} />
+```
+
+### Disabled
+
+```tsx
+<Switch checked={false} disabled>
+  <Text>Ask to join networks</Text>
+</Switch>
+```
+
 ### In a row
 
 A row with its label is the target: put the label in `children` and let `listRow` draw the row.
@@ -44,7 +61,8 @@ A switch is the whole row here — its children are its label, so a tap anywhere
 
 ### A settings row
 
-shadcn writes the same row the other way round: a `Field` in a row puts a title and its description at the start, `FieldContent` takes the room the control leaves, and the switch sits after them.
+A `Field` in a row puts a title and its description at the start, `FieldContent` takes the room
+the control leaves, and the switch sits after them.
 
 ```tsx
 <Field orientation="horizontal">
@@ -62,7 +80,7 @@ shadcn writes the same row the other way round: a `Field` in a row puts a title 
 
 The title is beside the switch, not in it, so the switch carries the row's name in `accessibilityLabel`; it is still read as that switch and its state. A list of them is a `FieldGroup`, and `FieldSeparator` draws the hairline between two rows.
 
-shadcn ties the label to its switch with `htmlFor`, which NSH has no form of: a title beside a switch takes no presses, so the switch is the target — a touch screen gives it the room a finger needs (`hitSlop`) — and a row that should toggle on a tap anywhere is the `listRow` row above.
+A title beside a switch takes no presses, so the switch is the target — a touch screen gives it the room a finger needs (`hitSlop`) — and a row that should toggle on a tap anywhere is the `listRow` row above.
 
 Nothing in the row names a side: `Field` lays its children out along the writing direction, so a right-to-left app puts the switch first and the text against the other edge, with the row unchanged.
 
@@ -82,23 +100,6 @@ With no children the track is all of it; a touch screen gets a 44-point target f
   checked={bluetooth()}
   onChange={({ checked }) => bluetooth.set(checked)}
 />
-```
-
-### Small
-
-`size` is read on a touch screen; with a pointer both sizes are 28 × 16.
-
-```tsx
-<Switch size="sm" checked={on()} onChange={({ checked }) => on.set(checked)} />
-<Switch size="default" checked={on()} onChange={({ checked }) => on.set(checked)} />
-```
-
-### Disabled
-
-```tsx
-<Switch checked={false} disabled>
-  <Text>Ask to join networks</Text>
-</Switch>
 ```
 
 ### The look alone
@@ -127,19 +128,17 @@ The settings row's looks are the field family's, for a `nsh/base` view of your o
 
 Each part of `fieldFamilyLook()` reads the theme when it is drawn, so a look kept in a `const` still follows the scheme.
 
+## Differences from shadcn/ui
+
+- A settings row is the field family's — `Field`, `FieldContent`, `FieldLabel`, `FieldDescription` — with the switch after them; shadcn ties a label to its switch with `htmlFor`, which NSH has no form of.
+
 ## API
 
 Every prop of [`nsh/base` Switch](https://nsh.dev/elements/switch) passes through. `trackClass`, `trackStyle` and `thumbStyle` go over the look's.
 
-| Prop                 | Type                    | Default     |
-| -------------------- | ----------------------- | ----------- |
-| `checked`            | `boolean`               |             |
-| `onChange`           | `({ checked }) => void` |             |
-| `size`               | `SwitchSize`            | `"default"` |
-| `disabled`           | `boolean`               | `false`     |
-| `children`           | `JSX.Element`           |             |
-| `accessibilityLabel` | `string`                |             |
-| `hitSlop`            | object                  |             |
+| Part     | Props                                                                                                                    | Description                                                                                                 |
+| -------- | ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `Switch` | `checked`, `onChange`, `size`, `disabled`, `children`, `accessibilityLabel`, `hitSlop`, and every `nsh/base` Switch prop | An on / off switch; alone it takes a 44-point hit slop, with children it is a row whose label is the target |
 
 ### Sizes
 

@@ -49,9 +49,10 @@ import { Toggle, ToggleGroup } from "@/components/ui/toggle-group";
 
 ## API
 
-Every prop of [`nsh/base` ToggleGroup](https://nsh.dev/elements/toggle) passes through. `style` goes over the look's. `Toggle` is re-exported from the toggle package.
+Every prop of [`nsh/base` ToggleGroup](https://nsh.dev/elements/toggle) passes through. `style` goes over the look's.
 
-| Prop       | Type      | Default |
-| ---------- | --------- | ------- |
-| `vertical` | `boolean` |         |
-| `inset`    | `boolean` | `true`  |
+| Part          | Props                                                      | Description                                                              |
+| ------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `ToggleGroup` | `vertical`, `inset`, and every `nsh/base` ToggleGroup prop | The inset track of `toolbarTrack` holding a row (or column) of `Toggle`s |
+
+`Toggle` is re-exported from this module.

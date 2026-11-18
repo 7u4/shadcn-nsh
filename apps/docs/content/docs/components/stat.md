@@ -45,10 +45,6 @@ import { Stat } from "@/components/ui/stat";
 
 Gallery atom: no `nsh/base` counterpart.
 
-| Prop       | Type                    | Default    |
-| ---------- | ----------------------- | ---------- |
-| `label`    | `string`                | (required) |
-| `value`    | `string`                | (required) |
-| `tone`     | `Tone \| (() => Tone)`  |            |
-| `width`    | percentage width string |            |
-| `truncate` | `boolean`               |            |
+| Part   | Props                                         | Description                                                                                  |
+| ------ | --------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `Stat` | `label`, `value`, `tone`, `width`, `truncate` | A muted label over a larger value; `tone` colors the value, `truncate` keeps it to one line. |
