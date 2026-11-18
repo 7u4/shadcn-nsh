@@ -79,7 +79,7 @@ function App() {
         }
       >
         <View style={sectionSurface({ padded: true })}>
-          <DemoSection title="Day">
+          <DemoSection title="Day" axis="block">
             <Month
               value={day()}
               firstDayOfWeek={week() === "Sunday" ? 0 : 1}
@@ -90,7 +90,7 @@ function App() {
               }}
             />
           </DemoSection>
-          <DemoSection title="Range: the first press starts it, the second ends it">
+          <DemoSection title="Range: the first press starts it, the second ends it" axis="block">
             <Month
               range
               value={range()}

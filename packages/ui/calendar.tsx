@@ -197,7 +197,7 @@ function Toggle(props: CalendarItemProps & { kind: "monthToggle" | "yearToggle" 
  * today, `primary` for the selected date and a range's ends (`aria-selected`,
  * which ranks over the hover; a range's middle days keep the band). A disabled
  * day takes no hover fill, unless it is today. The keyboard's day takes the
- * lists' highlight (the brand tint and edge); on the selected day only the
+ * brand tint and edge; on the selected day only the
  * edge, over `primary`.
  */
 function Day(props: { item: CalendarEntry; firstDayOfWeek?: number }) {
@@ -273,9 +273,9 @@ function heading(props: CalendarItemProps) {
  * for the selected date and a range's ends, the range's other days on a
  * band of the quiet fill from end to end (`data-range-*`) whose corners
  * round at the weeks' ends, the other months' days muted, the disabled ones
- * muted at half opacity, and the keyboard's day lit as a list's highlighted
- * row is (`optionClass`: the brand tint and edge), so Select, Combobox,
- * Command and the calendar move one kind of highlight. What draws each kind
+ * muted at half opacity, and the keyboard's day in the brand tint and edge:
+ * a list's highlight is the quiet fill, which a day already takes for today
+ * and the hover, so the keys' day needs a mark of its own. What draws each kind
  * is a component of its own, below: `Arrow`, `Toggle`, `Weekday`,
  * `MonthOrYear` and `Day`; the terminal's labels are drawn here.
  */
