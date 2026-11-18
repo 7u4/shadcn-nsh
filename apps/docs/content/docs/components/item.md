@@ -14,6 +14,8 @@ npx shadcn-nsh@latest add item
 ## Usage
 
 ```tsx
+import { Bell } from "lucide";
+
 import {
   Item,
   ItemActions,
@@ -26,7 +28,11 @@ import {
   ItemSeparator,
   ItemTitle,
 } from "@/components/ui/item";
+import { Icon } from "@/lib/icons";
+import { colors } from "@/lib/theme";
 ```
+
+The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for adding it and picking a size and color.
 
 ```tsx
 <ItemGroup>

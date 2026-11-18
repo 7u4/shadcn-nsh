@@ -140,7 +140,7 @@ export const NSH_ELEMENTS: readonly NshEntry[] = [
   { id: "editor", group: "base", ours: ["code-editor"] },
   { id: "emoji-picker", group: "base", ours: ["emoji-picker"] },
   { id: "hover-card", group: "base", ours: ["hover-card"] },
-  { id: "input", group: "base", ours: ["input", "input-group", "textarea"] },
+  { id: "input", group: "base", ours: ["input", "textarea"] },
   { id: "link", group: "base", ours: ["link"] },
   { id: "menu", group: "base", ours: ["menu", "context-menu", "menubar"] },
   { id: "nav-stack", group: "base", ours: ["nav-stack"] },

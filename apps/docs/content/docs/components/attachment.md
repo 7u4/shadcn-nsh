@@ -24,7 +24,11 @@ import {
   AttachmentMedia,
   AttachmentTitle,
 } from "@/components/ui/attachment";
+import { Icon } from "@/lib/icons";
+import { colors } from "@/lib/theme";
 ```
+
+The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for adding it and picking a size and color.
 
 ```tsx
 <Attachment state="done">

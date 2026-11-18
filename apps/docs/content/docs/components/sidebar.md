@@ -15,7 +15,10 @@ npx shadcn-nsh@latest add sidebar
 
 ```tsx
 import { Sidebar, SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { Icon } from "@/lib/icons";
 ```
+
+The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for adding it and picking a size and color.
 
 ```tsx
 <SidebarProvider>

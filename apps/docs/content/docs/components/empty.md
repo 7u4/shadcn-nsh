@@ -14,15 +14,22 @@ npx shadcn-nsh@latest add empty
 ## Usage
 
 ```tsx
+import { Inbox } from "lucide";
+
 import {
   Empty,
+  EMPTY_ICON,
   EmptyContent,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
+import { Icon } from "@/lib/icons";
+import { colors } from "@/lib/theme";
 ```
+
+The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for adding it and picking a size and color.
 
 ```tsx
 <Empty>

@@ -21,7 +21,10 @@ import {
   MessageScrollerItem,
   MessageScrollerViewport,
 } from "@/components/ui/message-scroller";
+import { Icon } from "@/lib/icons";
 ```
+
+The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for adding it and picking a size and color.
 
 ```tsx
 <MessageScroller style={{ height: 320 }}>

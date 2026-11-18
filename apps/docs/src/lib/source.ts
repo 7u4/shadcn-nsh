@@ -35,7 +35,7 @@ export const source = loader({
 
 /**
  * The sidebar, in the order `src/lib/nav.ts` keeps: "Start here", then the component pages one run
- * per kind ("Official", then "Our own"), each run labelled with a separator, as the Astro
+ * per kind ("NSH Base", then "Shadcn Copy"), each run labelled with a separator, as the Astro
  * `Sidebar.astro` did. Pages the content does not have yet are left out: the tree is the pages
  * that exist, ordered by the list, so a half-migrated content folder still navigates.
  */

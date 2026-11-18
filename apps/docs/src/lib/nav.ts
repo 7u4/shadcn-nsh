@@ -64,6 +64,13 @@ export const SIDEBAR_PAGES: SidebarPage[] = [
     source: "apps/docs/content/docs/customizing.md",
   },
   {
+    route: "/docs/icons",
+    href: url("docs/icons"),
+    title: "Icons",
+    group: "start",
+    source: "apps/docs/content/docs/icons.md",
+  },
+  {
     route: "/docs/components",
     href: url("docs/components"),
     title: "All components",

@@ -16,7 +16,10 @@ npx shadcn-nsh@latest add message
 ```tsx
 import { Bubble, BubbleContent } from "@/components/ui/bubble";
 import { Message, MessageAvatar, MessageContent } from "@/components/ui/message";
+import { Icon } from "@/lib/icons";
 ```
+
+The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for adding it and picking a size and color.
 
 ```tsx
 <Message>

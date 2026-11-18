@@ -15,7 +15,10 @@ npx shadcn-nsh@latest add button
 
 ```tsx
 import { Button } from "@/components/ui/button";
+import { Icon } from "@/lib/icons";
 ```
+
+The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for adding it and picking a size and color.
 
 ```tsx
 <Button onPress={save}>Save</Button>

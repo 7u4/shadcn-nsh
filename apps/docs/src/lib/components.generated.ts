@@ -189,15 +189,6 @@ export const components: ComponentDoc[] = [
     description: "A text field — sunk, ghost, multiline, masked, or invalid.",
   },
   {
-    slug: "input-group",
-    title: "InputGroup",
-    kind: "official",
-    shadcn: "input-group",
-    nshElement: "input",
-    description:
-      "A field's frame around an input and what sits beside it — an icon, a unit, a button.",
-  },
-  {
     slug: "link",
     title: "Link",
     kind: "official",
@@ -530,6 +521,15 @@ export const components: ComponentDoc[] = [
     nshElement: null,
     description:
       "A set of fields under a legend: a label, its control, a description and errors that are read out.",
+  },
+  {
+    slug: "input-group",
+    title: "InputGroup",
+    kind: "own",
+    shadcn: "input-group",
+    nshElement: null,
+    description:
+      "A field's frame around an input and what sits beside it — an icon, a unit, a button.",
   },
   {
     slug: "item",

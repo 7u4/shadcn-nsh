@@ -16,8 +16,12 @@ npx shadcn-nsh@latest add alert
 ```tsx
 import { AlertCircle } from "lucide";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Alert, ALERT_ICON, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Icon } from "@/lib/icons";
+import { colors } from "@/lib/theme";
 ```
+
+The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for adding it and picking a size and color.
 
 ```tsx
 <Alert>

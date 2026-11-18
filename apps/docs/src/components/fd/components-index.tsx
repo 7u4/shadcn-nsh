@@ -2,12 +2,12 @@
 
 import { components } from "@/lib/components";
 /**
- * A run of `/docs/components` in the page: the pages of one kind — Official (aligned with an NSH
- * element) or Our own — one row per page, with the line its description gives. The list is
+ * A run of `/docs/components` in the page: the pages of one kind — NSH Base (aligned with an NSH
+ * element) or Shadcn Copy — one row per page, with the line its description gives. The list is
  * `components.generated.ts`, so a page that lands appears here without anyone writing it down
  * twice (`apps/docs/src/pages/docs/components/index.astro` did the same in the Astro site).
  *
- * The headings of the runs are the page's own markdown (`## Official`, `## Our own`), so they reach
+ * The headings of the runs are the page's own markdown (`## NSH Base`, `## Shadcn Copy`), so they reach
  * the table of contents and carry the anchor button every other docs page's headings do; the kind
  * decides which rows this renders.
  */
