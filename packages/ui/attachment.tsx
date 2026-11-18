@@ -94,10 +94,8 @@ export interface AttachmentLook {
 }
 
 /** The illustration of a media's glyph, by size and orientation. */
-export const attachmentGlyph = (
-  size: AttachmentSize,
-  orientation: AttachmentOrientation,
-): number => (orientation === "vertical" ? 24 : sizes[size].glyph);
+export const attachmentGlyph = (size: AttachmentSize, orientation: AttachmentOrientation): number =>
+  orientation === "vertical" ? 24 : sizes[size].glyph;
 
 /**
  * An attachment's look, after shadcn/ui's: a frame as wide as it holds in the card's fill with a
