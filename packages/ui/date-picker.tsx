@@ -14,7 +14,7 @@ import {
 
 import { CalendarItem, calendarLook, TimeSegment } from "./calendar";
 import { timeFieldClass } from "./input";
-import { clearButtonLook, listboxPopup } from "./lib/listbox";
+import { clearButtonLook, listboxPopup, listboxPopupStarting } from "./lib/listbox";
 import { createOpenState, createSlot, type OpenState, type Slot } from "./lib/open-state";
 import { backdrop } from "./lib/popup";
 import { type Live, read } from "./lib/utils";
@@ -53,6 +53,9 @@ export function datePickerLook(o?: DatePickerLookOptions) {
     margin: 8,
     get popupStyle() {
       return listboxPopup();
+    },
+    get popupStartingStyle() {
+      return listboxPopupStarting();
     },
     get backdropStyle() {
       return backdrop();

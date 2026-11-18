@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Changed
+
+- **The baseline is NSH v0.6.0; the library needs NSH CLI v0.6.0.** The ported look follows
+  upstream's: the listbox and date-picker popups animate in (`popupStartingStyle`), a menu
+  opens as a popup on an iPad at regular width (`menuIsPopup`), and the rich editor's task
+  checkbox answers the pointer — a hover rim and fill, a pressed scale. The demo packaging
+  follows 0.6's slimmer web template, whose start logic is its own hashed script.
+
 ## 0.7.0 — conversations, navigation and a third theme
 
 ### Added

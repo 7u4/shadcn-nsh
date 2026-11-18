@@ -7,7 +7,7 @@
 本仓**安装** NSH CLI，从不编译 NSH。装的版本是 `port-map.json` 的 `upstream.cli`，本地和 CI 是同一条命令（`bun run nsh:bootstrap` 会打印它）：
 
 ```sh
-curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.5.1 sh   # upstream.cli 是 release tag 时
+curl -fsSL https://nsh.dev/install.sh | NSH_VERSION=v0.6.0 sh   # upstream.cli 是 release tag 时
 curl -fsSL https://nsh.dev/install.sh | sh -s -- --nightly       # upstream.cli 是 nightly 时
 export PATH="$HOME/.local/bin:$PATH"
 ```
@@ -18,9 +18,9 @@ CLI 与运行时同装进 `~/.nsh`，并链到 `~/.local/bin/nsh`。
 
 | 哪里       | 怎么读                                                                                       |
 | ---------- | -------------------------------------------------------------------------------------------- |
-| CLI        | `nsh --version` 括号里的哈希：`nsh 0.5.0 (f4d68f7)`                                          |
+| CLI        | `nsh --version` 括号里的哈希：`nsh 0.6.0 (5541637)`                                          |
 | 清单       | `port-map.json` 的 `upstream.commit`（40 位）                                                |
-| 安装的 CLI | `port-map.json` 的 `upstream.cli`：构建出该提交的 release tag（当前 `v0.5.1`），或 `nightly` |
+| 安装的 CLI | `port-map.json` 的 `upstream.cli`：构建出该提交的 release tag（当前 `v0.6.0`），或 `nightly` |
 | 子模块     | `git -C references/nsh rev-parse HEAD`                                                       |
 
 **换了 CLI，项目跟着动**：`bun run port:bump`（不带参数时用它打印的提交）移动清单与子模块，再按它列出的变化审阅、`port:review`，一个 commit。`bun run port:check` 在两者不同时只发 warning（新旧方向一样），提示的正是它；`bash scripts/nsh-bootstrap.sh` 在同一情况下停下，给出同样的提示。
@@ -33,9 +33,9 @@ CLI 与运行时同装进 `~/.nsh`，并链到 `~/.local/bin/nsh`。
 
 演示页的 `?idiom=` / `?theme=` 是 `apps/docs/scripts/player-options.ts` 在 `nsh package --target web` 的产物上按**发布模板的原文**改出来的（发布模板自己没有这两个入口，而官网的播放器页要编译 NSH）。升级 nsh 后模板文字一变，`bun run docs:demos` 会停在那条报错上，不会发出反不了的演示包。这时：
 
-1. 看新模板（`references/nsh/crates/nsh-cli/src/web/index.html`）里这四个标记还在不在：`createPlayer(document.getElementById("app"), {`（选项对象）、`player = loaded;`（播放器就绪）、`player.preloadSides(app.sides);`（应用已跑）、`</head>`。按新写法改 `player-options.ts` 的常量与插入点。
+1. 找四个标记如今的去处：v0.6 起发布模板把启动逻辑拆成独立的哈希脚本 `nsh-start.<hash>.js`（strict `script-src 'self'`），`createPlayer(document.getElementById("app"), {`（选项对象）、`player = loaded;`（播放器就绪）、`player.preloadSides(app.sides);`（应用已跑）三个都在它里面，`</head>` 还留在 `index.html`；`player-options.ts` 从 `index.html` 读出该脚本的 `src` 再注入。按新写法改它的常量与插入点。
 2. 若新模板自己就认 `?idiom=`（`createPlayer` 的选项里有 `idiom`）与 `?theme=`（`dark`），删掉对应的注入，只留它还缺的那一半。
-3. `bun run docs:demos`，再 `bun scripts/audit/audit.ts canvas --force`：Phone 应是 390 宽、`platform.desktop` 为假，Desktop 是 desktop idiom，站点切亮 / 暗时探针的 `colorScheme()` 跟着变。
+3. `bun run docs:demos`，然后 `bun scripts/audit/audit.ts probe --force`：phone 应是 390 宽、`platform.desktop` 为假，desktop 是 desktop idiom；`?theme=` 那一半对一个打包出的演示加 `?theme=dark` 打开，看 `colorScheme()` 跟不跟着变。（`audit.ts canvas` 自站点 2026-11-17 重构起认不出新页面的标记，重写前先用这两条。）
 4. 模板变了什么写进这一节。
 
 ### 运行时
