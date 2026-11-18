@@ -14,7 +14,14 @@
       "Bash(git status:*)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
-      "Bash(git show:*)"
+      "Bash(git show:*)",
+      "Bash(rex block capture *)",
+      "Bash(rex capture *)",
+      "Bash(bun run test:unit)",
+      "Bash(bun run catalog --check)",
+      "Bash(npm view *)",
+      "Bash(git submodule status)",
+      "Bash(git submodule status *)"
     ],
     "deny": [
       "Edit(references/**)",
