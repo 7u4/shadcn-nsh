@@ -76,19 +76,6 @@ export const buttonSizes: Record<ButtonSize, ButtonDimensions> = pointer
       lg: { height: 48, font: 17, icon: 18, pad: 20 },
     };
 
-/**
- * A margin that hangs a ghost button's padding past the content edge on
- * `side`, so its label lines up with the text beside it (a section head's
- * trailing action, a row's first page) and only its hover fill reaches
- * past, as a list row's does. None in the terminal, whose buttons are
- * bracketed words.
- */
-export function ghostOutdent(side: "left" | "right", size: ButtonSize = "default"): ViewStyle {
-  if (terminal) return {};
-  const pad = -buttonSizes[size].pad;
-  return side === "left" ? { marginLeft: pad } : { marginRight: pad };
-}
-
 /** The smallest target a finger gets (Accessibility, "Touch targets"). */
 const TOUCH_TARGET = 44;
 
