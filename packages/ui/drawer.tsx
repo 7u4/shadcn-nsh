@@ -12,7 +12,7 @@ import {
   type SheetProps as BaseSheetProps,
 } from "nsh/base";
 
-import { Button, type ButtonVariant } from "./button";
+import { Action, type ButtonVariant } from "./button";
 import { dialogText, dialogTitle } from "./dialog";
 import { createOpenState, type OpenState } from "./lib/open-state";
 import { backdrop } from "./lib/overlay";
@@ -145,33 +145,6 @@ export function Drawer(props: DrawerProps) {
     >
       {props.children}
     </DrawerContext.Provider>
-  );
-}
-
-/** A button of the panel, or its trigger: a `Button` for a string, else a pressable view. */
-function Action(props: DrawerTriggerProps & { onPress: () => void }) {
-  if (typeof props.children === "string") {
-    return (
-      <Button
-        variant={props.variant ?? "secondary"}
-        disabled={props.disabled}
-        style={props.style}
-        onPress={props.onPress}
-      >
-        {props.children}
-      </Button>
-    );
-  }
-  return (
-    <View
-      accessible
-      role="button"
-      accessibilityState={{ disabled: props.disabled }}
-      onPress={props.disabled ? undefined : props.onPress}
-      style={props.style}
-    >
-      {props.children}
-    </View>
   );
 }
 

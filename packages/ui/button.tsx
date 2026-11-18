@@ -722,3 +722,46 @@ export function SplitButtonDivider(props: SplitButtonDividerProps = {}) {
   const ctx = useSplit();
   return <View style={[ctx.look.divider, props.style ?? null]} />;
 }
+
+/** What a trigger's action takes: a string child wears the button, anything else presses where it is. */
+export interface ActionProps {
+  children?: string | JSX.Element;
+  /** The button's variant, for a string child (default `secondary`). */
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  style?: StyleProp<ViewStyle>;
+  /** Runs when it is pressed; a disabled one does not. */
+  onPress: () => void;
+}
+
+/**
+ * A trigger's action: a string presses as a `Button` of its variant; anything else (an icon, a
+ * glyph of its own) presses where it lies, in a view a screen reader still calls a button and the
+ * keyboard still rings.
+ */
+export function Action(props: ActionProps) {
+  if (typeof props.children === "string") {
+    return (
+      <Button
+        variant={props.variant ?? "secondary"}
+        disabled={props.disabled}
+        style={props.style}
+        onPress={props.onPress}
+      >
+        {props.children}
+      </Button>
+    );
+  }
+  return (
+    <View
+      accessible
+      role="button"
+      accessibilityState={{ disabled: props.disabled }}
+      focusVisibleStyle={focusRing()}
+      onPress={props.disabled ? undefined : props.onPress}
+      style={props.style}
+    >
+      {props.children}
+    </View>
+  );
+}
