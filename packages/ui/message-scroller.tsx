@@ -18,6 +18,7 @@ import { context, Scroll, signal, split, View } from "nsh";
 
 import { Button, buttonGlyph, type ButtonProps } from "./button";
 import { Icon } from "./lib/icons";
+import { PILL_RADIUS } from "./lib/surface";
 
 /** Which way a scroller's button sends the viewport: `end`, the newest message; `start`, the
  * oldest. */
@@ -38,9 +39,6 @@ const buttonInset = 16;
 
 /** A point of slack in the overflow test, so a height rounded under a viewport's is not an overflow. */
 const slack = 1;
-
-/** A pill's corners: half the tallest it gets, so any height of the button rounds to a pill. */
-const pill = 999;
 
 /** What a scroller keeps: where the viewport is, how tall it and its content are, and the view
  * whose end it reveals. */
@@ -123,7 +121,7 @@ export function messageScrollerLook(): MessageScrollerLook {
       ...(direction === "end" ? { bottom: buttonInset } : { top: buttonInset }),
     }),
     get button(): ViewStyle {
-      return { borderRadius: pill };
+      return { borderRadius: PILL_RADIUS };
     },
   };
 }

@@ -158,6 +158,9 @@ export function insetSurface(): ViewStyle {
   };
 }
 
+/** A pill's corners: half the tallest it gets, so any height rounds to a pill. */
+export const PILL_RADIUS = 999;
+
 /** How far a row's hover fill reaches past its content on each side, and its
  * corners: none in the terminal, where a negative margin rounds away but
  * the padding stays a column, pushing the label in. */

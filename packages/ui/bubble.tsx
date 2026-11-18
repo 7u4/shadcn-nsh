@@ -5,7 +5,7 @@ import { colors, radius, tints } from "@shadcn-nsh/theme";
 import type { JSX, TextStyle, ViewProps, ViewStyle } from "nsh";
 import { context, platform, split, Text, token, View } from "nsh";
 
-import { density } from "./lib/surface";
+import { density, PILL_RADIUS } from "./lib/surface";
 
 /**
  * A bubble's fill: `default`, the accent's fill (what you send); `secondary`, the raised neutral
@@ -43,9 +43,6 @@ const reactionsOverlap = "75%";
 
 /** How far a row of reactions sits inside the bubble's edge: 12 points. */
 const reactionsInset = 12;
-
-/** A pill's corners: half the tallest it gets, so any height of the row rounds to a pill. */
-const pill = 999;
 
 /** What a `BubbleContent` under a `Bubble` wears: the variant its fill and ink come from. */
 const BubbleContext = context<(() => BubbleVariant) | null>(null);
@@ -166,7 +163,7 @@ export function bubbleLook(): BubbleLook {
       gap: 4,
       paddingHorizontal: 6,
       paddingVertical: 3,
-      borderRadius: pill,
+      borderRadius: PILL_RADIUS,
       backgroundColor: token("muted"),
       boxShadow: `0 0 0 3px ${colors.surface}`,
       ...(side === "bottom" ? { bottom: 0 } : { top: 0 }),

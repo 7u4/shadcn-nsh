@@ -1377,7 +1377,7 @@
       "type": "registry:ui",
       "title": "MessageScroller",
       "description": "A conversation that keeps up with itself: new turns follow the newest message while you are at the end, and wait when you are not.",
-      "registryDependencies": ["button", "icons", "theme"],
+      "registryDependencies": ["button", "icons", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/message-scroller.tsx",
