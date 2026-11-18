@@ -76,7 +76,7 @@ function Chip(props: {
           disabled={props.disabled}
           class={look.removeClass}
           style={look.removeStyle}
-          focusVisibleStyle={look.removeFocusVisible}
+          focusVisibleStyle={look.focusVisibleStyle}
           onPress={props.onRemove}
         >
           {look.removeGlyph}
