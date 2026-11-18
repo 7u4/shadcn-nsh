@@ -79,8 +79,8 @@ the header of the page is the app's: a row with the trigger, a `Separator` (`ori
 
 `SidebarProvider` owns it: `open` (controlled) or `defaultOpen` (default `true`), reported by
 `onOpenChange({ open, reason })` — `triggerPress`, `railPress` or `shortcut`. Nothing is written
-down: shadcn keeps a cookie for a year, and this library leaves storage to the app, which usually
-keeps the state where it keeps the rest of its settings and passes it back as `open`.
+down: storage is the app's, which usually keeps the state where it keeps the rest of its settings
+and passes it back as `open`.
 
 ```tsx
 const open = signal(stored("sidebar") ?? true);
@@ -173,7 +173,7 @@ const action = sidebarMenuActionLook();
 </SidebarMenuItem>;
 ```
 
-An action is always there: shadcn's shows on hover only, which a touch screen has no way to do.
+An action is always there: hover alone is something a touch screen has no way to do.
 
 ### A sub menu
 
@@ -218,18 +218,16 @@ group.
 ### A row that is still coming
 
 `SidebarMenuSkeleton` is the skeleton's blocks where an icon and a name will be: an icon's box when
-`showIcon`, then a line of text as long as `width` says (70% when it says nothing). shadcn makes a
-length up between 50% and 90% per row so a loading group looks uneven; a length made up per mount is
-a picture that changes between runs, so this one is told.
+`showIcon`, then a line of text as long as `width` says (70% when it says nothing). A length made up
+per mount is a picture that changes between runs, so this one is told.
 
-### What a sidebar does not have
+## Differences from shadcn/ui
 
-There is no cookie, no `SidebarTrigger` in a rail's form, and no `asChild`: the parts take children
-and draw them, so an icon and a name are an `Icon` and a `Text` in the row, not a rewritten link. The
-`sidebar-*` theme roles are not a set of their own here: the column is `colors.sidebar`, its ink
-`colors.text`, its hover and chosen row `colors.sidebarSelected` (shadcn's `sidebar-accent`), its edge
-`colors.sidebarBorder`, and the keyboard's ring `focusRing()`. shadcn's `sidebar-primary` draws
-nothing in shadcn either, so nothing reads it.
+- No cookie: shadcn keeps the open state for a year; here storage is the app's, which keeps it where it keeps the rest of its settings and passes it back as `open`.
+- No `SidebarTrigger` in a rail's form, and no `asChild`: the parts take children and draw them, so an icon and a name are an `Icon` and a `Text` in the row, not a rewritten link.
+- A menu action is always there; shadcn's shows on hover only, which a touch screen has no way to do.
+- `SidebarMenuSkeleton`'s `width` is told: shadcn makes a length up between 50% and 90% per row so a loading group looks uneven.
+- The `sidebar-*` roles are not a set of their own: the column is `colors.sidebar`, its ink `colors.text`, its hover and chosen row `colors.sidebarSelected` (shadcn's `sidebar-accent`), its edge `colors.sidebarBorder`, and the keyboard's ring `focusRing()`. shadcn's `sidebar-primary` draws nothing in shadcn either, so nothing reads it.
 
 ## API
 
@@ -237,32 +235,32 @@ The provider owns the state and lays the column and the page out; a column and i
 `nsh`'s `View` (`SidebarSeparator` wraps this library's `Separator`, and the phone's sheet is this
 library's `Sheet`). Every `nsh` view prop passes through; a row is an `nsh/base` button's props too.
 
-| Part                   | Notes                                                                                     |
-| ---------------------- | ----------------------------------------------------------------------------------------- |
-| `SidebarProvider`      | `open` / `defaultOpen`, `onOpenChange({ open, reason })`; ⌘B / Ctrl+B; `style`            |
-| `Sidebar`              | `side`, `variant`, `collapsible`; the sheet on a phone                                    |
-| `SidebarTrigger`       | An icon button: `variant`, `size`, `accessibilityLabel` (default `"Toggle Sidebar"`)      |
-| `SidebarRail`          | A press at the column's inner edge; `accessibilityLabel`                                  |
-| `SidebarInset`         | The page beside the column                                                                |
-| `SidebarHeader`        | The top: a stack of rows, 8 points apart, 8 of room                                       |
-| `SidebarFooter`        | The bottom, as the header                                                                 |
-| `SidebarContent`       | The scrolling middle                                                                      |
-| `SidebarSeparator`     | A `Separator` in the sidebar's edge color, 8 points inset from either side                |
-| `SidebarInput`         | An `Input` as tall as a row, on the page's fill                                           |
-| `SidebarGroup`         | A titled group, 8 points of room                                                          |
-| `SidebarGroupLabel`    | A string is the name; folds away to nothing                                               |
-| `SidebarGroupAction`   | A 20-point square at the group's trailing edge                                            |
-| `SidebarGroupContent`  | What the group holds                                                                      |
-| `SidebarMenu`          | The rows: a column of them 4 points apart                                                 |
-| `SidebarMenuItem`      | One row's box: its button, an action, a badge, a sub menu                                 |
-| `SidebarMenuButton`    | `isActive`, `size`, `variant`, `tooltip`; an `nsh/base` button's `onPress`, `disabled`, … |
-| `SidebarMenuAction`    | A 20-point square at the row's trailing edge                                              |
-| `SidebarMenuBadge`     | A count or a short word at the row's trailing edge                                        |
-| `SidebarMenuSub`       | The rows under a row that opens them                                                      |
-| `SidebarMenuSubItem`   | One of them                                                                               |
-| `SidebarMenuSubButton` | `isActive`, `size`; it takes a press                                                      |
-| `SidebarMenuSkeleton`  | `showIcon`, `width`                                                                       |
-| `useSidebar()`         | `state`, `open`, `openMobile`, `isMobile`, `setOpen`, `setOpenMobile`, `toggleSidebar`    |
+| Part                   | Props                                                                                                                           | Description                                                                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `SidebarProvider`      | `open` / `defaultOpen`, `onOpenChange({ open, reason })`, `style`                                                               | Owns the state and the ⌘B / Ctrl+B binding, and lays the column and the page out                                                |
+| `Sidebar`              | `side`, `variant`, `collapsible`                                                                                                | The column; on a phone it is this library's `Sheet`                                                                             |
+| `SidebarTrigger`       | `children` (its icon), `accessibilityLabel` (default `"Toggle Sidebar"`), and an icon button's props                            | The button that opens and closes the column                                                                                     |
+| `SidebarRail`          | `accessibilityLabel`                                                                                                            | A press at the column's inner edge                                                                                              |
+| `SidebarInset`         | every `nsh` view prop                                                                                                           | The page beside the column                                                                                                      |
+| `SidebarHeader`        | every `nsh` view prop                                                                                                           | The top: a stack of rows, 8 points apart, 8 of room                                                                             |
+| `SidebarFooter`        | every `nsh` view prop                                                                                                           | The bottom, as the header                                                                                                       |
+| `SidebarContent`       | every `nsh` view prop                                                                                                           | The scrolling middle                                                                                                            |
+| `SidebarSeparator`     | `Separator`'s props                                                                                                             | A separator in the sidebar's edge color, 8 points inset from either side                                                        |
+| `SidebarInput`         | `Input`'s props                                                                                                                 | An input as tall as a row, on the page's fill                                                                                   |
+| `SidebarGroup`         | every `nsh` view prop                                                                                                           | A titled group, 8 points of room                                                                                                |
+| `SidebarGroupLabel`    | `children`                                                                                                                      | A string is the name; folds away to nothing                                                                                     |
+| `SidebarGroupAction`   | `accessibilityLabel`, `onPress`, and an `nsh/base` button's props                                                               | A 20-point square at the group's trailing edge                                                                                  |
+| `SidebarGroupContent`  | every `nsh` view prop                                                                                                           | What the group holds                                                                                                            |
+| `SidebarMenu`          | every `nsh` view prop                                                                                                           | The rows: a column of them 4 points apart                                                                                       |
+| `SidebarMenuItem`      | every `nsh` view prop                                                                                                           | One row's box: its button, an action, a badge, a sub menu                                                                       |
+| `SidebarMenuButton`    | `isActive`, `size`, `variant`, `tooltip`, `children`, `accessibilityLabel`, and an `nsh/base` button's `onPress`, `disabled`, … | A row of the menu                                                                                                               |
+| `SidebarMenuAction`    | `accessibilityLabel`, `onPress`, and an `nsh/base` button's props                                                               | A 20-point square at the row's trailing edge                                                                                    |
+| `SidebarMenuBadge`     | `children`                                                                                                                      | A count or a short word at the row's trailing edge                                                                              |
+| `SidebarMenuSub`       | every `nsh` view prop                                                                                                           | The rows under a row that opens them                                                                                            |
+| `SidebarMenuSubItem`   | every `nsh` view prop                                                                                                           | One of them                                                                                                                     |
+| `SidebarMenuSubButton` | `isActive`, `size`, `children`, `accessibilityLabel`, and an `nsh/base` button's props                                          | A sub row; it takes a press                                                                                                     |
+| `SidebarMenuSkeleton`  | `showIcon`, `width`                                                                                                             | The skeleton's blocks where an icon and a name will be                                                                          |
+| `useSidebar()`         | —                                                                                                                               | What the parts read inside the provider: `state`, `open`, `openMobile`, `isMobile`, `setOpen`, `setOpenMobile`, `toggleSidebar` |
 
 The looks — spread them on the view they name, or read their words for content of your own:
 `sidebarLook({ side, variant, collapsible, open, isMobile })` (`root`, `frame`, `column`, `inset`,

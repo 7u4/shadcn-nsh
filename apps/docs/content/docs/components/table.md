@@ -53,4 +53,15 @@ import {
 
 ## API
 
-Composition exports: `Table`, `TableHeader`, `TableBody`, `TableFooter`, `TableRow`, `TableHead`, `TableCell`, `TableCaption`, and `tableRowClass`. Props match [`nsh/base` Table](https://nsh.dev/elements/table) parts except `TableRow.selected`.
+| Part           | Props                          | Description                                                                    |
+| -------------- | ------------------------------ | ------------------------------------------------------------------------------ |
+| `Table`        | every `nsh/base` Table prop    | The app's rows as a bordered card; screen readers hear the base roles          |
+| `TableHeader`  | base props                     | The header band                                                                |
+| `TableBody`    | base props                     | The body group                                                                 |
+| `TableFooter`  | base props                     | The footer band, a hairline above                                              |
+| `TableRow`     | base props, `selected`         | A row with a hairline above; `selected` fills it with the look's `rowSelected` |
+| `TableHead`    | `children` (string or element) | A column's header cell; a string is drawn in the quiet header text             |
+| `TableCell`    | `children`                     | A body or footer cell; a string is drawn in the body text                      |
+| `TableCaption` | `children`                     | The caption under the rows; a string is drawn muted                            |
+
+`tableRowClass` is the row's color transition, for a row of your own.

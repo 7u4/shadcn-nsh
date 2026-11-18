@@ -38,7 +38,8 @@ import { Toast } from "@/components/ui/toast";
 
 Every prop of [`nsh/base` Toast](https://nsh.dev/elements/toast) passes through. `style` goes over `toastLook`.
 
-| Prop          | Type     | Default |
-| ------------- | -------- | ------- |
-| `title`       | `string` |         |
-| `description` | `string` |         |
+| Part    | Props                                                               | Description                                                          |
+| ------- | ------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| `Toast` | `title`, `description`, `children`, and every `nsh/base` Toast prop | A raised banner; without children it draws `title` and `description` |
+
+`toastLook`, `toastTitle`, `toastText`, `toastCloseLook`, `toastActionLook` and `toastActionLabel` are the look's parts, for content of your own.

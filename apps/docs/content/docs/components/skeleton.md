@@ -25,9 +25,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 ### A line, an avatar, a button
 
-A skeleton has no size of its own: the box is the caller's `style`, as shadcn's `className` is. A
-line is as tall as the type it will hold and as wide as that text runs; an avatar or an icon is a
-square, round with `borderRadius` half its side.
+A skeleton has no size of its own: the box is the caller's `style`. A line is as tall as the type
+it will hold and as wide as that text runs; an avatar or an icon is a square, round with
+`borderRadius` half its side.
 
 ```tsx
 <Skeleton style={{ width: 250, height: 14 }} />
@@ -61,13 +61,17 @@ terminal shows it still: nothing to play there.
 <Skeleton style={{ width: 200, height: 14 }} />;
 ```
 
+## Differences from shadcn/ui
+
+- The box is the caller's `style`; shadcn sizes a skeleton with `className`.
+
 ## API
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through (`style`, `accessibilityLabel`, …); `style` goes over the look's.
 
-| Prop | Type        | Default |
-| ---- | ----------- | ------- |
-| —    | `ViewProps` |         |
+| Part       | Props       | Description                                                           |
+| ---------- | ----------- | --------------------------------------------------------------------- |
+| `Skeleton` | `ViewProps` | The block; its box, corners and breathing are the look's and `style`. |
 
 There is no axis: a skeleton is one look — the theme's `accent` fill, the theme's inset corners,
 the breathing. `skeletonLook()` is exported for a block the app draws (or animates) itself.

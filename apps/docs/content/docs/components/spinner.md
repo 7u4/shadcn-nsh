@@ -45,7 +45,6 @@ import { Spinner } from "@/components/ui/spinner";
 
 A ring with its top arc in `tint`, turning once every 800 ms; its stroke is an eighth of `size`, at least 1.5 points.
 
-| Prop   | Type     | Default |
-| ------ | -------- | ------- |
-| `size` | `number` |         |
-| `tint` | `string` |         |
+| Part      | Props          | Description                                                                                   |
+| --------- | -------------- | --------------------------------------------------------------------------------------------- |
+| `Spinner` | `size`, `tint` | The ring: `size` its side in points, `tint` its arc (the rest of it that color at a quarter). |
