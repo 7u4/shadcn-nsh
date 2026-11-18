@@ -164,7 +164,7 @@ export const PILL_RADIUS = 999;
 /** How far a row's hover fill reaches past its content on each side, and its
  * corners: none in the terminal, where a negative margin rounds away but
  * the padding stays a column, pushing the label in. */
-export const ROW_BLEED = terminal ? 0 : 8;
+const ROW_BLEED = terminal ? 0 : 8;
 
 /** The room a stacked row leaves between its label and its control. */
 const STACKED_GAP = 8;
@@ -299,7 +299,7 @@ export function RowDivider(props: { show: boolean }) {
 }
 
 /** The terminal's labels' column, so the details after them line up. */
-export const LABEL_WIDTH = 16 * TERMINAL_COLUMN;
+const LABEL_WIDTH = 16 * TERMINAL_COLUMN;
 
 /**
  * The least a label keeps, with a pointer, beside a wide control (a
@@ -311,16 +311,12 @@ const LABEL_MIN = 96;
 /** The least a terminal's detail keeps beside its label: narrower, it wraps under it. */
 const DETAIL_WIDTH = 24 * TERMINAL_COLUMN;
 
-/** A terminal's name column for `names`: the longest of them (at least `LABEL_WIDTH`), so the details after it line up. */
-export const labelColumn = (names: readonly string[]) =>
-  Math.max(LABEL_WIDTH, ...names.map((n) => n.length * TERMINAL_COLUMN));
-
 /**
  * A row's label and a quieter line under it (after it in the terminal):
  * `controlSize.label` in the text color, regular weight (`strong`: 600, the
  * row that leads others, as a "Select all"), the detail 12 points with a
  * pointer, 13 on a touch screen, muted, wrapping rather than cut short
- * beside a control. `width`: the terminal's label column (`labelColumn`).
+ * beside a control. `width`: the terminal's label column.
  */
 export function RowLabel(props: {
   label: string;
