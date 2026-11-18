@@ -1,4 +1,5 @@
-// Color strings for the picker: format a value and pick ink that reads on it.
+// Color strings for the picker: format a value and pick ink that reads on it. Kept in lib, apart
+// from the picker, so `bun test` checks it without starting NSH.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import type { ColorFormat } from "nsh/base";
 
