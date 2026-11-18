@@ -3,7 +3,7 @@
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { alpha, colors, finish, radius, terminal, TERMINAL_COLUMN } from "@shadcn-nsh/theme";
 import type { IconNode } from "lucide";
-import type { JSX, ViewStyle } from "nsh";
+import type { JSX, StyleProp, ViewStyle } from "nsh";
 import { cleanup, context, platform, reduceMotion, signal, split, Text, View } from "nsh";
 import {
   Select as BaseSelect,
@@ -64,8 +64,8 @@ export interface PickerLookOptions {
   invalid?: Live<boolean>;
   /** A clear button lies over the end in place of the chevron: room for it. */
   clearable?: Live<boolean>;
-  /** Layout over the look (a width), or a function reading it. */
-  style?: Live<ViewStyle>;
+  /** Layout over the look (a width), or a function reading it; it may be a list. */
+  style?: Live<StyleProp<ViewStyle>>;
   /**
    * `default`: a select's trigger as shadcn's, the input's well
    * (the field fill, the input's edge), so it lines up with the text fields
@@ -131,7 +131,9 @@ export function pickerLook(o?: PickerLookOptions) {
         opacity: read(o?.disabled) ? 0.5 : 1,
         transitionProperty: "border-color, outline-color, opacity",
         transitionDuration: reduceMotion() ? 0 : edgeFade,
-        ...read(o?.style),
+        // The look is one object (it is spread on the trigger's view), so a list of styles is
+        // flattened into it: the app's style still lands last, over the look's.
+        ...flatStyle(read(o?.style) ?? {}),
       };
     },
     get hoverStyle(): ViewStyle | undefined {
@@ -164,7 +166,8 @@ export interface PickerProps {
   chevron?: boolean;
   /** `pickerLook`'s `variant`: the field's well (a select's, a date picker's: the default) or an outline button. */
   variant?: PickerVariant;
-  style?: ViewStyle;
+  /** Its own style, over its look: where the app places it. */
+  style?: StyleProp<ViewStyle>;
 }
 
 /** The icon of a trigger: 16 points with a pointer (shadcn's `size-4`), 18 on a touch screen. */
@@ -285,7 +288,7 @@ export type SelectTriggerProps = {
    * app lays out: a trigger then stretches and shrinks like a view of the app's own. The rest (the
    * fill, the edge, the padding) stays on the trigger.
    */
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 };
 
 /** The chosen title, or the placeholder: set by `SelectValue`, else the root's `placeholder`. */
@@ -336,21 +339,37 @@ const triggerLayoutKeys: readonly string[] = [
   "marginEnd",
 ];
 
+/** A style list as the one style its entries make, each over the last: the object a split reads keys of. */
+function flatStyle(style: StyleProp<ViewStyle>): ViewStyle {
+  const one: Record<string, unknown> = {};
+  const merge = (part: StyleProp<ViewStyle>) => {
+    if (!part) return;
+    if (Array.isArray(part)) {
+      for (const entry of part) merge(entry);
+      return;
+    }
+    Object.assign(one, part);
+  };
+  merge(style);
+  return one as ViewStyle;
+}
+
 /**
  * A trigger's `style`, in two: what the select's box wears (where it sits in the app's layout) and
  * what the trigger itself wears. `minWidth` goes to both: the look gives a trigger a `minWidth` of
  * its own (room for the list's rows, with a pointer), and a squeezed select cannot be narrower than
  * that, so the app's `minWidth` has to reach the trigger as well.
  */
-function splitTriggerStyle(style: ViewStyle | undefined): { layout: ViewStyle; look: ViewStyle } {
+function splitTriggerStyle(style: StyleProp<ViewStyle>): { layout: ViewStyle; look: ViewStyle } {
+  const flat = flatStyle(style);
   const layout: Record<string, unknown> = {};
   const look: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(style ?? {})) {
+  for (const [key, value] of Object.entries(flat)) {
     (triggerLayoutKeys.includes(key) ? layout : look)[key] = value;
   }
-  if (style?.minWidth !== undefined) {
-    layout.minWidth = style.minWidth;
-    look.minWidth = style.minWidth;
+  if (flat.minWidth !== undefined) {
+    layout.minWidth = flat.minWidth;
+    look.minWidth = flat.minWidth;
   }
   return { layout: layout as ViewStyle, look: look as ViewStyle };
 }

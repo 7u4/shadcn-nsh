@@ -2,7 +2,7 @@
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { terminal } from "@shadcn-nsh/theme";
 import { Calendar } from "lucide";
-import type { JSX, ViewStyle } from "nsh";
+import type { JSX, StyleProp, ViewStyle } from "nsh";
 import { context, signal, split, View } from "nsh";
 import {
   DatePicker as BaseDatePicker,
@@ -141,7 +141,8 @@ export type DatePickerTriggerProps = {
   invalid?: boolean;
   /** The app's own clear button lies over the end: room for it (default: the root's `cleanable`). */
   clearable?: boolean;
-  style?: ViewStyle;
+  /** The trigger's own style, over the look's. */
+  style?: StyleProp<ViewStyle>;
 };
 
 type DatePickerContextValue = OpenState & {
