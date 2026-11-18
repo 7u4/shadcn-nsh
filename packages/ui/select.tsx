@@ -18,6 +18,7 @@ import { Icon } from "./lib/icons";
 import {
   Chevron,
   clearButtonLook,
+  clearInset,
   listboxProps,
   ListboxEmpty,
   ListboxHeader,
@@ -49,10 +50,6 @@ const edgeFade = 120;
 
 /** How far a pressed trigger sinks to, as a button's does. */
 const pressedOpacity = 0.7;
-
-/** The clear button's inset from a trigger's end: centered where the chevron's lane is. The button is in the
- * select's view, outside the trigger, so its inset counts the trigger's 1-point border too. */
-const clearInset = 1 + 10 + controlSize.check / 4 - controlSize.clear / 2;
 
 /** A trigger's variants: `default` shadcn's field, `outline` an outline button of shadcn's, on the raised finish. */
 export type PickerVariant = "default" | "outline";
