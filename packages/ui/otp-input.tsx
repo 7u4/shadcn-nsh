@@ -11,8 +11,13 @@ import { type Live, read } from "./lib/utils";
 // @port look/field.tsx
 const pointer = platform.desktop;
 
-/** The cells of a code of six: 36 × 44 with a pointer, 44 × 52 on a touch screen. */
-export const otpCells = pointer ? "w-9 h-11 text-lg" : "w-11 h-13 text-xl";
+/**
+ * The cells of a code of six: 36 × 44 with a pointer, 44 × 52 on a touch screen. They narrow
+ * together (`shrink min-w-0`) where the code is wider than the room it has, a narrow phone's card.
+ */
+export const otpCells = pointer
+  ? "w-9 h-11 text-lg shrink min-w-0"
+  : "w-11 h-13 text-xl shrink min-w-0";
 
 /** Options of `otpCellLook`. */
 export interface OtpCellOptions {
@@ -65,9 +70,17 @@ export type OtpInputProps = BaseOtpInputProps & {
   tone?: Live<Tone | undefined>;
 };
 
+/**
+ * The code and its groups never grow past the room they have: they shrink with the cells
+ * (`otpCells`) in front of the app's own `class` / `groupClass`, which lay them out.
+ */
+const fit = terminal ? "" : "max-w-full shrink min-w-0";
+
 /** A one-time code's cells. */
 export function OtpInput(props: OtpInputProps) {
   const [, rest] = split(props, [
+    "class",
+    "groupClass",
     "cells",
     "tone",
     "cellClass",
@@ -79,6 +92,8 @@ export function OtpInput(props: OtpInputProps) {
   return (
     <BaseOtpInput
       {...rest}
+      class={props.class ? `${fit} ${props.class}` : fit}
+      groupClass={props.groupClass ? `${fit} ${props.groupClass}` : fit}
       cellClass={props.cellClass ? `${look.cellClass} ${props.cellClass}` : look.cellClass}
       cellStyle={[look.cellStyle, props.cellStyle ?? null]}
       caretClass={props.caretClass ? `${look.caretClass} ${props.caretClass}` : look.caretClass}
