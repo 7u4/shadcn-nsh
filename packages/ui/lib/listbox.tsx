@@ -7,7 +7,7 @@ import { platform, Text, View } from "nsh";
 import type { SelectEntry, SelectGroup } from "nsh/base";
 
 import { Icon } from "./icons";
-import { backdrop } from "./overlay";
+import { backdrop } from "./popup";
 import { controlSize } from "./surface";
 
 // @port look/listbox.tsx

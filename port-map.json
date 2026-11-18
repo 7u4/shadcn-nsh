@@ -76,7 +76,7 @@
     "look/overlay.ts": {
       "symbols": {
         "pointer": ["packages/ui/dialog.tsx", "packages/ui/popover.tsx", "packages/ui/toast.tsx"],
-        "backdrop": "packages/ui/lib/overlay.ts",
+        "backdrop": "packages/ui/lib/popup.tsx",
         "dialogCard": "packages/ui/dialog.tsx",
         "dialogTitle": "packages/ui/dialog.tsx",
         "dialogText": "packages/ui/dialog.tsx",

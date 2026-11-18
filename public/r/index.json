@@ -134,19 +134,6 @@
       ]
     },
     {
-      "name": "overlay",
-      "type": "registry:lib",
-      "title": "Overlay",
-      "description": "The scrim behind what is modal.",
-      "files": [
-        {
-          "path": "packages/ui/lib/overlay.ts",
-          "type": "registry:lib",
-          "target": "lib/overlay.ts"
-        }
-      ]
-    },
-    {
       "name": "icons",
       "type": "registry:lib",
       "title": "Icons",
@@ -181,7 +168,7 @@
       "name": "popup",
       "type": "registry:lib",
       "title": "Popup",
-      "description": "The shared popup surface and the motion it comes in with.",
+      "description": "The popup families' surface, motion and mark, and the scrim behind what is modal.",
       "files": [
         {
           "path": "packages/ui/lib/popup.tsx",

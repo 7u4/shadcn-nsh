@@ -12,7 +12,7 @@ import {
 
 import { Action, type ButtonVariant } from "./button";
 import { createOpenState, type OpenState } from "./lib/open-state";
-import { backdrop } from "./lib/overlay";
+import { backdrop } from "./lib/popup";
 
 // @port look/overlay.ts
 const pointer = platform.desktop;

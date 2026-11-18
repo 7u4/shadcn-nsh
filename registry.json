@@ -141,20 +141,6 @@
       ]
     },
     {
-      "name": "overlay",
-      "type": "registry:lib",
-      "title": "Overlay",
-      "description": "The scrim behind what is modal.",
-      "registryDependencies": [],
-      "files": [
-        {
-          "path": "packages/ui/lib/overlay.ts",
-          "type": "registry:lib",
-          "target": "lib/overlay.ts"
-        }
-      ]
-    },
-    {
       "name": "icons",
       "type": "registry:lib",
       "title": "Icons",
@@ -192,7 +178,7 @@
       "name": "popup",
       "type": "registry:lib",
       "title": "Popup",
-      "description": "The shared popup surface and the motion it comes in with.",
+      "description": "The popup families' surface, motion and mark, and the scrim behind what is modal.",
       "registryDependencies": ["icons", "theme"],
       "files": [
         {
@@ -291,7 +277,7 @@
       "type": "registry:ui",
       "title": "Dialog",
       "description": "A card dialog: Trigger, Content, Title, Description, Footer and Close.",
-      "registryDependencies": ["button", "open-state", "overlay", "theme"],
+      "registryDependencies": ["button", "open-state", "popup", "theme"],
       "files": [
         {
           "path": "packages/ui/dialog.tsx",
@@ -475,7 +461,7 @@
       "type": "registry:ui",
       "title": "Sheet",
       "description": "A panel that slides in from an edge of the screen over a scrim.",
-      "registryDependencies": ["button", "open-state", "overlay", "theme"],
+      "registryDependencies": ["button", "open-state", "popup", "theme"],
       "files": [
         {
           "path": "packages/ui/sheet.tsx",
@@ -517,15 +503,7 @@
       "type": "registry:ui",
       "title": "Menu",
       "description": "A menu of items, separators and submenus on the shared menu look.",
-      "registryDependencies": [
-        "button",
-        "icons",
-        "open-state",
-        "overlay",
-        "popup",
-        "theme",
-        "utils"
-      ],
+      "registryDependencies": ["button", "icons", "open-state", "popup", "theme", "utils"],
       "files": [
         {
           "path": "packages/ui/menu.tsx",
@@ -554,7 +532,7 @@
       "type": "registry:lib",
       "title": "Listbox",
       "description": "Shared list popup, rows, search and clear looks for select, combobox and date picker.",
-      "registryDependencies": ["icons", "overlay", "surface", "theme"],
+      "registryDependencies": ["icons", "popup", "surface", "theme"],
       "files": [
         {
           "path": "packages/ui/lib/listbox.tsx",
@@ -636,7 +614,7 @@
         "input",
         "listbox",
         "open-state",
-        "overlay",
+        "popup",
         "select",
         "theme",
         "utils"
@@ -1264,7 +1242,7 @@
       "type": "registry:ui",
       "title": "Drawer",
       "description": "A panel from the bottom edge, with a grabber, that a swipe closes.",
-      "registryDependencies": ["button", "dialog", "open-state", "overlay", "sheet", "theme"],
+      "registryDependencies": ["button", "dialog", "open-state", "popup", "sheet", "theme"],
       "files": [
         {
           "path": "packages/ui/drawer.tsx",

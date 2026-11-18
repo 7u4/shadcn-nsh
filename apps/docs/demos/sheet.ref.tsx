@@ -7,7 +7,7 @@ import { mount, signal, Text, View } from "nsh";
 import { Sheet } from "nsh/base";
 
 import { Button } from "@/packages/ui/button";
-import { backdrop } from "@/packages/ui/lib/overlay";
+import { backdrop } from "@/packages/ui/lib/popup";
 import { sheetPanel, type SheetSide } from "@/packages/ui/sheet";
 
 import { DemoPage } from "./kit";

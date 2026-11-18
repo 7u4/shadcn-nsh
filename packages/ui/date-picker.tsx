@@ -16,7 +16,7 @@ import { CalendarItem, calendarLook, TimeSegment } from "./calendar";
 import { timeFieldClass } from "./input";
 import { clearButtonLook, listboxPopup } from "./lib/listbox";
 import { createOpenState, createSlot, type OpenState, type Slot } from "./lib/open-state";
-import { backdrop } from "./lib/overlay";
+import { backdrop } from "./lib/popup";
 import { type Live, read } from "./lib/utils";
 import { Picker, type PickerProps } from "./select";
 

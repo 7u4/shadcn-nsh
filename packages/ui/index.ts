@@ -94,7 +94,6 @@ export {
   type ListboxPopupOptions,
 } from "./lib/listbox";
 export * from "./lib/open-state";
-export * from "./lib/overlay";
 export * from "./lib/popup";
 export * from "./lib/press";
 export * from "./lib/surface";
