@@ -41,7 +41,7 @@ npx shadcn-nsh add theme-solid-glass                    # one more theme to swit
 
 `https://raw.githubusercontent.com/aningdev/shadcn-nsh/v<version>/public/r/{name}.json`
 
-So `shadcn-nsh@0.6.1` reads `v0.6.1`'s registry: the files match the CLI you are running, and a new release never changes an installed app's source. `--registry <template>` (with `{name}` in it) points them anywhere else — a branch, a local `serve`, a fork.
+So `shadcn-nsh@0.7.0` reads `v0.7.0`'s registry: the files match the CLI you are running, and a new release never changes an installed app's source. `--registry <template>` (with `{name}` in it) points them anywhere else — a branch, a local `serve`, a fork.
 
 ## Compatibility
 
@@ -49,6 +49,7 @@ Each release of this library tracks one NSH CLI version; installing a newer CLI 
 
 | shadcn-nsh | NSH CLI |
 | ---------- | ------- |
+| 0.7.x      | v0.5.1  |
 | 0.6.x      | v0.5.1  |
 
 ## Community

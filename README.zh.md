@@ -41,7 +41,7 @@ npx shadcn-nsh add theme-solid-glass                    # 多带一套，运行�
 
 `https://raw.githubusercontent.com/aningdev/shadcn-nsh/v<version>/public/r/{name}.json`
 
-即 `shadcn-nsh@0.6.1` 读 `v0.6.1` 的 registry：文件与你在跑的 CLI 对得上，新版本发布也不会悄悄改掉已装应用的源码。`--registry <template>`（含 `{name}`）可以指向别处 —— 分支、本地 `serve`、fork。
+即 `shadcn-nsh@0.7.0` 读 `v0.7.0` 的 registry：文件与你在跑的 CLI 对得上，新版本发布也不会悄悄改掉已装应用的源码。`--registry <template>`（含 `{name}`）可以指向别处 —— 分支、本地 `serve`、fork。
 
 ## 兼容矩阵
 
@@ -49,6 +49,7 @@ npx shadcn-nsh add theme-solid-glass                    # 多带一套，运行�
 
 | shadcn-nsh | NSH CLI |
 | ---------- | ------- |
+| 0.7.x      | v0.5.1  |
 | 0.6.x      | v0.5.1  |
 
 ## 参与与声明

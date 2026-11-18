@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.7.0 — conversations, navigation and a third theme
+
 ### Added
 
 - **`theme-solid-glass`.** Solid Glass ([deeplethe/solid-glass](https://github.com/deeplethe/solid-glass),
