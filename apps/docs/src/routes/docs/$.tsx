@@ -89,7 +89,7 @@ const loader = createServerFn({ method: "GET" })
  * What a page shows around its markdown, none of it written in the `.md`: the title and the
  * description with links to the NSH element and the shadcn/ui component it answers to, then
  * straight away the Preview panel (a component page is read by looking at it first), then the
- * page's own sections, "Behavior & a11y" and "Source".
+ * page's own sections. Behavior and the unstyled API are NSH's, one badge away.
  */
 function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
   const page = docs.getPage(path);
@@ -106,7 +106,6 @@ function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
   const demo = page.demo;
   // The page's own file, in the content folder the site reads.
   const editPath = `apps/docs/content/docs/${path}`;
-  const authoringFile = componentDoc ? `packages/ui/${componentDoc.slug}.tsx` : undefined;
 
   return (
     <DocsPage toc={toc}>
@@ -124,29 +123,6 @@ function Content({ path, markdownUrl }: { path: string; markdownUrl: string }) {
           </div>
         ) : null}
         <MDX components={useMDXComponents()} />
-        {componentDoc && nshHref ? (
-          <>
-            <h2 id="behavior-a11y">Behavior &amp; a11y</h2>
-            <p>
-              Keyboard, focus, platform notes, and the full unstyled API live on nsh — not on this
-              page. See{" "}
-              <a href={nshHref} rel="noopener noreferrer">
-                {componentDoc.title} on nsh.dev
-              </a>
-              . This package is a curated styled wrapper; only props listed under API (when present)
-              are part of the public surface here.
-            </p>
-          </>
-        ) : null}
-        {componentDoc ? (
-          <>
-            <h2 id="source">Source</h2>
-            <p>
-              Authoring: <code>{authoringFile}</code>. Registry: <code>{componentDoc.slug}</code>{" "}
-              (depends on <code>theme</code>).
-            </p>
-          </>
-        ) : null}
         {editPath ? (
           <p className="text-sm">
             <a href={`${EDIT_BASE}${editPath}`} target="_blank" rel="noopener noreferrer">

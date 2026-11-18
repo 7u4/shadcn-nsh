@@ -72,10 +72,9 @@ of your own goes over the look's, so the fill and the corners are the caller's.
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through (`style`, `accessibilityLabel`, `onPress`, …); `style` goes over the look's, so a caller's own width, corners or fill replace the look's and the box keeps its ratio inside them.
 
-| Prop       | Type                                              | Default |
-| ---------- | ------------------------------------------------- | ------- |
-| `ratio`    | `number`, a ratio string (`"16 / 9"`) or `"auto"` | `1`     |
-| `children` | `JSX.Element`                                     |         |
+| Part          | Props                                                                                               | Description                                                |
+| ------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `AspectRatio` | `ratio`: `number`, a ratio string (`"16 / 9"`) or `"auto"` (default `1`); `children`: `JSX.Element` | A box as wide as its column and as tall as its ratio says. |
 
 The box is as wide as its column (`width: "100%"`) and its height is that width over the ratio; its
 content is clipped to it (`overflow: "hidden"`), so a picture fills the box rather than spilling out

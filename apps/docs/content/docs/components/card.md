@@ -104,15 +104,15 @@ squeezing both.
 Each part is the `nsh` element it is drawn with, wearing the look `cardLook()` gives it. Every
 view prop passes through; `style` goes over the look's.
 
-| Part              | Renders | Look                     |
-| ----------------- | ------- | ------------------------ |
-| `Card`            | `View`  | `cardLook().card`        |
-| `CardHeader`      | `View`  | `cardLook().header`      |
-| `CardTitle`       | `Text`  | `cardLook().title`       |
-| `CardDescription` | `Text`  | `cardLook().description` |
-| `CardAction`      | `View`  | `cardLook().action`      |
-| `CardContent`     | `View`  | `cardLook().content`     |
-| `CardFooter`      | `View`  | `cardLook().footer`      |
+| Part              | Props | Description                                                                             |
+| ----------------- | ----- | --------------------------------------------------------------------------------------- |
+| `Card`            | —     | The flat surface holding related content: `cardLook().card`.                            |
+| `CardHeader`      | —     | Title over description in the first column, the action at the trailing edge: `.header`. |
+| `CardTitle`       | —     | A step larger than body, semibold, the text colour: `.title`.                           |
+| `CardDescription` | —     | Body size in the muted colour: `.description`.                                          |
+| `CardAction`      | —     | The control at the trailing edge, beside title and description: `.action`.              |
+| `CardContent`     | —     | What the card is about — pads its sides and nothing else: `.content`.                   |
+| `CardFooter`      | —     | A wrapping row, centred, 8 apart: `.footer`.                                            |
 
 `CardTitle` and `CardDescription` are `Text`, so they take text props (`numberOfLines`, `role`).
 `CardHeader` is a grid of two columns: the title over the description in the first and the action

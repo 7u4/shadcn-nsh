@@ -45,6 +45,12 @@ The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for 
 
 A size is compact with a pointer (24 / 28 / 34 points) and roomier on a touch screen (36 / 40 / 48), where a hit slop makes the target 44 points. `sm`, `default` and `lg` are the only values: a pixel size is a geometry prop (`width`, `side`), not a scale.
 
+### Disabled
+
+```tsx
+<Button disabled>Save</Button>
+```
+
 ### Selected
 
 ```tsx
@@ -61,12 +67,6 @@ A spinner before the label, and no second press.
 <Button busy={saving()} onPress={save}>
   Save
 </Button>
-```
-
-### Disabled
-
-```tsx
-<Button disabled>Save</Button>
 ```
 
 ### With an icon, or any content
@@ -142,7 +142,21 @@ The look is a function, for a pressable of your own.
 </View>
 ```
 
+## Differences from shadcn/ui
+
+- shadcn's `outline` and `link` are not looks of this library yet, so they are not values: a button
+  is filled, raised, bare or destructive.
+
 ## API
+
+| Part                 | Props                                                                       | Description                                                                     |
+| -------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `Button`             | `variant`, `size`, `busy`, `accessibilityLabel`, `children`                 | A press that acts; a string child is the label and its name for screen readers. |
+| `IconButton`         | `variant`, `size`, `accessibilityLabel`, `children`                         | A square icon-only button; it will not compile without an `accessibilityLabel`. |
+| `RoundButton`        | `variant`, `size`, `side`, `accessibilityLabel`, `children`                 | A round icon-only button; `side` is an exact diameter where the scale is off.   |
+| `SplitButton`        | `variant`, `size`                                                           | A main action and a menu half in one silhouette.                                |
+| `SplitButtonSegment` | every [`nsh/base` Button](https://nsh.dev/elements/button) prop; `children` | One half; a string child is the label and its name for screen readers.          |
+| `SplitButtonDivider` | `style`                                                                     | The hairline between the main action and the menu half.                         |
 
 ### Button
 
@@ -155,8 +169,6 @@ Every prop of [`nsh/base` Button](https://nsh.dev/elements/button) passes throug
 | `busy`               | `boolean`                                              | `false`     |
 | `accessibilityLabel` | `string` (the string child's text, or the caller's)    | the child   |
 | `children`           | `string \| JSX.Element`                                |             |
-
-shadcn's `outline` and `link` are not looks of this library yet, so they are not values: a button is filled, raised, bare or destructive.
 
 ### IconButton
 

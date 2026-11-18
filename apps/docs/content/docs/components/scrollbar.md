@@ -46,3 +46,7 @@ Scrollbar.setTheme();
 ## API
 
 Uses `scrollbarTheme` by default. Call `Scrollbar.setTheme()` to install it on every scroll view. Every prop of [`nsh/base` Scrollbar](https://nsh.dev/elements/scrollbar) passes through.
+
+| Part        | Props | Description                                                                     |
+| ----------- | ----- | ------------------------------------------------------------------------------- |
+| `Scrollbar` |       | Uses `scrollbarTheme` by default; `setTheme()` installs it on every scroll view |

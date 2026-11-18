@@ -83,7 +83,13 @@ draws nothing: pass the dot, and tell it which slide it is on.
 
 Uses `carouselArrowLook`, `carouselPaginationLook`, `carouselDotItemLook`, and `CarouselDot`. Every prop of [`nsh/base` Carousel](https://nsh.dev/elements/carousel) parts passes through.
 
-| Prop (on arrows) | Type      | Default |
-| ---------------- | --------- | ------- |
-| `glass`          | `boolean` |         |
-| `side`           | `number`  |         |
+| Part                     | Props                                             | Description                                                                                  |
+| ------------------------ | ------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `Carousel`               | —                                                 | The carousel over [`nsh/base` Carousel](https://nsh.dev/elements/carousel).                  |
+| `CarouselContent`        | —                                                 | The snap viewport the slides scroll in.                                                      |
+| `CarouselItem`           | —                                                 | One slide: one per view unless the app gives it a width.                                     |
+| `CarouselPrevious`       | `glass`, `side`                                   | The arrow back: `glass` and `side` shape its look, an arrow unless given a child.            |
+| `CarouselNext`           | `glass`, `side`                                   | The arrow forward, as the previous one.                                                      |
+| `CarouselPagination`     | —                                                 | The dot row, with the pill that travels to the slide shown.                                  |
+| `CarouselPaginationItem` | `children` (a `CarouselDot`; nothing without one) | One slide's dot, named `Slide 1`, `Slide 2`, …                                               |
+| `CarouselDot`            | `selected`                                        | A quiet circle that brightens under the pointer and hides under the pill on the slide shown. |

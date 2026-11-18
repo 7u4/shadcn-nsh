@@ -42,6 +42,6 @@ Bottom sheets include a grabber. The look alone is `sheetPanel(side)` and `sheet
 
 Every prop of [`nsh/base` Sheet](https://nsh.dev/elements/sheet) passes through on `SheetContent`. `popupStyle` and `backdropStyle` go over the look's.
 
-| Prop   | Type                                     | Default    |
-| ------ | ---------------------------------------- | ---------- |
-| `side` | `"bottom" \| "top" \| "left" \| "right"` | `"bottom"` |
+| Part           | Props                                                                 | Description                                                                                        |
+| -------------- | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `SheetContent` | `side` (`"bottom" \| "top" \| "left" \| "right"`, default `"bottom"`) | Every prop of `nsh/base` Sheet passes through. `popupStyle` and `backdropStyle` go over the look's |

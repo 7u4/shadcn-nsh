@@ -71,6 +71,7 @@ Uses `plotCrossLine` and `plotDotClass` by default. Every prop of [`nsh/base/plo
 
 Also export `Legend` for a colored square and label beside a chart.
 
-| Prop   | Type      | Default |
-| ------ | --------- | ------- |
-| `band` | `boolean` |         |
+| Part     | Props              | Description                                        |
+| -------- | ------------------ | -------------------------------------------------- |
+| `Plot`   | `band` (`boolean`) | Uses `plotCrossLine` and `plotDotClass` by default |
+| `Legend` |                    | A colored square and label beside a chart          |

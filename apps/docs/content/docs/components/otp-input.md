@@ -54,7 +54,6 @@ A verdict tints every cell of the whole code.
 
 Every prop of [`nsh/base` OtpInput](https://nsh.dev/elements/otp-input) passes through. Cell and caret props go over the look's.
 
-| Prop    | Type                                | Default    |
-| ------- | ----------------------------------- | ---------- |
-| `cells` | `string`                            | `otpCells` |
-| `tone`  | `Tone \| (() => Tone \| undefined)` |            |
+| Part       | Props                                                                                | Description                             |
+| ---------- | ------------------------------------------------------------------------------------ | --------------------------------------- |
+| `OtpInput` | `cells` (`string`, default `otpCells`), `tone` (`Tone \| (() => Tone \| undefined)`) | Cell and caret props go over the look's |

@@ -57,7 +57,6 @@ Overlap and `limit` use `nsh/base` `AvatarGroup`; size each `Avatar` the same.
 
 Uses `avatarIdentity` and `avatarHue`. Every prop of [`nsh/base` Avatar](https://nsh.dev/elements/avatar) passes through.
 
-| Prop   | Type     | Notes                    |
-| ------ | -------- | ------------------------ |
-| `name` | `string` | Initials hue on fallback |
-| `src`  | `string` | Picture URL              |
+| Part     | Props         | Description                                                    |
+| -------- | ------------- | -------------------------------------------------------------- |
+| `Avatar` | `name`, `src` | A round picture or name-colored initials on the identity ring. |

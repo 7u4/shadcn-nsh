@@ -30,6 +30,17 @@ The group draws the field: its fill, its edge and, while the input inside has th
 
 ## Examples
 
+### Invalid and disabled
+
+```tsx
+<InputGroup invalid>
+  <InputGroupInput value={email()} placeholder="you@example.com" />
+</InputGroup>
+<InputGroup disabled>
+  <InputGroupInput value="ada@example.com" />
+</InputGroup>
+```
+
 ### An addon before and after the input
 
 `InputGroupAddon` holds an icon, a word or a button at the start or at the end of the group's line (`align`: `inline-start`, `inline-end`). A press on an addon puts the keys in the input, so the magnifier works as part of the field; a press on a button in it is the button's alone.
@@ -109,20 +120,11 @@ Write the radius and the padding on the group. The focus ring is drawn on the gr
 </InputGroup>
 ```
 
-### Invalid and disabled
-
-```tsx
-<InputGroup invalid>
-  <InputGroupInput value={email()} placeholder="you@example.com" />
-</InputGroup>
-<InputGroup disabled>
-  <InputGroupInput value="ada@example.com" />
-</InputGroup>
-```
-
 ### Buttons in a group
 
-`InputGroupButton` takes shadcn's sizes for a button inside a group, on this library's scale: `xs` is a `sm` button (24 points high with a pointer), `sm` a `default` one (28), and `icon-xs` / `icon-sm` a square of that height. `variant` is a button's, `ghost` unless set.
+`InputGroupButton` sizes a button inside a group: `xs` is a `sm` button (24 points high with a
+pointer), `sm` a `default` one (28), and `icon-xs` / `icon-sm` a square of that height. `variant`
+is a button's, `ghost` unless set.
 
 ```tsx
 <InputGroup>
@@ -181,7 +183,20 @@ let search: InputRef | undefined;
 </View>
 ```
 
+## Differences from shadcn/ui
+
+- `disabled` on the group disables what it holds and dims it; shadcn's group leaves each control to its own `disabled`.
+
 ## API
+
+| Part                 | Props                                                                                                                                                                         | Description                                    |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `InputGroup`         | `invalid`; every `View` prop; `class`, `style` and `disabledStyle` over the look's                                                                                            | The field's frame around its parts             |
+| `InputGroupAddon`    | `align`: `"inline-start" \| "inline-end" \| "block-start" \| "block-end"` (default `"inline-start"`); every `View` prop                                                       | An icon, a word or a button beside the control |
+| `InputGroupText`     | `children`; every `View` prop                                                                                                                                                 | A word or an icon in the field's type          |
+| `InputGroupButton`   | `size`: `"xs" \| "sm" \| "icon-xs" \| "icon-sm"` (default `"xs"`), `variant`: `"default" \| "secondary" \| "ghost" \| "destructive"` (default `"ghost"`); every `Button` prop | A button sized for a group                     |
+| `InputGroupInput`    | every `nsh/base` Input prop, `ref` included                                                                                                                                   | The group's single-line control                |
+| `InputGroupTextarea` | every `nsh/base` Input prop, `ref` included                                                                                                                                   | The group's multiline control                  |
 
 `InputGroup` is a view: every `View` prop passes through. `class`, `style` and `disabledStyle` go over its look's.
 
@@ -191,9 +206,3 @@ let search: InputRef | undefined;
 | `style`   | `ViewStyle` |         | Over the look's: the radius, the padding and the width of the group. |
 
 `InputGroupInput` and `InputGroupTextarea` take every prop of [`nsh/base` Input](https://nsh.dev/elements/input), `ref` included: `value`, `onChange`, `placeholder`, `keyboardType`, `maxLength`, `readonly`, `disabled` and the rest. `InputGroupTextarea` is the multiline one. Their `style` goes over the look's. A `ref` is the control's `InputRef`, as shadcn's controls forward theirs: `ref.focus()` puts the keys in it from code (a shortcut, a request to focus a draft).
-
-| Part               | Props                                                                                                                                                                         |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `InputGroupAddon`  | every `View` prop; `align`: `"inline-start" \| "inline-end" \| "block-start" \| "block-end"` (default `"inline-start"`)                                                       |
-| `InputGroupText`   | every `View` prop; a string child is the word, anything else (an icon) is drawn as given                                                                                      |
-| `InputGroupButton` | every `Button` prop; `size`: `"xs" \| "sm" \| "icon-xs" \| "icon-sm"` (default `"xs"`), `variant`: `"default" \| "secondary" \| "ghost" \| "destructive"` (default `"ghost"`) |

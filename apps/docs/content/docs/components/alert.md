@@ -74,7 +74,7 @@ variant down.
 
 ### A note and no title
 
-As shadcn's, the note has a column and no row of its own: with no title it sits beside the icon,
+The note has a column and no row of its own: with no title it sits beside the icon,
 and a long sentence wraps there. Put an error that needs more than one line in the note, not in
 the title, which keeps to one line.
 
@@ -108,10 +108,9 @@ there carries its own ink.
 
 ### The icon's column
 
-shadcn moves the text into the icon's column only when there is an icon (`has-[>svg]`). A view has
-no such selector and a child cannot be asked what it is, so the text keeps that gutter either way:
-an alert without an icon starts 12 points in from its padding. Write the icon first — it is what
-takes the leading column.
+A view has no selector for its children, and a child cannot be asked what it is, so the text keeps
+that gutter either way: an alert without an icon starts 12 points in from its padding. Write the
+icon first — it is what takes the leading column.
 
 ### How it differs from the other alerts
 
@@ -130,6 +129,11 @@ Three things are called an alert here, and this is the quiet one:
 So: a notice that can wait belongs here; a question that must be answered before anything else is
 an `alert-dialog` (or `dialog`, when the box needs content of the app's own).
 
+## Differences from shadcn/ui
+
+- shadcn moves the text into the icon's column only when there is an icon (`has-[>svg]`); here the
+  text keeps that gutter either way, with or without an icon.
+
 ## API
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `Alert` and
@@ -137,15 +141,15 @@ Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `Ale
 `style` goes over the look's on each. The root is `role="alert"`, so a notice is read out when it
 appears.
 
+| Part               | Props                                                         | Description                                                                                          |
+| ------------------ | ------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `Alert`            | `variant`: `"default" \| "destructive"` (default `"default"`) | The notice's surface: `alertLook().root()`.                                                          |
+| `AlertTitle`       | —                                                             | The title, a `Text` in `alertLook().title(variant)`.                                                 |
+| `AlertDescription` | —                                                             | The note: `alertLook().descriptionFrame()`, its string child `alertLook().descriptionText(variant)`. |
+
 | Prop      | Type                         | Default   |
 | --------- | ---------------------------- | --------- |
 | `variant` | `"default" \| "destructive"` | `default` |
-
-| Part               | Renders | Look                                                                                      |
-| ------------------ | ------- | ----------------------------------------------------------------------------------------- |
-| `Alert`            | `View`  | `alertLook().root()`                                                                      |
-| `AlertTitle`       | `Text`  | `alertLook().title(variant)`                                                              |
-| `AlertDescription` | `View`  | `alertLook().descriptionFrame()`, its string child `alertLook().descriptionText(variant)` |
 
 The surface is the card's, with one hairline edge and the theme's inset corners, padded 16 by 12;
 the icon's column is as wide as the icon, the text's takes the rest, a gap of 12 between them.

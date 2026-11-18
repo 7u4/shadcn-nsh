@@ -37,19 +37,19 @@ import { Radio, RadioGroup } from "@/components/ui/radio-group";
 
 `size` is `ChoiceSize` (`"sm" | "default" | "lg"`: 0.8, 1 or 1.25 times the page's control size), shared with `Checkbox`.
 
-### Tile
-
-```tsx
-<Radio variant="tile" checked={on()} onChange={() => on.set(true)}>
-  Option A
-</Radio>
-```
-
 ### Disabled
 
 ```tsx
 <Radio checked disabled>
   Team
+</Radio>
+```
+
+### Tile
+
+```tsx
+<Radio variant="tile" checked={on()} onChange={() => on.set(true)}>
+  Option A
 </Radio>
 ```
 
@@ -70,11 +70,10 @@ A string child is the row's label and its name for screen readers; `accessibilit
 
 Every prop of [`nsh/base` Radio](https://nsh.dev/elements/radio) and [`RadioGroup`](https://nsh.dev/elements/radio) passes through. Style props go over the look's. The row is the `group` the ring sinks with while pressed. `RadioGroupItem` is an alias of `Radio`.
 
-| Prop        | Type                    | Default     |
-| ----------- | ----------------------- | ----------- |
-| `variant`   | `RadioVariant`          | `"default"` |
-| `indicator` | `boolean`               | `true`      |
-| `size`      | `ChoiceSize`            | `"default"` |
-| `children`  | `string \| JSX.Element` |             |
+| Part             | Props                                                                                                                                                                      | Description                                        |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `Radio`          | `variant` (`RadioVariant`, default `"default"`), `indicator` (`boolean`, default `true`), `size` (`ChoiceSize`, default `"default"`), `children` (`string \| JSX.Element`) | The sunk ring, or a choice tile                    |
+| `RadioGroup`     |                                                                                                                                                                            | Every prop of `nsh/base` RadioGroup passes through |
+| `RadioGroupItem` |                                                                                                                                                                            | An alias of `Radio`                                |
 
 `RadioVariant` is `"default"` (the sunk ring) or `"tile"` (the whole surface is the control, this library's own value).

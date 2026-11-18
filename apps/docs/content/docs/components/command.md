@@ -64,3 +64,10 @@ The field filters the rows as you type; the search bar and the rows are `command
 ## API
 
 Uses `commandClasses`, `CommandRow`, `CommandHeading`, and `CommandEmpty` by default. Every prop of [`nsh/base` Command](https://nsh.dev/elements/command) passes through.
+
+| Part             | Props                             | Description                                                                                                        |
+| ---------------- | --------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `Command`        | —                                 | A command palette: a search field over virtualized, natively filtered rows.                                        |
+| `CommandRow`     | `entry`, `icon`, `detail`, `note` | A row's content: the icon, the label, a `note` at the end, the shortcut's keys and a check for the item in effect. |
+| `CommandHeading` | `group`                           | A section's heading: small capitals in the faint color.                                                            |
+| `CommandEmpty`   | `label`                           | What the palette shows while nothing matches.                                                                      |

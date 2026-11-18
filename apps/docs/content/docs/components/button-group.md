@@ -29,11 +29,10 @@ import { ButtonGroup, buttonGroupLook } from "@/components/ui/button-group";
 
 ### The join
 
-shadcn squares the corners that touch and drops the edge between them with a child selector
-(`[&>*:not(:first-child)]:rounded-l-none`); a view styles itself and not its children, so here each
-button wears its own place in the group: `item(orientation, position)` squares the sides that touch
-and drops their edge, the outer sides keeping the corners and the edge the button came with. `first`
-at the leading edge, `last` at the trailing one, `middle` between two others.
+A view styles itself and not its children, so each button wears its own place in the group:
+`item(orientation, position)` squares the sides that touch and drops their edge, the outer sides
+keeping the corners and the edge the button came with. `first` at the leading edge, `last` at the
+trailing one, `middle` between two others.
 
 ```tsx
 <ButtonGroup>
@@ -78,20 +77,26 @@ no join, and is hidden from a reader (it is the group's own hairline).
 </ButtonGroup>
 ```
 
+## Differences from shadcn/ui
+
+- shadcn squares the corners that touch and drops the edge between them with a child selector
+  (`[&>*:not(:first-child)]:rounded-l-none`); here each button wears its own place in the group
+  (`first` / `middle` / `last`), because a view styles itself and not its children.
+
 ## API
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on all three parts;
 `style` goes over the look's on each.
 
+| Part                   | Props                                                                | Description                                                                                                  |
+| ---------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `ButtonGroup`          | `orientation`: `"horizontal" \| "vertical"` (default `"horizontal"`) | Buttons joined into one control, in a row or a column: `buttonGroupLook().root(orientation)`.                |
+| `ButtonGroupText`      | —                                                                    | A word inside the group on the muted fill, joined as a button would be joined: `.textFrame()` and `.text()`. |
+| `ButtonGroupSeparator` | —                                                                    | The separator's own, turned to the group's orientation; hidden from a reader.                                |
+
 | Prop          | Type                         | Default      |
 | ------------- | ---------------------------- | ------------ |
 | `orientation` | `"horizontal" \| "vertical"` | `horizontal` |
-
-| Part                   | Renders     | Look                                          |
-| ---------------------- | ----------- | --------------------------------------------- |
-| `ButtonGroup`          | `View`      | `buttonGroupLook().root(orientation)`         |
-| `ButtonGroupText`      | `View`      | `buttonGroupLook().textFrame()` and `.text()` |
-| `ButtonGroupSeparator` | `Separator` | the separator's own, turned to the group's    |
 
 `buttonGroupLook()` is exported for a group the app lays out itself: `root(orientation)` the group,
 `item(orientation, position)` the join each button wears, `textFrame()` and `text()` the word's box

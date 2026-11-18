@@ -54,8 +54,6 @@ const sweep = progressSweep();
 
 Uses `progressLook`. Every prop of [`nsh/base` Progress](https://nsh.dev/elements/progress) passes through.
 
-| Prop     | Type                   | Default |
-| -------- | ---------------------- | ------- |
-| `height` | `number`               | `6`     |
-| `tone`   | `Tone \| (() => Tone)` | citrus  |
-| `sweep`  | `ProgressSweep`        |         |
+| Part       | Props                                                                                                        | Description         |
+| ---------- | ------------------------------------------------------------------------------------------------------------ | ------------------- |
+| `Progress` | `height` (`number`, default `6`), `tone` (`Tone \| (() => Tone)`, default citrus), `sweep` (`ProgressSweep`) | Uses `progressLook` |

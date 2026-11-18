@@ -106,19 +106,19 @@ actions, the title and the description as plain text.
 
 ## API
 
+| Part               | Props                                                               | Description                                      |
+| ------------------ | ------------------------------------------------------------------- | ------------------------------------------------ |
+| `Empty`            | every `nsh` View prop; look `emptyLook().root()`                    | A centered block that takes the room it is given |
+| `EmptyHeader`      | every `nsh` View prop; look `emptyLook().header()`                  | The media and the words under it                 |
+| `EmptyMedia`       | `variant`; every `nsh` View prop; look `emptyLook().media(variant)` | The media's box                                  |
+| `EmptyTitle`       | every `nsh` Text prop; look `emptyLook().title()`                   | The line that says there is nothing here         |
+| `EmptyDescription` | every `nsh` Text prop; look `emptyLook().description()`             | The line under the title, a step quieter         |
+| `EmptyContent`     | every `nsh` View prop; look `emptyLook().content()`                 | What the reader can do about it                  |
+
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `Empty`,
 `EmptyHeader`, `EmptyMedia` and `EmptyContent`, and every prop of
 [`nsh` Text](https://nsh.dev/elements/text) on `EmptyTitle` and `EmptyDescription`; `style` goes
 over the look's on each.
-
-| Part               | Renders | Look                         |
-| ------------------ | ------- | ---------------------------- |
-| `Empty`            | `View`  | `emptyLook().root()`         |
-| `EmptyHeader`      | `View`  | `emptyLook().header()`       |
-| `EmptyMedia`       | `View`  | `emptyLook().media(variant)` |
-| `EmptyTitle`       | `Text`  | `emptyLook().title()`        |
-| `EmptyDescription` | `Text`  | `emptyLook().description()`  |
-| `EmptyContent`     | `View`  | `emptyLook().content()`      |
 
 | Prop      | Type                  | Default   |
 | --------- | --------------------- | --------- |

@@ -50,7 +50,8 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 
 Uses `disclosureTriggerLook`, `DisclosureChevron`, and `disclosurePanel` from accordion. Composition: `Collapsible`, `CollapsibleTrigger`, `CollapsibleContent`.
 
-| Prop (on `CollapsibleTrigger`) | Type      | Default |
-| ------------------------------ | --------- | ------- |
-| `first`                        | `boolean` |         |
-| `start`                        | `number`  |         |
+| Part                 | Props                                                               | Description                                                                         |
+| -------------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `Collapsible`        | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `children` | A disclosure row that reveals a panel beneath it.                                   |
+| `CollapsibleTrigger` | `children`, `first`, `start`                                        | The title row; `first` drops its top divider, `start` lines it past a leading icon. |
+| `CollapsibleContent` | `children`                                                          | The panel beneath, in `disclosurePanel` padding.                                    |

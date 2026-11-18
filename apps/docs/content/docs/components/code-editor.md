@@ -25,18 +25,6 @@ Every prop of [`nsh/base` Editor](https://nsh.dev/elements/editor) passes throug
 
 ## Examples
 
-### Controlled text
-
-Pass `value` and set it again in `onChange`; the app owns the file, as a formatter's output or a loaded file replaces it.
-
-```tsx
-import { signal } from "nsh";
-
-const source = signal(SAMPLE);
-
-<CodeEditor value={source()} onChange={({ value }) => source.set(value)} language="typescript" />;
-```
-
 ### Languages
 
 `language` takes a name, an extension or a file name; the editor highlights it and follows its editing rules (comments, brackets, indentation).
@@ -77,11 +65,23 @@ Ranges the app marks, carried through edits until it sets new ones: an error is 
 />
 ```
 
+### Controlled text
+
+Pass `value` and set it again in `onChange`; the app owns the file, as a formatter's output or a loaded file replaces it.
+
+```tsx
+import { signal } from "nsh";
+
+const source = signal(SAMPLE);
+
+<CodeEditor value={source()} onChange={({ value }) => source.set(value)} language="typescript" />;
+```
+
 ## API
 
-| Export              | Role                                                            |
-| ------------------- | --------------------------------------------------------------- |
-| `CodeEditor`        | Themed `nsh/base` Editor on the field's well                    |
-| `CodeEditorProps`   | `nsh/base`'s `EditorProps`, unchanged                           |
-| `codeEditorClasses` | The look of the editor's parts (classes, by part)               |
-| `codeEditorFrame`   | The surface's style: the field's fill, edge and control corners |
+| Part                | Props                                                           | Description                                                      |
+| ------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `CodeEditor`        | every [`nsh/base` Editor](https://nsh.dev/elements/editor) prop | Themed `nsh/base` Editor on the field's well.                    |
+| `CodeEditorProps`   | —                                                               | `nsh/base`'s `EditorProps`, unchanged.                           |
+| `codeEditorClasses` | —                                                               | The look of the editor's parts (classes, by part).               |
+| `codeEditorFrame`   | —                                                               | The surface's style: the field's fill, edge and control corners. |

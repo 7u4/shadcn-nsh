@@ -58,12 +58,18 @@ A string child is a `Button`; a disabled trigger keeps the card closed.
 <HoverCardTrigger disabled>@nsh</HoverCardTrigger>
 ```
 
+## Differences from shadcn/ui
+
+- No `asChild`: a string child of `HoverCardTrigger` is a `Button` (`variant`, `secondary` by default); anything else is a pressable view.
+- Adds `compact` and `width` on `HoverCardContent`.
+- `onOpenChange` reports `{ open, reason }`.
+
 ## API
 
-The root owns the open flag; `HoverCardContent` mounts [`nsh/base` HoverCard](https://nsh.dev/elements/hover-card) and every base prop passes through except those. Its children come in on a `PopIn` with `popoverLook`.
+| Part               | Props                                                                                              | Description                     |
+| ------------------ | -------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `HoverCard`        | `open` / `defaultOpen`, `onOpenChange`, `onOpen`, `onClose`                                        | Open state and the trigger slot |
+| `HoverCardTrigger` | `children`, `variant` (a string child's `Button`), `disabled`, `style`                             | What the card previews          |
+| `HoverCardContent` | `compact`, `width`, and base's `placement`, `align`, `offset`, `margin`, `openDelay`, `closeDelay` | The preview card                |
 
-| Part               | Notes                                                                                              |
-| ------------------ | -------------------------------------------------------------------------------------------------- |
-| `HoverCard`        | `open` / `defaultOpen`, `onOpenChange`, `onOpen`, `onClose`                                        |
-| `HoverCardTrigger` | `variant` (a string child's `Button`), `disabled`, `style`                                         |
-| `HoverCardContent` | `compact`, `width`, and base's `placement`, `align`, `offset`, `margin`, `openDelay`, `closeDelay` |
+The root owns the open flag; `HoverCardContent` mounts [`nsh/base` HoverCard](https://nsh.dev/elements/hover-card) and every base prop passes through except those. Its children come in on a `PopIn` with `popoverLook`.

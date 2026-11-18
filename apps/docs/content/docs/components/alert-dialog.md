@@ -127,16 +127,15 @@ const open = signal(false);
 </AlertDialog>;
 ```
 
-### What shadcn has that this does not
+## Differences from shadcn/ui
 
-| shadcn                                       | Here                                                                 |
-| -------------------------------------------- | -------------------------------------------------------------------- |
-| Any JSX in the box (icons, fields, media)    | strings: `AlertDialogTitle`, `AlertDialogDescription`, button labels |
-| `AlertDialogMedia`                           | —                                                                    |
-| `size="sm" \| "default"`                     | — (the platform picks)                                               |
-| `className` and styles on the box            | — (`AlertDialogHeader` / `Footer` draw nothing)                      |
-| `AlertDialogCancel` closes without an action | it reports its `id` (`"cancel"`)                                     |
-| `asChild` on the trigger                     | a `Button` for a string, a pressable view otherwise                  |
+- The box holds strings — `AlertDialogTitle`, `AlertDialogDescription` and the buttons' labels —
+  not any JSX (icons, fields, media).
+- No `AlertDialogMedia`.
+- No `size="sm" | "default"` on the box: the platform picks the size.
+- No `className` or styles on the box: `AlertDialogHeader` / `Footer` draw nothing.
+- `AlertDialogCancel` reports its `id` (`"cancel"`) instead of closing without an action.
+- No `asChild` on the trigger: a `Button` for a string, a pressable view otherwise.
 
 ## API
 
@@ -145,14 +144,14 @@ const open = signal(false);
 one while it is up: a part that renders again with the alert still open — a page whose layout
 rebuilds its children does — stacks nothing, and the answer belongs to the app that asked.
 
-| Part                     | Props                                                                                      |
-| ------------------------ | ------------------------------------------------------------------------------------------ |
-| `AlertDialog`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onAction({ action })`            |
-| `AlertDialogTrigger`     | `children`, `variant`, `disabled`, `style`                                                 |
-| `AlertDialogContent`     | `presentation`, `closeOnEscape`, `closeOnBackdropPress` — the rest of `AlertDialogOptions` |
-| `AlertDialogTitle`       | `children` (a string)                                                                      |
-| `AlertDialogDescription` | `children` (a string)                                                                      |
-| `AlertDialogAction`      | `id`, `role`, `children` (a string; the `id` when left out)                                |
-| `AlertDialogCancel`      | `id` (default `"cancel"`), `children`                                                      |
-| `AlertDialogHeader`      | `children` — shadcn's block, drawn by nothing                                              |
-| `AlertDialogFooter`      | `children` — shadcn's block; the buttons keep the order they are written in                |
+| Part                     | Props                                                                                      | Description                                                                                                 |
+| ------------------------ | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| `AlertDialog`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onAction({ action })`            | The root: owns the open state and the text its parts registered.                                            |
+| `AlertDialogTrigger`     | `children`, `variant`, `disabled`, `style`                                                 | The press that opens it; a string child is a `Button`, `variant` picking its look (`secondary` by default). |
+| `AlertDialogContent`     | `presentation`, `closeOnEscape`, `closeOnBackdropPress` — the rest of `AlertDialogOptions` | The parts the box shows, and the `AlertDialog.show` call when the root opens.                               |
+| `AlertDialogTitle`       | `children` (a string)                                                                      | The heading.                                                                                                |
+| `AlertDialogDescription` | `children` (a string)                                                                      | The message.                                                                                                |
+| `AlertDialogAction`      | `id`, `role`, `children` (a string; the `id` when left out)                                | A choice; `role` is what it means and `onAction` reports its `id`.                                          |
+| `AlertDialogCancel`      | `id` (default `"cancel"`), `children`                                                      | The same button with `role="cancel"`.                                                                       |
+| `AlertDialogHeader`      | `children`                                                                                 | shadcn's block, drawn by nothing.                                                                           |
+| `AlertDialogFooter`      | `children`                                                                                 | shadcn's block; the buttons keep the order they are written in.                                             |

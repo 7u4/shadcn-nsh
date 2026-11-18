@@ -51,6 +51,6 @@ Default `pair`: chevrons stacked at the end. `split`: − before the field and +
 
 Every prop of [`nsh/base` NumberInput](https://nsh.dev/elements/number-input) passes through. `class`, `inputStyle` and the step props go over the look's.
 
-| Prop    | Type                | Default  |
-| ------- | ------------------- | -------- |
-| `steps` | `"split" \| "pair"` | `"pair"` |
+| Part          | Props                                           | Description                                         |
+| ------------- | ----------------------------------------------- | --------------------------------------------------- |
+| `NumberInput` | `steps` (`"split" \| "pair"`, default `"pair"`) | Every prop of `nsh/base` NumberInput passes through |

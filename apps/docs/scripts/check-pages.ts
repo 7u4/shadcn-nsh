@@ -3,8 +3,9 @@
 /**
  * The docs' page contract, checked:
  *
- * - a page has Installation, Usage, Examples and API, and none of the old
- *   Install / Composition / Differences / Not forwarded sections;
+ * - a page has Installation, Usage, Examples, an optional Differences from shadcn/ui, and API, in
+ *   that order and nothing else; Examples' subsections run variant, size, state, the rest,
+ *   controlled; API opens with the | Part | Props | Description | table (docs/port.md, 文档页);
  * - a `demo:` names the page's own demo;
  * - every name a fenced snippet imports from `@/components/ui/<id>` is
  *   exported by that component's file;
@@ -68,6 +69,56 @@ function fences(source: string): Fence[] {
 }
 
 /** The `##` headings outside fences, exactly as written. */
+/** A page's `##` sections in order, each with its `###` titles and its first table's header cells,
+ * fences skipped. */
+type Section = { title: string; subsections: string[]; firstTable: string[] | null };
+
+function outline(source: string): Section[] {
+  const out: Section[] = [];
+  let marker: string | null = null;
+  for (const line of source.split(/\r?\n/)) {
+    const fence = /^(`{3,}|~{3,})/.exec(line);
+    if (marker) {
+      if (fence && fence[1]!.startsWith(marker)) marker = null;
+      continue;
+    }
+    if (fence) {
+      marker = fence[1]!;
+      continue;
+    }
+    const h2 = /^##\s+(.+?)\s*$/.exec(line);
+    if (h2) {
+      out.push({ title: h2[1]!, subsections: [], firstTable: null });
+      continue;
+    }
+    const current = out.at(-1);
+    if (!current) continue;
+    const h3 = /^###\s+(.+?)\s*$/.exec(line);
+    if (h3) current.subsections.push(h3[1]!);
+    else if (current.firstTable === null && /^\|.*\|\s*$/.test(line)) {
+      current.firstTable = line
+        .trim()
+        .slice(1, -1)
+        .split("|")
+        .map((cell) => cell.trim());
+    }
+  }
+  return out;
+}
+
+/**
+ * Where an Examples subsection sits (docs/port.md, 文档页): variants, then sizes, then states, then
+ * everything else, then controlled. A title is placed by its first word.
+ */
+function exampleRank(title: string): number {
+  const first = title.split(/\s+/)[0]!.replace(/`/g, "");
+  if (["Variant", "Tone"].includes(first)) return 1;
+  if (first === "Size") return 2;
+  if (["Disabled", "Invalid", "Read-only", "Loading"].includes(first)) return 3;
+  if (["Controlled", "Uncontrolled"].includes(first)) return 5;
+  return 4;
+}
+
 function headings(source: string): string[] {
   const out: string[] = [];
   const lines = source.split(/\r?\n/);
@@ -207,7 +258,11 @@ if (nshFiles) {
 
 let importCount = 0;
 const required = ["Installation", "Usage", "Examples", "API"];
-const old = new Set(["Install", "Composition", "Differences", "Not forwarded"]);
+const old = new Set(["Install", "Composition", "Differences", "Not forwarded", "Accessibility"]);
+/** The one optional section, between Examples and API. */
+const DIFFERENCES = "Differences from shadcn/ui";
+/** The header of the parts table that opens API. */
+const API_HEADER = ["Part", "Props", "Description"];
 
 for (const component of cat.components) {
   const file = component.page;
@@ -231,6 +286,41 @@ for (const component of cat.components) {
   }
   for (const section of found) {
     if (old.has(section)) fail(`${where}: old section "## ${section}"`);
+  }
+
+  // The sections, in their order, and nothing else at `##` (docs/port.md, 文档页).
+  const sections = outline(source);
+  const titles = sections.map((section) => section.title);
+  const expected = titles.includes(DIFFERENCES)
+    ? [...required.slice(0, 3), DIFFERENCES, "API"]
+    : required;
+  if (titles.join("|") !== expected.join("|")) {
+    fail(
+      `${where}: sections are ${titles.map((t) => `"${t}"`).join(", ")}, not ${expected.map((t) => `"${t}"`).join(", ")}`,
+    );
+  }
+  const examples = sections.find((section) => section.title === "Examples");
+  if (examples) {
+    let last = 0;
+    for (const title of examples.subsections) {
+      const rank = exampleRank(title);
+      if (rank < last)
+        fail(
+          `${where}: "### ${title}" is out of order in Examples (variant, size, state, the rest, controlled)`,
+        );
+      last = Math.max(last, rank);
+      if (/^(Variants|Sizes|Tones)\b/.test(title))
+        fail(`${where}: "### ${title}" — write it singular`);
+      if (/shadcn|does not have|has that/i.test(title)) {
+        fail(`${where}: "### ${title}" compares with shadcn; that belongs in "## ${DIFFERENCES}"`);
+      }
+    }
+  }
+  const api = sections.find((section) => section.title === "API");
+  if (api && api.firstTable?.join("|") !== API_HEADER.join("|")) {
+    fail(
+      `${where}: the first table in API has header ${api.firstTable ? `| ${api.firstTable.join(" | ")} |` : "none"}, not | ${API_HEADER.join(" | ")} |`,
+    );
   }
 
   if (nshFiles) {

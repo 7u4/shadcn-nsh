@@ -44,6 +44,23 @@ The examples draw icons with `Icon` from `lib/icons`; see [Icons](../icons) for 
 
 ## Examples
 
+### Size
+
+`size` is `default` (40-point media, the body's type), `sm` (32, the note's) or `xs` (28, the
+note's, in a chip's corners).
+
+```tsx
+<Attachment size="sm">
+  <AttachmentMedia>
+    <Icon icon={FileText} size={attachmentGlyph("sm", "horizontal")} tint={colors.muted} />
+  </AttachmentMedia>
+  <AttachmentContent>
+    <AttachmentTitle>changelog.md</AttachmentTitle>
+    <AttachmentDescription>8 KB</AttachmentDescription>
+  </AttachmentContent>
+</Attachment>
+```
+
 ### States
 
 `state` says how the attachment is doing: `idle` (not sent yet, its edge dashed), `uploading`,
@@ -58,23 +75,6 @@ description). Put a `Spinner` in the media while it travels.
   <AttachmentContent>
     <AttachmentTitle>registry.zip</AttachmentTitle>
     <AttachmentDescription>Uploading · 42%</AttachmentDescription>
-  </AttachmentContent>
-</Attachment>
-```
-
-### Sizes
-
-`size` is `default` (40-point media, the body's type), `sm` (32, the note's) or `xs` (28, the
-note's, in a chip's corners).
-
-```tsx
-<Attachment size="sm">
-  <AttachmentMedia>
-    <Icon icon={FileText} size={attachmentGlyph("sm", "horizontal")} tint={colors.muted} />
-  </AttachmentMedia>
-  <AttachmentContent>
-    <AttachmentTitle>changelog.md</AttachmentTitle>
-    <AttachmentDescription>8 KB</AttachmentDescription>
   </AttachmentContent>
 </Attachment>
 ```
@@ -139,6 +139,20 @@ fit — the files under a message, the pictures in a composer.
 </AttachmentGroup>
 ```
 
+## Differences from shadcn/ui
+
+- **`asChild` on `AttachmentTrigger`.** The trigger is the frame's own pressable; a link of yours
+  cannot become it (NSH has no `Slot`).
+- **The frame's padding follows what it holds** (`has-data-[slot=attachment-content]:px-2.5`,
+  `:[slot=media]:p-2`). NSH has no `:has()`, so the frame always pads as if it holds text: a media
+  on its own sits in text's padding.
+- **The hover fill a frame takes when something in it is pressable** (`has-[>a,>button]:hover:bg-muted/50`).
+  The trigger shows its own wash under the pointer instead.
+- **The `shimmer` on a title while it uploads or is processed.** Not reproduced: an uploading
+  title reads as it is, and a `Spinner` in the media says it is moving.
+- **The group's snapping and faded edges** (`snap-x`, `scroll-fade-x`). The row scrolls with the
+  platform's own feel, without snapping, and its scrollbar is hidden.
+
 ## API
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on every part;
@@ -147,17 +161,17 @@ Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on ever
 `AttachmentTitle`/`AttachmentDescription` the text's. A title or a description is one line,
 truncated.
 
-| Part                    | Renders  | Look                                                        |
-| ----------------------- | -------- | ----------------------------------------------------------- |
-| `Attachment`            | `View`   | `attachmentLook().root(state, size, orientation)`           |
-| `AttachmentGroup`       | `Scroll` | `attachmentLook().group`, `.groupContent`                   |
-| `AttachmentMedia`       | `View`   | `attachmentLook().media(size, orientation, variant, state)` |
-| `AttachmentContent`     | `View`   | `attachmentLook().content(orientation)`                     |
-| `AttachmentTitle`       | `Text`   | `attachmentLook().title(size)`                              |
-| `AttachmentDescription` | `Text`   | `attachmentLook().description(state)`                       |
-| `AttachmentActions`     | `View`   | `attachmentLook().actions(orientation)`                     |
-| `AttachmentTrigger`     | `View`   | `attachmentLook().trigger`                                  |
-| `AttachmentAction`      | `Button` | `buttonLook("ghost", { size: "sm" })`                       |
+| Part                    | Props                          | Description                                                                                            |
+| ----------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `Attachment`            | `state`, `size`, `orientation` | The frame that carries one file: `attachmentLook().root(state, size, orientation)`.                    |
+| `AttachmentGroup`       | —                              | A row 12 points apart that scrolls sideways when the files do not fit: `.group`, `.groupContent`.      |
+| `AttachmentMedia`       | `variant`                      | The file's icon or picture: `attachmentLook().media(size, orientation, variant, state)`.               |
+| `AttachmentContent`     | —                              | The text beside the media: `attachmentLook().content(orientation)`.                                    |
+| `AttachmentTitle`       | —                              | The file's name, one line, truncated: `attachmentLook().title(size)`.                                  |
+| `AttachmentDescription` | —                              | How the file is doing, one line: `attachmentLook().description(state)`.                                |
+| `AttachmentActions`     | —                              | What can be done to it: `attachmentLook().actions(orientation)`.                                       |
+| `AttachmentTrigger`     | —                              | A pressable over the whole frame: press it to open the file.                                           |
+| `AttachmentAction`      | —                              | An action on the file, this library's `Button` ghost and small: `buttonLook("ghost", { size: "sm" })`. |
 
 | Prop          | On                | Type                                                         | Default      |
 | ------------- | ----------------- | ------------------------------------------------------------ | ------------ |
@@ -171,17 +185,3 @@ the card's fill with a hairline edge and the card's corners (`inset`'s at `xs`),
 in from its edge and 8 / 6 / 4 above and below; the title is medium in the page's ink and the
 description the note's size in the muted ink. `attachmentLook()` and
 `attachmentGlyph(size, orientation)` are exported for a frame an app draws itself.
-
-shadcn/ui's attachment differs here in five places:
-
-- **`asChild` on `AttachmentTrigger`.** The trigger is the frame's own pressable; a link of yours
-  cannot become it (NSH has no `Slot`).
-- **The frame's padding follows what it holds** (`has-data-[slot=attachment-content]:px-2.5`,
-  `:[slot=media]:p-2`). NSH has no `:has()`, so the frame always pads as if it holds text: a media
-  on its own sits in text's padding.
-- **The hover fill a frame takes when something in it is pressable** (`has-[>a,>button]:hover:bg-muted/50`).
-  The trigger shows its own wash under the pointer instead.
-- **The `shimmer` on a title while it uploads or is processed.** Not reproduced: an uploading
-  title reads as it is, and a `Spinner` in the media says it is moving.
-- **The group's snapping and faded edges** (`snap-x`, `scroll-fade-x`). The row scrolls with the
-  platform's own feel, without snapping, and its scrollbar is hidden.
