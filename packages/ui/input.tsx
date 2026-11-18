@@ -6,14 +6,10 @@ import type { InputStyle, ViewStyle } from "nsh";
 import { platform, split } from "nsh";
 import { Input as BaseInput, type InputProps as BaseInputProps } from "nsh/base";
 
+import { type Live, read } from "./lib/live";
+
 // @port look/field.tsx
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /**
  * A text field's sizes, shared by every single-line field and picker

@@ -1,0 +1,15 @@
+{
+  "name": "live",
+  "type": "registry:lib",
+  "title": "Live values",
+  "description": "A value a look takes as it is, or as a function reading it where the look is applied.",
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "packages/ui/lib/live.ts",
+      "type": "registry:lib",
+      "target": "lib/live.ts",
+      "content": "// A value a look takes as it is, or as a function reading it where the look is applied.\n// Owned by this library: every look that takes a value takes it this way, rather than each\n// component writing the pair out again.\n\n/**\n * A value, or a function reading it where the look is applied (a signal): read at draw time, a\n * signal's value stays live.\n */\nexport type Live<T> = T | (() => T);\n\n/** `v`, read where it is applied: the value itself, or what its accessor returns then. */\nexport const read = <T>(v: Live<T> | undefined): T | undefined =>\n  typeof v === \"function\" ? (v as () => T)() : v;\n"
+    }
+  ]
+}

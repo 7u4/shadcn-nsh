@@ -12,12 +12,6 @@ import { menuHighlight, menuItemSize, menuPopup } from "./menu";
 
 const pointer = platform.desktop;
 
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
-
 /** A bar's height, its padding and the gap between its triggers, and a trigger's height: with a
  * pointer a 36-point bar around 26-point triggers (shadcn's `h-9` and `h-7`), on a touch screen 50
  * and 40, a finger's target. */
@@ -323,3 +317,4 @@ export {
   type MenuSubProps as MenubarSubProps,
   type MenuSubTriggerProps as MenubarSubTriggerProps,
 } from "./menu";
+import { type Live, read } from "./lib/live";

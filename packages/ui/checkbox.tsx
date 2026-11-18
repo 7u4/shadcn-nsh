@@ -8,14 +8,10 @@ import { Checkbox as BaseCheckbox, type CheckboxProps as BaseCheckboxProps } fro
 
 import { Icon } from "./lib/icons";
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import { controlSize } from "./lib/surface";
 
 // @port look/choice.tsx
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** What a checkbox's box shows: a check, a dash (indeterminate) or nothing. */
 export type CheckboxMarkKind = "check" | "dash" | null;

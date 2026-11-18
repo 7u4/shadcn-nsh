@@ -21,6 +21,7 @@ import {
 
 import { ChoiceLight, choiceScales, choiceSink, choiceWell, type ChoiceSize } from "./checkbox";
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import { pressSink } from "./lib/press";
 import { controlSize } from "./lib/surface";
 
@@ -71,12 +72,6 @@ export function RadioRing(props: { on: boolean; scale?: number; disabled?: boole
     </View>
   );
 }
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** Options of `choiceTileLook`. */
 export interface ChoiceTileOptions {

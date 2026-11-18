@@ -13,13 +13,9 @@ import type { ViewStyle } from "nsh";
 import { platform, split } from "nsh";
 import { Terminal as BaseTerminal, type TerminalProps as BaseTerminalProps } from "nsh/base";
 
+import { type Live, read } from "./lib/live";
+
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /**
  * A terminal's variants: `default` is a well — the field's fill and edge, the theme's inner corners,

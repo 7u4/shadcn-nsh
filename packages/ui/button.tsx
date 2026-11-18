@@ -18,6 +18,7 @@ import { context, platform, split, Text, token, View } from "nsh";
 import { Button as BaseButton, type ButtonProps as BaseButtonProps } from "nsh/base";
 
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import { pressSink, pressTransition } from "./lib/press";
 import { Spinner } from "./spinner";
 
@@ -34,9 +35,6 @@ export type ButtonVariant = "default" | "secondary" | "ghost" | "destructive";
 
 /** A button's size: 24 / 28 / 34 points with a pointer, 36 / 40 / 48 on a touch screen. */
 export type ButtonSize = "sm" | "default" | "lg";
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
 
 /** Options of `buttonLook`, `buttonLabel` and `buttonGlyph` (the same object for all three). */
 export interface ButtonLookOptions {
@@ -107,9 +105,6 @@ const sink = (scale: number): ViewStyle => pressSink(scale).activeStyle;
 /** The properties a button's states change, eased over 150 ms: the press's
  * sink (Design Guides, "Motion") and the hover's and press's colors. */
 const transition = pressTransition("background-color, border-color, box-shadow, opacity");
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** The style props a look fills: the shell writes each as its own prop, never as a
  * spread object, which is read once and keeps the appearance it was built in. */

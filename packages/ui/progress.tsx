@@ -5,12 +5,9 @@ import type { AnimatedValue, ViewStyle } from "nsh";
 import { cleanup, createAnimatedValue, Easing, effect, reduceMotion, split } from "nsh";
 import { Progress as BaseProgress, type ProgressProps as BaseProgressProps } from "nsh/base";
 
-// @port look/meter.ts
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
+import { type Live, read } from "./lib/live";
 
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
+// @port look/meter.ts
 
 /**
  * A determinate fill's classes: the whole track's width, slid back by what

@@ -34,6 +34,7 @@ import {
   ListboxHeader,
   OptionRow,
 } from "./lib/listbox";
+import { type Live, read } from "./lib/live";
 import {
   createItemRegistry,
   createOpenState,
@@ -46,12 +47,6 @@ import { controlSize, narrowWindow } from "./lib/surface";
 
 // @port look/listbox.tsx
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** Options of `comboboxLook`. */
 export interface ComboboxLookOptions {

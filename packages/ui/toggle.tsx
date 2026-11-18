@@ -6,6 +6,7 @@ import { platform, split, Text } from "nsh";
 import { Toggle as BaseToggle, type ToggleProps as BaseToggleProps } from "nsh/base";
 
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import { pressSink, pressTransition } from "./lib/press";
 
 // @port look/tool.ts
@@ -14,9 +15,6 @@ export type ToggleSize = "sm" | "default" | "lg";
 
 /** A toggle's variants: `default` bare while off, `outline` on a field's edge while off. */
 export type ToggleVariant = "default" | "outline";
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
 
 /** Options of `toggleLook`, `toggleLabel` and `toggleGlyph` (the same object for all three). */
 export interface ToggleLookOptions {
@@ -79,9 +77,6 @@ const sink = (scale: number): ViewStyle => pressSink(scale).activeStyle;
  * (`pressTransition`): the sink (Design Guides, "Motion"), the on fill
  * fading in and out, the hover's. */
 const transition = pressTransition("background-color, border-color, box-shadow, opacity");
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 const dimensions = (o?: ToggleLookOptions) => toggleSizes[read(o?.size) ?? "default"];
 

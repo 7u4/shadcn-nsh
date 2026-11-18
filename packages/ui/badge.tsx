@@ -11,15 +11,11 @@ import {
 } from "@shadcn-nsh/theme";
 import { token, View, Text } from "nsh";
 
+import { type Live, read } from "./lib/live";
+
 // @port index.tsx
 /** A badge's variants: `default`, the tone's fill; `outline`, an edge in the tone's color. */
 export type BadgeVariant = "default" | "outline";
-
-/** A value, or a function reading it where the badge is drawn (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /** The props of `Badge`. */
 export type BadgeProps = {

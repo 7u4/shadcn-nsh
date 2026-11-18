@@ -15,18 +15,13 @@ import {
 
 import { Icon } from "./lib/icons";
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import { createSlot, type Slot } from "./lib/open-state";
 import { PopIn, popupSurface, type PopupSide } from "./lib/popup";
 import { pressSink, pressTransition } from "./lib/press";
 
 /** A pointer's compact bar; a touch screen's roomier one, a finger's target in every trigger. */
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /**
  * A bar's measurements: a trigger's height, its inset from its sides, the gap between triggers,

@@ -36,6 +36,7 @@ import { IconButton, iconButtonGlyph, type IconButtonProps } from "./button";
 import { Input, type InputProps } from "./input";
 import { IconLabel } from "./lib/icons";
 import { labelOf } from "./lib/label";
+import { type Live, read } from "./lib/live";
 import { pressSink, pressTransition } from "./lib/press";
 import { narrowWindow } from "./lib/surface";
 import { Separator, type SeparatorProps } from "./separator";
@@ -45,12 +46,6 @@ import { Tooltip, TooltipContent, TooltipTrigger, type TooltipContentProps } fro
 
 /** A pointer's density; a touch screen's rows are taller, a finger's target. */
 const pointer = platform.desktop;
-
-/** A value, or a function reading it where the look is applied (a signal). */
-type Live<T> = T | (() => T | undefined);
-
-const read = <T,>(v: Live<T> | undefined): T | undefined =>
-  typeof v === "function" ? (v as () => T)() : v;
 
 /**
  * A sidebar's measurements, in points, after shadcn/ui's: 256 across (`16rem`), 48 folded to its
@@ -435,9 +430,9 @@ export function sidebarGroupLook(o?: SidebarFoldOptions) {
 /** A menu row's options: the column as it stands, and the row's own axes. */
 export interface SidebarMenuButtonLookOptions extends SidebarFoldOptions {
   /** Default `default`: 32 points high (44 on a touch screen). */
-  size?: Live<SidebarMenuButtonSize>;
+  size?: Live<SidebarMenuButtonSize | undefined>;
   /** Default `default`: bare until the pointer is over it. `outline` is a card of its own. */
-  variant?: Live<SidebarMenuButtonVariant>;
+  variant?: Live<SidebarMenuButtonVariant | undefined>;
   /** The page the app is on: the chosen fill under it, its ink and its icon the text's. */
   active?: Live<boolean>;
   /** No presses, no hover, 50%. */
@@ -629,7 +624,7 @@ export function sidebarMenuSubLook(o?: SidebarFoldOptions) {
 /** A sub menu row's options. */
 export interface SidebarMenuSubButtonLookOptions extends SidebarFoldOptions {
   /** Default `default`: 28 points high (40 on a touch screen). */
-  size?: Live<SidebarMenuSubButtonSize>;
+  size?: Live<SidebarMenuSubButtonSize | undefined>;
   /** The page the app is on: the chosen fill under it. */
   active?: Live<boolean>;
   /** No presses, no hover, 50%. */
