@@ -3,7 +3,7 @@
 import { alpha, colors, finish, terminal } from "@shadcn-nsh/theme";
 import { ChevronLeft, ChevronRight } from "lucide";
 import type { JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
-import { context, platform, split, Text, token, View } from "nsh";
+import { context, horizontalSizeClass, platform, split, Text, token, View } from "nsh";
 import {
   Menu as BaseMenu,
   MenuItem as BaseMenuItem,
@@ -31,6 +31,22 @@ import { labelOf } from "./lib/utils";
 
 // @port look/menu.tsx
 const pointer = platform.desktop;
+
+/**
+ * Whether a menu is a popup at its trigger, as `nsh/base` presents it: on
+ * the desktops, and on an iPad while its window is regular in width (UIKit's
+ * horizontal size class); a sheet elsewhere. Read it in a getter or a
+ * binding: an iPad's window can be resized across it.
+ */
+export function menuIsPopup(): boolean {
+  return (
+    pointer ||
+    (platform.os === "ios" &&
+      platform.idiom === "pad" &&
+      !platform.catalyst &&
+      horizontalSizeClass() === "regular")
+  );
+}
 
 /** A menu row's height, corners and type: compact with a pointer, a
  * finger's row on a touch screen. */
@@ -156,20 +172,21 @@ export interface MenuPopupOptions {
 
 /**
  * What a menu takes besides its items (spread it on a `Menu` or a
- * `ContextMenu`; its submenus' popups take the same): with a pointer the
- * popup surface every menu shares (`popupSurface`), at least `minWidth`
- * across, coming in from the trigger's `side` (`popInStyles`: a fade, 96%
- * to full size, 4 points of slide, 150 ms); on a touch screen the sheet
- * that slides up, the card's surface with its top corners 20 points round
- * and 34 points under its rows for the home indicator; the scrim behind the
- * sheet. The surface is the popup's own box: `nsh/base` holds it to the
- * room on its side and scrolls the items inside it, so its edges and
- * shadow stay put. Its values are getters, so they follow the appearance.
+ * `ContextMenu`; its submenus' popups take the same): as a popup
+ * (`menuIsPopup`) the popup surface every menu shares (`popupSurface`), at
+ * least `minWidth` across, coming in from the trigger's `side`
+ * (`popInStyles`: a fade, 96% to full size, 4 points of slide, 150 ms); as
+ * a sheet the one that slides up, the card's surface with its top corners
+ * 20 points round and 34 points under its rows for the home indicator; the
+ * scrim behind the sheet. The surface is the popup's own box: `nsh/base`
+ * holds it to the room on its side and scrolls the items inside it, so its
+ * edges and shadow stay put. Its values are getters, so they follow the
+ * appearance.
  */
 export function menuPopup(o?: MenuPopupOptions) {
   return {
     get popupStyle(): ViewStyle {
-      return pointer
+      return menuIsPopup()
         ? { ...popupSurface(), minWidth: o?.minWidth ?? 200, ...popInStyles(o?.side).style }
         : {
             backgroundColor: colors.surface,
@@ -182,7 +199,7 @@ export function menuPopup(o?: MenuPopupOptions) {
           };
     },
     get popupStartingStyle(): ViewStyle | undefined {
-      return pointer ? popInStyles(o?.side).starting : undefined;
+      return menuIsPopup() ? popInStyles(o?.side).starting : undefined;
     },
     get backdropStyle(): ViewStyle {
       return backdrop();

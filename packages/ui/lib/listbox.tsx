@@ -7,7 +7,7 @@ import { platform, Text, View } from "nsh";
 import type { SelectEntry, SelectGroup } from "nsh/base";
 
 import { Icon } from "./icons";
-import { backdrop } from "./popup";
+import { backdrop, popInStyles } from "./popup";
 import { controlSize } from "./surface";
 
 // @port look/listbox.tsx
@@ -27,10 +27,12 @@ const SHEET_FOOT = 34;
 /**
  * The list's surface: with a pointer a popup at the trigger that extends
  * it (the floating finish every popup wears, the theme's inset corners, 6
- * points of padding); on a touch screen a sheet at the bottom, its top
- * corners rounded, at most 70% of the window high. Not the raised finish:
- * that is a control's, and a theme may make it a tint over what is behind
- * it (Solid Glass), which a list floating over the page cannot be.
+ * points of padding) and comes in as a menu does (`popInStyles`: a fade,
+ * 96% to full size, 4 points of slide, 150 ms); on a touch screen a sheet
+ * at the bottom, its top corners rounded, at most 70% of the window high,
+ * which slides up on its own. Not the raised finish: that is a control's,
+ * and a theme may make it a tint over what is behind it (Solid Glass),
+ * which a list floating over the page cannot be.
  */
 export function listboxPopup(o?: ListboxPopupOptions): ViewStyle {
   return pointer
@@ -40,6 +42,7 @@ export function listboxPopup(o?: ListboxPopupOptions): ViewStyle {
         padding: 6,
         ...finish.menu,
         ...(o?.minWidth ? { minWidth: o.minWidth } : {}),
+        ...popInStyles().style,
       }
     : {
         backgroundColor: colors.surface,
@@ -50,6 +53,11 @@ export function listboxPopup(o?: ListboxPopupOptions): ViewStyle {
         paddingBottom: SHEET_FOOT,
         maxHeight: "70%",
       };
+}
+
+/** The list's popup in its first frame (its `popupStartingStyle`), from which `listboxPopup`'s transition brings it in; none on a touch screen. */
+export function listboxPopupStarting(): ViewStyle | undefined {
+  return pointer ? popInStyles().starting : undefined;
 }
 
 /**
@@ -73,6 +81,9 @@ export function listboxProps(o?: ListboxPopupOptions) {
     margin: 8,
     get popupStyle() {
       return listboxPopup(o);
+    },
+    get popupStartingStyle() {
+      return listboxPopupStarting();
     },
     get backdropStyle() {
       return backdrop();

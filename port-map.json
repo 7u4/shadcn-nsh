@@ -1,9 +1,9 @@
 {
   "upstream": {
     "path": "references/nsh/examples/nsh-gallery-ui",
-    "commit": "224d9a795c7ac9d10d75750de9351adac5549675",
-    "reviewed": "224d9a795c7ac9d10d75750de9351adac5549675",
-    "cli": "v0.5.1"
+    "commit": "554163758e30d2f62f814096a6327937dcb4fe49",
+    "reviewed": "554163758e30d2f62f814096a6327937dcb4fe49",
+    "cli": "v0.6.0"
   },
   "root": ".",
   "files": {
@@ -261,6 +261,7 @@
         "read": "packages/ui/lib/utils.ts",
         "ListboxPopupOptions": "packages/ui/lib/listbox.tsx",
         "listboxPopup": "packages/ui/lib/listbox.tsx",
+        "listboxPopupStarting": "packages/ui/lib/listbox.tsx",
         "optionClass": "packages/ui/lib/listbox.tsx",
         "listboxProps": "packages/ui/lib/listbox.tsx",
         "Chevron": "packages/ui/lib/listbox.tsx",
@@ -301,6 +302,7 @@
     },
     "look/menu.tsx": {
       "symbols": {
+        "menuIsPopup": "packages/ui/menu.tsx",
         "MenuItemDimensions": "packages/ui/menu.tsx",
         "menuItemSize": "packages/ui/menu.tsx",
         "menuHighlight": "packages/ui/menu.tsx",
