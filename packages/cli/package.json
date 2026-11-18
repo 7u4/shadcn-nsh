@@ -35,10 +35,10 @@
     "prepublishOnly": "bun run build"
   },
   "dependencies": {
-    "commander": "^15.0.0"
+    "commander": "^15.1.0"
   },
   "devDependencies": {
-    "tsup": "^8.5.0"
+    "tsup": "^9.0.0"
   },
   "engines": {
     "node": ">=20"

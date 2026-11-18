@@ -11,20 +11,20 @@
     "build:demos": "bun scripts/build-demos.ts"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
+    "@tailwindcss/vite": "^4.3.5",
     "@tanstack/react-router": "1.170.46",
     "@tanstack/react-start": "1.169.5",
     "@tanstack/start-static-server-functions": "1.167.44",
     "cn": "^0.5.2",
-    "fumadocs-core": "16.19.3",
+    "fumadocs-core": "16.19.4",
     "fumadocs-mdx": "15.6.3",
-    "fumadocs-ui": "npm:@fumadocs/base-ui@16.19.3",
-    "lucide": "1.66.0",
-    "lucide-react": "^1.71.0",
+    "fumadocs-ui": "npm:@fumadocs/base-ui@16.19.4",
+    "lucide": "1.75.0",
+    "lucide-react": "^1.75.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "tailwindcss": "^4.3.3",
-    "zod": "^4.1.11"
+    "tailwindcss": "^4.3.5",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@types/mdx": "^2.0.14",
