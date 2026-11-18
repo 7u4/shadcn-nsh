@@ -7,7 +7,7 @@ demo: toggle
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add toggle
 ```
 

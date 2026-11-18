@@ -7,7 +7,7 @@ demo: input-group
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add input-group
 ```
 

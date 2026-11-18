@@ -7,7 +7,7 @@ demo: context-menu
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add context-menu
 ```
 

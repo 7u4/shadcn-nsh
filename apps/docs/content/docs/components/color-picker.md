@@ -7,7 +7,7 @@ demo: color-picker
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add color-picker
 ```
 

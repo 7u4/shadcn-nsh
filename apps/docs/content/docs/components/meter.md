@@ -7,7 +7,7 @@ demo: meter
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add meter
 ```
 

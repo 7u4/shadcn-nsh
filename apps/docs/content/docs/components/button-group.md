@@ -7,7 +7,7 @@ demo: button-group
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add button-group
 ```
 

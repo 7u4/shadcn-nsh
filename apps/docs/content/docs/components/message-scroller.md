@@ -7,7 +7,7 @@ demo: message-scroller
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add message-scroller
 ```
 

@@ -7,7 +7,7 @@ demo: diff-view
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add diff-view
 ```
 

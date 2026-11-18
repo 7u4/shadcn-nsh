@@ -7,7 +7,7 @@ description: Add shadcn-nsh to an existing NSH app.
 
 An app with `nsh.json` (from `nsh init`) is ready:
 
-```sh
+```npm
 npx shadcn-nsh@latest init
 npx shadcn-nsh@latest add button
 ```
@@ -31,7 +31,7 @@ Every command takes `-c, --cwd <dir>` (default: the current directory). `init`, 
 
 ## Add
 
-```sh
+```npm
 npx shadcn-nsh@latest add button -c apps/web
 npx shadcn-nsh@latest add --all
 npx shadcn-nsh@latest add button --dry-run
@@ -46,7 +46,7 @@ npx shadcn-nsh@latest add button --overwrite
 
 ## list, view, diff
 
-```sh
+```npm
 npx shadcn-nsh@latest list
 npx shadcn-nsh@latest view button
 npx shadcn-nsh@latest diff
@@ -55,7 +55,7 @@ npx shadcn-nsh@latest diff button
 
 `list` reads the catalog (`index.json`) and marks an item when any of its files is in the app; `--json` prints the same catalog for tooling. `view` prints what `add` would write, dependencies first, with imports rewritten for the app. `diff` compares the same rewritten content with the app's files; without an item it lists the installed items that differ, with one it prints the changed lines, and it exits 1 when anything differs:
 
-```sh
+```npm
 npx shadcn-nsh@latest diff || echo "run shadcn-nsh add <item> --overwrite"
 ```
 
@@ -63,7 +63,7 @@ npx shadcn-nsh@latest diff || echo "run shadcn-nsh add <item> --overwrite"
 
 If the workspace has `apps/web` and a `packages/ui` named `@workspace/ui`:
 
-```sh
+```npm
 npx shadcn-nsh@latest add button -c apps/web
 ```
 

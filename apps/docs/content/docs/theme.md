@@ -15,7 +15,7 @@ The theme is the upstream gallery's: a graphite page (paper in light appearance)
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add theme
 ```
 

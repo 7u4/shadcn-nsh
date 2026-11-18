@@ -7,7 +7,7 @@ demo: empty
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add empty
 ```
 

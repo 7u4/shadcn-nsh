@@ -7,7 +7,7 @@ demo: badge
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add badge
 ```
 

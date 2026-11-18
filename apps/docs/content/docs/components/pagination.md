@@ -7,7 +7,7 @@ demo: pagination
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add pagination
 ```
 

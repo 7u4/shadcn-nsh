@@ -7,7 +7,7 @@ demo: code-editor
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add code-editor
 ```
 

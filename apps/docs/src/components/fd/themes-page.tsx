@@ -19,6 +19,7 @@ import { finishSampleCss, themePages } from "@/lib/themes";
  * entries in the page's table of contents, which is built from the markdown.
  */
 import { PALETTES } from "../../../demos/palettes";
+import { InstallTabs } from "./install-tabs";
 
 const themes = themePages();
 const samples = finishSampleCss();
@@ -100,9 +101,7 @@ export function ThemesPage() {
           </p>
 
           <h3 id={`install-${theme.palette.id}`}>Installation</h3>
-          <pre>
-            <code>npx shadcn-nsh@latest add {theme.item}</code>
-          </pre>
+          <InstallTabs command={`npx shadcn-nsh@latest add ${theme.item}`} />
           <p>
             <code>add {theme.item}</code> installs <code>themes/{theme.palette.id}/</code> beside
             the app&apos;s build-time theme and leaves that one as it is; the app lists the theme

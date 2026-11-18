@@ -7,7 +7,7 @@ demo: alert-dialog
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add alert-dialog
 ```
 

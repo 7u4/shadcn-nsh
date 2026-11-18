@@ -7,7 +7,7 @@ demo: toggle-group
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add toggle-group
 ```
 

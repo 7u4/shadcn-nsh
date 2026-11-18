@@ -7,7 +7,7 @@ demo: link
 
 ## Installation
 
-```sh
+```npm
 npx shadcn-nsh@latest add link
 ```
 
