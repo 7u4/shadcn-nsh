@@ -34,8 +34,9 @@ function Item(props: {
   disabled?: boolean;
   closeOnSelect?: boolean;
   variant?: "default" | "destructive";
+  inset?: boolean;
 }) {
-  const look = menuItemLook();
+  const look = menuItemLook({ inset: props.inset });
   const checkable = props.checked !== undefined;
   return (
     <MenuItem
@@ -204,10 +205,10 @@ function App() {
             closeOnSelect={false}
             onSelect={() => pinned.set(!pinned())}
           />
-          <Item label="Copy" onSelect={() => choose("Copy")} />
-          <Item label="Rename" onSelect={() => choose("Rename")} />
+          <Item label="Copy" inset onSelect={() => choose("Copy")} />
+          <Item label="Rename" inset onSelect={() => choose("Rename")} />
           <MenuSeparator style={menuSeparator()} />
-          <Item label="Delete" variant="destructive" onSelect={() => choose("Delete")} />
+          <Item label="Delete" inset variant="destructive" onSelect={() => choose("Delete")} />
         </ContextMenu>
       </Split>
     </DemoPage>

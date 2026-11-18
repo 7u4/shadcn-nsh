@@ -117,6 +117,17 @@ export function addPlayerOptions(outDir: string, name: string) {
       // Once the app runs: its engine's environment is the one `setDark` writes.
       .replace(ran, `${START_THEME}\n${ran}`),
   );
-  // The page: the parameters' reader, before the first paint.
-  fs.writeFileSync(index, html.replace(head, `${HEAD_SCRIPT}${head}`));
+  // The page: the parameters' reader, before the first paint; and no zoom on focus, which iOS
+  // Safari does for an input under 16 points (NSH's are 14) — pinching still zooms.
+  const viewport = /<meta name="viewport" content="([^"]*)">/;
+  fs.writeFileSync(
+    index,
+    html
+      .replace(viewport, (tag, content: string) =>
+        content.includes("maximum-scale")
+          ? tag
+          : tag.replace(content, `${content}, maximum-scale=1`),
+      )
+      .replace(head, `${HEAD_SCRIPT}${head}`),
+  );
 }

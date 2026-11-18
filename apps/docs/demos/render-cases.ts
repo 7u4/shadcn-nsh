@@ -180,7 +180,14 @@ const overrides: Record<string, Override> = {
     // The column draws before the page does, so its rail is the first of the two names in the page.
     steps: (app) => app.press("Toggle Sidebar >> nth=0"),
   },
-  toast: { steps: (app) => app.press("Copy the link") },
+  // Once the toast is in, not only pushed: its `presented` line lands in the log a moment after the
+  // press, so a picture taken before it differs from one taken after by that line alone.
+  toast: {
+    steps: async (app) => {
+      await app.press("Copy the link");
+      await app.waitFor("text:presented · toast-1");
+    },
+  },
   select: { steps: (app) => app.press("label:Language") },
   "date-picker": { steps: (app) => app.press("No due date") },
   // The pages whose photos come over the network mark themselves once every image is there.

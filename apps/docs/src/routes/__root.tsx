@@ -14,7 +14,10 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      // `maximum-scale=1`: iOS Safari zooms the page into an input under 16 points as it takes the
+      // focus — the search field's, and a preview's (NSH's inputs are 14), whose frame zooms this
+      // page. Pinching still zooms on iOS.
+      { name: "viewport", content: "width=device-width, initial-scale=1, maximum-scale=1" },
       { title: SITE_TITLE },
       { name: "description", content: SITE_DESCRIPTION },
     ],

@@ -166,10 +166,14 @@ function App() {
             >
               Pinned
             </ContextMenuItem>
-            <ContextMenuItem onSelect={() => choose("Copy")}>Copy</ContextMenuItem>
-            <ContextMenuItem onSelect={() => choose("Rename")}>Rename</ContextMenuItem>
+            <ContextMenuItem inset onSelect={() => choose("Copy")}>
+              Copy
+            </ContextMenuItem>
+            <ContextMenuItem inset onSelect={() => choose("Rename")}>
+              Rename
+            </ContextMenuItem>
             <ContextMenuSeparator />
-            <ContextMenuItem variant="destructive" onSelect={() => choose("Delete")}>
+            <ContextMenuItem inset variant="destructive" onSelect={() => choose("Delete")}>
               Delete
             </ContextMenuItem>
           </ContextMenuContent>
