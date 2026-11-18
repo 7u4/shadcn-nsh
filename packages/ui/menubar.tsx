@@ -15,7 +15,7 @@ const pointer = platform.desktop;
 /** A bar's height, its padding and the gap between its triggers, and a trigger's height: with a
  * pointer a 36-point bar around 26-point triggers (shadcn's `h-9` and `h-7`), on a touch screen 50
  * and 40, a finger's target. */
-export const menubarSize = pointer
+const menubarSize = pointer
   ? { height: 36, padding: 4, gap: 4, trigger: 26 }
   : { height: 50, padding: 4, gap: 6, trigger: 40 };
 
