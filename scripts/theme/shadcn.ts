@@ -18,7 +18,7 @@
  * A color derived here (an `--input` laid on a card, two tones' midpoint) is mixed in 8-bit sRGB
  * and written back as `oklch()`: `oklch.ts` round-trips every channel exactly.
  *
- * Read by `generate-shadcn.ts`, which writes the two JSON files; `docs/specs/theme-shadcn.md`
+ * Read by `generate-shadcn.ts`, which writes the two JSON files; `docs/archive/theme-shadcn.md`
  * holds the mapping tables this file implements.
  */
 import { oklch, oklchColor, over, parseColor, toOklchText, withAlpha } from "./oklch";

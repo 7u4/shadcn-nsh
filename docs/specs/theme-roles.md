@@ -69,14 +69,14 @@ bun scripts/theme-lint.ts   # 一次跑完本文所有规则
 
 <!-- theme-lint: tokens-c -->
 
-| 键                                                             | 值                               | 用途                       |
-| -------------------------------------------------------------- | -------------------------------- | -------------------------- |
-| `radius` / `radius-card` / `radius-control` / `radius-popover` | `10px` / `12px` / `7px` / `16px` | 四档圆角                   |
-| `brand-fill`                                                   | 强调色的填充                     | `calendar` 的选中日        |
-| `on-brand`                                                     | `brand-fill` 上的字              | 同上                       |
-| `scrim`                                                        | 遮罩                             | `lib/overlay`、`dock-area` |
-| `window-close` / `window-minimize` / `window-zoom`             | 三颗窗口按钮各自的色             | `theme.ts` 的窗口按钮映射  |
-| `window-control-ink` / `window-control-edge`                   | 窗口按钮的字与边                 | 同上                       |
+| 键                                                             | 值                               | 用途                      |
+| -------------------------------------------------------------- | -------------------------------- | ------------------------- |
+| `radius` / `radius-card` / `radius-control` / `radius-popover` | `10px` / `12px` / `7px` / `16px` | 四档圆角                  |
+| `brand-fill`                                                   | 强调色的填充                     | `calendar` 的选中日       |
+| `on-brand`                                                     | `brand-fill` 上的字              | 同上                      |
+| `scrim`                                                        | 遮罩                             | `lib/popup`、`dock-area`  |
+| `window-close` / `window-minimize` / `window-zoom`             | 三颗窗口按钮各自的色             | `theme.ts` 的窗口按钮映射 |
+| `window-control-ink` / `window-control-edge`                   | 窗口按钮的字与边                 | 同上                      |
 
 <!-- /theme-lint: tokens-c -->
 
