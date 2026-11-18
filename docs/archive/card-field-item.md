@@ -1,7 +1,7 @@
 # Card、Field、Item：三个组合组件（#19）
 
 > **已完成，留作记录（最后编辑 2026-11-18）：`card`、`field`、`item` 三个条目随 `0.3.0` 发布。**
-> 组件的对外说明以文档页为准（`apps/docs/content/docs/components/`），代码规则见 [`AGENTS.md`](../../AGENTS.md)
+> 组件的对外说明以文档页为准（`apps/website/content/docs/components/`），代码规则见 [`AGENTS.md`](../../AGENTS.md)
 > 与 [`ARCHITECTURE.md`](../ARCHITECTURE.md)。
 
 ## 目标
@@ -35,5 +35,5 @@ MyAid 改用本库后，复制进来的文件不改、外观只经主题。应�
 ## 验收标准
 
 1. 三个 registry 条目 `card`、`field`、`item`，部件和轴与上表一致，`shadcn-nsh add` 能装，`test:install` 通过。
-2. 组件代码里没有颜色字面量；`port:check`、`catalog --check`、`nsh check apps/docs/demos`、`vp check`、`port:render` 通过，四张截图人眼看过。
+2. 组件代码里没有颜色字面量；`port:check`、`catalog --check`、`nsh check apps/website/demos`、`vp check`、`port:render` 通过，四张截图人眼看过。
 3. 文档页各一页，固定四节；`README.md` 的组件列表更新。

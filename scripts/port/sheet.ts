@@ -1,5 +1,5 @@
 /**
- * The contact sheet: one self-contained HTML page of every shot in `apps/docs/demos/shots/`,
+ * The contact sheet: one self-contained HTML page of every shot in `apps/website/demos/shots/`,
  * a row per component with the pointer and touch passes, light and dark, each pair beside its
  * reference. A component's row is marked when its two shots differ or one is missing.
  *
@@ -16,7 +16,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { antialiasing, cases, schemes } from "../../apps/docs/demos/render-cases";
+import { antialiasing, cases, schemes } from "../../apps/website/demos/render-cases";
 import { catalog } from "../catalog";
 import { repo } from "./lib";
 import { compareWithinTolerance } from "./pixels";

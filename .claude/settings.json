@@ -26,8 +26,8 @@
     "deny": [
       "Edit(references/**)",
       "Write(references/**)",
-      "Edit(apps/docs/public/demos/**)",
-      "Write(apps/docs/public/demos/**)",
+      "Edit(apps/website/public/demos/**)",
+      "Write(apps/website/public/demos/**)",
       "Read(bun.lock)",
       "Read(node_modules/**)"
     ]

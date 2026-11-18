@@ -27,7 +27,7 @@ bun run nsh:bootstrap                     # 校验 CLI 与 references/nsh 在基
 | ----------------------------------------- | ----------------------------------------------------- |
 | `bun run dev:docs`                        | 文档站（含组件演示）                                  |
 | `bun run dev:gallery`                     | gallery：原生行为测试的页面                           |
-| `nsh run apps/docs/demos/button.tsx`      | 跑单个演示                                            |
+| `nsh run apps/website/demos/button.tsx`   | 跑单个演示                                            |
 | `bun run port:new <id> --from <上游文件>` | 新组件脚手架（路由、外壳、演示、文档、registry）      |
 | `bun run port:new <id> --base <符号>`     | 不来自上游的自有组件（不写路由、不 vendor）           |
 | `bun run port:new <id> --view`            | 只排版上色的自有组件（画在 `View` / `Text` 上）       |
@@ -49,7 +49,7 @@ bun run check:theme               主题数据是否符合 docs/specs/theme-role
 bun run registry:build --check    public/r 是否与 registry.json 同步
 bun run port:check                上游变化与清单完整性
 bun run port:coverage             每个组件有没有演示、文档页、参照
-nsh check apps/docs/demos         演示与 UI 的类型
+nsh check apps/website/demos         演示与 UI 的类型
 nsh check apps/gallery            gallery 的类型
 bun run check:pages               文档站的页面与链接
 bun run check:docs                文档站自身

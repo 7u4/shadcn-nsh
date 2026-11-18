@@ -14,7 +14,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-import { antialiasing, cases, schemes } from "../../apps/docs/demos/render-cases";
+import { antialiasing, cases, schemes } from "../../apps/website/demos/render-cases";
 import { catalog } from "../catalog";
 import { repo } from "./lib";
 import { compareWithinTolerance } from "./pixels";

@@ -4,13 +4,13 @@
  * page.
  *
  * Both are scripts, not a library: `scripts/port` is the tooling around the components, and only
- * it reads `apps/docs/demos`.
+ * it reads `apps/website/demos`.
  */
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
-import { antialiasing, cases, schemes } from "../../apps/docs/demos/render-cases";
+import { antialiasing, cases, schemes } from "../../apps/website/demos/render-cases";
 import { catalog } from "../catalog";
 import { compareWithinTolerance } from "./pixels";
 

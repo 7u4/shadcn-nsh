@@ -6,8 +6,8 @@ Styled copy-into-app components on [`nsh/base`](https://nsh.dev/elements): behav
 
 - Rules and port flow: [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md), [`docs/port.md`](../../docs/port.md), [`AGENTS.md`](../../AGENTS.md)
 - Routing: [`port-map.json`](../../port-map.json)
-- Demos / render check: [`apps/docs/demos`](../../apps/docs/demos)
-- Docs: [`apps/docs`](../../apps/docs)
+- Demos / render check: [`apps/website/demos`](../../apps/website/demos)
+- Docs: [`apps/website`](../../apps/website)
 - Native smoke: [`apps/gallery`](../../apps/gallery)
 
 ## Layers
@@ -27,7 +27,7 @@ Develop against **NSH nightly** aligned with the pinned upstream commit in `port
 
 ```sh
 bun run port:check
-nsh check apps/docs/demos
+nsh check apps/website/demos
 bun run port:render
 bun run registry:build
 ```

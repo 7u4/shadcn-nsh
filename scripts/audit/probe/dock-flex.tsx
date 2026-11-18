@@ -1,4 +1,4 @@
-// A copy of `apps/docs/demos/dock-area.tsx` with `class="flex-1"` on the DockArea: the audit's
+// A copy of `apps/website/demos/dock-area.tsx` with `class="flex-1"` on the DockArea: the audit's
 // experiment for the empty panel content (see docs/specs/demo-audit.md). Not a demo.
 import { colors } from "@shadcn-nsh/theme";
 import { mount, Text, View } from "nsh";

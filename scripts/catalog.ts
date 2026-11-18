@@ -5,7 +5,7 @@
  * instead of filtering the registry or walking the directories themselves.
  *
  * The NSH runtime cannot import this module (`node:fs`), so the runtime's list is generated:
- * `apps/docs/demos/catalog.generated.ts`, read by `App.tsx` and `render-cases.ts`.
+ * `apps/website/demos/catalog.generated.ts`, read by `App.tsx` and `render-cases.ts`.
  *
  *   bun run catalog           # write catalog.generated.ts
  *   bun run catalog --check   # fail when the set is inconsistent or the file is stale
@@ -35,11 +35,11 @@ export type Component = {
   item: RegistryItem;
   /** `packages/ui/<id>.tsx`. */
   uiFile: string;
-  /** `apps/docs/demos/<id>.tsx`. */
+  /** `apps/website/demos/<id>.tsx`. */
   demo: string;
-  /** `apps/docs/demos/<id>.ref.tsx`. */
+  /** `apps/website/demos/<id>.ref.tsx`. */
   reference: string;
-  /** `apps/docs/content/docs/components/<id>.md`. */
+  /** `apps/website/content/docs/components/<id>.md`. */
   page: string;
 };
 
@@ -83,10 +83,10 @@ export function catalog(root = DEFAULT_ROOT): Catalog {
     registry: path.join(root, "registry.json"),
     ui: path.join(root, "packages/ui"),
     theme: path.join(root, "packages/theme"),
-    demos: path.join(root, "apps/docs/demos"),
-    pages: path.join(root, "apps/docs/content/docs/components"),
+    demos: path.join(root, "apps/website/demos"),
+    pages: path.join(root, "apps/website/content/docs/components"),
     index: path.join(root, "packages/ui/index.ts"),
-    generated: path.join(root, "apps/docs/demos/catalog.generated.ts"),
+    generated: path.join(root, "apps/website/demos/catalog.generated.ts"),
   };
   const paths: CatalogPaths = {
     ...shared,
@@ -282,7 +282,7 @@ export function isGeneratedCurrent(cat: Catalog): boolean {
   );
 }
 
-/** Write `apps/docs/demos/catalog.generated.ts`. */
+/** Write `apps/website/demos/catalog.generated.ts`. */
 export function writeGenerated(cat: Catalog): void {
   fs.writeFileSync(cat.paths.generated, renderGenerated(cat));
 }
@@ -297,7 +297,7 @@ if (import.meta.main) {
       problems.push(`${path.relative(cat.root, file)}: listed in PAGE_DEMOS, but there is no file`);
   }
   // The runtime's table is plain TypeScript (no `node:fs`), so the check can import its keys.
-  const { overrideIds } = await import("../apps/docs/demos/render-cases");
+  const { overrideIds } = await import("../apps/website/demos/render-cases");
   problems.push(...checkOverrides(cat, overrideIds));
   if (problems.length > 0) {
     for (const problem of problems) console.error(`catalog: ${problem}`);

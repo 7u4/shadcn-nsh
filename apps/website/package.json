@@ -1,0 +1,40 @@
+{
+  "name": "@shadcn-nsh/website",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev --port 4321",
+    "build": "vite build && cp .output/public/_shell.html .output/public/404.html",
+    "preview": "vite preview --port 4321",
+    "check": "tsc --noEmit",
+    "build:demos": "bun scripts/build-demos.ts"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.5",
+    "@tanstack/react-router": "^1.170.46",
+    "@tanstack/react-start": "^1.169.5",
+    "@tanstack/start-static-server-functions": "^1.167.44",
+    "cn": "^0.5.2",
+    "fumadocs-core": "^16.19.4",
+    "fumadocs-mdx": "^15.6.3",
+    "fumadocs-ui": "npm:@fumadocs/base-ui@16.19.4",
+    "lucide": "^1.75.0",
+    "lucide-react": "^1.75.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "tailwindcss": "^4.3.5",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/mdx": "^2.0.14",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "nitro": "3.0.261103-rc",
+    "srvx": "^1.0.8",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8"
+  }
+}

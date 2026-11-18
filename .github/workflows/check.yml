@@ -57,7 +57,7 @@ jobs:
         run: bun run registry:build --check
 
       - name: Type check the demos
-        run: nsh check apps/docs/demos
+        run: nsh check apps/website/demos
 
       - name: Type check the gallery
         run: nsh check apps/gallery
@@ -92,7 +92,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: render-shots
-          path: apps/docs/demos/shots
+          path: apps/website/demos/shots
           if-no-files-found: ignore
           retention-days: 7
 

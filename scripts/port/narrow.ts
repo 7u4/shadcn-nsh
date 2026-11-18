@@ -1,5 +1,5 @@
 /**
- * The narrow check: every demo fits a 320-point phone. `apps/docs/demos/narrow.test.tsx` opens
+ * The narrow check: every demo fits a 320-point phone. `apps/website/demos/narrow.test.tsx` opens
  * each one at that width and screenshots it; this script reads the page's right margin in every
  * picture, which must be bare page from top to bottom. A card, a field, a row of cells or a
  * skeleton line that runs past its card reaches into the margin, and the demo is named.

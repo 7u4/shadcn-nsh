@@ -1,0 +1,438 @@
+/// <reference types="bun" />
+
+/**
+ * The docs' page contract, checked:
+ *
+ * - a page has Installation, Usage, Examples, an optional Differences from shadcn/ui, and API, in
+ *   that order and nothing else; Examples' subsections run variant, size, state, the rest,
+ *   controlled; API opens with the | Part | Props | Description | table (docs/port.md, 文档页);
+ * - a `demo:` names the page's own demo;
+ * - every name a fenced snippet imports from `@/components/ui/<id>` is
+ *   exported by that component's file;
+ * - a page's kind is derived from the official tables, so there is no
+ *   hand-kept list of kinds to fall out of step;
+ * - the official tables in `src/lib/official.ts` cover every file of
+ *   `references/shadcn-ui`'s ui directory and every `references/nsh` element,
+ *   name only pages that exist, and say why when they serve nothing;
+ * - `components.generated.ts` is what `bun run docs:components` would write.
+ *
+ * The component set itself (page, demo and reference page exist, no orphans) is
+ * `bun run catalog --check`.
+ *
+ *   bun run check:pages
+ */
+import fs from "node:fs";
+import path from "node:path";
+
+import { catalog } from "../../../scripts/catalog";
+import { PALETTES } from "../demos/palettes";
+import { components } from "../src/lib/components.generated";
+import { NSH_ELEMENTS, SHADCN_UI, type OfficialEntry } from "../src/lib/official";
+import { componentPlan, isCurrent, readPageMeta } from "./build-components";
+
+const cat = catalog();
+const repo = cat.root;
+
+type Fence = { lang: string; body: string; line: number };
+
+const problems: string[] = [];
+const fail = (message: string) => problems.push(message);
+
+/** The fences of a Markdown page, with the line their content starts on. */
+function fences(source: string): Fence[] {
+  const out: Fence[] = [];
+  const lines = source.split(/\r?\n/);
+  let open: { marker: string; lang: string; body: string[]; line: number } | null = null;
+  for (let i = 0; i < lines.length; i += 1) {
+    const line = lines[i]!;
+    const fence = /^(`{3,}|~{3,})(.*)$/.exec(line);
+    if (open) {
+      if (fence && fence[1]!.startsWith(open.marker) && fence[2]!.trim() === "") {
+        out.push({ lang: open.lang, body: open.body.join("\n"), line: open.line });
+        open = null;
+      } else {
+        open.body.push(line);
+      }
+      continue;
+    }
+    if (fence) {
+      const info = fence[2]!.trim();
+      open = {
+        marker: fence[1]!,
+        lang: info.split(/\s+/)[0] ?? "",
+        body: [],
+        line: i + 2,
+      };
+    }
+  }
+  return out;
+}
+
+/** The `##` headings outside fences, exactly as written. */
+/** A page's `##` sections in order, each with its `###` titles and its first table's header cells,
+ * fences skipped. */
+type Section = { title: string; subsections: string[]; firstTable: string[] | null };
+
+function outline(source: string): Section[] {
+  const out: Section[] = [];
+  let marker: string | null = null;
+  for (const line of source.split(/\r?\n/)) {
+    const fence = /^(`{3,}|~{3,})/.exec(line);
+    if (marker) {
+      if (fence && fence[1]!.startsWith(marker)) marker = null;
+      continue;
+    }
+    if (fence) {
+      marker = fence[1]!;
+      continue;
+    }
+    const h2 = /^##\s+(.+?)\s*$/.exec(line);
+    if (h2) {
+      out.push({ title: h2[1]!, subsections: [], firstTable: null });
+      continue;
+    }
+    const current = out.at(-1);
+    if (!current) continue;
+    const h3 = /^###\s+(.+?)\s*$/.exec(line);
+    if (h3) current.subsections.push(h3[1]!);
+    else if (current.firstTable === null && /^\|.*\|\s*$/.test(line)) {
+      current.firstTable = line
+        .trim()
+        .slice(1, -1)
+        .split("|")
+        .map((cell) => cell.trim());
+    }
+  }
+  return out;
+}
+
+/**
+ * Where an Examples subsection sits (docs/port.md, 文档页): variants, then sizes, then states, then
+ * everything else, then controlled. A title is placed by its first word.
+ */
+function exampleRank(title: string): number {
+  const first = title.split(/\s+/)[0]!.replace(/`/g, "");
+  if (["Variant", "Tone"].includes(first)) return 1;
+  if (first === "Size") return 2;
+  if (["Disabled", "Invalid", "Read-only", "Loading"].includes(first)) return 3;
+  if (["Controlled", "Uncontrolled"].includes(first)) return 5;
+  return 4;
+}
+
+function headings(source: string): string[] {
+  const out: string[] = [];
+  const lines = source.split(/\r?\n/);
+  let marker: string | null = null;
+  for (const line of lines) {
+    const fence = /^(`{3,}|~{3,})/.exec(line);
+    if (marker) {
+      if (fence && fence[1]!.startsWith(marker)) marker = null;
+      continue;
+    }
+    if (fence) {
+      marker = fence[1]!;
+      continue;
+    }
+    const heading = /^##\s+(.+?)\s*$/.exec(line);
+    if (heading) out.push(heading[1]!);
+  }
+  return out;
+}
+
+/** Every name `packages/ui` exports from a module: declarations and re-exports. */
+function exportsOf(file: string): Set<string> {
+  const source = fs.readFileSync(file, "utf8");
+  const names = new Set<string>();
+  const declaration =
+    /^export\s+(?:declare\s+)?(?:async\s+)?(?:function|const|let|var|class|interface|type|enum)\s+([A-Za-z_$][\w$]*)/gm;
+  for (const match of source.matchAll(declaration)) names.add(match[1]!);
+  const named = /^export\s+(?:type\s+)?\{([\s\S]*?)\}\s*(?:from\s*["'][^"']*["'])?;?\s*$/gm;
+  for (const match of source.matchAll(named)) {
+    for (const raw of match[1]!.split(",")) {
+      const part = raw.trim().replace(/^type\s+/, "");
+      const alias = /\bas\s+([A-Za-z_$][\w$]*)$/.exec(part);
+      if (alias) {
+        names.add(alias[1]!);
+      } else if (/^[A-Za-z_$][\w$]*$/.test(part)) {
+        names.add(part);
+      }
+    }
+  }
+  if (/^export\s+default\b/m.test(source)) names.add("default");
+  return names;
+}
+
+// Generated list. A page with no kind throws the plan away: `check:pages` reports that below.
+try {
+  if (!isCurrent(componentPlan(), components)) {
+    fail("components.generated.ts is stale; run `bun run docs:components`");
+  }
+} catch (error) {
+  fail((error as Error).message);
+}
+
+const byId = new Map(cat.components.map((component) => [component.id, component]));
+
+// Kinds are derived from the official rows, so a page with no kind cannot happen: every page is
+// either in a row's `ours` or it is ours. Nothing to keep in step here; the generated list above
+// is checked instead.
+
+// The official tables: every row names pages that exist, and says why when it serves none.
+const tables: { label: string; entries: readonly OfficialEntry[] }[] = [
+  { label: "src/lib/official.ts SHADCN_UI", entries: SHADCN_UI },
+  { label: "src/lib/official.ts NSH_ELEMENTS", entries: NSH_ELEMENTS },
+];
+
+for (const { label, entries } of tables) {
+  const ids = new Set<string>();
+  const servedBy = new Map<string, string>();
+  for (const entry of entries) {
+    if (ids.has(entry.id)) fail(`${label}: "${entry.id}" is listed twice`);
+    ids.add(entry.id);
+    for (const slug of entry.ours) {
+      const owner = servedBy.get(slug);
+      if (owner) fail(`${label}: "${slug}" is served by "${owner}" and by "${entry.id}"`);
+      servedBy.set(slug, entry.id);
+      if (!byId.has(slug) && entry.status !== "planned") {
+        fail(`${label} "${entry.id}": no docs page "${slug}"`);
+      }
+    }
+    if (entry.ours.some((slug) => byId.has(slug))) continue;
+    if (!entry.status) {
+      fail(`${label} "${entry.id}": nothing serves it; give it a status and a note`);
+    } else if (!entry.note) {
+      fail(`${label} "${entry.id}": say why in a note`);
+    }
+  }
+}
+
+// The official sets themselves: a component added upstream with no row here fails.
+const references = path.join(repo, "references");
+const names = (dir: string, extension: string): string[] | undefined => {
+  if (!fs.existsSync(dir)) return undefined;
+  return fs
+    .readdirSync(dir)
+    .filter((file) => file.endsWith(extension) && file !== "index.md")
+    .map((file) => file.slice(0, -extension.length))
+    .sort();
+};
+
+const shadcnDir = path.join(references, "shadcn-ui/apps/v4/registry/new-york-v4/ui");
+const shadcnFiles = names(shadcnDir, ".tsx");
+if (shadcnFiles) {
+  const rows = new Set(SHADCN_UI.map((entry) => entry.id));
+  for (const id of shadcnFiles) {
+    if (!rows.has(id)) {
+      fail(`references/shadcn-ui …/ui/${id}.tsx: no row in SHADCN_UI (src/lib/official.ts)`);
+    }
+  }
+  for (const id of rows) {
+    if (!shadcnFiles.includes(id))
+      fail(`SHADCN_UI: "${id}" is no file in references/shadcn-ui …/ui`);
+  }
+}
+
+const nshDir = path.join(references, "nsh/website/elements");
+const nshFiles = names(nshDir, ".md");
+if (nshFiles) {
+  const rows = new Map(NSH_ELEMENTS.map((entry) => [entry.id, entry]));
+  for (const id of nshFiles) {
+    if (!rows.has(id)) {
+      fail(
+        `references/nsh/website/elements/${id}.md: no row in NSH_ELEMENTS (src/lib/official.ts)`,
+      );
+    }
+  }
+  for (const [id, entry] of rows) {
+    if (!nshFiles.includes(id)) {
+      fail(`NSH_ELEMENTS: "${id}" is no element in references/nsh/website/elements`);
+      continue;
+    }
+    const source = fs.readFileSync(path.join(nshDir, `${id}.md`), "utf8");
+    const group = /^group:\s*(\S+)\s*$/m.exec(source)?.[1];
+    if (group && group !== entry.group) {
+      fail(`NSH_ELEMENTS: "${id}" is "${group}" in references/nsh, not "${entry.group}"`);
+    }
+  }
+}
+
+let importCount = 0;
+const required = ["Installation", "Usage", "Examples", "API"];
+const old = new Set(["Install", "Composition", "Differences", "Not forwarded", "Accessibility"]);
+/** The one optional section, between Examples and API. */
+const DIFFERENCES = "Differences from shadcn/ui";
+/** The header of the parts table that opens API. */
+const API_HEADER = ["Part", "Props", "Description"];
+
+for (const component of cat.components) {
+  const file = component.page;
+  const source = fs.readFileSync(file, "utf8");
+  const where = path.relative(repo, file);
+  const meta = readPageMeta(source);
+  const found = headings(source);
+
+  // Astro parses the frontmatter as YAML, and a value it cannot read fails the site's build.
+  const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---/.exec(source)?.[1];
+  try {
+    if (frontmatter !== undefined) Bun.YAML.parse(frontmatter);
+  } catch (error) {
+    fail(
+      `${where}: frontmatter is not YAML (${(error as Error).message}); quote a value with ": "`,
+    );
+  }
+
+  for (const section of required) {
+    if (!found.includes(section)) fail(`${where}: missing "## ${section}"`);
+  }
+  for (const section of found) {
+    if (old.has(section)) fail(`${where}: old section "## ${section}"`);
+  }
+
+  // The sections, in their order, and nothing else at `##` (docs/port.md, 文档页).
+  const sections = outline(source);
+  const titles = sections.map((section) => section.title);
+  const expected = titles.includes(DIFFERENCES)
+    ? [...required.slice(0, 3), DIFFERENCES, "API"]
+    : required;
+  if (titles.join("|") !== expected.join("|")) {
+    fail(
+      `${where}: sections are ${titles.map((t) => `"${t}"`).join(", ")}, not ${expected.map((t) => `"${t}"`).join(", ")}`,
+    );
+  }
+  const examples = sections.find((section) => section.title === "Examples");
+  if (examples) {
+    let last = 0;
+    for (const title of examples.subsections) {
+      const rank = exampleRank(title);
+      if (rank < last)
+        fail(
+          `${where}: "### ${title}" is out of order in Examples (variant, size, state, the rest, controlled)`,
+        );
+      last = Math.max(last, rank);
+      if (/^(Variants|Sizes|Tones)\b/.test(title))
+        fail(`${where}: "### ${title}" — write it singular`);
+      if (/shadcn|does not have|has that/i.test(title)) {
+        fail(`${where}: "### ${title}" compares with shadcn; that belongs in "## ${DIFFERENCES}"`);
+      }
+    }
+  }
+  const api = sections.find((section) => section.title === "API");
+  if (api && api.firstTable?.join("|") !== API_HEADER.join("|")) {
+    fail(
+      `${where}: the first table in API has header ${api.firstTable ? `| ${api.firstTable.join(" | ")} |` : "none"}, not | ${API_HEADER.join(" | ")} |`,
+    );
+  }
+
+  if (nshFiles) {
+    for (const link of source.matchAll(/nsh\.dev\/elements\/([a-z-]+)/g)) {
+      if (!nshFiles.includes(link[1]!))
+        fail(`${where}: nsh.dev/elements/${link[1]} is no NSH element`);
+    }
+  }
+
+  if (meta.demo && meta.demo !== component.id) {
+    fail(`${where}: demo "${meta.demo}" is not "${component.id}"`);
+  }
+
+  const modules = new Map<string, Set<string>>();
+  for (const fence of fences(source)) {
+    if (!["tsx", "ts", "jsx", "js"].includes(fence.lang)) continue;
+    const importBlock = /import\s+(?:type\s+)?\{([\s\S]*?)\}\s+from\s+["']([^"']+)["']/g;
+    for (const match of fence.body.matchAll(importBlock)) {
+      const spec = match[2]!;
+      if (!spec.startsWith("@/components/ui/")) continue;
+      const id = spec.slice("@/components/ui/".length);
+      const owner = byId.get(id);
+      if (!owner) {
+        fail(`${where}:${fence.line}: no component "${id}" to import from`);
+        modules.set(id, new Set());
+        continue;
+      }
+      if (!modules.has(id)) modules.set(id, exportsOf(owner.uiFile));
+      const exported = modules.get(id)!;
+      const names = match[1]!
+        .replace(/\/\*[\s\S]*?\*\//g, "")
+        .replace(/\/\/.*$/gm, "")
+        .split(",")
+        .map((raw) => raw.trim().replace(/^type\s+/, ""))
+        .filter(Boolean);
+      for (const raw of names) {
+        const name = /\bas\s+([A-Za-z_$][\w$]*)$/.exec(raw)
+          ? raw.split(/\s+as\s+/)[0]!.trim()
+          : raw;
+        importCount += 1;
+        if (!exported.has(name)) {
+          fail(`${where}:${fence.line}: ${id} does not export "${name}"`);
+        }
+      }
+    }
+  }
+}
+
+// llms.txt is written by hand: every component has its line, and no line names one that is gone.
+const llmsFile = path.join(repo, "apps/website/public/llms.txt");
+const listed = new Set(
+  [...fs.readFileSync(llmsFile, "utf8").matchAll(/^- \/docs\/components\/([a-z-]+):/gm)].map(
+    (match) => match[1]!,
+  ),
+);
+for (const component of cat.components) {
+  if (!listed.has(component.id))
+    fail(`apps/website/public/llms.txt: no line for "${component.id}"`);
+}
+for (const id of listed) {
+  if (id !== "coverage" && !byId.has(id)) {
+    fail(`apps/website/public/llms.txt: "${id}" is no component`);
+  }
+}
+
+// The themes page and the registry: every palette the site switches to has its `theme-<id>` item
+// and a section on the page, and every `theme-*` item is one of those palettes. The page renders
+// them from the same list (`src/lib/themes.ts`), so a theme is never written twice: the sections
+// are `themes.map` over that list in the page's component, and the `.mdx` only asks for it.
+const themesPage = path.join(repo, "apps/website/content/docs/themes.mdx");
+const themesSections = path.join(repo, "apps/website/src/components/fd/themes-page.tsx");
+const themesSource = fs.readFileSync(themesPage, "utf8");
+const themesSectionsSource = fs.readFileSync(themesSections, "utf8");
+const registryItems = (
+  JSON.parse(fs.readFileSync(path.join(repo, "registry.json"), "utf8")) as {
+    items: { name: string; type: string }[];
+  }
+).items;
+const themeItems = new Map(registryItems.map((item) => [item.name, item]));
+for (const palette of PALETTES) {
+  const item = `theme-${palette.id}`;
+  const entry = themeItems.get(item);
+  if (!entry) {
+    fail(`registry.json: no "${item}" for the "${palette.id}" palette`);
+  } else if (entry.type !== "registry:theme") {
+    fail(`registry.json: "${item}" is a ${entry.type}, not a registry:theme`);
+  }
+}
+for (const item of themeItems.keys()) {
+  if (!item.startsWith("theme-")) continue;
+  const id = item.slice("theme-".length);
+  if (!PALETTES.some((palette) => palette.id === id)) {
+    fail(`registry.json: "${item}" is no palette in apps/website/demos/palettes.ts`);
+  }
+}
+if (!/<ThemesPage \/>/.test(themesSource)) {
+  fail("apps/website/content/docs/themes.mdx: does not render the palette sections");
+}
+if (!/\{themes\.map\(/.test(themesSectionsSource)) {
+  fail("apps/website/src/components/fd/themes-page.tsx: not generated from the palette list");
+}
+
+if (problems.length > 0) {
+  for (const problem of problems) console.error(`✗ ${problem}`);
+  console.error(`\ncheck:pages: ${problems.length} problem(s)`);
+  process.exit(1);
+}
+
+const official = [
+  shadcnFiles ? `${SHADCN_UI.length} shadcn/ui` : "shadcn/ui (references/ empty)",
+  nshFiles ? `${NSH_ELEMENTS.length} NSH` : "NSH (references/ empty)",
+];
+console.log(
+  `check:pages ok — ${cat.components.length} components, ${importCount} imported names; ${official.join(", ")} answered for`,
+);

@@ -1,6 +1,6 @@
 /**
  * The demos' coverage of each component's axes: every value of a `variant`, `size` or `tone`
- * union that a component declares must appear in `apps/docs/demos/<id>.tsx`.
+ * union that a component declares must appear in `apps/website/demos/<id>.tsx`.
  *
  *   bun scripts/port/coverage.ts [--verbose]
  *
@@ -27,7 +27,7 @@ import path from "node:path";
 
 import { parseSync } from "oxc-parser";
 
-import { cases } from "../../apps/docs/demos/render-cases";
+import { cases } from "../../apps/website/demos/render-cases";
 import { catalog } from "../catalog";
 import { repo } from "./lib";
 
@@ -348,7 +348,9 @@ for (const { id, selfReference } of cases) {
   if (!component) continue;
   const shell = hasShell(moduleAt(component.uiFile));
   if (!shell && !selfReference) {
-    problems.push(`${id}: no shell, so declare selfReference in apps/docs/demos/render-cases.ts`);
+    problems.push(
+      `${id}: no shell, so declare selfReference in apps/website/demos/render-cases.ts`,
+    );
   }
   if (shell && selfReference) {
     problems.push(

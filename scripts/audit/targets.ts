@@ -10,7 +10,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-import { addPlayerOptions } from "../../apps/docs/scripts/player-options";
+import { addPlayerOptions } from "../../apps/website/scripts/player-options";
 import { repo } from "../port/lib";
 
 /** The official website example whose scene a component's demo should follow, by catalog id. */
@@ -85,7 +85,7 @@ export type Target = {
   slug: string;
 };
 
-export const demosDir = path.join(repo, "apps", "docs", "demos");
+export const demosDir = path.join(repo, "apps", "website", "demos");
 export const officialDir = path.join(repo, "references", "nsh", "website", "demos");
 /**
  * The audit's own screenshots, beside the render check's `shots/` rather than inside it: the
@@ -152,7 +152,7 @@ const idOf = (slug: string) => `dev.audit.nsh.${slug.replace(/[^a-z0-9]/gi, "")}
  * the package's nested folder. A packaged page can already be there (`force: false`).
  *
  * The page gets the docs panel's `?idiom=` and `?theme=` from the same function that prepares the
- * docs' own packages (`apps/docs/scripts/player-options.ts`), so a probe shows the idiom and
+ * docs' own packages (`apps/website/scripts/player-options.ts`), so a probe shows the idiom and
  * appearance the panel gives a demo — and the two cannot drift apart.
  */
 export function packageTarget(target: Target, work: string, force = false): string {

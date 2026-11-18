@@ -62,7 +62,7 @@ NSH 的打包器（rolldown）会解析 `node_modules`；`Path2D` 直接接受 S
 | `sun`                                                                                                                                                                | `Sun`                       |                        |                        |
 | `check`、`plus`、`minus`、`search`、`star`、`play`、`code`、`pipette`、`folder`、`folder-open`、`file`、`clock`、`calendar`、`car`、`flag`、`heart`、`leaf`、`share` | 对应的 PascalCase 导出      | 类型检查报出的其他名字 | 选意思最近的，补进本表 |
 
-`badge` 演示里的 `name: "migrate"` 是行数据，不是图标。全集以 `nsh check apps/docs/demos` 和 `nsh check apps/gallery` 报出的错误为准。
+`badge` 演示里的 `name: "migrate"` 是行数据，不是图标。全集以 `nsh check apps/website/demos` 和 `nsh check apps/gallery` 报出的错误为准。
 
 ## 不做
 
@@ -73,7 +73,7 @@ NSH 的打包器（rolldown）会解析 `node_modules`；`Path2D` 直接接受 S
 ## 验收标准
 
 1. `packages/ui/lib/icons.tsx` 只剩渲染器：`Icon`、`IconLabel`、`CheckMark`；没有字形，没有 `IconName`；仓库里没有图标数据文件。
-2. `packages/ui` 和演示里的图标全部 `from "lucide"`；`nsh check apps/docs/demos`、`nsh check apps/gallery` 通过。
+2. `packages/ui` 和演示里的图标全部 `from "lucide"`；`nsh check apps/website/demos`、`nsh check apps/gallery` 通过。
 3. `public/r` 中 import `lucide` 的条目都带 `dependencies: ["lucide@^1.66.0"]`；P6 测试覆盖 npm import，故意漏写 `dependencies` 时会失败。
 4. CLI 能装 npm 依赖：
    - 在一个没有 `package.json` 的新 NSH 应用里跑 `shadcn-nsh init` 再 `add tabs`，会装上 `lucide`，并且 `nsh check` 通过。

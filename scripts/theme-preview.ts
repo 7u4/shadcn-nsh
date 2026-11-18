@@ -10,7 +10,7 @@
  *
  * The theme is a build input (`nsh.json`'s `theme`), not a runtime switch, so each alternative is
  * a full package run: `scripts/audit/audit.ts build --force --only …` then `shots --only …`, once
- * per appearance. Screenshots land in `apps/docs/demos/shots-audit/theme/` as
+ * per appearance. Screenshots land in `apps/website/demos/shots-audit/theme/` as
  * `<id>-<name>-<kind>-<layout>-<appearance>.png`, out of the audit's own names.
  *
  * `docs/archive/theme-shadcn.md` is what this was run for; it is not part of the check pipeline.

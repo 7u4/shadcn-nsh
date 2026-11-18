@@ -8,11 +8,11 @@
 
 ## 结论
 
-**不是组件（外壳、look）的问题。** 52 个组件的 `<id>.tsx` 与 `<id>.ref.tsx` 在 390×844 与 1024×640 下逐字节相同（`shasum` 全等），说明外壳在两种尺寸下与"look 展开在 `nsh/base` 上"的参照页没有偏离；六个已知问题在参照页上同样出现，因此不在外壳。这批 390×844 / desktop-idiom 截图里，48 张与 `apps/docs/demos/baseline/` 的既有基线逐字节相同（另 4 张是 dialog / alert-dialog——基线按 `steps` 打开了弹窗——与 calendar / date-picker——基线把"今天"钉在 2026-11-12），所以基线本身就是"文档站 Phone 画布"的样子。
+**不是组件（外壳、look）的问题。** 52 个组件的 `<id>.tsx` 与 `<id>.ref.tsx` 在 390×844 与 1024×640 下逐字节相同（`shasum` 全等），说明外壳在两种尺寸下与"look 展开在 `nsh/base` 上"的参照页没有偏离；六个已知问题在参照页上同样出现，因此不在外壳。这批 390×844 / desktop-idiom 截图里，48 张与 `apps/website/demos/baseline/` 的既有基线逐字节相同（另 4 张是 dialog / alert-dialog——基线按 `steps` 打开了弹窗——与 calendar / date-picker——基线把"今天"钉在 2026-11-12），所以基线本身就是"文档站 Phone 画布"的样子。
 
 问题落在两处：
 
-1. **套件**（`apps/docs/demos/kit.tsx`）：`DemoSection` 把每个小节做成 `flexDirection: "row"` + `alignItems: "center"` 的换行行。行不给子项**宽度**（`alignSelf: "stretch"` 在行里是交叉轴、也就是高度），整宽控件（accordion、collapsible、data-table、color-picker、emoji-picker、slider）于是缩成内容宽或 0 宽；`DemoPage` 又没有滚动容器，内容超过 iframe 高度就被裁掉。
+1. **套件**（`apps/website/demos/kit.tsx`）：`DemoSection` 把每个小节做成 `flexDirection: "row"` + `alignItems: "center"` 的换行行。行不给子项**宽度**（`alignSelf: "stretch"` 在行里是交叉轴、也就是高度），整宽控件（accordion、collapsible、data-table、color-picker、emoji-picker、slider）于是缩成内容宽或 0 宽；`DemoPage` 又没有滚动容器，内容超过 iframe 高度就被裁掉。
 2. **演示写法**：演示是"变体矩阵"页，不是官方示例的场景（Stage / Split / Inspector / Panel / Log / Segmented）；数据、检查器、事件日志普遍缺失，部分演示还把控件放在错误的容器里（plot 没有高度、dock 没有 `flex-1`、carousel 没有照片、editor 只有两行）。
 
 **画布**是横向问题，不是单个组件的根因：文档站给演示的窗口与平台和官方网站播放器不一致（390 宽却是 desktop idiom；Desktop 只有 726×454 而不是 1024×640/900）。六个问题在官方尺寸的 390×844、phone idiom 下同样复现，所以它们不能归给画布；但任务 2、4 完成前，画布必须先修，否则官方场景的 `wide()`（≥700）与 `split`（≥900）在文档站里永远不成立。
@@ -32,13 +32,13 @@
 ```sh
 bun run build:docs                          # 演示打包 + 文档站构建（画布测量需要）
 bun scripts/audit/audit.ts build            # 每个 demo/ref/官方示例 nsh package --target web（/tmp/nsh-audit）
-bun scripts/audit/audit.ts shots            # 390×844 / 1024×640 各一张，落到 apps/docs/demos/shots-audit
+bun scripts/audit/audit.ts shots            # 390×844 / 1024×640 各一张，落到 apps/website/demos/shots-audit
 bun scripts/audit/audit.ts canvas           # 量文档站两种布局真正给 iframe 的尺寸、平台（探针）
 bun scripts/audit/audit.ts probe            # 探针在两种 idiom 下单独截图
 bun scripts/audit/sheet.ts --out sheet.png --cols 3 a.png b.png c.png   # 拼对照页
 ```
 
-- 截图**不提交**：`apps/docs/demos/shots-audit/` 在 `.gitignore` 的 `**/demos/shots-audit/` 下（与渲染比对的 `shots/` 分开：`port:render` 每次清空自己的目录）（524 张、13 MB）。包在 `/tmp/nsh-audit/packages`（1.6 GB），同样不进仓库。
+- 截图**不提交**：`apps/website/demos/shots-audit/` 在 `.gitignore` 的 `**/demos/shots-audit/` 下（与渲染比对的 `shots/` 分开：`port:render` 每次清空自己的目录）（524 张、13 MB）。包在 `/tmp/nsh-audit/packages`（1.6 GB），同样不进仓库。
 - 三列分别是 `demo`（`<id>.tsx`）、`ref`（`<id>.ref.tsx`）、`official`（`references/nsh/website/demos/el-<name>.tsx`，原地打包，不复制、不改）。
 - 下文表格的证据用短名：`<id>-d-p` = `<id>-demo-phone.png`，`-r-` = `-ref-`，`-o-` = `-official-`，`p` = `-phone`，`k` = `-desktop`，`cp` = `-canvasphone`（390×844、desktop idiom，即文档站 Phone 画布），`ck` = `-canvasdesktop`（726×454，即文档站 Desktop 画布）；额外官方示例带后缀，如 `plot-official-phone-cells.png`。
 - 截图是**初始状态**：dialog、alert-dialog、sheet、popover、tooltip、hover-card、menu、context-menu、date-picker、select、combobox 在演示里由 `open` / `defaultOpen` 钉住或只显示触发器；打开态由 `port:render` 的 `steps` 覆盖，这里不重复。
@@ -50,13 +50,13 @@ bun scripts/audit/sheet.ts --out sheet.png --cols 3 a.png b.png c.png   # 拼对
 
 在文档站 `/shadcn-nsh/docs/components/accordion/` 上，用站点自己的 Phone / Desktop 按钮切换，然后把预览 iframe 指向一个打包成同样形态的探针应用（`scripts/audit/probe/probe.tsx`，打印 `windowSize()`、`platform.desktop`、`platform.idiom`）：
 
-| 页面视口 | 布局    | iframe / `windowSize()` | `platform.desktop` | `platform.idiom` | 探针截图                                                |
-| -------- | ------- | ----------------------- | ------------------ | ---------------- | ------------------------------------------------------- |
-| 1440×900 | Phone   | 390 × 844               | **true**           | **desktop**      | `apps/docs/demos/shots-audit/canvas-mobile.png`         |
-| 1440×900 | Desktop | **726 × 454**           | **true**           | **desktop**      | `apps/docs/demos/shots-audit/canvas-desktop.png`        |
-| 1280×800 | Desktop | **678 × 424**           | true               | desktop          | `apps/docs/demos/shots-audit/canvas-desktop-laptop.png` |
-| 560×900  | Desktop | **526 × 420**           | true               | desktop          | `apps/docs/demos/shots-audit/canvas-desktop-narrow.png` |
-| 400×900  | Phone   | **350 × 757**           | true               | desktop          | `apps/docs/demos/shots-audit/canvas-mobile-small.png`   |
+| 页面视口 | 布局    | iframe / `windowSize()` | `platform.desktop` | `platform.idiom` | 探针截图                                                   |
+| -------- | ------- | ----------------------- | ------------------ | ---------------- | ---------------------------------------------------------- |
+| 1440×900 | Phone   | 390 × 844               | **true**           | **desktop**      | `apps/website/demos/shots-audit/canvas-mobile.png`         |
+| 1440×900 | Desktop | **726 × 454**           | **true**           | **desktop**      | `apps/website/demos/shots-audit/canvas-desktop.png`        |
+| 1280×800 | Desktop | **678 × 424**           | true               | desktop          | `apps/website/demos/shots-audit/canvas-desktop-laptop.png` |
+| 560×900  | Desktop | **526 × 420**           | true               | desktop          | `apps/website/demos/shots-audit/canvas-desktop-narrow.png` |
+| 400×900  | Phone   | **350 × 757**           | true               | desktop          | `apps/website/demos/shots-audit/canvas-mobile-small.png`   |
 
 探针原文（Phone 画布，1440 视口）：`windowSize() 390 × 844`、`platform.desktop true`、`platform.idiom desktop`、`platform.os web`；Desktop 画布是 `windowSize() 726 × 454`，其余相同。也就是说：
 
@@ -68,16 +68,16 @@ bun scripts/audit/sheet.ts --out sheet.png --cols 3 a.png b.png c.png   # 拼对
 
 ### 1.2 为什么：代码链
 
-- 文档站的 iframe：`apps/docs/src/lib/demo.js:17-20` 的 `LAYOUTS`（390×844 / 1024×640）；`:88-89` 的 `<iframe src=demoHref(name)>` **没有 `?idiom=`、没有 `?theme=`**。
-- 包：`apps/docs/scripts/build-demos.ts:55-59` 用 `nsh package <id>.tsx --target web`，得到的是**发布模板**（`references/nsh/crates/nsh-cli/src/web/index.html:94-110`）；该模板的 `createPlayer` 选项里没有 `idiom`，也不读 `?theme=`（`grep -c idiom` = 0）。
+- 文档站的 iframe：`apps/website/src/lib/demo.js:17-20` 的 `LAYOUTS`（390×844 / 1024×640）；`:88-89` 的 `<iframe src=demoHref(name)>` **没有 `?idiom=`、没有 `?theme=`**。
+- 包：`apps/website/scripts/build-demos.ts:55-59` 用 `nsh package <id>.tsx --target web`，得到的是**发布模板**（`references/nsh/crates/nsh-cli/src/web/index.html:94-110`）；该模板的 `createPlayer` 选项里没有 `idiom`，也不读 `?theme=`（`grep -c idiom` = 0）。
 - 平台：没有 `options.idiom` 时，`references/nsh/crates/nsh-platform-web/web/nsh.js:1602` 走 `measureIdiom()`，`:1850-1852` 在 `(pointer: fine) and (hover: hover)` 为真时返回 `"desktop"`——桌面浏览器里永远为真，**与 iframe 多宽无关**。`platform.desktop` 由 `references/nsh/crates/nsh-core/src/platform.rs:158-160` 的 `desktop_on()` 给出：web 上只有 desktop idiom 为 true。
-- 尺寸：`apps/docs/src/lib/demo-client.ts:28-41` 的 `fit()` 把宽度夹到 `stage.clientWidth`，再把高度按 `width × (height/width)` 等比缩（`MIN_HEIGHT` 420，`:18`）。它按"缩放整机"写，不是按"应用以真实尺寸运行"写；注释 `:21` 自己也写着 "no NSH player idiom"。
+- 尺寸：`apps/website/src/lib/demo-client.ts:28-41` 的 `fit()` 把宽度夹到 `stage.clientWidth`，再把高度按 `width × (height/width)` 等比缩（`MIN_HEIGHT` 420，`:18`）。它按"缩放整机"写，不是按"应用以真实尺寸运行"写；注释 `:21` 自己也写着 "no NSH player idiom"。
 
 ### 1.3 官方网站播放器怎么做（文件:行）
 
 | 事项        | 官方网站                                                                                                                                                                         | 文档站                                                          |
 | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| 两种布局    | `references/nsh/website/src/lib/demo.js:24-27`：mobile 390×844 **idiom phone**，desktop 1024×640 **idiom desktop**；`demo-client.ts:44-45` 的 desktop 上限是 1024×**900**        | `apps/docs/src/lib/demo.js:17-20`：只有宽高，没有 idiom         |
+| 两种布局    | `references/nsh/website/src/lib/demo.js:24-27`：mobile 390×844 **idiom phone**，desktop 1024×640 **idiom desktop**；`demo-client.ts:44-45` 的 desktop 上限是 1024×**900**        | `apps/website/src/lib/demo.js:17-20`：只有宽高，没有 idiom      |
 | iframe 地址 | `demo.js:111-112` `playerHref()` = `play/index.html?theme=dark&idiom=phone\|desktop#<name>`；`:133` 写进 `data-player-src`                                                       | `demo.js:89` 直接 `demos/<name>/index.html`，无参数             |
 | 平台        | 播放器 `references/nsh/crates/nsh-platform-web/web/index.html:48-52` 读 `?idiom=` 传给 `createPlayer`                                                                            | 发布模板没有这个入口，见 1.2                                    |
 | 主题        | 播放器 `index.html:46-47` 读 `?theme=`；`demo-client.ts:18-38` 的 `themeDemos()` 先改 URL、运行中 `postMessage({ theme })` 切换                                                  | 无主题参数；演示跟随浏览器 `prefers-color-scheme`，站点切换不到 |
@@ -89,20 +89,20 @@ bun scripts/audit/sheet.ts --out sheet.png --cols 3 a.png b.png c.png   # 拼对
 
 ### 1.4 套件：`DemoSection` 与 `DemoPage`
 
-- `apps/docs/demos/kit.tsx:53-62`：`DemoSection` 的标题下是 `View { flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 8 }`（`:57`）。在行里，子项的 `alignSelf: "stretch"` 只决定**交叉轴**（高度），宽度仍是内容宽；`flexGrow` 才会分到主轴宽度，但多数演示没有给。
+- `apps/website/demos/kit.tsx:53-62`：`DemoSection` 的标题下是 `View { flexDirection: "row", flexWrap: "wrap", alignItems: "center", gap: 8 }`（`:57`）。在行里，子项的 `alignSelf: "stretch"` 只决定**交叉轴**（高度），宽度仍是内容宽；`flexGrow` 才会分到主轴宽度，但多数演示没有给。
   - 后果：accordion / collapsible 的正文按一行排版、被卡片裁掉；data-table 的包装 `View style={{ height: 200, alignSelf: "stretch" }}` 只有 2 pt 宽（边框），表体 0 宽；slider 直接放在行里时宽 0，只剩值气泡；emoji-picker 的固定 342 pt 面板比卡片内容宽（318 pt）而出框；color-picker 的面板被拉满整行，`ColorSwatches` 的 `justifyContent: "space-between"` 把 4 个色板摊开。
   - 反例（同一套件下正确的写法）：badge、button 的小节各自套了 `flex: 1` 或固定宽容器；switch 用整行 `listRow`。
-- `apps/docs/demos/kit.tsx:11-34`：`DemoPage` 是 `padding: 20` 的普通 `View`，没有 `Scroll`，也没有 `flex: 1` 的滚动区。iframe 只有 844（Phone）或 454（文档站 Desktop）高，内容更高的演示直接被裁：emoji-picker 的第二个面板、editor、dock-area、command 都撞到这条。
+- `apps/website/demos/kit.tsx:11-34`：`DemoPage` 是 `padding: 20` 的普通 `View`，没有 `Scroll`，也没有 `flex: 1` 的滚动区。iframe 只有 844（Phone）或 454（文档站 Desktop）高，内容更高的演示直接被裁：emoji-picker 的第二个面板、editor、dock-area、command 都撞到这条。
 - Desktop 画布下 `DemoCard` 是 1024 宽（文档站 726），列表行、accordion 触发器横贯整行；官方示例把主体放进 `Stage`（`demo.ts:122-150`，`maxWidth` 默认 440），同样的控件看起来是居中的一块。演示没有这层，宽屏下比例与官方明显不同（`input-demo-desktop.png` 里 Name 拉满约 930 pt，Password 只有 187 pt）。
 
 ### 1.5 结论
 
 - 六个已知问题里，**没有一个是画布直接造成**的：把演示放进 390×844、phone idiom 的官方画布，它们仍然出现（`accordion-demo-phone.png` 等）。画布的问题是**横向**的：idiom 不对、Desktop 尺寸不对、主题不跟站点。
-- 任务 2 的顺序应该是：先让预览能按布局给 `?idiom=` / `?theme=`（用播放器或等价的发布模板注入），再把 Desktop 的宽高改成"1024 × 内容高（上限 900，下限 420）"，最后把官方的 `Stage / Split / Inspector / Panel / Log / Segmented` 搬进 `apps/docs/demos`（demo-parity 已决定），并让 `DemoSection` 有"行 / 列"两种轴向。否则任务 4 移植进来的官方场景在文档站里 `wide()` 与 `sideBySide()` 都不成立。
+- 任务 2 的顺序应该是：先让预览能按布局给 `?idiom=` / `?theme=`（用播放器或等价的发布模板注入），再把 Desktop 的宽高改成"1024 × 内容高（上限 900，下限 420）"，最后把官方的 `Stage / Split / Inspector / Panel / Log / Segmented` 搬进 `apps/website/demos`（demo-parity 已决定），并让 `DemoSection` 有"行 / 列"两种轴向。否则任务 4 移植进来的官方场景在文档站里 `wide()` 与 `sideBySide()` 都不成立。
 
 ## 二、逐组件
 
-图例：**证据**列是 `apps/docs/demos/shots-audit/` 下的文件名（`d` = demo，`r` = ref，`o` = official；`p` = phone 390×844，`k` = desktop 1024×640；`cp`/`ck` = 文档站实测尺寸 390×844 / 726×454）。`official` 缺失即"无官方示例"。
+图例：**证据**列是 `apps/website/demos/shots-audit/` 下的文件名（`d` = demo，`r` = ref，`o` = official；`p` = phone 390×844，`k` = desktop 1024×640；`cp`/`ck` = 文档站实测尺寸 390×844 / 726×454）。`official` 缺失即"无官方示例"。
 
 | #   | id           | 官方示例                        | 问题（Phone / Desktop）                                                                                                     | 归类                 | 证据                                                     |
 | --- | ------------ | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------- | -------------------- | -------------------------------------------------------- |
@@ -165,9 +165,9 @@ bun scripts/audit/sheet.ts --out sheet.png --cols 3 a.png b.png c.png   # 拼对
 
 **accordion**：`DemoSection` 的行不给宽度（`kit.tsx:57`），演示只写了 `alignSelf: "stretch"`（`accordion.tsx:39-44`；参照页 `accordion.ref.tsx:42-47` 相同）。在行里那是交叉轴，accordion 按 max-content 排成一行，正文被 `DemoCard` 裁掉、chevron 被推到卡片外。官方把触发器放进 `sectionSurface`（列）里的 `Split > Stage`（`references/nsh/website/demos/el-accordion.tsx:60-80`；`references/nsh/examples/nsh-gallery-ui/demo.ts:166-217` 的 `Split` 给出宽度）。桌面尺寸下（726 pt）同一份代码正常，证明 look 与外壳无问题。
 
-**collapsible**：同一行的宽度问题（`collapsible.tsx:12-30`；`collapsible.ref.tsx:57-72`）。触发器内部又包了一层 `flexGrow: 1` 的行（`packages/ui/collapsible.tsx:111`），在内容宽的行里没有可增长的空间，所以 chevron 贴在文字后；官方把 `RowLabel` 与 `DisclosureChevron` 直接放进 `disclosureTriggerLook` 的行，行本身由 `sectionSurface` 拉伸（`el-collapsible.tsx:61`）。"Default 打开却不显示内容"在两种画布与 iOS 触屏渲染里都不复现：内容是有的，只是排成单行、被卡片右缘裁掉，看起来像空白（`collapsible-d-p`、`collapsible-r-p`；同批的 iOS 触屏截图 `apps/docs/demos/shots/collapsible-touch-light.png` 也一样）。"Closed 却显示内容"也不复现：Closed 一栏是关着的（`collapsible-d-p`）；若截图里它展开了，是点击后的状态。
+**collapsible**：同一行的宽度问题（`collapsible.tsx:12-30`；`collapsible.ref.tsx:57-72`）。触发器内部又包了一层 `flexGrow: 1` 的行（`packages/ui/collapsible.tsx:111`），在内容宽的行里没有可增长的空间，所以 chevron 贴在文字后；官方把 `RowLabel` 与 `DisclosureChevron` 直接放进 `disclosureTriggerLook` 的行，行本身由 `sectionSurface` 拉伸（`el-collapsible.tsx:61`）。"Default 打开却不显示内容"在两种画布与 iOS 触屏渲染里都不复现：内容是有的，只是排成单行、被卡片右缘裁掉，看起来像空白（`collapsible-d-p`、`collapsible-r-p`；同批的 iOS 触屏截图 `apps/website/demos/shots/collapsible-touch-light.png` 也一样）。"Closed 却显示内容"也不复现：Closed 一栏是关着的（`collapsible-d-p`）；若截图里它展开了，是点击后的状态。
 
-**checkbox**：`Scale` / `Round` / `States` 三节里的 Checkbox 直接放在 `DemoSection` 的行里（`checkbox.tsx:67-108`；`checkbox.ref.tsx:81-160`），没有 `listRow`。`nsh/base` 的 Checkbox 默认是列：indicator 在上、children 在下（`references/nsh/crates/nsh-base/src/checkbox.rs:116-120`），所以标签落在方框下方。官方每个 Checkbox 都带 `listRow`（`el-checkbox.tsx:53,69,81`），行内排列。**"描述行带红色虚线框"不复现**：`packages/ui/checkbox.tsx` 与 `lib/surface.tsx` 里没有任何 `borderStyle: "dashed"` 或 danger 边框（全仓只有 `context-menu` 演示的灰色虚线投放区、`select.tsx:140` 的 solid outline），web（`checkbox-d-p`、`checkbox-d-k`、`checkbox-d-cp`）与 iOS 触屏（`apps/docs/demos/shots/checkbox-touch-light.png`）都没有该框；它来自应用之外（浏览器 / 系统 / 截图工具的焦点或调试框），不是本组件画的。描述行真正的问题是它与方框同一行时的挤压（同上的列布局），而不是边框。
+**checkbox**：`Scale` / `Round` / `States` 三节里的 Checkbox 直接放在 `DemoSection` 的行里（`checkbox.tsx:67-108`；`checkbox.ref.tsx:81-160`），没有 `listRow`。`nsh/base` 的 Checkbox 默认是列：indicator 在上、children 在下（`references/nsh/crates/nsh-base/src/checkbox.rs:116-120`），所以标签落在方框下方。官方每个 Checkbox 都带 `listRow`（`el-checkbox.tsx:53,69,81`），行内排列。**"描述行带红色虚线框"不复现**：`packages/ui/checkbox.tsx` 与 `lib/surface.tsx` 里没有任何 `borderStyle: "dashed"` 或 danger 边框（全仓只有 `context-menu` 演示的灰色虚线投放区、`select.tsx:140` 的 solid outline），web（`checkbox-d-p`、`checkbox-d-k`、`checkbox-d-cp`）与 iOS 触屏（`apps/website/demos/shots/checkbox-touch-light.png`）都没有该框；它来自应用之外（浏览器 / 系统 / 截图工具的焦点或调试框），不是本组件画的。描述行真正的问题是它与方框同一行时的挤压（同上的列布局），而不是边框。
 
 **color-picker**：演示把 `ColorPanel` 直接放进 `DemoSection`（`color-picker.tsx:18-32`；参照页 `color-picker.ref.tsx:19-33` 相同），行不给宽度上限，面板拉满卡片；`ColorSwatches` 用 `justifyContent: "space-between"`（`packages/ui/color-picker.tsx:398`），4 个色板（`color-picker.tsx:9`）于是在整行宽度上摊开。官方用 8 个色板、把面板放进 `Split` 的 `Stage`（`el-color-picker.tsx:14,43,57`；Stage 上限 440）。"只占左半边"在 390 与 1024 的打包截图里都没有出现（面板是满宽），文档站 726 宽下也是满宽；可见的是"过宽"而不是"半宽"。
 
@@ -179,9 +179,9 @@ bun scripts/audit/sheet.ts --out sheet.png --cols 3 a.png b.png c.png   # 拼对
 
 ### 3.1 任务 2：画布与套件（先做）
 
-> **已完成**（`5a7a050`、`965b67d`、`39b568f`、`376c954`、`b96adb9`、`05798f7`、`3817175`、以及返工 `REVIEW-1` 的提交）。发布模板没有播放器入口，因此走的是下面第 2 条的注入（`apps/docs/scripts/player-options.ts`，注释里写了为什么不走播放器；模板文字变了怎么办见 [`toolchain.md`](../toolchain.md) 的换 CLI 一节）。
+> **已完成**（`5a7a050`、`965b67d`、`39b568f`、`376c954`、`b96adb9`、`05798f7`、`3817175`、以及返工 `REVIEW-1` 的提交）。发布模板没有播放器入口，因此走的是下面第 2 条的注入（`apps/website/scripts/player-options.ts`，注释里写了为什么不走播放器；模板文字变了怎么办见 [`toolchain.md`](../toolchain.md) 的换 CLI 一节）。
 >
-> **后来改了**：预览框高度不再随内容伸缩（会来回跳），固定为手机 390 × 844、桌面 1024 × 640，见 `apps/docs/src/lib/demo-client.ts` 的 `fit()`。下面是改之前的实测。
+> **后来改了**：预览框高度不再随内容伸缩（会来回跳），固定为手机 390 × 844、桌面 1024 × 640，见 `apps/website/src/lib/demo-client.ts` 的 `fit()`。下面是改之前的实测。
 >
 > `bun scripts/audit/audit.ts canvas` 的实测（页视口 1440×900，探针应用原地打包，`windowSize()` 是**应用启动时**看到的窗口——面板先按布局的高启动，量到内容后再把 frame 压到内容高，与官网一致，见 `references/nsh/website/src/lib/demo-client.ts:120-131` 与 `:135-147`）：
 >
@@ -191,22 +191,22 @@ bun scripts/audit/sheet.ts --out sheet.png --cols 3 a.png b.png c.png   # 拼对
 > | Desktop（文档列宽）                       | 726 × 612  | 726 × 900      | 真                 |
 > | Desktop（demo 卡放宽到 1180，stage 1178） | 1024 × 420 | 1024 × 900     | 真                 |
 >
-> Phone 的 frame 宽 390、idiom `phone`；Desktop 是 desktop idiom，宽取 min(1024, 列宽)。站点切亮 / 暗，探针的 `colorScheme()` 分别为 `light` / `dark`（运行中 `postMessage`）。JSON 在 `/tmp/nsh-audit/canvas.json`，截图 `apps/docs/demos/shots-audit/canvas-*.png`。
+> Phone 的 frame 宽 390、idiom `phone`；Desktop 是 desktop idiom，宽取 min(1024, 列宽)。站点切亮 / 暗，探针的 `colorScheme()` 分别为 `light` / `dark`（运行中 `postMessage`）。JSON 在 `/tmp/nsh-audit/canvas.json`，截图 `apps/website/demos/shots-audit/canvas-*.png`。
 
-1. **`apps/docs/src/lib/demo.js`**：`phoneHtml` 的 iframe 地址按布局加 `?idiom=phone|desktop` 与 `?theme=<站点当前主题>`；`demoPanelHtml` 的初始 `data-layout` 与 `initDemos` 的默认一致（现在 HTML 写 desktop、脚本默认 mobile，会闪一次）；`LAYOUTS.desktop` 改成 1024×**900**（与 `references/nsh/website/src/lib/demo-client.ts:44-45` 一致）。
+1. **`apps/website/src/lib/demo.js`**：`phoneHtml` 的 iframe 地址按布局加 `?idiom=phone|desktop` 与 `?theme=<站点当前主题>`；`demoPanelHtml` 的初始 `data-layout` 与 `initDemos` 的默认一致（现在 HTML 写 desktop、脚本默认 mobile，会闪一次）；`LAYOUTS.desktop` 改成 1024×**900**（与 `references/nsh/website/src/lib/demo-client.ts:44-45` 一致）。
 2. **让演示真的认这两个参数**：发布模板（`references/nsh/crates/nsh-cli/src/web/index.html`）没有出口。两条路：
    - 用 NSH 播放器：`public/play/index.html`（`references/nsh/crates/nsh-platform-web/web/index.html:48-52`）+ `nsh build` 出的 `demos/<name>.js`，和官网一致；文档站构建脚本改成 `nsh build`。
-   - 或留在 `nsh package`，在 `apps/docs/scripts/player-options.ts` 里对生成的 `index.html` 注入运行时自己的 `idiom` / `dark` 选项（文档站与审计共用一份，`scripts/audit/targets.ts` 直接 import 它）。实际走的是这条；第二种是补丁，长期应走第一种。
-3. **`apps/docs/src/lib/demo-client.ts`**：`fit()` 不再按比例缩高度；高度取 `min(布局高, max(420, 内容高 + 32))`，需要 `contentHeight()` 与加载后重测（照 `references/nsh/website/src/lib/demo-client.ts:75-108,150-158`）；切换布局时**重载** iframe 让新 idiom 生效（`demo-client.ts:157-166`）；主题变化 `postMessage`。
-4. **`apps/docs/demos/kit.tsx`**：`DemoSection` 增加轴向（`inline` 行 / `block` 列）；`block` 用列 + `alignItems: "stretch"`，整宽控件不再靠 `flexGrow`。`DemoPage` 加 `Scroll`（或由第 3 条的内容高度兜住），保证内容不被裁。
-5. **`apps/docs/demos/`**：新增官方的演示适配层（`Stage`、`Split`、`Inspector`、`Panel`、`Log`、`Segmented`、`desktop`、`wide`、`sideBySide`），从 `references/nsh/examples/nsh-gallery-ui/demo.ts` 搬（`demo.ts:45,49,53,122-286`），只供演示，不进 registry；同步改 `AGENTS.md` 的"不搬 demo 适配"一条（demo-parity 已决定）。
+   - 或留在 `nsh package`，在 `apps/website/scripts/player-options.ts` 里对生成的 `index.html` 注入运行时自己的 `idiom` / `dark` 选项（文档站与审计共用一份，`scripts/audit/targets.ts` 直接 import 它）。实际走的是这条；第二种是补丁，长期应走第一种。
+3. **`apps/website/src/lib/demo-client.ts`**：`fit()` 不再按比例缩高度；高度取 `min(布局高, max(420, 内容高 + 32))`，需要 `contentHeight()` 与加载后重测（照 `references/nsh/website/src/lib/demo-client.ts:75-108,150-158`）；切换布局时**重载** iframe 让新 idiom 生效（`demo-client.ts:157-166`）；主题变化 `postMessage`。
+4. **`apps/website/demos/kit.tsx`**：`DemoSection` 增加轴向（`inline` 行 / `block` 列）；`block` 用列 + `alignItems: "stretch"`，整宽控件不再靠 `flexGrow`。`DemoPage` 加 `Scroll`（或由第 3 条的内容高度兜住），保证内容不被裁。
+5. **`apps/website/demos/`**：新增官方的演示适配层（`Stage`、`Split`、`Inspector`、`Panel`、`Log`、`Segmented`、`desktop`、`wide`、`sideBySide`），从 `references/nsh/examples/nsh-gallery-ui/demo.ts` 搬（`demo.ts:45,49,53,122-286`），只供演示，不进 registry；同步改 `AGENTS.md` 的"不搬 demo 适配"一条（demo-parity 已决定）。
 6. **验证**：`bun scripts/audit/audit.ts canvas` 应给出 Phone `390×844 / desktop=false`、Desktop `1024×<内容高> / desktop=true`；`port:check`、`catalog --check` 不变。
 
 ### 3.2 任务 3：组件修复
 
 **没有发现需要改的外壳或 look。** 证据：
 
-- 52 个 `<id>.tsx` 与 `<id>.ref.tsx` 在 390×844、1024×640 下 SHA-256 全等；390×844 / desktop-idiom 的 52 张 demo 截图里 48 张与 `apps/docs/demos/baseline/` 逐字节相同（4 张差异见"结论"：dialog / alert-dialog 是打开与否，calendar / date-picker 是渲染时钟）。
+- 52 个 `<id>.tsx` 与 `<id>.ref.tsx` 在 390×844、1024×640 下 SHA-256 全等；390×844 / desktop-idiom 的 52 张 demo 截图里 48 张与 `apps/website/demos/baseline/` 逐字节相同（4 张差异见"结论"：dialog / alert-dialog 是打开与否，calendar / date-picker 是渲染时钟）。
 - 六个问题在参照页上同样出现，且在官方尺寸下由 look 正常绘制（accordion 726 宽正常、collapsible 1024 正常、color-picker 在官方 440 Stage 里正常、data-table 给足宽度正常、emoji 面板在 342 宽内正常、checkbox 行布局由调用方给）。
 - 唯一的"外壳可疑点"是 `packages/ui/collapsible.tsx:111` 包了一层 `flexGrow: 1` 的行；但在有界宽度下它正确工作，改它反而会让参照页与组件页不一致（P4）。建议不动。
 
@@ -300,6 +300,6 @@ bun scripts/audit/sheet.ts --out sheet.png --cols 3 a.png b.png c.png   # 拼对
 
 ## 附：证据与工具
 
-- 截图：`apps/docs/demos/shots-audit/`（524 张，gitignored）。命名：`<id>-{demo,ref,official}-{phone,desktop}.png`；`plot` / `editor` / `text-view` 的额外官方示例带后缀（`plot-official-phone-cells.png` 等）；文档站实测尺寸另有 `<id>-{demo,ref}-canvas{phone,desktop}.png` 与 `canvas-*.png`、`probe-*.png`。
+- 截图：`apps/website/demos/shots-audit/`（524 张，gitignored）。命名：`<id>-{demo,ref,official}-{phone,desktop}.png`；`plot` / `editor` / `text-view` 的额外官方示例带后缀（`plot-official-phone-cells.png` 等）；文档站实测尺寸另有 `<id>-{demo,ref}-canvas{phone,desktop}.png` 与 `canvas-*.png`、`probe-*.png`。
 - 工具：`scripts/audit/chrome.ts`（静态服务 + DevTools 截图）、`audit.ts`（批量打包 / 截图 / 画布 / 探针）、`shoot.ts`（任意 `.tsx` 一张）、`sheet.ts`（对照页）、`targets.ts`（官方对应表）。探针应用在 `scripts/audit/probe/`，三个一次性实验（`dock-flex`、`plot-height`、`data-table-width`）留在同目录，注释里写明用途。
 - 本次测量：154 个包（52 demo + 52 ref + 50 官方/额外），308 张官方尺寸截图 + 208 张文档站尺寸截图 + 8 张画布/探针截图 = 524 张；打包失败 0，截图失败 0。

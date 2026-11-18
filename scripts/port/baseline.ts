@@ -5,7 +5,7 @@
  *   bun scripts/port/baseline.ts [--only <id,...>]            # compare the latest shots with baseline/
  *
  * `--update` copies every `*-pointer-*.png` in `shots/` (demo and reference alike) into
- * `apps/docs/demos/baseline/` and prints how many; commit them after looking at the sheet. It
+ * `apps/website/demos/baseline/` and prints how many; commit them after looking at the sheet. It
  * replaces only the ids those shots belong to — a render of a few ids (`port:render --only`)
  * leaves the other ids' pictures alone — and drops the pictures of an id the catalog no longer has.
  * Without it, every baseline image must be in `shots/` byte for byte, and a pointer shot the
@@ -21,7 +21,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { antialiasing, cases } from "../../apps/docs/demos/render-cases";
+import { antialiasing, cases } from "../../apps/website/demos/render-cases";
 import { catalog } from "../catalog";
 import { repo } from "./lib";
 import { compareWithinTolerance } from "./pixels";

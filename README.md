@@ -49,6 +49,7 @@ Each release of this library tracks one NSH CLI version; installing a newer CLI 
 
 | shadcn-nsh | NSH CLI |
 | ---------- | ------- |
+| 0.8.x      | v0.6.0  |
 | 0.7.x      | v0.5.1  |
 | 0.6.x      | v0.5.1  |
 
@@ -79,8 +80,8 @@ bun run check           # what CI runs, in one command
 | ---------------------------- | --------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `packages/theme`             | `@shadcn-nsh/theme`   | `theme.json`, `finishes.json`, `theme.ts` — the theme (ours; `oklch()`); `themes/<name>/` is another theme's data, shipped as its `theme-<name>` item |
 | `packages/ui`                | `@shadcn-nsh/ui`      | one file per component: a look (`// @port` region) + shell                                                                                            |
-| `apps/docs/demos`            | —                     | acceptance demos, reference pages, `port:render`                                                                                                      |
-| `apps/docs/content/docs`     | —                     | docs pages (`/docs/…`), rendered by `src/routes/docs/$.tsx`                                                                                           |
+| `apps/website/demos`         | —                     | acceptance demos, reference pages, `port:render`                                                                                                      |
+| `apps/website/content/docs`  | —                     | docs pages (`/docs/…`), rendered by `src/routes/docs/$.tsx`                                                                                           |
 | `apps/gallery`               | `@shadcn-nsh/gallery` | native behavior tests and smoke pages                                                                                                                 |
 | `packages/cli`               | `shadcn-nsh` (npm)    | `init` / `add` / `list` / `view` / `diff` / `build` / `serve`                                                                                         |
 | `registry.json` → `public/r` | —                     | registry source → committed HTTP artifacts                                                                                                            |

@@ -2,7 +2,7 @@
  * Screenshots one NSH page (a `.tsx` entry) at one size and idiom, through the same packaged
  * web build the docs site embeds:
  *
- *   bun scripts/audit/shoot.ts apps/docs/demos/accordion.tsx --size 390x844 --idiom phone \
+ *   bun scripts/audit/shoot.ts apps/website/demos/accordion.tsx --size 390x844 --idiom phone \
  *     --out /tmp/accordion.png
  *
  * The entry's `nsh.json` (its theme and aliases) is the one in `--cwd` or beside the entry.

@@ -31,7 +31,7 @@ CLI 与运行时同装进 `~/.nsh`，并链到 `~/.local/bin/nsh`。
 
 ### 升级后 `build:docs` 报“the packaged index.html has no …”
 
-演示页的 `?idiom=` / `?theme=` 是 `apps/docs/scripts/player-options.ts` 在 `nsh package --target web` 的产物上按**发布模板的原文**改出来的（发布模板自己没有这两个入口，而官网的播放器页要编译 NSH）。升级 nsh 后模板文字一变，`bun run docs:demos` 会停在那条报错上，不会发出反不了的演示包。这时：
+演示页的 `?idiom=` / `?theme=` 是 `apps/website/scripts/player-options.ts` 在 `nsh package --target web` 的产物上按**发布模板的原文**改出来的（发布模板自己没有这两个入口，而官网的播放器页要编译 NSH）。升级 nsh 后模板文字一变，`bun run docs:demos` 会停在那条报错上，不会发出反不了的演示包。这时：
 
 1. 找四个标记如今的去处：v0.6 起发布模板把启动逻辑拆成独立的哈希脚本 `nsh-start.<hash>.js`（strict `script-src 'self'`），`createPlayer(document.getElementById("app"), {`（选项对象）、`player = loaded;`（播放器就绪）、`player.preloadSides(app.sides);`（应用已跑）三个都在它里面，`</head>` 还留在 `index.html`；`player-options.ts` 从 `index.html` 读出该脚本的 `src` 再注入。按新写法改它的常量与插入点。
 2. 若新模板自己就认 `?idiom=`（`createPlayer` 的选项里有 `idiom`）与 `?theme=`（`dark`），删掉对应的注入，只留它还缺的那一半。
@@ -44,7 +44,7 @@ CLI 与运行时同装进 `~/.nsh`，并链到 `~/.local/bin/nsh`。
 
 **项目不再用 `NSH_RUNTIME`**：脚本不设它；自己导出仍会被尊重。
 
-`bash scripts/nsh-bootstrap.sh` 检查 CLI 与子模块都在基线，然后生成 `apps/gallery` 与 `apps/docs/demos` 的 `.nsh` types host。
+`bash scripts/nsh-bootstrap.sh` 检查 CLI 与子模块都在基线，然后生成 `apps/gallery` 与 `apps/website/demos` 的 `.nsh` types host。
 
 ### CI
 
@@ -52,7 +52,7 @@ CLI 与运行时同装进 `~/.nsh`，并链到 `~/.local/bin/nsh`。
 | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `.github/actions/setup-nsh`         | 用 `install.sh` 装 `port-map.json` 的 `upstream.cli`（release 按 tag 缓存，`nightly` 按 UTC 日期缓存）；仓库变量 `NSH_CHANNEL` 可覆盖；装上的提交与基线不同只发 `::warning::` |
 | `.github/workflows/check.yml`       | 每个 PR：`port:check`、两个 `nsh check`、`test:unit`、`check:docs`、`port:render`、`test:install`。渲染比对要 Chrome（runner 自带）；截图留作 artifact                        |
-| `.github/workflows/deploy-docs.yml` | 同一个 action，然后 `bun run build:docs`（`docs:demos` 逐个打包演示，再 `vite build` 出静态站到 `apps/docs/.output/public`）。它不读 `references/nsh`，所以不取子模块         |
+| `.github/workflows/deploy-docs.yml` | 同一个 action，然后 `bun run build:docs`（`docs:demos` 逐个打包演示，再 `vite build` 出静态站到 `apps/website/.output/public`）。它不读 `references/nsh`，所以不取子模块      |
 
 缓存的 key 是 `nsh-<channel>-<os>-<UTC 日期>`：nightly 每天重建，于是每天第一次下载，当天其余运行直接恢复。
 
@@ -79,16 +79,16 @@ CLI 与运行时同装进 `~/.nsh`，并链到 `~/.local/bin/nsh`。
 
 ## TypeScript 分层
 
-| 面           | 路径                            | extends                                                                                                 | 类型权威                                   |
-| ------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
-| 共享选项     | `tsconfig.base.json`            | —                                                                                                       | —                                          |
-| 组件 + 主题  | `tsconfig.nsh.json`             | base + NSH JSX；`paths` → `packages/theme`、`packages/ui`；`files` 可用 gallery 或 demos 的 tokens host | `vp check`、单文件抽查                     |
-| 验收演示     | `apps/docs/demos/tsconfig.json` | `./.nsh/tsconfig.json`；`@shadcn-nsh/theme` → `packages/theme`；`@` → 仓库根                            | **`nsh check apps/docs/demos`**（主）      |
-| Gallery 测试 | `apps/gallery/tsconfig.json`    | 仅 `./.nsh/tsconfig.json`；须手写回填 `nsh` / `nsh/*` paths                                             | `nsh check apps/gallery`                   |
-| Docs（站点） | `apps/docs/tsconfig.json`       | `strict` + React JSX；`@/*` → `apps/docs/src/*`；`exclude: demos`                                       | **`bun run check:docs`**（`tsc --noEmit`） |
-| 工具链       | `packages/cli`、`scripts/port`  | base；加 `types: ["bun"]`（CLI 另有 `node`）                                                            | `vp check`                                 |
+| 面           | 路径                               | extends                                                                                                 | 类型权威                                   |
+| ------------ | ---------------------------------- | ------------------------------------------------------------------------------------------------------- | ------------------------------------------ |
+| 共享选项     | `tsconfig.base.json`               | —                                                                                                       | —                                          |
+| 组件 + 主题  | `tsconfig.nsh.json`                | base + NSH JSX；`paths` → `packages/theme`、`packages/ui`；`files` 可用 gallery 或 demos 的 tokens host | `vp check`、单文件抽查                     |
+| 验收演示     | `apps/website/demos/tsconfig.json` | `./.nsh/tsconfig.json`；`@shadcn-nsh/theme` → `packages/theme`；`@` → 仓库根                            | **`nsh check apps/website/demos`**（主）   |
+| Gallery 测试 | `apps/gallery/tsconfig.json`       | 仅 `./.nsh/tsconfig.json`；须手写回填 `nsh` / `nsh/*` paths                                             | `nsh check apps/gallery`                   |
+| Docs（站点） | `apps/website/tsconfig.json`       | `strict` + React JSX；`@/*` → `apps/website/src/*`；`exclude: demos`                                    | **`bun run check:docs`**（`tsc --noEmit`） |
+| 工具链       | `packages/cli`、`scripts/port`     | base；加 `types: ["bun"]`（CLI 另有 `node`）                                                            | `vp check`                                 |
 
-`Tokens` 类型（`token("…")` 接受哪些名字）由每个 NSH 应用按自己的 `theme.json` 生成到 `.nsh/types/nsh/tokens.d.ts`。移植主题与旧 neutral 主题的 token 不同；**docs 演示**用 `apps/docs/demos/.nsh`（绑定 `packages/theme/theme.json`），**gallery** 用 `apps/gallery/.nsh`。types host 不存在时先跑一次对应的 `nsh check`。
+`Tokens` 类型（`token("…")` 接受哪些名字）由每个 NSH 应用按自己的 `theme.json` 生成到 `.nsh/types/nsh/tokens.d.ts`。移植主题与旧 neutral 主题的 token 不同；**docs 演示**用 `apps/website/demos/.nsh`（绑定 `packages/theme/theme.json`），**gallery** 用 `apps/gallery/.nsh`。types host 不存在时先跑一次对应的 `nsh check`。
 
 每个演示文件是一个独立入口；`nsh check` 和 `nsh test` 还需要目录里有 `App.tsx`。带 `nsh.json` `resolve.alias` 的入口必须和 `nsh.json` 在同一目录，放进子目录后别名不生效（所以参照页是 `<id>.ref.tsx`，不是 `ref/<id>.tsx`）。
 
@@ -96,17 +96,17 @@ TypeScript 为 **7.1**。它不提供 JS 解析 API，`scripts/port` 用 `oxc-pa
 
 ## 渲染比对的两半
 
-`port:render:theme` 是第三趟：同一批页在 **shadcn 主题**下画一遍，组件对参照页成对比较，不进基线（`scripts/port/render-theme.ts` 把演示复制到 `apps/docs/demos-themed/`，每页在 `mount` 前 `selectTheme(shadcn)`；跑完整份复制删掉，截图留 `apps/docs/demos/shots-theme/`）。页面仍是自己的入口，所以它和构建时那一趟画的是同一个应用，差别只有主题。
+`port:render:theme` 是第三趟：同一批页在 **shadcn 主题**下画一遍，组件对参照页成对比较，不进基线（`scripts/port/render-theme.ts` 把演示复制到 `apps/website/demos-themed/`，每页在 `mount` 前 `selectTheme(shadcn)`；跑完整份复制删掉，截图留 `apps/website/demos/shots-theme/`）。页面仍是自己的入口，所以它和构建时那一趟画的是同一个应用，差别只有主题。
 
 `port:render` 用无头浏览器（Chrome / Edge / Chromium），它始终只量到精细指针：在 `--target web` 上强制不了触屏，所以这一半只跑指针。触屏那一半 `port:render:touch` 用 `nsh test render-touch.test.tsx --target ios`，在 iOS 模拟器上打开同一批演示与参照页（`open(…, { platform: "ios" })`），亮 / 暗各一组，截图落在同一个 `shots/`。
 
 `port:render` **让浏览器用 CPU 光栅化，并打开“减少动态效果”**：`scripts/port/render.ts` 自己找 Chrome / Edge / Chromium（`NSH_BROWSER`、`CHROME_PATH` 优先），写一个带 `--disable-gpu --force-prefers-reduced-motion` 的包装脚本交给 `--browser`。GPU 上 Chrome 偶尔把圆弧的抗锯齿画低一级（1/255）：`status: pointer, dark` 的圆点圆角因此约每六次跑差一次，同一页开两次也会差；换成 CPU 后逐字节相同（Windows 上起不了脚本，照旧用 CLI 自己的浏览器；找不到浏览器时脚本也那样跑并说明）。`--target web` 不替页面模拟“减少动态效果”，而运行时的 `.nsh-reduce` 只在媒体查询为真时关掉过渡与关键帧；不传这个 flag，无限循环的动画（`spinner`）就按墙钟转，两次跑停在不同的角度。
 
-两份测试共用的用例表、截图比较和 **200 ms 的定身等待**在 `apps/docs/demos/render-cases.ts`：手动时钟把两页的入场过渡（弹层 150 ms、颜色 160 ms）走完再截图，避免一页停在过渡中途而另一页已经落定。这是确定性的等待，不是失败重试。
+两份测试共用的用例表、截图比较和 **200 ms 的定身等待**在 `apps/website/demos/render-cases.ts`：手动时钟把两页的入场过渡（弹层 150 ms、颜色 160 ms）走完再截图，避免一页停在过渡中途而另一页已经落定。这是确定性的等待，不是失败重试。
 
 没有外壳的组件（`badge`、`spinner`、`stat`、`status`、`meter`、`plot`、`emoji-picker`、`color-picker`）在参照页上画的就是组件本身，比较证明不了什么：它们在那张表里带 `selfReference`（理由），渲染测试打印理由、只截组件，外观检查照旧跑；`port:coverage` 要求无外壳的都有声明、有外壳的都没有。
 
-**指针截图有一份提交的基线。** 两次渲染的同一页通常逐字节相同（2026-11-12，macOS），但圆角的抗锯齿偶尔在两次页面实例之间差一个像素、1/255：比较因此按"逐字节，或落在抗锯齿预算内"（`render-cases.ts` 的 `antialiasing`：至多 6 个像素、每个通道至多 6/255；`avatar` 的圆形照片另有更宽的 `tolerance`）。`apps/docs/demos/baseline/` 收完整的一份（192 张）：`port:render` 跑完按同一规则比较，改动、缺失、新增都会列出并以非零退出。看过 `port:sheet` 后确认是想要的改动，就 `bun run port:baseline --update`（`--only <id,...>` 只重录这几个）并提交。基线只在 macOS 上是门禁：别的平台字体与抗锯齿不同，会全部"改动"，所以 CI（Linux）跑 `port:render --no-baseline`，只以组件与参照页成对相同为门禁。
+**指针截图有一份提交的基线。** 两次渲染的同一页通常逐字节相同（2026-11-12，macOS），但圆角的抗锯齿偶尔在两次页面实例之间差一个像素、1/255：比较因此按"逐字节，或落在抗锯齿预算内"（`render-cases.ts` 的 `antialiasing`：至多 6 个像素、每个通道至多 6/255；`avatar` 的圆形照片另有更宽的 `tolerance`）。`apps/website/demos/baseline/` 收完整的一份（192 张）：`port:render` 跑完按同一规则比较，改动、缺失、新增都会列出并以非零退出。看过 `port:sheet` 后确认是想要的改动，就 `bun run port:baseline --update`（`--only <id,...>` 只重录这几个）并提交。基线只在 macOS 上是门禁：别的平台字体与抗锯齿不同，会全部"改动"，所以 CI（Linux）跑 `port:render --no-baseline`，只以组件与参照页成对相同为门禁。
 
 iOS 那一半需要 Xcode 的 iPhone 模拟器，以及 iOS 运行时（`~/.nsh/runtime/ios/iphonesimulator/nsh-ios-host`）。运行时用 CLI 装，不编译：
 

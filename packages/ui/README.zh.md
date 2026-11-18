@@ -6,8 +6,8 @@
 
 - 规范与移植流程：[`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md)、[`docs/port.md`](../../docs/port.md)、[`AGENTS.md`](../../AGENTS.md)
 - 路由：[`port-map.json`](../../port-map.json)
-- 演示 / 渲染比对：[`apps/docs/demos`](../../apps/docs/demos)
-- 文档站：[`apps/docs`](../../apps/docs)
+- 演示 / 渲染比对：[`apps/website/demos`](../../apps/website/demos)
+- 文档站：[`apps/website`](../../apps/website)
 - 原生冒烟：[`apps/gallery`](../../apps/gallery)
 
 每个文件 = look + 薄外壳。有上游的组件，look 起于上游 gallery UI（`// @port` 区域归本库，可直接改；上游有变化时 `port:check` 列出待审阅项，`bun run port:review` 记下审阅）；没有上游的（`pressable`）整份归本库。

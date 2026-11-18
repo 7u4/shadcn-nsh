@@ -7,7 +7,7 @@
  * one — and four rows: light phone, light desktop, dark phone, dark desktop. Plus one overview
  * (`theme/sheet-overview.png`): every component's light desktop demo, a row each.
  *
- * Reads `apps/docs/demos/shots-audit/theme/<id>-<name>-<kind>-<layout>-<appearance>.png` and calls
+ * Reads `apps/website/demos/shots-audit/theme/<id>-<name>-<kind>-<layout>-<appearance>.png` and calls
  * `scripts/audit/sheet.ts` with them; not part of the check pipeline.
  */
 import { spawnSync } from "node:child_process";

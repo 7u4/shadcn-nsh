@@ -54,8 +54,8 @@ jobs:
         id: demos
         uses: actions/cache@v4
         with:
-          path: apps/docs/public/demos
-          key: demos-${{ runner.os }}-${{ steps.nsh.outputs.version }}-${{ hashFiles('apps/docs/demos/**', '!apps/docs/demos/baseline/**', '!apps/docs/demos/shots*/**', 'packages/**', '!packages/**/node_modules/**', 'apps/docs/scripts/build-demos.ts', 'apps/docs/scripts/player-options.ts', 'scripts/catalog.ts', 'bun.lock') }}
+          path: apps/website/public/demos
+          key: demos-${{ runner.os }}-${{ steps.nsh.outputs.version }}-${{ hashFiles('apps/website/demos/**', '!apps/website/demos/baseline/**', '!apps/website/demos/shots*/**', 'packages/**', '!packages/**/node_modules/**', 'apps/website/scripts/build-demos.ts', 'apps/website/scripts/player-options.ts', 'scripts/catalog.ts', 'bun.lock') }}
 
       - name: Build docs
         if: steps.demos.outputs.cache-hit != 'true'
@@ -63,12 +63,12 @@ jobs:
 
       - name: Build docs (demos from the cache)
         if: steps.demos.outputs.cache-hit == 'true'
-        run: nsh check apps/docs/demos && bun --filter @shadcn-nsh/docs build
+        run: nsh check apps/website/demos && bun --filter @shadcn-nsh/website build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: apps/docs/.output/public
+          path: apps/website/.output/public
 
   deploy:
     needs: build

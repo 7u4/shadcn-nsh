@@ -54,9 +54,9 @@ function fixture({ items, files = {}, index }: Fixture): string {
   for (const item of items) {
     if (item.type !== "registry:ui") continue;
     defaults[`packages/ui/${item.name}.tsx`] = "export const value = 1;\n";
-    defaults[`apps/docs/demos/${item.name}.tsx`] = "// demo\n";
-    defaults[`apps/docs/demos/${item.name}.ref.tsx`] = "// reference\n";
-    defaults[`apps/docs/content/docs/components/${item.name}.md`] = "## Installation\n";
+    defaults[`apps/website/demos/${item.name}.tsx`] = "// demo\n";
+    defaults[`apps/website/demos/${item.name}.ref.tsx`] = "// reference\n";
+    defaults[`apps/website/content/docs/components/${item.name}.md`] = "## Installation\n";
   }
   for (const [rel, text] of Object.entries({ ...defaults, ...files })) {
     const file = path.join(root, rel);
@@ -84,9 +84,9 @@ describe("catalog", () => {
     expect(set.map((component) => component.id)).toEqual(["beta", "alpha"]);
     expect(set[0]!.item.name).toBe("beta");
     expect(set[0]!.uiFile).toBe(path.join(root, "packages/ui/beta.tsx"));
-    expect(set[0]!.demo).toBe(path.join(root, "apps/docs/demos/beta.tsx"));
-    expect(set[0]!.reference).toBe(path.join(root, "apps/docs/demos/beta.ref.tsx"));
-    expect(set[0]!.page).toBe(path.join(root, "apps/docs/content/docs/components/beta.md"));
+    expect(set[0]!.demo).toBe(path.join(root, "apps/website/demos/beta.tsx"));
+    expect(set[0]!.reference).toBe(path.join(root, "apps/website/demos/beta.ref.tsx"));
+    expect(set[0]!.page).toBe(path.join(root, "apps/website/content/docs/components/beta.md"));
   });
 
   test("exposes the paths the scripts share", () => {
@@ -94,7 +94,7 @@ describe("catalog", () => {
     const paths = catalog(root).paths;
 
     expect(paths.registry).toBe(path.join(root, "registry.json"));
-    expect(paths.generated).toBe(path.join(root, "apps/docs/demos/catalog.generated.ts"));
+    expect(paths.generated).toBe(path.join(root, "apps/website/demos/catalog.generated.ts"));
     expect(paths.index).toBe(path.join(root, "packages/ui/index.ts"));
   });
 });
@@ -107,16 +107,16 @@ describe("checkCatalog", () => {
 
   test("reports a missing file, reference page, docs page and export", () => {
     const root = fixture({ items: [ui("alpha")], index: 'export * from "./other";\n' });
-    remove(root, "apps/docs/demos/alpha.tsx");
-    remove(root, "apps/docs/demos/alpha.ref.tsx");
-    remove(root, "apps/docs/content/docs/components/alpha.md");
+    remove(root, "apps/website/demos/alpha.tsx");
+    remove(root, "apps/website/demos/alpha.ref.tsx");
+    remove(root, "apps/website/content/docs/components/alpha.md");
     remove(root, "packages/ui/alpha.tsx");
 
     const problems = checkCatalog(catalog(root));
     expect(problems).toContain("alpha: no packages/ui/alpha.tsx");
-    expect(problems).toContain("alpha: no demo apps/docs/demos/alpha.tsx");
-    expect(problems).toContain("alpha: no reference page apps/docs/demos/alpha.ref.tsx");
-    expect(problems).toContain("alpha: no docs page apps/docs/content/docs/components/alpha.md");
+    expect(problems).toContain("alpha: no demo apps/website/demos/alpha.tsx");
+    expect(problems).toContain("alpha: no reference page apps/website/demos/alpha.ref.tsx");
+    expect(problems).toContain("alpha: no docs page apps/website/content/docs/components/alpha.md");
     expect(problems).toContain('alpha: packages/ui/index.ts does not export "./alpha"');
   });
 
@@ -141,12 +141,12 @@ describe("checkCatalog", () => {
       items: [ui("alpha")],
       index: 'export {\n  value,\n  type AlphaProps,\n} from "./alpha";\n',
       files: {
-        "apps/docs/demos/App.tsx": "",
-        "apps/docs/demos/kit.tsx": "",
-        "apps/docs/demos/render-cases.ts": "",
-        "apps/docs/demos/alpha.test.tsx": "",
-        "apps/docs/demos/baseline/shot.png": "",
-        "apps/docs/content/docs/components/index.astro": "",
+        "apps/website/demos/App.tsx": "",
+        "apps/website/demos/kit.tsx": "",
+        "apps/website/demos/render-cases.ts": "",
+        "apps/website/demos/alpha.test.tsx": "",
+        "apps/website/demos/baseline/shot.png": "",
+        "apps/website/content/docs/components/index.astro": "",
       },
     });
 
@@ -162,16 +162,16 @@ describe("checkCatalog", () => {
     const root = fixture({
       items: [ui("alpha")],
       files: {
-        "apps/docs/demos/orphan.tsx": "",
-        "apps/docs/demos/orphan.ref.tsx": "",
-        "apps/docs/content/docs/components/orphan.md": "",
+        "apps/website/demos/orphan.tsx": "",
+        "apps/website/demos/orphan.ref.tsx": "",
+        "apps/website/content/docs/components/orphan.md": "",
       },
     });
 
     expect(checkCatalog(catalog(root)).sort()).toEqual([
-      "apps/docs/content/docs/components/orphan.md: docs page for no component",
-      "apps/docs/demos/orphan.ref.tsx: reference page for no component",
-      "apps/docs/demos/orphan.tsx: demo for no component",
+      "apps/website/content/docs/components/orphan.md: docs page for no component",
+      "apps/website/demos/orphan.ref.tsx: reference page for no component",
+      "apps/website/demos/orphan.tsx: demo for no component",
     ]);
   });
 });
@@ -206,7 +206,7 @@ describe("addComponent", () => {
 describe("checkOverrides", () => {
   test("reports an override for an id the catalog does not list", () => {
     const root = fixture({ items: [ui("alpha")] });
-    const where = path.join("apps/docs/demos", "render-cases.ts");
+    const where = path.join("apps/website/demos", "render-cases.ts");
 
     expect(checkOverrides(catalog(root), ["alpha"])).toEqual([]);
     expect(checkOverrides(catalog(root), ["ghost"])).toEqual([

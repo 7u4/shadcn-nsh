@@ -3,7 +3,7 @@
  *
  * The spec is the one list. `scripts/theme-lint.ts` holds the theme files to it — and it to
  * `references/nsh/crates/nsh-base/src/theme.rs`, whose slots it must name — and the docs site draws
- * its tables from it (`apps/docs/src/lib/themes.ts`), the markdown read as text, so the page keeps
+ * its tables from it (`apps/website/src/lib/themes.ts`), the markdown read as text, so the page keeps
  * no second copy of a token or a finish. The spec marks those parts with `<!-- theme-lint: … -->`
  * blocks; this file is the reader both sides use.
  *

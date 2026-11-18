@@ -14,14 +14,14 @@
 # CLI with `bun run port:bump`. The installed distribution carries its runtimes,
 # so web packing (`docs:demos`) and the render check need no `NSH_RUNTIME`.
 #
-# The only thing this writes is `.nsh/` in `apps/gallery` and `apps/docs/demos`.
+# The only thing this writes is `.nsh/` in `apps/gallery` and `apps/website/demos`.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root"
 
 base_dts="apps/gallery/.nsh/types/nsh/base.d.ts"
-demos_dts="apps/docs/demos/.nsh/types/nsh/base.d.ts"
+demos_dts="apps/website/demos/.nsh/types/nsh/base.d.ts"
 
 die() {
   printf 'nsh: %s\n' "$*" >&2
@@ -80,4 +80,4 @@ bun run prepare:types
 
 printf 'nsh: OK — CLI and upstream at the baseline %s\n' "${baseline:0:7}"
 printf 'nsh: types hosts at %s and %s\n' "$base_dts" "$demos_dts"
-printf 'nsh: next: bun run test:unit, nsh check apps/docs/demos, bun run check\n'
+printf 'nsh: next: bun run test:unit, nsh check apps/website/demos, bun run check\n'

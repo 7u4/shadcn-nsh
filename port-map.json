@@ -18,15 +18,15 @@
     },
     "demo.ts": {
       "symbols": {
-        "desktop": "apps/docs/demos/stage.tsx",
-        "wide": "apps/docs/demos/stage.tsx",
-        "sideBySide": "apps/docs/demos/stage.tsx",
-        "Stage": "apps/docs/demos/stage.tsx",
-        "Inspector": "apps/docs/demos/stage.tsx",
-        "Split": "apps/docs/demos/stage.tsx",
-        "Panel": "apps/docs/demos/stage.tsx",
-        "Log": "apps/docs/demos/stage.tsx",
-        "Segmented": "apps/docs/demos/stage.tsx"
+        "desktop": "apps/website/demos/stage.tsx",
+        "wide": "apps/website/demos/stage.tsx",
+        "sideBySide": "apps/website/demos/stage.tsx",
+        "Stage": "apps/website/demos/stage.tsx",
+        "Inspector": "apps/website/demos/stage.tsx",
+        "Split": "apps/website/demos/stage.tsx",
+        "Panel": "apps/website/demos/stage.tsx",
+        "Log": "apps/website/demos/stage.tsx",
+        "Segmented": "apps/website/demos/stage.tsx"
       },
       "exclude": {
         "hoverFill": "the gallery's press fill; a demo takes the theme's `hovered()`",
@@ -44,7 +44,7 @@
       "exclude": "the NSH website's demo adapter"
     },
     "photos.ts": {
-      "to": "apps/docs/demos/photos.ts"
+      "to": "apps/website/demos/photos.ts"
     },
     "sound.ts": {
       "exclude": "sounds are out of scope"
@@ -138,9 +138,9 @@
       "symbols": {
         "avatarHue": "packages/ui/avatar.tsx",
         "avatarIdentity": "packages/ui/avatar.tsx",
-        "MAINTAINERS": "apps/docs/demos/avatar-data.ts",
-        "avatarPortrait": "apps/docs/demos/avatar-data.ts",
-        "AVATAR_BROKEN": "apps/docs/demos/avatar-data.ts",
+        "MAINTAINERS": "apps/website/demos/avatar-data.ts",
+        "avatarPortrait": "apps/website/demos/avatar-data.ts",
+        "AVATAR_BROKEN": "apps/website/demos/avatar-data.ts",
         "oklch": "packages/ui/avatar.tsx",
         "HUES": "packages/ui/avatar.tsx",
         "hash": "packages/ui/avatar.tsx"

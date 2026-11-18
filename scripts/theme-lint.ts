@@ -114,7 +114,7 @@ function files(dir: string, extensions: string[]): string[] {
 /** The code that reads a theme: the components, the theme module, and the demos. */
 const code = [
   ...files("packages/ui", [".ts", ".tsx"]),
-  ...files("apps/docs/demos", [".ts", ".tsx"]),
+  ...files("apps/website/demos", [".ts", ".tsx"]),
 ]
   .map((path) => read(path))
   .join("\n");

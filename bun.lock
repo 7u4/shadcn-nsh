@@ -12,8 +12,16 @@
         "vite-plus": "^1.7.0",
       },
     },
-    "apps/docs": {
-      "name": "@shadcn-nsh/docs",
+    "apps/gallery": {
+      "name": "@shadcn-nsh/gallery",
+      "version": "0.0.0",
+      "dependencies": {
+        "@shadcn-nsh/theme": "workspace:*",
+        "@shadcn-nsh/ui": "workspace:*",
+      },
+    },
+    "apps/website": {
+      "name": "@shadcn-nsh/website",
       "version": "0.0.0",
       "dependencies": {
         "@tailwindcss/vite": "^4.3.5",
@@ -43,17 +51,9 @@
         "vite": "^8.3.8",
       },
     },
-    "apps/gallery": {
-      "name": "@shadcn-nsh/gallery",
-      "version": "0.0.0",
-      "dependencies": {
-        "@shadcn-nsh/theme": "workspace:*",
-        "@shadcn-nsh/ui": "workspace:*",
-      },
-    },
     "packages/cli": {
       "name": "shadcn-nsh",
-      "version": "0.7.0",
+      "version": "0.8.0",
       "bin": {
         "shadcn-nsh": "dist/index.js",
       },
@@ -421,13 +421,13 @@
 
     "@rollup/rollup-win32-x64-msvc": ["@rollup/rollup-win32-x64-msvc@4.68.6", "", { "os": "win32", "cpu": "x64" }, "sha512-DkUnrmo6oUZPDK6O6LOXLcEx8BZ85I8qkJLZWoSaOBHPqJfYzTtqweyoSxPpePG7XQvFkFEcSgVvHWRnuiXIcw=="],
 
-    "@shadcn-nsh/docs": ["@shadcn-nsh/docs@workspace:apps/docs"],
-
     "@shadcn-nsh/gallery": ["@shadcn-nsh/gallery@workspace:apps/gallery"],
 
     "@shadcn-nsh/theme": ["@shadcn-nsh/theme@workspace:packages/theme"],
 
     "@shadcn-nsh/ui": ["@shadcn-nsh/ui@workspace:packages/ui"],
+
+    "@shadcn-nsh/website": ["@shadcn-nsh/website@workspace:apps/website"],
 
     "@shikijs/core": ["@shikijs/core@4.6.0", "", { "dependencies": { "@shikijs/primitive": "4.6.0", "@shikijs/types": "4.6.0", "@shikijs/vscode-textmate": "^10.1.0", "@types/hast": "^3.0.5", "hast-util-to-html": "^9.0.6" } }, "sha512-bfd4OKgvoyXYiYmMRuleA656P4V7M/Du9lcTl38Ngm6KszMj7bq4J1IGZwSYR4c95Tv5UQALtYNWUwaI9UT3xw=="],
 

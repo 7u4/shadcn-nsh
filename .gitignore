@@ -156,7 +156,7 @@ vite.config.ts.timestamp-*
 .nsh/
 
 # Docs web demos (nsh package --target web)
-apps/docs/public/demos/
+apps/website/public/demos/
 
 # Bun
 bun.lockb

@@ -49,6 +49,7 @@ npx shadcn-nsh add theme-solid-glass                    # 多带一套，运行�
 
 | shadcn-nsh | NSH CLI |
 | ---------- | ------- |
+| 0.8.x      | v0.6.0  |
 | 0.7.x      | v0.5.1  |
 | 0.6.x      | v0.5.1  |
 
@@ -79,8 +80,8 @@ bun run check           # CI 跑的那一串
 | ---------------------------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `packages/theme`             | `@shadcn-nsh/theme`   | `theme.json`、`finishes.json`、`theme.ts` —— 主题（本库所有，oklch）；`themes/<name>/` 是另一套主题的数据，作为它的 `theme-<name>` 条目发布 |
 | `packages/ui`                | `@shadcn-nsh/ui`      | 一个组件一个文件：外观（`// @port` 区域）+ 外壳                                                                                             |
-| `apps/docs/demos`            | —                     | 验收演示、参照页、`port:render`                                                                                                             |
-| `apps/docs/content/docs`     | —                     | 文档页（`/docs/…`），由 `src/routes/docs/$.tsx` 渲染                                                                                        |
+| `apps/website/demos`         | —                     | 验收演示、参照页、`port:render`                                                                                                             |
+| `apps/website/content/docs`  | —                     | 文档页（`/docs/…`），由 `src/routes/docs/$.tsx` 渲染                                                                                        |
 | `apps/gallery`               | `@shadcn-nsh/gallery` | 原生行为测试与冒烟页                                                                                                                        |
 | `packages/cli`               | `shadcn-nsh`（npm）   | `init` / `add` / `list` / `view` / `diff` / `build` / `serve`                                                                               |
 | `registry.json` → `public/r` | —                     | registry 源 → 提交的 HTTP 产物                                                                                                              |

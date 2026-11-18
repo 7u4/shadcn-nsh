@@ -46,10 +46,10 @@ const lib = readdirSync(new URL("packages/ui/lib/", root))
 /** The theme's helpers read the roles; they write no color of their own either. */
 const theme = ["packages/theme/theme.ts", "packages/theme/index.ts"];
 /** The demo adapter is the demos' chrome; `stage.tsx` is where the official examples' parts live. */
-const adapter = ["apps/docs/demos/kit.tsx", "apps/docs/demos/stage.tsx"];
-const demos = readdirSync(new URL("apps/docs/demos/", root))
+const adapter = ["apps/website/demos/kit.tsx", "apps/website/demos/stage.tsx"];
+const demos = readdirSync(new URL("apps/website/demos/", root))
   .filter((file) => file.endsWith(".tsx") && !file.endsWith(".test.tsx"))
-  .map((file) => `apps/docs/demos/${file}`);
+  .map((file) => `apps/website/demos/${file}`);
 
 const sources = [...components, ...lib, ...theme, ...adapter, ...demos];
 
@@ -63,12 +63,12 @@ const exempt: Record<string, string> = {
     "spells out a color the user picked (rgb() / hsl() / oklch() built from its value) and picks black or white ink to read on it; the theme cannot name the user's color",
   "packages/ui/color-picker.tsx":
     'the swatch\'s white ring and black hairline read on the user\'s color in either appearance; "red" / "green" / "blue" here are RGB channel names',
-  "apps/docs/demos/color-picker.tsx":
+  "apps/website/demos/color-picker.tsx":
     "the palette is the demo's content: the colors the user picks, and the ink that reads on them",
-  "apps/docs/demos/color-picker.ref.tsx": "the same page, its look expanded onto `nsh/base`",
-  "apps/docs/demos/plot.tsx":
+  "apps/website/demos/color-picker.ref.tsx": "the same page, its look expanded onto `nsh/base`",
+  "apps/website/demos/plot.tsx":
     "chart labels sit on a series' fill: black or white reads on any of them, the theme's ink does not",
-  "apps/docs/demos/plot.ref.tsx": "the same page, its look expanded onto `nsh/base`",
+  "apps/website/demos/plot.ref.tsx": "the same page, its look expanded onto `nsh/base`",
 };
 
 const violations = (paths: string[]) =>

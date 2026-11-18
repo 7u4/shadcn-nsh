@@ -5,13 +5,13 @@
  * the preview.
  *
  *   bun scripts/audit/audit.ts build   [--only id,id] [--force]  # nsh package into /tmp/nsh-audit
- *   bun scripts/audit/audit.ts shots   [--only id,id] [--theme light|dark]  # PNGs under apps/docs/demos/shots-audit
+ *   bun scripts/audit/audit.ts shots   [--only id,id] [--theme light|dark]  # PNGs under apps/website/demos/shots-audit
  *   bun scripts/audit/audit.ts canvas                            # the docs preview (needs build:docs)
  *   bun scripts/audit/audit.ts probe                             # the probe at both idioms, standalone
  *
  * `canvas` needs `bun run build:docs` first (the site embeds the packaged demos; a page without
- * one shows source only) and leaves the probe in `apps/docs/dist/demos/__audit-probe`. The
- * screenshots directory under `apps/docs/demos` is gitignored, and the packages stay in the work
+ * one shows source only) and leaves the probe in `apps/website/dist/demos/__audit-probe`. The
+ * screenshots directory under `apps/website/demos` is gitignored, and the packages stay in the work
  * directory.
  */
 import fs from "node:fs";
@@ -25,7 +25,7 @@ import { type Target, packageTarget, shotName, shotsDir, targetsFor } from "./ta
 const work = process.env.NSH_AUDIT_WORK ?? path.join("/tmp", "nsh-audit");
 const packages = path.join(work, "packages");
 const probeDir = path.join(repo, "scripts", "audit", "probe");
-const dist = path.join(repo, "apps", "docs", "dist");
+const dist = path.join(repo, "apps", "website", "dist");
 
 /** The player's two frames: a phone (a finger) and a desktop window (a pointer). */
 const LAYOUTS = {
@@ -304,7 +304,7 @@ async function readProbe(page: Page, prefix: string, nonce: string): Promise<str
 
 async function canvas() {
   if (!fs.existsSync(path.join(dist, "index.html"))) {
-    throw new Error("apps/docs/dist is missing: run `bun run build:docs` first");
+    throw new Error("apps/website/dist is missing: run `bun run build:docs` first");
   }
   const probe = packageTarget(probeTarget, work, force);
   fs.rmSync(path.join(dist, "demos", "__audit-probe"), { recursive: true, force: true });

@@ -1,4 +1,4 @@
-// The plot demo's chart with the one change `apps/docs/demos/plot.tsx` lacks: the Plot's height.
+// The plot demo's chart with the one change `apps/website/demos/plot.tsx` lacks: the Plot's height.
 // The audit's experiment for the blank chart (see docs/specs/demo-audit.md). Not a demo.
 import { colors } from "@shadcn-nsh/theme";
 import { mount, View } from "nsh";

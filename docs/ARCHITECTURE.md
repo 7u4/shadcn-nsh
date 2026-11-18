@@ -13,7 +13,7 @@ _Avoid_: Prettier、npm / pnpm 脚本
 **上游解析**：`oxc-parser`
 _Avoid_: TypeScript 编译器 API、正则切声明
 
-**文档站**：TanStack Start + Fumadocs（`apps/docs`，React + Tailwind），静态预渲染；演示由 `nsh package --target web` 打包后嵌进 iframe
+**文档站**：TanStack Start + Fumadocs（`apps/website`，React + Tailwind），静态预渲染；演示由 `nsh package --target web` 打包后嵌进 iframe
 
 **分发**：shadcn registry 格式（`registry.json` → `public/r`）+ 本仓 CLI `shadcn-nsh`
 _Avoid_: 发布组件 npm 包、旧 registry id 的别名
@@ -23,21 +23,21 @@ _Avoid_: 发布组件 npm 包、旧 registry id 的别名
 ## Layout
 
 - `registry.json`：**Catalog** 的真源，其 `registry:ui` 条目就是组件集合
-- `port-map.json`：**Port Map**，上游每个声明的来源去向表与已审阅的上游提交；目标不一定是组件——`demo.ts` 的 `Stage` / `Split` / `Inspector` / `Panel` / `Log` / `Segmented` 等去向 `apps/docs/demos/stage.tsx`（演示适配层，不进 registry）
+- `port-map.json`：**Port Map**，上游每个声明的来源去向表与已审阅的上游提交；目标不一定是组件——`demo.ts` 的 `Stage` / `Split` / `Inspector` / `Panel` / `Log` / `Segmented` 等去向 `apps/website/demos/stage.tsx`（演示适配层，不进 registry）
 - `packages/theme/`：**Theme Source**（两个 JSON，oklch，归本库）与 `theme.ts`（读取 token 与 finish，以及运行时的 `selectTheme` / `currentTheme`）；`themes/<name>/` 是其它主题，一套一个 `AppTheme`（`theme.json`、`finishes.json`、`index.ts`），经 `theme-<name>` 条目分发；不放组件
 - `packages/ui/<id>.tsx`：一个**组件** = look（源自上游的部分以 **Port Region** 标注来源）+ **Shell**；一个 registry 条目一个文件
 - `packages/ui/lib/`：没有所属控件的上游部分（以上游文件名命名）与多个外壳共用的接线；作为 `registry:lib` 条目分发
-- `apps/docs/demos/`：每个组件的 `<id>.tsx` 与 **Reference Page** `<id>.ref.tsx`、渲染比对用例与基线截图；`kit.tsx` 是演示外框，`stage.tsx` 是演示适配层（`Stage` / `Inspector` / `Split` / `Panel` / `Log` / `Segmented` / `Chips` / `desktop` / `wide` / `ui()`，见 [`port.md`](port.md#演示)），`photos.ts` 是照片页用的图（上游 `photos.ts`，原样搬运），都不进 registry；`shots/` 是渲染比对的截图，`shots-audit/` 是诊断脚本的，两者都不提交
-- `apps/docs/public/demos/`：`docs:demos` 的打包产物（页面、运行时、wasm），不进仓库；`apps/docs/scripts/build-demos.ts` 打包每个演示，`player-options.ts` 让页面认面板的 `?idiom=` / `?theme=`
-- `apps/docs/content/docs/`：文档页（MDX / Markdown，`createFileRoute("/docs/$")` 渲染）；组件页 `<id>.md` 固定四节。`components.mdx`（组件索引）、`components/coverage.mdx`（对照页）与 `themes.mdx`（主题页）由 `apps/docs/src/components/fd/` 里的 React 组件画，行与 token 都来自生成表，正文只在页面里写一遍。`apps/docs/src/lib/official.ts` 是文档站唯一的登记表（shadcn/ui 与 NSH 元素各一张：来源、去向、没做的理由）；分类从它推导——页被 NSH 元素表（`references/nsh/website/elements`）某行的 `ours` 列出就是**对齐官方**，否则是**自研**（shadcn/ui 有没有对应都不影响）——`apps/docs/src/lib/kinds.ts` 只留两个类名、顺序与这条推导。侧边栏分组、索引分节、每页页头的官方链接（`Official: shadcn/ui · … | NSH · …`）与对照页都从它们生成，页面自己不写。新增组件只在该表登记（若对得上某个官方组件），分类自动得出；`bun run check:pages` 会拦下没登记或没建的页
+- `apps/website/demos/`：每个组件的 `<id>.tsx` 与 **Reference Page** `<id>.ref.tsx`、渲染比对用例与基线截图；`kit.tsx` 是演示外框，`stage.tsx` 是演示适配层（`Stage` / `Inspector` / `Split` / `Panel` / `Log` / `Segmented` / `Chips` / `desktop` / `wide` / `ui()`，见 [`port.md`](port.md#演示)），`photos.ts` 是照片页用的图（上游 `photos.ts`，原样搬运），都不进 registry；`shots/` 是渲染比对的截图，`shots-audit/` 是诊断脚本的，两者都不提交
+- `apps/website/public/demos/`：`docs:demos` 的打包产物（页面、运行时、wasm），不进仓库；`apps/website/scripts/build-demos.ts` 打包每个演示，`player-options.ts` 让页面认面板的 `?idiom=` / `?theme=`
+- `apps/website/content/docs/`：文档页（MDX / Markdown，`createFileRoute("/docs/$")` 渲染）；组件页 `<id>.md` 固定四节。`components.mdx`（组件索引）、`components/coverage.mdx`（对照页）与 `themes.mdx`（主题页）由 `apps/website/src/components/fd/` 里的 React 组件画，行与 token 都来自生成表，正文只在页面里写一遍。`apps/website/src/lib/official.ts` 是文档站唯一的登记表（shadcn/ui 与 NSH 元素各一张：来源、去向、没做的理由）；分类从它推导——页被 NSH 元素表（`references/nsh/website/elements`）某行的 `ours` 列出就是**对齐官方**，否则是**自研**（shadcn/ui 有没有对应都不影响）——`apps/website/src/lib/kinds.ts` 只留两个类名、顺序与这条推导。侧边栏分组、索引分节、每页页头的官方链接（`Official: shadcn/ui · … | NSH · …`）与对照页都从它们生成，页面自己不写。新增组件只在该表登记（若对得上某个官方组件），分类自动得出；`bun run check:pages` 会拦下没登记或没建的页
 - `apps/gallery/`：原生行为测试与冒烟页，用同一套 `packages/ui`；不做公开文档，不比截图
 - `packages/cli/`：`shadcn-nsh` CLI（`init`、`add`、`list`、`view`、`diff`、`build`、`serve`）
-- `scripts/catalog.ts`：**Catalog** 模块，脚本读写 `registry.json` 与取组件集合的唯一入口（`addComponent` 写入新条目）；生成 `apps/docs/demos/catalog.generated.ts` 供 NSH 运行时使用（不手改）；`demos/` 下不是组件演示的文件（`App.tsx`、`kit.tsx`、`stage.tsx`）在 `NON_COMPONENT_DEMOS` 登记，新增这样的文件要加进去，否则 `catalog --check` 把它当成没有组件的演示
+- `scripts/catalog.ts`：**Catalog** 模块，脚本读写 `registry.json` 与取组件集合的唯一入口（`addComponent` 写入新条目）；生成 `apps/website/demos/catalog.generated.ts` 供 NSH 运行时使用（不手改）；`demos/` 下不是组件演示的文件（`App.tsx`、`kit.tsx`、`stage.tsx`）在 `NON_COMPONENT_DEMOS` 登记，新增这样的文件要加进去，否则 `catalog --check` 把它当成没有组件的演示
 - `scripts/registry-build.ts`：`registry:build` 与 `test:install` 共用的构建（CLI `build` 加格式化）
 - `scripts/install-test.ts`：`test:install`，从应用一侧验证 Copy-into-app
 - `scripts/failure.ts`：脚本报错的约定，`StepFailure` 带失败的步骤名与 `cause`
 - `scripts/port/`：抽取与上游变化提醒工具（读 `references/nsh`，见下）
-- `scripts/audit/`：诊断演示的工具（批量打包 / 截图 / 量画布 / 拼对照页），不属于检查流水线；也读 `references/nsh`（官方示例原地打包），截图落在 `apps/docs/demos/shots-audit/`（gitignored，`port:render` 不清它），包落在仓库外，见 [`specs/demo-audit.md`](specs/demo-audit.md)
+- `scripts/audit/`：诊断演示的工具（批量打包 / 截图 / 量画布 / 拼对照页），不属于检查流水线；也读 `references/nsh`（官方示例原地打包），截图落在 `apps/website/demos/shots-audit/`（gitignored，`port:render` 不清它），包落在仓库外，见 [`specs/demo-audit.md`](specs/demo-audit.md)
 - `references/`：只读子模块
 
 ## Layers
@@ -51,9 +51,9 @@ flowchart TD
   ui["packages/ui/&lt;id&gt;"]
   base["nsh/base"]
   nsh["nsh"]
-  demos["apps/docs/demos"]
+  demos["apps/website/demos"]
   gallery["apps/gallery"]
-  site["apps/docs 站点"]
+  site["apps/website 站点"]
   registry["registry.json → public/r"]
   cli["packages/cli"]
 
@@ -74,11 +74,11 @@ flowchart TD
 - `packages/ui/lib` 不 import `packages/ui/<id>`；组件之间可以 import（`./button`），依赖写进该条目的 `registryDependencies`
 - `packages/theme` 不 import `packages/ui`；反过来，组件只经 `@shadcn-nsh/theme` 的 token 与 finish 取外观（`colors`、`finish`、`radius`），不直接读两个 JSON，也不读 `themes/<name>/`
 - `packages/*` 不 import `apps/*`、`scripts/*` 或 `references/*`；运行时代码只认 `@shadcn-nsh/theme`、`nsh`、`nsh/base`、`lucide`（图标库，应用经 registry 的 `dependencies` 安装）与相对路径
-- 只有 `scripts/port`（抽取与变化提醒）与 `scripts/audit`（对照诊断截图）读 `references/nsh`；`apps/docs` 的构建不需要子模块
+- 只有 `scripts/port`（抽取与变化提醒）与 `scripts/audit`（对照诊断截图）读 `references/nsh`；`apps/website` 的构建不需要子模块
 - 组件集合只从 `scripts/catalog.ts`（脚本）或 `catalog.generated.ts`（NSH 运行时）取；不自己读 `registry.json` 过滤，也不 `readdir` 演示或文档目录来推导
 - `scripts/*` 可以把 `packages/cli/src/*` 当库 import（构建、serve、registry 形状校验）：它是工具，不是应用代码；CLI 本身仍只经 Registry 拿组件
 - registry JSON 的形状只在 `packages/cli/src/utils/registry-schema.ts` 校验；读到的 JSON 经它变成类型，不用 `as` 断言
-- `scripts/*` 可以 import `apps/docs/demos/render-cases.ts`（渲染用例与特例）、`apps/docs/demos/palettes.ts`（可切换的主题清单：站点与主题渲染检查读同一份）与 `apps/docs/scripts/player-options.ts`（演示包的 `?idiom=` / `?theme=`：文档站与审计用同一份），不 import `apps/docs` 的其他代码
+- `scripts/*` 可以 import `apps/website/demos/render-cases.ts`（渲染用例与特例）、`apps/website/demos/palettes.ts`（可切换的主题清单：站点与主题渲染检查读同一份）与 `apps/website/scripts/player-options.ts`（演示包的 `?idiom=` / `?theme=`：文档站与审计用同一份），不 import `apps/website` 的其他代码
 - 每个组件的特例（渲染前的 steps、`selfReference`）只写在 `render-cases.ts`，按 id 覆盖；`packages/ui/index.ts` 手写，由检查保证它导出每个组件
 
 ## Themes
@@ -128,5 +128,5 @@ Port Region 是**来源标注**，不是只读区：可以直接修改；`port:v
 **Registry**（`registry.json` 的 shadcn 格式）：CLI 只经它拿组件，不读仓库源码
 _Adapters_: GitHub Pages 上的 `public/r`、本地 `registry:serve`、CLI 测试的夹具 registry
 
-**渲染用例表**（`apps/docs/demos/render-cases.ts`）：哪些页、怎么定身、怎么比较，只在这里定义
+**渲染用例表**（`apps/website/demos/render-cases.ts`）：哪些页、怎么定身、怎么比较，只在这里定义
 _Adapters_: web 指针（`port:render`）、iOS 触屏（`port:render:touch`）、shadcn 主题（`port:render:theme`）、外观切换检查

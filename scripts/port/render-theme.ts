@@ -1,6 +1,6 @@
 /**
  * The render check under the themes the demos can switch to: every demo, and its reference page
- * beside it, drawn with the theme its palette names (`apps/docs/demos/palettes.ts`) — shadcn's,
+ * beside it, drawn with the theme its palette names (`apps/website/demos/palettes.ts`) — shadcn's,
  * the theme the registry installs — and the two compared, so a component drawn by hand still draws
  * what its theme says.
  *
@@ -21,8 +21,8 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-import { PALETTES } from "../../apps/docs/demos/palettes";
-import { cases } from "../../apps/docs/demos/render-cases";
+import { PALETTES } from "../../apps/website/demos/palettes";
+import { cases } from "../../apps/website/demos/render-cases";
 import { catalog } from "../catalog";
 import { repo } from "./lib";
 import { comparePairs, onlyIds, softwareBrowser } from "./render-shared";
