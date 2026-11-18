@@ -78,7 +78,7 @@ bun run port:new alert --view --family   # 有零件（Title / Description…）
 
 `Log` 的 `grow` 默认 `sideBySide()`：并排时它吃掉检查器剩下的高度；页面级的一条日志（toast）在窄窗口不伸、在宽窗口跟着长，与官方的 `Log` 一致。
 
-**照片页**：演示里的图来自上游的 `photos.ts`（搬到 `apps/docs/demos/photos.ts`，**演示内容，不进 registry**）与 `avatarPortrait`。页面先 `Image.prefetch` 再交给 `Image`，全部到位后画 `testID="images-ready"` 的标记；`render-cases.ts` 的 `photos: true` 让 `port:render` 用活网络打开它、等这个标记与淡入结束。圆角裁切的边缘在两次运行间偶尔差 1/255：所有页按抗锯齿预算比较（`render-cases.ts` 的 `antialiasing`），avatar 的圆形头像另有更宽的 `tolerance`，数字与实测写在那里。
+**照片页**：演示里的图来自上游的 `photos.ts`（搬到 `apps/docs/demos/photos.ts`，**演示内容，不进 registry**）与 `apps/docs/demos/avatar-data.ts` 的 `avatarPortrait`（同样只供演示）。页面先 `Image.prefetch` 再交给 `Image`，全部到位后画 `testID="images-ready"` 的标记；`render-cases.ts` 的 `photos: true` 让 `port:render` 用活网络打开它、等这个标记与淡入结束。圆角裁切的边缘在两次运行间偶尔差 1/255：所有页按抗锯齿预算比较（`render-cases.ts` 的 `antialiasing`），avatar 的圆形头像另有更宽的 `tolerance`，数字与实测写在那里。
 
 它们都在 `apps/docs/demos/stage.tsx`，从上游 `demo.ts` 搬来（`port-map.json` 的 `symbols` 路由）。区域先留空，再由 `port:vendor` 填；填过之后就是我们的代码，改它不需要登记。外观取 `@shadcn-nsh/theme` 与 `packages/ui/lib/surface`，**不进 `packages/ui`、不进 registry**。适配层新增、重命名时：改 `port-map.json` 的 `symbols` 与目标文件的 `// @port demo.ts` 区域。
 

@@ -138,9 +138,9 @@
       "symbols": {
         "avatarHue": "packages/ui/avatar.tsx",
         "avatarIdentity": "packages/ui/avatar.tsx",
-        "MAINTAINERS": "packages/ui/avatar.tsx",
-        "avatarPortrait": "packages/ui/avatar.tsx",
-        "AVATAR_BROKEN": "packages/ui/avatar.tsx",
+        "MAINTAINERS": "apps/docs/demos/avatar-data.ts",
+        "avatarPortrait": "apps/docs/demos/avatar-data.ts",
+        "AVATAR_BROKEN": "apps/docs/demos/avatar-data.ts",
         "oklch": "packages/ui/avatar.tsx",
         "HUES": "packages/ui/avatar.tsx",
         "hash": "packages/ui/avatar.tsx"

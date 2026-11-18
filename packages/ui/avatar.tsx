@@ -1,4 +1,4 @@
-// An avatar: the identity ring (`avatarIdentity`, `avatarPortrait`) and the `Avatar` that wears it.
+// An avatar: the identity ring (`avatarIdentity`, `avatarHue`) and the `Avatar` that wears it.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 import { isDark } from "@shadcn-nsh/theme";
 import { split } from "nsh";
@@ -67,31 +67,11 @@ export function avatarIdentity(name: string) {
       };
 }
 
-/** NSH's maintainers, by name: their GitHub logins and account ids. */
-export const MAINTAINERS = [
-  { name: "Jason Lee", login: "huacnlee", id: 5518 },
-  { name: "Sunli", login: "sunli829", id: 20092316 },
-  { name: "Floyd Wang", login: "madcodelife", id: 28998859 },
-] as const;
-
-/**
- * The GitHub picture of `name`, one of NSH's maintainers (160 px, sharp
- * at the demos' largest avatar), or none for anyone else: they show their
- * initials.
- */
-export function avatarPortrait(name: string): string | undefined {
-  const person = MAINTAINERS.find((m) => m.name === name);
-  return person && `https://avatars.githubusercontent.com/u/${person.id}?s=160`;
-}
-
-/** An image that never loads (bytes no decoder reads): the avatar's
- * fallback shows, as for a picture that is gone. */
-export const AVATAR_BROKEN = "data:image/png;base64,AAAA";
 // @port end
 
 /**
  * `nsh/base`'s Avatar with identity colors for a named fallback. Every base prop passes through.
- * `name` drives initials and hue via `avatarIdentity`; use `avatarPortrait` for maintainer pictures.
+ * `name` drives initials and hue via `avatarIdentity`; `src` is the picture, if there is one.
  */
 export type AvatarProps = BaseAvatarProps;
 

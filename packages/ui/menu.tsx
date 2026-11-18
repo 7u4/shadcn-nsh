@@ -55,14 +55,10 @@ const markRoom = menuItemSize.icon + 8;
 export const menuHighlight = (): ViewStyle => ({ backgroundColor: token("accent") });
 
 /** A row pressed (`activeStyle`): a shade deeper than the highlight. */
-export const menuPressed = (): ViewStyle => ({ backgroundColor: alpha(colors.text, 0.1) });
+const menuPressed = (): ViewStyle => ({ backgroundColor: alpha(colors.text, 0.1) });
 
 /** Options of `menuItemLook`. */
 export interface MenuItemLookOptions {
-  /** A row of two lines (a label and a note under it): as tall as they are,
-   * 6 points above and below with a pointer, 10 on a touch screen, its mark
-   * at the top. */
-  tall?: boolean;
   /** The label starts where a checkable row's does, past the mark's room, as shadcn's `inset`. */
   inset?: boolean;
   /** More style (a justification, a padding), over the look's. */
@@ -83,9 +79,9 @@ export function menuItemLook(o?: MenuItemLookOptions) {
     get style(): ViewStyle {
       return {
         flexDirection: "row",
-        alignItems: o?.tall ? "flex-start" : "center",
+        alignItems: "center",
         gap: 8,
-        ...(o?.tall ? { paddingVertical: pointer ? 6 : 10 } : { height: menuItemSize.height }),
+        height: menuItemSize.height,
         paddingHorizontal: rowInset,
         ...(o?.inset ? { paddingStart: rowInset + markRoom } : {}),
         borderRadius: menuItemSize.radius,

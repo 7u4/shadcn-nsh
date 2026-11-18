@@ -5,10 +5,11 @@ import type { JSX } from "nsh";
 import { Image, mount, signal, Text, View } from "nsh";
 import { Avatar, AvatarGroup } from "nsh/base";
 
-import { AVATAR_BROKEN, avatarIdentity, avatarPortrait } from "@/packages/ui/avatar";
+import { avatarIdentity } from "@/packages/ui/avatar";
 import { Button } from "@/packages/ui/button";
 import { listRow, RowLabel, sectionSurface } from "@/packages/ui/lib/surface";
 
+import { AVATAR_BROKEN, avatarPortrait } from "./avatar-data";
 import { DemoPage } from "./kit";
 import { desktop, Log, Panel, Segmented, Split, ui } from "./stage";
 
