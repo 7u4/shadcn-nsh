@@ -13,7 +13,7 @@
 
 抽取自上游的代码位于 `// @port <上游文件>` 与 `// @port end` 之间：这是**来源标注**，说明这段起源于上游哪个文件，**可以直接修改**。上游每个声明的去向记在 [`port-map.json`](port-map.json)；`port:vendor` 只在新增组件时抽取初稿，不覆盖已有代码。颜色只来自主题（`packages/theme`），组件代码里不写颜色字面量。
 
-**写或改任何组件、主题、演示之前，读 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**（目录、分层、规则 P1–P6、归属）**和 [`docs/port.md`](docs/port.md)**（每个组件的流程、外壳写法、检查）。词汇见 [`docs/GLOSSARY.md`](docs/GLOSSARY.md)。组件会被复制进别人的仓库，代码写法与审阅标准见 [`docs/code-style.md`](docs/code-style.md)。
+**写或改任何组件、主题、演示之前，读 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)**（目录、分层、规则 P1–P6、归属）**和 [`docs/port.md`](docs/port.md)**（每个组件的流程、外壳写法、检查）。词汇见 [`docs/GLOSSARY.md`](docs/GLOSSARY.md)。
 
 **不做**：改 `nsh` / `nsh/base`；在组件代码里写颜色字面量（颜色一律经主题角色）；搬上游的声音；把上游的 demo 适配层（`Stage` / `Split` / `Inspector` / `Panel` / `Log` / `Segmented`）放进组件库或 registry（它只在 `apps/docs/demos` 里，供演示用）；为旧 registry id 提供别名。
 
