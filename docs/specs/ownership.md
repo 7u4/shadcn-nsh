@@ -1,5 +1,10 @@
 # 组件归本库：检查工具改造
 
+> **已完成，留作记录（最后编辑 2026-11-18）。** 工具改造已落地：`port:review`、`port-map.json` 的
+> `upstream.reviewed`、`port:check` 的变化提醒，`replace` / `copy` 已废弃。现行的流程与检查见
+> [`docs/port.md`](../port.md) 与 [`docs/toolchain.md`](../toolchain.md)，规则见 [`AGENTS.md`](../../AGENTS.md)
+> 与 [`ARCHITECTURE.md`](../ARCHITECTURE.md) 的 P1–P6。
+
 ## 目标
 
 用户决定（2026-11-14）：组件与主题**由本库自己抽取并拥有**，上游 `nsh-gallery-ui` 与官方推荐的样子是参考规范。规则已改（`AGENTS.md`、`docs/ARCHITECTURE.md` 的 P1–P6），工具要跟上：从"必须与上游一致"改为"上游变化提醒"。

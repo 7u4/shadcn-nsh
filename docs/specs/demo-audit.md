@@ -1,6 +1,10 @@
 # 演示诊断
 
-[`demo-parity.md`](demo-parity.md) 任务 1：52 个组件的演示，在 Phone（390）与 Desktop（1024）两种画布下，和 `references/nsh/website/demos` 的官方示例对照，判断问题在**画布 / 套件 / 外壳 / look / 演示写法**的哪一层。本文件只诊断，不改组件、演示或文档站。
+> **已完成，留作记录（最后编辑 2026-11-14）。** 这是 [`demo-parity.md`](../archive/demo-parity.md)
+> 任务 1 的诊断结果，与那份记录的完成情况一一对应。现在改一个演示的流程与检查见
+> [`docs/port.md`](../port.md)、截图与比较工具见 [`docs/toolchain.md`](../toolchain.md)。
+
+[`demo-parity.md`](../archive/demo-parity.md) 任务 1：52 个组件的演示，在 Phone（390）与 Desktop（1024）两种画布下，和 `references/nsh/website/demos` 的官方示例对照，判断问题在**画布 / 套件 / 外壳 / look / 演示写法**的哪一层。本文件只诊断，不改组件、演示或文档站。
 
 ## 结论
 

@@ -1,5 +1,9 @@
 # 多主题与运行时切换（#20b）
 
+> **已完成，留作记录（最后编辑 2026-11-18）：`AppTheme`、`selectTheme` 与 `themes/<name>/` 随 `0.5.0` 发布。**
+> 现行说明见 [`packages/theme/README.md`](../../packages/theme/README.md) 与
+> [themes](https://aningdev.github.io/shadcn-nsh/docs/themes)。
+
 ## 目标
 
 issue #20 的第 2 条：一个应用同时带两套以上主题，运行时切换后所有已渲染组件跟着变，无需重启；配色方案（亮 / 暗 / 系统）与主题互相独立。应用（如 MyAid 的「通用 → 颜色」）能列出可选主题并让用户切换；持久化由应用负责。
