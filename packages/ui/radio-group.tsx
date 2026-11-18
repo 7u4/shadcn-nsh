@@ -20,10 +20,9 @@ import {
 } from "nsh/base";
 
 import { ChoiceLight, choiceScales, choiceSink, choiceWell, type ChoiceSize } from "./checkbox";
-import { labelOf } from "./lib/label";
-import { type Live, read } from "./lib/live";
 import { pressSink } from "./lib/press";
 import { controlSize } from "./lib/surface";
+import { labelOf, type Live, read } from "./lib/utils";
 
 // @port look/choice.tsx
 /** A box's or ring's size: `scale` times the page's; one row high in the

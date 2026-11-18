@@ -1,5 +1,5 @@
-// A switch's sizes and the arithmetic of its knob, apart from `switch.tsx` and free of imports, so
-// a test can check it without NSH.
+// A switch's sizes and the arithmetic of its knob, apart from `switch.tsx` and free of imports: kept
+// in lib so `bun test` checks it without starting NSH.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
 
 // @port look/switch-geometry.ts

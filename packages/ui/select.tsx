@@ -24,7 +24,6 @@ import {
   ListboxHeader,
   OptionRow,
 } from "./lib/listbox";
-import { type Live, read } from "./lib/live";
 import {
   createItemRegistry,
   createOpenState,
@@ -34,6 +33,7 @@ import {
   type Slot,
 } from "./lib/open-state";
 import { controlSize } from "./lib/surface";
+import { type Live, read } from "./lib/utils";
 
 // @port look/listbox.tsx
 const pointer = platform.desktop;

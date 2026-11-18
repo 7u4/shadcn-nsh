@@ -61,7 +61,7 @@ words, said twice:
 <Label>Accept terms and conditions</Label>
 ```
 
-`lib/label.ts` compiles into the app beside it and is a different thing: `labelOf(caller, children)`
+`lib/utils.ts` compiles into the app beside it and is a different thing: `labelOf(caller, children)`
 is the rule the shells share for the name a control already derives from a string child
 (`Pressable`, `Button`). A `Label` draws type; `labelOf` decides what screen readers say.
 

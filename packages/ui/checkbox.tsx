@@ -7,9 +7,8 @@ import { split, Text, View } from "nsh";
 import { Checkbox as BaseCheckbox, type CheckboxProps as BaseCheckboxProps } from "nsh/base";
 
 import { Icon } from "./lib/icons";
-import { labelOf } from "./lib/label";
-import { type Live, read } from "./lib/live";
 import { controlSize } from "./lib/surface";
+import { labelOf, type Live, read } from "./lib/utils";
 
 // @port look/choice.tsx
 

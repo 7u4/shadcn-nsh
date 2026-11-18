@@ -8,7 +8,7 @@ import { buttonLabel, buttonLook } from "@/packages/ui/button";
 import { dialogText, dialogTitle } from "@/packages/ui/dialog";
 import { drawerFooter, drawerGrabber, drawerHeader } from "@/packages/ui/drawer";
 import { Input } from "@/packages/ui/input";
-import { backdrop } from "@/packages/ui/lib/overlay";
+import { backdrop } from "@/packages/ui/lib/popup";
 import { sheetPanel } from "@/packages/ui/sheet";
 
 import { DemoPage } from "./kit";

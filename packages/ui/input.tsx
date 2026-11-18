@@ -6,7 +6,7 @@ import type { InputStyle, ViewStyle } from "nsh";
 import { platform, split } from "nsh";
 import { Input as BaseInput, type InputProps as BaseInputProps } from "nsh/base";
 
-import { type Live, read } from "./lib/live";
+import { type Live, read } from "./lib/utils";
 
 // @port look/field.tsx
 const pointer = platform.desktop;

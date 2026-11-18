@@ -11,7 +11,7 @@ import {
 } from "@shadcn-nsh/theme";
 import { token, View, Text } from "nsh";
 
-import { type Live, read } from "./lib/live";
+import { type Live, read } from "./lib/utils";
 
 // @port index.tsx
 /** A badge's variants: `default`, the tone's fill; `outline`, an edge in the tone's color. */

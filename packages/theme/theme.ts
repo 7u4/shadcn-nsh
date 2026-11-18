@@ -411,18 +411,6 @@ export const toneColor = (tone: Tone) => (tone === "neutral" ? colors.muted : co
 /** The tint of a tone. */
 export const toneTint = (tone: Tone) => (tone === "neutral" ? colors.raised : tints[tone]);
 
-/** How much of a tone a solid tint carries: 10 % over a light base, 16 % over a dark one, where the
- * same mix would read fainter. */
-const SOLID_TINT = { light: 10, dark: 16 } as const;
-
-/** A tone's tint as `toneTint` shows it on `base` (default the card), but
- * opaque: for what overlaps, such as stacked avatars, where a translucent
- * tint would let what is under it show through. */
-export const solidTint = (tone: Tone, base: string = colors.surface) =>
-  tone === "neutral"
-    ? colors.raised
-    : `color-mix(in srgb, ${toneColor(tone)} ${isDark() ? SOLID_TINT.dark : SOLID_TINT.light}%, ${base})`;
-
 /** The monospaced family, for code (API names, identifiers). Figures use
  * the system font with tabular numbers instead. */
 export const mono = "monospace";
@@ -497,14 +485,6 @@ export function follow(
  * selected one, whose own fill shows.
  */
 export const hovered = (): ViewStyle => ({ backgroundColor: token("hover") });
-
-/**
- * The resting fill of a ghost control (a bare button, an icon button): none,
- * bare until the pointer is over it; in the terminal, which shows no hover
- * until the pointer is there and no outline to hint at one, a faint
- * `secondary` band, so it reads as pressable.
- */
-export const ghostFill = () => (terminal ? token("secondary") : "transparent");
 
 /** How wide the halo round a focused view is: shadcn/ui's `ring-3`. */
 const RING_WIDTH = 3;

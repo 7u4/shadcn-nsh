@@ -13,9 +13,9 @@ import {
 } from "nsh/base";
 
 import { Kbd } from "./kbd";
-import { joinClass } from "./lib/classes";
 import { Icon } from "./lib/icons";
 import { controlSize } from "./lib/surface";
+import { joinClass } from "./lib/utils";
 
 const desktop = platform.desktop;
 const size = {

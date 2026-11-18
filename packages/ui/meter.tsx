@@ -3,7 +3,7 @@
 import { colors, terminal, TERMINAL_ROW, toneColor, type Tone } from "@shadcn-nsh/theme";
 import { View } from "nsh";
 
-import { type Live, read } from "./lib/live";
+import { type Live, read } from "./lib/utils";
 import { progressFill, progressGlide, progressRail, progressRemaining } from "./progress";
 
 // @port index.tsx

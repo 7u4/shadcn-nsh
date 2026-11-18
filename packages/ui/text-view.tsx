@@ -10,7 +10,7 @@ import {
   type TextViewRef,
 } from "nsh/base";
 
-import { mergeClasses } from "./lib/classes";
+import { mergeClasses } from "./lib/utils";
 
 // @port look/workspace.tsx
 /** A `TextView`'s links (its `classes`): the brand color over a faint

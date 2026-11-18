@@ -5,9 +5,8 @@ import type { JSX, TextStyle, ViewStyle } from "nsh";
 import { platform, split, Text } from "nsh";
 import { Toggle as BaseToggle, type ToggleProps as BaseToggleProps } from "nsh/base";
 
-import { labelOf } from "./lib/label";
-import { type Live, read } from "./lib/live";
-import { pressSink, pressTransition } from "./lib/press";
+import { pressSink, pressTransition, touchSlop } from "./lib/press";
+import { labelOf, type Live, read } from "./lib/utils";
 
 // @port look/tool.ts
 /** A toggle's size: 24 / 28 / 34 points with a pointer, 32 / 38 / 44 on a touch screen. */
@@ -59,16 +58,6 @@ const toggleSizes: Record<ToggleSize, ToggleDimensions> = pointer
       default: { side: 38, icon: 18, text: 15, pad: 12 },
       lg: { side: 44, icon: 20, text: 16, pad: 14 },
     };
-
-/** The smallest target a finger gets (Accessibility, "Touch targets"). */
-const TOUCH_TARGET = 44;
-
-/** How far presses count past a toggle `side` tall, so a finger gets 44
- * points without the toggle looking bigger: none with a pointer. */
-const slop = (side: number): number | undefined => {
-  if (pointer || terminal || side >= TOUCH_TARGET) return undefined;
-  return (TOUCH_TARGET - side) / 2;
-};
 
 /** How far a press sinks a toggle (`activeStyle`): none with reduced motion. */
 const sink = (scale: number): ViewStyle => pressSink(scale).activeStyle;
@@ -135,7 +124,7 @@ export function toggleLook(o?: ToggleLookOptions) {
     },
     disabledStyle: { opacity: 0.5 },
     get hitSlop(): number | undefined {
-      return slop(dimensions(o).side);
+      return touchSlop(dimensions(o).side);
     },
   };
 }

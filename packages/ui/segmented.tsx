@@ -10,8 +10,7 @@ import {
   type TabsProps as BaseTabsProps,
 } from "nsh/base";
 
-import { labelOf } from "./lib/label";
-import { type Live, read } from "./lib/live";
+import { labelOf, type Live, read } from "./lib/utils";
 import type { TabLook, TabState } from "./tabs";
 
 /**

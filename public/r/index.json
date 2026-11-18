@@ -108,41 +108,15 @@
       ]
     },
     {
-      "name": "live",
+      "name": "utils",
       "type": "registry:lib",
-      "title": "Live values",
-      "description": "A value a look takes as it is, or as a function reading it where the look is applied.",
+      "title": "Utils",
+      "description": "The small tools the shells share: a look's value or accessor, the name a control gives screen readers, and how an app's part classes meet ours.",
       "files": [
         {
-          "path": "packages/ui/lib/live.ts",
+          "path": "packages/ui/lib/utils.ts",
           "type": "registry:lib",
-          "target": "lib/live.ts"
-        }
-      ]
-    },
-    {
-      "name": "merge-classes",
-      "type": "registry:lib",
-      "title": "Merge classes",
-      "description": "How a component's default part classes meet an app's classes.",
-      "files": [
-        {
-          "path": "packages/ui/lib/classes.ts",
-          "type": "registry:lib",
-          "target": "lib/classes.ts"
-        }
-      ]
-    },
-    {
-      "name": "label-of",
-      "type": "registry:lib",
-      "title": "Label",
-      "description": "The name screen readers say of a control whose content is a text label.",
-      "files": [
-        {
-          "path": "packages/ui/lib/label.ts",
-          "type": "registry:lib",
-          "target": "lib/label.ts"
+          "target": "lib/utils.ts"
         }
       ]
     },
@@ -156,19 +130,6 @@
           "path": "packages/ui/lib/switch-geometry.ts",
           "type": "registry:lib",
           "target": "lib/switch-geometry.ts"
-        }
-      ]
-    },
-    {
-      "name": "overlay",
-      "type": "registry:lib",
-      "title": "Overlay",
-      "description": "The scrim behind what is modal.",
-      "files": [
-        {
-          "path": "packages/ui/lib/overlay.ts",
-          "type": "registry:lib",
-          "target": "lib/overlay.ts"
         }
       ]
     },
@@ -207,7 +168,7 @@
       "name": "popup",
       "type": "registry:lib",
       "title": "Popup",
-      "description": "The shared popup surface and the motion it comes in with.",
+      "description": "The popup families' surface, motion and mark, and the scrim behind what is modal.",
       "files": [
         {
           "path": "packages/ui/lib/popup.tsx",

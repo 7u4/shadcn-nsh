@@ -5,7 +5,7 @@ import type { AnimatedValue, ViewStyle } from "nsh";
 import { cleanup, createAnimatedValue, Easing, effect, reduceMotion, split } from "nsh";
 import { Progress as BaseProgress, type ProgressProps as BaseProgressProps } from "nsh/base";
 
-import { type Live, read } from "./lib/live";
+import { type Live, read } from "./lib/utils";
 
 // @port look/meter.ts
 

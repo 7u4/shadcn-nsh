@@ -7,7 +7,7 @@ import { platform, split, Text, token, View } from "nsh";
 import { Link as BaseLink, type LinkProps as BaseLinkProps } from "nsh/base";
 
 import { Icon } from "./lib/icons";
-import { labelOf } from "./lib/label";
+import { labelOf } from "./lib/utils";
 
 // @port look/nav.tsx
 const pointer = platform.desktop;

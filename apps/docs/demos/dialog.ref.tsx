@@ -8,7 +8,7 @@ import { Dialog } from "nsh/base";
 
 import { Button } from "@/packages/ui/button";
 import { dialogCard, dialogText, dialogTitle } from "@/packages/ui/dialog";
-import { backdrop } from "@/packages/ui/lib/overlay";
+import { backdrop } from "@/packages/ui/lib/popup";
 import { listRow, RowLabel } from "@/packages/ui/lib/surface";
 import { Switch } from "@/packages/ui/switch";
 

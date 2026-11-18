@@ -14,11 +14,10 @@ import {
 } from "nsh/base";
 
 import { Icon } from "./lib/icons";
-import { labelOf } from "./lib/label";
-import { type Live, read } from "./lib/live";
 import { createSlot, type Slot } from "./lib/open-state";
 import { PopIn, popupSurface, type PopupSide } from "./lib/popup";
 import { pressSink, pressTransition } from "./lib/press";
+import { labelOf, type Live, read } from "./lib/utils";
 
 /** A pointer's compact bar; a touch screen's roomier one, a finger's target in every trigger. */
 const pointer = platform.desktop;

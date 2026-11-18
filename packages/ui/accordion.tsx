@@ -18,10 +18,9 @@ import {
   type AccordionTriggerProps as BaseAccordionTriggerProps,
 } from "nsh/base";
 
-import { joinClass } from "./lib/classes";
 import { Icon } from "./lib/icons";
-import { labelOf } from "./lib/label";
 import { controlSize, listRow, RowLabel, type ListRowOptions } from "./lib/surface";
+import { joinClass, labelOf } from "./lib/utils";
 
 // @port look/disclosure.tsx
 /** Options of `disclosureTriggerLook`: a row's (`listRow`). */
