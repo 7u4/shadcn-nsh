@@ -37,6 +37,15 @@ import { DiffView, diffViewStyles, DiffHunkActions, diffHunkTone } from "@/compo
 
 ## Examples
 
+### Tone
+
+`DiffHunkActions` takes a `tone` for the backing it fades in over: `diffHunkTone` answers the change's own row (`up` for an added line, `down` for a deleted one), and any of the theme's tones works, read where the backing is drawn.
+
+```tsx
+<DiffHunkActions index={0} tone="up" onRevert={() => {}} onKeep={() => {}} />
+<DiffHunkActions index={1} tone={() => (verdict() === "bad" ? "danger" : "warn")} onRevert={() => {}} onKeep={() => {}} />
+```
+
 ### Unified
 
 ```tsx
@@ -83,15 +92,11 @@ import { DiffView, diffViewStyles, DiffHunkActions, diffHunkTone } from "@/compo
 <DiffView oldValue={before} newValue={after} styles={diffViewStyles()} />
 ```
 
-### Tone
-
-`DiffHunkActions` takes a `tone` for the backing it fades in over: `diffHunkTone` answers the change's own row (`up` for an added line, `down` for a deleted one), and any of the theme's tones works, read where the backing is drawn.
-
-```tsx
-<DiffHunkActions index={0} tone="up" onRevert={() => {}} onKeep={() => {}} />
-<DiffHunkActions index={1} tone={() => (verdict() === "bad" ? "danger" : "warn")} onRevert={() => {}} onKeep={() => {}} />
-```
-
 ## API
+
+| Part              | Props                                                            | Description                 |
+| ----------------- | ---------------------------------------------------------------- | --------------------------- |
+| `DiffView`        | every `nsh/base` DiffView prop; `styles` over `diffViewStyles()` | Two texts, or a patch       |
+| `DiffHunkActions` | `index`, `iconOnly`, `tone`, `onRevert`, `onKeep`                | Revert and Keep on a change |
 
 Every prop of [`nsh/base` DiffView](https://nsh.dev/elements/diff-view) passes through.

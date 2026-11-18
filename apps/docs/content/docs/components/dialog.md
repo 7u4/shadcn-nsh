@@ -44,16 +44,6 @@ import {
 
 ## Examples
 
-### Controlled
-
-`open` owns the state; `onOpenChange` reports the next one and why.
-
-```tsx
-<Dialog open={open()} onOpenChange={({ open: next }) => setOpen(next)}>
-  …
-</Dialog>
-```
-
 ### Width
 
 The card is 360 points with a pointer and 320 on a touch screen; `width` sets another, never past 90% of the window.
@@ -101,18 +91,37 @@ Escape, a backdrop press and a downward swipe close the dialog; turn any of them
 </DialogContent>
 ```
 
+### Controlled
+
+`open` owns the state; `onOpenChange` reports the next one and why.
+
+```tsx
+<Dialog open={open()} onOpenChange={({ open: next }) => setOpen(next)}>
+  …
+</Dialog>
+```
+
+## Differences from shadcn/ui
+
+- No `DialogPortal` or `DialogOverlay`: `nsh/base` hosts the popup and draws the backdrop, and `backdropStyle` styles the scrim.
+- No `DialogHeader`: `DialogTitle` and `DialogDescription` are separate parts, and the block that holds them is the app's.
+- No built-in close button: `DialogClose` is the one the app places.
+- Adds `width`, `animation` and `presentation` on `DialogContent`.
+- No `asChild`: a string child of `DialogTrigger` or `DialogClose` is a `Button` (`variant`, `secondary` by default).
+- `onOpenChange` reports `{ open, reason }`.
+
 ## API
 
 `Dialog` owns the open state. `DialogContent` mounts [`nsh/base` Dialog](https://nsh.dev/elements/dialog); every base prop passes through it, and base owns the backdrop, the popup host and Escape, back and swipe.
 
-| Part                | Props                                                                                            |
-| ------------------- | ------------------------------------------------------------------------------------------------ |
-| `Dialog`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onOpen`, `onClose`, `onCancel`         |
-| `DialogTrigger`     | `children`, `variant`, `disabled`, `style`                                                       |
-| `DialogContent`     | `width`, every `nsh/base` Dialog prop; `style` over `dialogCard`, `backdropStyle` over the scrim |
-| `DialogTitle`       | `children`; a string takes `dialogTitle`                                                         |
-| `DialogDescription` | `children`; a string takes `dialogText`                                                          |
-| `DialogFooter`      | `children`, `style`                                                                              |
-| `DialogClose`       | As `DialogTrigger`, plus `onPress` before it closes                                              |
+| Part                | Props                                                                                            | Description                          |
+| ------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------ |
+| `Dialog`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onOpen`, `onClose`, `onCancel`         | Open state                           |
+| `DialogTrigger`     | `children`, `variant`, `disabled`, `style`                                                       | What opens the dialog                |
+| `DialogContent`     | `width`, every `nsh/base` Dialog prop; `style` over `dialogCard`, `backdropStyle` over the scrim | The card                             |
+| `DialogTitle`       | `children`; a string takes `dialogTitle`                                                         | The card's title                     |
+| `DialogDescription` | `children`; a string takes `dialogText`                                                          | The muted line under the title       |
+| `DialogFooter`      | `children`, `style`                                                                              | The row of actions at the card's end |
+| `DialogClose`       | As `DialogTrigger`, plus `onPress` before it closes                                              | What closes the dialog               |
 
 A string child of `DialogTrigger` or `DialogClose` is a `Button`; `variant` picks its look (`secondary` by default). Anything else is drawn as given.

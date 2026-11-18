@@ -41,8 +41,8 @@ const session = createRichEditor({ extensions: [StarterKit], content: doc, forma
 
 ## API
 
-| Export              | Role                                      |
-| ------------------- | ----------------------------------------- |
-| `richEditorClasses` | `RichEditor` document chrome              |
-| `RichEditor`        | Themed `nsh/base` RichEditor              |
-| `RichEditorProps`   | `nsh/base`'s `RichEditorProps`, unchanged |
+| Part                | Props                                                                | Description                               |
+| ------------------- | -------------------------------------------------------------------- | ----------------------------------------- |
+| `RichEditor`        | every `nsh/base` RichEditor prop; `classes` over `richEditorClasses` | Themed `nsh/base` RichEditor              |
+| `richEditorClasses` | —                                                                    | `RichEditor` document chrome              |
+| `RichEditorProps`   | —                                                                    | `nsh/base`'s `RichEditorProps`, unchanged |

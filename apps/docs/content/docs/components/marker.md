@@ -80,8 +80,7 @@ for this.
 ### A marker that acts
 
 Give the marker `onPress` and `role="button"`: its line is underlined and the pointer over it is a
-hand. shadcn/ui's `asChild` (rendering the marker as a link or a button) has no equivalent here —
-NSH has no `Slot` — so the marker itself takes the press.
+hand.
 
 ```tsx
 <Marker role="button" onPress={() => open("https://github.com/…/pull/1")}>
@@ -90,18 +89,24 @@ NSH has no `Slot` — so the marker itself takes the press.
 </Marker>
 ```
 
+## Differences from shadcn/ui
+
+- **No `asChild` (Slot).** A marker that acts takes `onPress` on itself, where shadcn's renders the marker as a link or a button.
+- **The separator's rules are two real views in the row**, not pseudo-elements, so a `MarkerContent` of your own between them needs no `flex-none` of its own.
+- **No `shimmer` utility.** NSH has no animated gradient over text; a streaming line keeps its look, and `Spinner` in `MarkerIcon` is what shows the work.
+
 ## API
+
+| Part            | Props                                                                   | Description                                    |
+| --------------- | ----------------------------------------------------------------------- | ---------------------------------------------- |
+| `Marker`        | `variant`; every `nsh` View prop; look `markerLook().root(variant)`     | A line in a conversation that is not a message |
+| `MarkerIcon`    | `icon`, `children`; every `nsh` View prop; look `markerLook().icon`     | The icon beside the line                       |
+| `MarkerContent` | `children`; every `nsh` Text prop; look `markerLook().content(variant)` | The line's words                               |
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `Marker` and
 `MarkerIcon` (`role`, `onPress`, `accessibilityLabel`, …), and every prop of
 [`nsh` Text](https://nsh.dev/elements/text) on `MarkerContent`. Style props go over the look's:
 `style` on a `View` or `Text` part.
-
-| Part            | Renders | Look                            |
-| --------------- | ------- | ------------------------------- |
-| `Marker`        | `View`  | `markerLook().root(variant)`    |
-| `MarkerIcon`    | `View`  | `markerLook().icon`             |
-| `MarkerContent` | `Text`  | `markerLook().content(variant)` |
 
 | Prop       | On              | Type                                   | Default   |
 | ---------- | --------------- | -------------------------------------- | --------- |
@@ -113,11 +118,3 @@ The line is in the muted ink at the body's size (13 points with a pointer, 15 on
 its icon 16 points in the same ink; a marker's icon box is never shrunk by a tight row. In a
 terminal the icon is drawn as NSH draws icons there (a check is `✓`, the others show nothing) and
 the rules are hairlines. `markerLook()` is exported for a line an app draws itself.
-
-shadcn/ui's marker is not reproduced in three places, each because NSH has no equivalent:
-
-- **`asChild` (Slot).** A marker that acts takes `onPress` on itself.
-- **The separator's rules as pseudo-elements.** They are two real views in the row, so a
-  `MarkerContent` of your own between them needs no `flex-none` of its own.
-- **The `shimmer` utility.** NSH has no animated gradient over text; a streaming line keeps its
-  look, and `Spinner` in `MarkerIcon` is what shows the work.

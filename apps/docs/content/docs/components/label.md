@@ -23,6 +23,16 @@ import { Label } from "@/components/ui/label";
 
 ## Examples
 
+### Disabled
+
+A label beside a control that cannot be used dims to half. Set `disabled` where the control's own
+`disabled` is set.
+
+```tsx
+<Checkbox disabled accessibilityLabel="Weekly digest" />
+<Label disabled>Weekly digest</Label>
+```
+
 ### Beside a choice
 
 A label is a row, so an icon or a switch can sit before its text; a control beside it is the
@@ -65,18 +75,15 @@ words, said twice:
 is the rule the shells share for the name a control already derives from a string child
 (`Pressable`, `Button`). A `Label` draws type; `labelOf` decides what screen readers say.
 
-### Disabled
+## Differences from shadcn/ui
 
-A label beside a control that cannot be used dims to half, as shadcn's `peer-disabled` dims it.
-Without a sibling selector to read the control's state, the label takes `disabled` itself: set it
-where the control's own `disabled` is set.
-
-```tsx
-<Checkbox disabled accessibilityLabel="Weekly digest" />
-<Label disabled>Weekly digest</Label>
-```
+- `disabled` is this library's prop, not shadcn's: without a sibling selector to read the control's state, the label takes it itself, where shadcn's `peer-disabled` dims it from the control.
 
 ## API
+
+| Part    | Props                                                                                                                        | Description                   |
+| ------- | ---------------------------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| `Label` | `disabled`: `boolean` (default `false`), `children`: `string \| JSX.Element`; every `nsh` View prop; `style` over the look's | The visible name of a control |
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through (`style`, `role`, …); `style` goes over the look's.
 
@@ -85,7 +92,6 @@ Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through (`style
 | `disabled` | `boolean`               | `false` |
 | `children` | `string \| JSX.Element` |         |
 
-`disabled` is this library's, not shadcn's: it is how the `peer-disabled` look is reached. There is
-no other axis: the text is `controlSize.label` (14 points with a pointer, 15 on a touch screen) and
-medium, in the theme's text color, a row with a gap of 8. `labelLook({ disabled })` is exported —
-`root` and `text` — for a label the app draws itself.
+There is no other axis: the text is `controlSize.label` (14 points with a pointer, 15 on a touch
+screen) and medium, in the theme's text color, a row with a gap of 8. `labelLook({ disabled })` is
+exported — `root` and `text` — for a label the app draws itself.

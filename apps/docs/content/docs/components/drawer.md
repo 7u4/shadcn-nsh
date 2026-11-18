@@ -84,30 +84,31 @@ one closes the drawer after its `onPress`.
 </DrawerFooter>
 ```
 
-### What a drawer has that a sheet does not
+### Against `Sheet`
 
 Opening from the bottom by default, the grabber, the swipe, and the four parts around the panel
 (`DrawerHeader`, `DrawerTitle`, `DrawerDescription`, `DrawerFooter`). The panel, the scrim and the
 title's type are shared: `sheetPanel(side)`, `backdrop()`, `dialogTitle()` and `dialogText()`, so a
 drawer and the rest of the library wear one surface.
 
-shadcn's `DrawerPortal` and `DrawerOverlay` have no part here: the panel is over the screen and the
-scrim is behind it in `nsh/base`'s Sheet, which this is — `popupStyle` and `backdropStyle` style
-both.
+## Differences from shadcn/ui
+
+- No `DrawerPortal` or `DrawerOverlay`: the panel is over the screen and the scrim is behind it in `nsh/base`'s Sheet, which this is; `popupStyle` and `backdropStyle` style both.
+- The grabber is drawn by the component (`drawerGrabber`), not by the app.
 
 ## API
+
+| Part                | Props                                                                                                         | Description                                                    |
+| ------------------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `Drawer`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onOpen`, `onClose`, `onCancel`                      | Open state and lifecycle                                       |
+| `DrawerTrigger`     | `children`, `variant`, `disabled`, `style`                                                                    | A `Button` for a string child, else a pressable of its own     |
+| `DrawerContent`     | `side`, every `nsh/base` Sheet prop but open state and the lifecycle callbacks; `popupStyle`, `backdropStyle` | The panel                                                      |
+| `DrawerHeader`      | `children`, `style`                                                                                           | A column holding the title and its description, 2 points apart |
+| `DrawerTitle`       | `children`, `style`                                                                                           | The panel's title                                              |
+| `DrawerDescription` | `children`, `style`                                                                                           | The muted line under it                                        |
+| `DrawerFooter`      | `children`, `style`                                                                                           | The actions, stacked, each as wide as the drawer               |
+| `DrawerClose`       | As `DrawerTrigger`, plus `onPress`                                                                            | Closes it after its own `onPress`                              |
 
 Every prop of [`nsh/base` Sheet](https://nsh.dev/elements/sheet) passes through on `DrawerContent`
 except open state and the lifecycle callbacks, which the root owns. `popupStyle` and `backdropStyle`
 go over the look's. Defaults: `side` `"bottom"`, `closeOnSwipe` `true`.
-
-| Part                | Notes                                                             |
-| ------------------- | ----------------------------------------------------------------- |
-| `Drawer`            | Open state + lifecycle; `onOpenChange` reports `{ open, reason }` |
-| `DrawerTrigger`     | A `Button` for a string child, else a pressable of its own        |
-| `DrawerContent`     | The panel; `side`                                                 |
-| `DrawerHeader`      | A column holding the title and its description, 2 points apart    |
-| `DrawerTitle`       | The panel's title                                                 |
-| `DrawerDescription` | The muted line under it                                           |
-| `DrawerFooter`      | The actions, stacked, each as wide as the drawer                  |
-| `DrawerClose`       | Closes it after its own `onPress`                                 |
