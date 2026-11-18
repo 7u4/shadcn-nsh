@@ -97,8 +97,10 @@ function App() {
           ))}
         </View>
 
-        {/* Underlined tabs with counts: the line travels and stretches to the selected one; a disabled one dims. */}
-        <View style={{ alignSelf: "stretch", marginHorizontal: -8 }}>
+        {/* Underlined tabs with counts: the line travels and stretches to the selected one; a disabled one dims.
+            Its rule spans the column, not 8 points past it: a pulled-out strip runs into the page margin on
+            a 320-point phone. */}
+        <View style={{ alignSelf: "stretch" }}>
           <Tabs value={folder()} onValueChange={(value) => folder.set(value)}>
             <TabsList variant="line">
               {folders.map((f) => (

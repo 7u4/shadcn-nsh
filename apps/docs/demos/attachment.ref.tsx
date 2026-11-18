@@ -214,8 +214,14 @@ function App() {
             </View>
           </DemoSection>
 
+          {/* The strip scrolls sideways when the card is narrower than it, as `AttachmentGroup` does. */}
           <DemoSection title="Pictures in a strip" axis="block">
-            <View style={{ flexDirection: "row", alignItems: "flex-start", gap: 12 }}>
+            <Scroll
+              horizontal
+              scrollbar={false}
+              style={look.group}
+              contentStyle={look.groupContent}
+            >
               <View style={frame("done", "default", "vertical")}>
                 <View style={media("done", "default", "vertical", "image")}>
                   <Icon
@@ -252,7 +258,7 @@ function App() {
                   <Text style={look.description("uploading")}>Uploading · 18%</Text>
                 </View>
               </View>
-            </View>
+            </Scroll>
           </DemoSection>
 
           <DemoSection title="A frame that opens" axis="block">

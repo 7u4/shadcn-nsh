@@ -110,8 +110,9 @@ function App() {
         </View>
 
         {/* Underlined tabs with counts: the line travels and stretches to the selected one; a disabled one dims. */}
-        {/* Pulled out by a tab's padding, so the first label lines up with the content. */}
-        <View style={{ alignSelf: "stretch", marginHorizontal: -8 }}>
+        {/* The strip spans the column: pulled out by a tab's padding, its rule would run past the page on a
+            narrow phone. */}
+        <View style={{ alignSelf: "stretch" }}>
           <View style={underline.rule} />
           <Tabs style={underline.style} indicatorStyle={underline.indicatorStyle}>
             {folders.map((f) => (

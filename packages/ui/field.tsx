@@ -38,7 +38,9 @@ export interface FieldFamilyLook {
   legend(variant: FieldLegendVariant): TextStyle;
   /** A control's label, in the vertical look (as wide as its text). */
   readonly title: TextStyle;
-  /** A field's label in a row: as wide as its text, wrapping rather than pushing the control out. */
+  /** A field's label in a row: as wide as its text, never squeezed thinner than it (the control
+   * beside it takes the room left, `content`'s `minWidth: 0`), which on a narrow phone would cut
+   * it mid-word. */
   readonly labelInRow: TextStyle;
   readonly description: TextStyle;
   readonly separator: ViewStyle;
@@ -47,6 +49,9 @@ export interface FieldFamilyLook {
   readonly error: ViewStyle;
   readonly errorRow: ViewStyle;
   readonly errorText: TextStyle;
+  /** An error's message beside its bullet: it wraps rather than running past the field, which a
+   * long sentence would in a narrow window (`flexShrink: 1`, `minWidth: 0`). */
+  readonly errorMessage: TextStyle;
 }
 
 /** The gap between a set's fields: 16 points, or one row in the terminal. */
@@ -107,7 +112,7 @@ export function fieldFamilyLook(): FieldFamilyLook {
             width: "100%",
           },
     get content(): ViewStyle {
-      return { flexGrow: 1, flexShrink: 1, flexDirection: "column", gap: 4 };
+      return { flexGrow: 1, flexShrink: 1, minWidth: 0, flexDirection: "column", gap: 4 };
     },
     legend: (variant: FieldLegendVariant): TextStyle => ({
       ...label(),
@@ -117,7 +122,7 @@ export function fieldFamilyLook(): FieldFamilyLook {
       return { ...label(), alignSelf: "flex-start" };
     },
     get labelInRow(): TextStyle {
-      return { ...label(), flexShrink: 1 };
+      return { ...label(), flexShrink: 0 };
     },
     get description(): TextStyle {
       return { fontSize: density.note, color: colors.muted };
@@ -144,6 +149,9 @@ export function fieldFamilyLook(): FieldFamilyLook {
     },
     get errorText(): TextStyle {
       return { fontSize: density.note, color: colors.danger };
+    },
+    get errorMessage(): TextStyle {
+      return { fontSize: density.note, color: colors.danger, flexShrink: 1, minWidth: 0 };
     },
   };
 }
@@ -332,7 +340,7 @@ export function FieldError(props: FieldErrorProps) {
         {(message) => (
           <View style={fieldFamilyLook().errorRow}>
             <Text style={fieldFamilyLook().errorText}>•</Text>
-            <Text style={fieldFamilyLook().errorText}>{message()}</Text>
+            <Text style={fieldFamilyLook().errorMessage}>{message()}</Text>
           </View>
         )}
       </Each>

@@ -21,8 +21,9 @@ import { density } from "@/packages/ui/lib/surface";
 import { DemoPage } from "./kit";
 import { ui } from "./stage";
 
-/** A card's width: two side by side in a wide window, one across a phone. */
-const cardStyle = { flexGrow: 1, flexBasis: 300, maxWidth: 440 } as const;
+/** A card's width: two side by side in a wide window, one across a phone — and narrower than its
+ * 300-point basis on a 320-point phone (`flexShrink`), where a fixed 300 would run past the page. */
+const cardStyle = { flexGrow: 1, flexShrink: 1, flexBasis: 300, maxWidth: 440 } as const;
 
 /** A label over its control, inside a card's body. */
 function Labeled(props: { label: string; children: JSX.Element }) {

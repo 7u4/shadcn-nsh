@@ -87,13 +87,13 @@ function App() {
               <View role="alert" style={fieldFamilyLook().error}>
                 <View style={fieldFamilyLook().errorRow}>
                   <Text style={fieldFamilyLook().errorText}>•</Text>
-                  <Text style={fieldFamilyLook().errorText}>
+                  <Text style={fieldFamilyLook().errorMessage}>
                     Enter an email address like name@example.com.
                   </Text>
                 </View>
                 <View style={fieldFamilyLook().errorRow}>
                   <Text style={fieldFamilyLook().errorText}>•</Text>
-                  <Text style={fieldFamilyLook().errorText}>
+                  <Text style={fieldFamilyLook().errorMessage}>
                     It must be one address, without spaces.
                   </Text>
                 </View>
