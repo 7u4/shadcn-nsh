@@ -1,6 +1,6 @@
 // Diff view: `diffViewStyles`, `DiffHunkActions`, and the `DiffView` that wears them.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
-import { alpha, colors, solidTint, terminal, type Tone } from "@shadcn-nsh/theme";
+import { alpha, colors, isDark, terminal, toneColor, type Tone } from "@shadcn-nsh/theme";
 import { Check, Undo2, type IconNode } from "lucide";
 import { split, Text, View } from "nsh";
 import {
@@ -13,6 +13,19 @@ import {
 import { buttonGlyph, buttonLabel, buttonLook, type ButtonVariant } from "./button";
 import { Icon } from "./lib/icons";
 import { read } from "./lib/utils";
+
+/** How much of a tone a solid tint carries: 10 % over a light base, 16 % over a dark one, where the
+ * same mix would read fainter. */
+const SOLID_TINT = { light: 10, dark: 16 } as const;
+
+/** A tone's tint as `toneTint` shows it on `base` (default the card), but
+ * opaque: for what overlaps, such as stacked avatars or the actions over a
+ * changed line, where a translucent tint would let what is under it show
+ * through. */
+const solidTint = (tone: Tone, base: string = colors.surface) =>
+  tone === "neutral"
+    ? colors.raised
+    : `color-mix(in srgb, ${toneColor(tone)} ${isDark() ? SOLID_TINT.dark : SOLID_TINT.light}%, ${base})`;
 
 // @port look/workspace.tsx
 

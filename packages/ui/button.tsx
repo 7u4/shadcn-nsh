@@ -5,7 +5,6 @@ import {
   colors,
   finish,
   focusRing,
-  ghostFill,
   hovered,
   radius,
   terminal,
@@ -20,6 +19,13 @@ import { Button as BaseButton, type ButtonProps as BaseButtonProps } from "nsh/b
 import { pressSink, pressTransition, touchSlop } from "./lib/press";
 import { labelOf, type Live, read } from "./lib/utils";
 import { Spinner } from "./spinner";
+
+/**
+ * The resting fill of a ghost control: none, bare until the pointer is over
+ * it; in the terminal, which shows no hover until the pointer is there and no
+ * outline to hint at one, a faint `secondary` band, so it reads as pressable.
+ */
+const ghostFill = () => (terminal ? token("secondary") : "transparent");
 
 // @port look/button.ts
 /**
