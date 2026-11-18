@@ -37,24 +37,6 @@ import {
 
 ## Examples
 
-### Grouped choices
-
-`SelectLabel` names the section; the list draws its header.
-
-```tsx
-<SelectContent>
-  <SelectGroup>
-    <SelectLabel>Europe</SelectLabel>
-    <SelectItem value="de">Deutsch</SelectItem>
-    <SelectItem value="fr">Français</SelectItem>
-  </SelectGroup>
-  <SelectGroup>
-    <SelectLabel>Asia</SelectLabel>
-    <SelectItem value="ja">日本語</SelectItem>
-  </SelectGroup>
-</SelectContent>
-```
-
 ### Disabled choice, disabled select
 
 ```tsx
@@ -72,6 +54,24 @@ The trigger's edge takes the danger tone.
 <SelectTrigger invalid>
   <SelectValue placeholder="Country" />
 </SelectTrigger>
+```
+
+### Grouped choices
+
+`SelectLabel` names the section; the list draws its header.
+
+```tsx
+<SelectContent>
+  <SelectGroup>
+    <SelectLabel>Europe</SelectLabel>
+    <SelectItem value="de">Deutsch</SelectItem>
+    <SelectItem value="fr">Français</SelectItem>
+  </SelectGroup>
+  <SelectGroup>
+    <SelectLabel>Asia</SelectLabel>
+    <SelectItem value="ja">日本語</SelectItem>
+  </SelectGroup>
+</SelectContent>
 ```
 
 ### Outline trigger, and a width
@@ -125,12 +125,13 @@ lets a narrow row squeeze it, and its title ends in an ellipsis instead of overf
 
 The root owns the open flag and the value; `SelectContent` mounts [`nsh/base` Select](https://nsh.dev/elements/select) and every base prop passes through except those. `listboxProps` and `OptionRow` fill the popup, the scrim and the rows by default.
 
-| Part                          | Notes                                                                                                                                                 |
-| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Select`                      | `value` / `defaultValue`, `open` / `defaultOpen`, `disabled`, `cleanable`, `placeholder`, `onChange`, `onOpenChange`, `onOpen`, `onClose`, `onCancel` |
-| `SelectTrigger`               | A `Picker`: `icon`, `lead`, `invalid`, `variant`, `chevron`, `style` (the layout keys place it where the app puts it)                                 |
-| `SelectValue`                 | The placeholder while nothing is chosen (`placeholder`)                                                                                               |
-| `SelectContent`               | The list: `items` instead of `SelectItem` children, `minWidth`                                                                                        |
-| `SelectItem`                  | `value`, `disabled`, `group`; a string child is its title                                                                                             |
-| `SelectGroup` / `SelectLabel` | A section and its name                                                                                                                                |
-| `SelectSeparator`             | Nothing: base's list separates sections by their headers                                                                                              |
+| Part              | Props                                                                                                                                               | Description                                                           |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `Select`          | `value`, `defaultValue`, `open`, `defaultOpen`, `disabled`, `cleanable`, `placeholder`, `onChange`, `onOpenChange`, `onOpen`, `onClose`, `onCancel` | The root owns the open flag and the value                             |
+| `SelectTrigger`   | `icon`, `lead`, `invalid`, `variant`, `chevron`, `style`                                                                                            | A `Picker`; the layout keys on `style` place it where the app puts it |
+| `SelectValue`     | `placeholder`                                                                                                                                       | The placeholder while nothing is chosen                               |
+| `SelectContent`   | `items`, `minWidth`                                                                                                                                 | The list; `items` instead of `SelectItem` children                    |
+| `SelectItem`      | `value`, `disabled`, `group`                                                                                                                        | A string child is its title                                           |
+| `SelectGroup`     |                                                                                                                                                     | A section                                                             |
+| `SelectLabel`     |                                                                                                                                                     | The section's name                                                    |
+| `SelectSeparator` |                                                                                                                                                     | Nothing: base's list separates sections by their headers              |

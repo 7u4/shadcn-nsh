@@ -128,6 +128,16 @@ Anything else in `MessageFooter` is drawn as given: a row of `IconButton`s, a re
 </MessageFooter>
 ```
 
+## Differences from shadcn/ui
+
+shadcn/ui's message differs here in two places:
+
+- **The avatar does not step up for a footer.** shadcn/ui lifts it by the footer's height when a
+  message has one (`group-has-data-[slot=message-footer]`); NSH has no `:has()`, so the avatar
+  sits at the bottom of the whole row, beside the footer rather than the turn.
+- **The `role` shortcut is not there.** shadcn/ui's `Message` reads `role="user"` to mirror the
+  row; here `align` is the only axis, so the app says `align="end"` for what it sent.
+
 ## API
 
 Every prop of [`nsh` View](https://nsh.dev/elements/view) passes through on `MessageGroup`,
@@ -136,14 +146,14 @@ this library's [`Avatar`](https://nsh.dev/elements/avatar) on `MessageAvatar` (`
 `fallback`, `onStatusChange`, …). A string child of `MessageFooter` and of `MessageHeader` is drawn
 as [`nsh` Text](https://nsh.dev/elements/text).
 
-| Part             | Renders  | Look                           |
-| ---------------- | -------- | ------------------------------ |
-| `MessageGroup`   | `View`   | `messageLook().group`          |
-| `Message`        | `View`   | `messageLook().row(align)`     |
-| `MessageAvatar`  | `Avatar` | `messageLook().avatar`         |
-| `MessageContent` | `View`   | `messageLook().content(align)` |
-| `MessageHeader`  | `View`   | `messageLook().header`         |
-| `MessageFooter`  | `View`   | `messageLook().footer(align)`  |
+| Part             | Props         | Description                                     |
+| ---------------- | ------------- | ----------------------------------------------- |
+| `MessageGroup`   |               | Renders `View` (`messageLook().group`)          |
+| `Message`        | `align`       | Renders `View` (`messageLook().row(align)`)     |
+| `MessageAvatar`  | `name`, `src` | Renders `Avatar` (`messageLook().avatar`)       |
+| `MessageContent` |               | Renders `View` (`messageLook().content(align)`) |
+| `MessageHeader`  | `children`    | Renders `View` (`messageLook().header`)         |
+| `MessageFooter`  | `children`    | Renders `View` (`messageLook().footer(align)`)  |
 
 | Prop       | On              | Type                    | Default |
 | ---------- | --------------- | ----------------------- | ------- |
@@ -157,11 +167,3 @@ The row is its avatar and its content 8 points apart, the content a column 10 po
 body's size; the header and the footer are small (12 with a pointer, 13 on a touch screen), medium
 and in the muted ink, 12 points in from the turn's edge. `messageLook()` is exported for a row an
 app draws itself.
-
-shadcn/ui's message differs here in two places:
-
-- **The avatar does not step up for a footer.** shadcn/ui lifts it by the footer's height when a
-  message has one (`group-has-data-[slot=message-footer]`); NSH has no `:has()`, so the avatar
-  sits at the bottom of the whole row, beside the footer rather than the turn.
-- **The `role` shortcut is not there.** shadcn/ui's `Message` reads `role="user"` to mirror the
-  row; here `align` is the only axis, so the app says `align="end"` for what it sent.

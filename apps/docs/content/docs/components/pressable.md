@@ -23,6 +23,14 @@ import { Pressable } from "@/components/ui/pressable";
 
 ## Examples
 
+### Disabled
+
+```tsx
+<Pressable disabled onPress={open}>
+  Open the note
+</Pressable>
+```
+
 ### A region with its own look
 
 `Pressable` draws nothing of its own: no fill, no padding, no height. It is its content, and a `style` adds whatever geometry the region needs. The theme's lightest hover fill, the press's sink and the keyboard's ring are the whole of its look.
@@ -77,14 +85,6 @@ A pressable is not an on / off control, and it has no `checked`: no prop makes o
 />;
 ```
 
-### Disabled
-
-```tsx
-<Pressable disabled onPress={open}>
-  Open the note
-</Pressable>
-```
-
 ### The look alone
 
 The look is a function, for a `nsh/base` control of your own. Its `radius.control` corners shape the focus ring; a `style` with its own radius moves the ring with it.
@@ -98,8 +98,8 @@ The look is a function, for a `nsh/base` control of your own. Its `radius.contro
 
 Every prop of [`nsh/base` Button](https://nsh.dev/elements/button) passes through (`onPress`, `disabled`, `selected`, `role`, `hitSlop`, …). `style`, `hoverStyle`, `activeStyle` and `focusVisibleStyle` go over the look's.
 
-| Prop       | Type                    | Default |
-| ---------- | ----------------------- | ------- |
-| `children` | `string \| JSX.Element` |         |
+| Part        | Props                                | Description                                                                       |
+| ----------- | ------------------------------------ | --------------------------------------------------------------------------------- |
+| `Pressable` | `children` (`string \| JSX.Element`) | One look — the hover, the sink and the ring — and its appearance is its content's |
 
 There is no axis: a pressable has one look — the hover, the sink and the ring — and its appearance is its content's. `pressableLook` takes `disabled` (no hover or press feedback) and `style` (geometry over the look's), and is what the reference page spreads on `nsh/base`'s Button.

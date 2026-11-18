@@ -93,20 +93,12 @@ note), and `MenubarLabel` is `MenuLabel`: its child is the title.
 </MenubarMenu>
 ```
 
-### What a menubar does not have
+## Differences from shadcn/ui
 
-`MenubarRadioGroup` and `MenubarGroup`'s `aria-labelledby` are shadcn's: a group is a `View` here,
-and one-of-many is a `MenubarRadioItem` with its own `checked`. `MenubarPortal` has no part here: the popup
-is over the screen in `nsh/base`'s Menu already, and `popupStyle` / `backdropStyle` style it.
-
-Two more differences: shadcn moves the open menu to the neighbour when the pointer passes over
-another trigger; here a press opens one menu and a press closes it, and the bar is a `menubar` whose
-triggers are `menuitem`s, so the pointer moves within the open popup as it does in [`Menu`](./menu).
-And nothing here is a native menu bar: [`nsh/desktop`](https://nsh.dev/modules/nsh-desktop)'s app menu is
-the platform's, and this is one drawn in the app. Nor is it an NSH element: `nsh/base` has no menubar
-(its menu bar is [`Menu`](https://nsh.dev/elements/menu)s whose triggers are items of one
-[`Toolbar`](https://nsh.dev/elements/toolbar)), so this page is shadcn/ui's menubar over
-[`menu.tsx`](./menu)'s look.
+- `MenubarRadioGroup` is not here. One-of-many is a `MenubarRadioItem` with its own `checked`. `MenubarGroup`'s `aria-labelledby` is not here: a group is a `View`.
+- `MenubarPortal` has no part here: the popup is over the screen in `nsh/base`'s Menu already, and `popupStyle` / `backdropStyle` style it.
+- shadcn moves the open menu to the neighbour when the pointer passes over another trigger; here a press opens one menu and a press closes it, and the bar is a `menubar` whose triggers are `menuitem`s, so the pointer moves within the open popup as it does in [`Menu`](./menu).
+- Nothing here is a native menu bar: [`nsh/desktop`](https://nsh.dev/modules/nsh-desktop)'s app menu is the platform's, and this is one drawn in the app. Nor is it an NSH element: `nsh/base` has no menubar (its menu bar is [`Menu`](https://nsh.dev/elements/menu)s whose triggers are items of one [`Toolbar`](https://nsh.dev/elements/toolbar)), so this page is shadcn/ui's menubar over [`menu.tsx`](./menu)'s look.
 
 ## API
 
@@ -115,19 +107,19 @@ except the trigger, the open state and the lifecycle callbacks, which the root o
 `backdropStyle` and `popupStartingStyle` go over `menuPopup`'s. Defaults: `placement` `"bottom"`,
 `align` `"start"`, `offset` `8` — a menu under the trigger it belongs to, whatever the bar's width.
 
-| Part                  | Notes                                                             |
-| --------------------- | ----------------------------------------------------------------- |
-| `Menubar`             | The bar; a row holding its menus                                  |
-| `MenubarMenu`         | Open state + lifecycle; `onOpenChange` reports `{ open, reason }` |
-| `MenubarTrigger`      | A string is the name; wears the chosen fill while open            |
-| `MenubarContent`      | The popup, over the menu surface                                  |
-| `MenubarItem`         | A row; `variant="destructive"` is the danger tone                 |
-| `MenubarCheckboxItem` | A row with a check, `closeOnSelect={false}` to stay open          |
-| `MenubarRadioItem`    | A row with a dot                                                  |
-| `MenubarLabel`        | A group's name (`text`)                                           |
-| `MenubarSeparator`    | A hairline between rows                                           |
-| `MenubarShortcut`     | The row's trailing note (a key equivalent)                        |
-| `MenubarGroup`        | A block grouping rows                                             |
-| `MenubarSub`          | A submenu: `MenubarSubTrigger` and `MenubarSubContent`            |
-| `MenubarSubTrigger`   | The row that opens it (a chevron with a string)                   |
-| `MenubarSubContent`   | Its popup; a back row on a touch screen                           |
+| Part                  | Props           | Description                                            |
+| --------------------- | --------------- | ------------------------------------------------------ |
+| `Menubar`             |                 | The bar; a row holding its menus                       |
+| `MenubarMenu`         | `onOpenChange`  | Open state + lifecycle; reports `{ open, reason }`     |
+| `MenubarTrigger`      |                 | A string is the name; wears the chosen fill while open |
+| `MenubarContent`      |                 | The popup, over the menu surface                       |
+| `MenubarItem`         | `variant`       | A row; `"destructive"` is the danger tone              |
+| `MenubarCheckboxItem` | `closeOnSelect` | A row with a check; `false` to stay open               |
+| `MenubarRadioItem`    |                 | A row with a dot                                       |
+| `MenubarLabel`        |                 | A group's name (`text`)                                |
+| `MenubarSeparator`    |                 | A hairline between rows                                |
+| `MenubarShortcut`     |                 | The row's trailing note (a key equivalent)             |
+| `MenubarGroup`        |                 | A block grouping rows                                  |
+| `MenubarSub`          |                 | A submenu: `MenubarSubTrigger` and `MenubarSubContent` |
+| `MenubarSubTrigger`   |                 | The row that opens it (a chevron with a string)        |
+| `MenubarSubContent`   |                 | Its popup; a back row on a touch screen                |

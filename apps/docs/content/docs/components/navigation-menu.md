@@ -114,31 +114,26 @@ const bar = navigationMenuTriggerLook();
 A `NavigationMenuTrigger` or `NavigationMenuLink` that is not a string is drawn as given, so an icon
 can lead a name.
 
-### What a navigation menu does not have
+## Differences from shadcn/ui
 
-`NavigationMenuViewport` is not here. shadcn's opens one box under the whole bar whose size animates
-from one item to the next; a panel here is placed against the trigger that opened it, so it is that
-trigger's width — give `NavigationMenuContent` a `width` that fits the window, and a bar that wraps
-will have the panel over its second line. `viewport={false}` is therefore not a prop: there is no
-viewport. `NavigationMenuIndicator` — the arrow that slides under the trigger — is not here either,
-and neither is `navigationMenuTriggerStyle`'s `asChild`: the parts take children and draw them.
-
-A trigger is drawn by its item's content, which is what places it in the bar, so a
-`NavigationMenuTrigger` declared after its `NavigationMenuContent` draws nothing.
+- `NavigationMenuViewport` is not here. shadcn's opens one box under the whole bar whose size animates from one item to the next; a panel here is placed against the trigger that opened it, so it is that trigger's width — give `NavigationMenuContent` a `width` that fits the window, and a bar that wraps will have the panel over its second line.
+- `viewport={false}` is not a prop: there is no viewport.
+- `NavigationMenuIndicator` — the arrow that slides under the trigger — is not here, and neither is `navigationMenuTriggerStyle`'s `asChild`: the parts take children and draw them.
+- A trigger is drawn by its item's content, which is what places it in the bar, so a `NavigationMenuTrigger` declared after its `NavigationMenuContent` draws nothing.
 
 ## API
 
 The root owns the open item and the two delays; a panel mounts [`nsh/base` Popover](https://nsh.dev/elements/popover)
 and every base prop passes through except the trigger, the open state and the lifecycle callbacks.
 
-| Part                    | Notes                                                                                       |
-| ----------------------- | ------------------------------------------------------------------------------------------- |
-| `NavigationMenu`        | `value` / `defaultValue`, `onValueChange({ value, reason })`, `delayDuration`, `closeDelay` |
-| `NavigationMenuList`    | The wrapping row                                                                            |
-| `NavigationMenuItem`    | `value` (what the root opens), a trigger and its content, or a link; `style`                |
-| `NavigationMenuTrigger` | A string is the name, a chevron follows it; `disabled`, `style`                             |
-| `NavigationMenuContent` | The panel; `width`, `placement`, `align`, `offset`, and base's `margin`, `closeOnEscape`, … |
-| `NavigationMenuLink`    | A link: `href`, `openWith`, `onPress`, `active`, `disabled`, `style`                        |
+| Part                    | Props                                                                   | Description                                                               |
+| ----------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `NavigationMenu`        | `value`, `defaultValue`, `onValueChange`, `delayDuration`, `closeDelay` | `onValueChange` reports `{ value, reason }`                               |
+| `NavigationMenuList`    |                                                                         | The wrapping row                                                          |
+| `NavigationMenuItem`    | `value`, `style`                                                        | `value` is what the root opens; a trigger and its content, or a link      |
+| `NavigationMenuTrigger` | `disabled`, `style`                                                     | A string is the name, a chevron follows it                                |
+| `NavigationMenuContent` | `width`, `placement`, `align`, `offset`, `margin`, `closeOnEscape`      | The panel; `margin` and `closeOnEscape` are base's, and more pass through |
+| `NavigationMenuLink`    | `href`, `openWith`, `onPress`, `active`, `disabled`, `style`            | A link                                                                    |
 
 The look is `navigationMenuLook()` — `root`, `list`, `item`, `panel`, `link`, `linkText`,
 `linkHint` — and `navigationMenuTriggerLook({ open, disabled })` and

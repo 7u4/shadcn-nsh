@@ -68,3 +68,8 @@ import { ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 `ResizablePanelGroup` spreads `resizableHandleLook` for the axis. Every prop of [`nsh/base` ResizablePanelGroup](https://nsh.dev/elements/resizable) passes through.
 
 Also export `resizableHandleLook`, `resizableHandle`, and `handleThumb` for custom layouts.
+
+| Part                  | Props | Description                                              |
+| --------------------- | ----- | -------------------------------------------------------- |
+| `ResizablePanelGroup` |       | Spreads `resizableHandleLook` for the axis               |
+| `ResizablePanel`      |       | `size` is its current width; `onResize` reports the drag |

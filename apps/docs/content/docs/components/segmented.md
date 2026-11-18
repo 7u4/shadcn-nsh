@@ -44,9 +44,10 @@ import { Segmented, SegmentedItem, SegmentedList } from "@/components/ui/segment
 
 Uses `segmentedLook`. Composition: `Segmented`, `SegmentedList`, `SegmentedItem`. Every prop of [`nsh/base` Tabs / `Tab`](https://nsh.dev/elements/tabs) passes through on the list and items.
 
-| Prop (on `SegmentedList`) | Type            | Default     |
-| ------------------------- | --------------- | ----------- |
-| `size`                    | `SegmentedSize` | `"default"` |
-| `fill`                    | `boolean`       |             |
+| Part            | Props                                                             | Description                                           |
+| --------------- | ----------------------------------------------------------------- | ----------------------------------------------------- |
+| `Segmented`     |                                                                   | Composition, with `SegmentedList` and `SegmentedItem` |
+| `SegmentedList` | `size` (`SegmentedSize`, default `"default"`), `fill` (`boolean`) | `size` is `"default"` or `"sm"`                       |
+| `SegmentedItem` |                                                                   | Composition, with `Segmented` and `SegmentedList`     |
 
-`SegmentedSize` is `"sm" | "default"`, as shadcn's two-step segmented control is.
+`SegmentedSize` is `"sm" | "default"`.

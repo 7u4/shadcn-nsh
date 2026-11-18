@@ -75,11 +75,11 @@ A string child is a `Button`; anything else is a pressable view.
 
 The root owns the open flag; `PopoverContent` mounts [`nsh/base` Popover](https://nsh.dev/elements/popover) and every base prop passes through except those. Its children come in on a `PopIn` with `popoverLook` (the surface, 14 points of padding with a pointer and 16 on a touch screen).
 
-| Part                 | Notes                                                                                                           |
-| -------------------- | --------------------------------------------------------------------------------------------------------------- |
-| `Popover`            | `open` / `defaultOpen`, `onOpenChange`, `onOpen`, `onClose`, `onCancel`                                         |
-| `PopoverTrigger`     | `variant` (a string child's `Button`), `disabled`, `style`                                                      |
-| `PopoverContent`     | `compact`, `width`, and base's `placement`, `align`, `offset`, `margin`, `closeOnEscape`, `closeOnPressOutside` |
-| `PopoverHeader`      | A `View` around a title and its description (`style`, `class`)                                                  |
-| `PopoverTitle`       | A string is `Text` (`style`, `class`)                                                                           |
-| `PopoverDescription` | As `PopoverTitle`                                                                                               |
+| Part                 | Props                                                                                                | Description                                                     |
+| -------------------- | ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| `Popover`            | `open`, `defaultOpen`, `onOpenChange`, `onOpen`, `onClose`, `onCancel`                               | The root owns the open flag                                     |
+| `PopoverTrigger`     | `variant`, `disabled`, `style`                                                                       | `variant` is a string child's `Button`                          |
+| `PopoverContent`     | `compact`, `width`, `placement`, `align`, `offset`, `margin`, `closeOnEscape`, `closeOnPressOutside` | The panel; `placement` through `closeOnPressOutside` are base's |
+| `PopoverHeader`      | `style`, `class`                                                                                     | A `View` around a title and its description                     |
+| `PopoverTitle`       | `style`, `class`                                                                                     | A string is `Text`                                              |
+| `PopoverDescription` | `style`, `class`                                                                                     | As `PopoverTitle`                                               |
