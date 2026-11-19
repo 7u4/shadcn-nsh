@@ -1,11 +1,11 @@
 import type { Folder, Item, Node, Root } from "fumadocs-core/page-tree";
-import { loader } from "fumadocs-core/source";
+import { loader, llms } from "fumadocs-core/source";
 import { pageSchema } from "fumadocs-core/source/schema";
 import { defineDocs } from "fumadocs-mdx/macro";
 import { z } from "zod";
 
 import { KIND_LABELS, KINDS } from "./kinds";
-import { SIDEBAR_GROUPS, SIDEBAR_PAGES, type SidebarPage } from "./nav";
+import { SIDEBAR_PAGES, type SidebarPage } from "./nav";
 
 /**
  * A component page's frontmatter, declared once: Fumadocs' own fields plus the three the old
@@ -72,14 +72,14 @@ export function pageTree(): Root {
 
   const children: Node[] = [];
   if (start.length > 0) {
-    children.push({ type: "separator", name: SIDEBAR_GROUPS.start });
+    children.push({ type: "separator", name: "Start here" });
     children.push(...nodes(start));
   }
   // "All components" and "Coverage" are the group's own pages, above the two runs (they carry no
   // kind: they list the set rather than belong to one).
   const group = components.filter((page) => page.kind === undefined);
   if (components.length > 0) {
-    children.push({ type: "separator", name: SIDEBAR_GROUPS.components });
+    children.push({ type: "separator", name: "Components" });
     children.push(...nodes(group));
   }
   const runs = KINDS.map((kind) => ({
@@ -93,3 +93,9 @@ export function pageTree(): Root {
 
   return { name: "Docs", children };
 }
+
+export const docsLlms = llms(source, {
+  renderPage: async (page) => `# ${page.data.title} (${page.url})
+
+${await page.data.getText("processed")}`,
+});
