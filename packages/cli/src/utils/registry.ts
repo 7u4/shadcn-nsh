@@ -3,6 +3,7 @@ import path from "node:path";
 
 import type { NshUiConfig, Registry, RegistryIndex, RegistryItem } from "../types";
 import { DEFAULT_THEME } from "../types";
+import { fetchJson } from "./fetch-cached";
 
 export function itemUrl(config: NshUiConfig, name: string, registryOverride?: string) {
   const template = registryOverride ?? config.registry;
@@ -30,11 +31,10 @@ export async function fetchItem(
   registryOverride?: string,
 ): Promise<RegistryItem> {
   const url = itemUrl(config, name, registryOverride);
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
-  }
-  return (await res.json()) as RegistryItem;
+  return (await fetchJson(
+    url,
+    (res) => new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`),
+  )) as RegistryItem;
 }
 
 /** Fetch the catalog (`index.json`). */
@@ -43,14 +43,27 @@ export async function fetchIndex(
   registryOverride?: string,
 ): Promise<RegistryIndex> {
   const url = indexUrl(config, registryOverride);
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error(
-      `Failed to fetch ${url}: ${res.status} ${res.statusText}. ` +
-        "A registry needs an index.json (bun run registry:build writes one).",
-    );
+  return (await fetchJson(
+    url,
+    (res) =>
+      new Error(
+        `Failed to fetch ${url}: ${res.status} ${res.statusText}. ` +
+          "A registry needs an index.json (bun run registry:build writes one).",
+      ),
+  )) as RegistryIndex;
+}
+
+/**
+ * Fetch the catalog only to have it cached: `diff` with no item reads it to find what is
+ * installed, and offline it has only the copy an earlier command left. A command that installs
+ * fetches it for that alone, so a registry without one, or a network gone by now, is no failure.
+ */
+export async function cacheIndex(config: NshUiConfig, registryOverride?: string): Promise<void> {
+  try {
+    await fetchIndex(config, registryOverride);
+  } catch {
+    // Nothing to keep: `diff` will say it could not check, if it ever has to.
   }
-  return (await res.json()) as RegistryIndex;
 }
 
 /** `theme.json` and `finishes.json`: the two data files a theme is. */
