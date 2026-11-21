@@ -6,7 +6,7 @@
  *   bun scripts/theme-preview.ts <name> [--only id,id] [--appearance light|dark]
  *
  * `<name>` is `default` (the files as they are: `<id>-default-…` pictures) or a directory under
- * `packages/theme/themes/` holding `theme.json` and `finishes.json` (e.g. `shadcn`).
+ * `packages/theme/themes/` holding `theme.json` and `semantics.json` (e.g. `shadcn`).
  *
  * The theme is a build input (`nsh.json`'s `theme`), not a runtime switch, so each alternative is
  * a full package run: `scripts/audit/audit.ts build --force --only …` then `shots --only …`, once
@@ -61,7 +61,7 @@ const out = path.join(shotsDir, "theme");
 fs.mkdirSync(out, { recursive: true });
 
 /** The default files, kept byte for byte: put back whatever happens below. */
-const FILES = ["theme.json", "finishes.json"] as const;
+const FILES = ["theme.json", "semantics.json"] as const;
 const saved = new Map(FILES.map((file) => [file, fs.readFileSync(path.join(theme, file))]));
 
 const run = (args: string[]) => {

@@ -1,5 +1,5 @@
 /**
- * Rewrites the default theme files (`packages/theme/theme.json`, `finishes.json`) so every color
+ * Rewrites the default theme files (`packages/theme/theme.json`, `semantics.json`) so every color
  * is canonical `oklch()`: tokens, gradients, shadows, `color-mix()` innards. NSH reads `oklch()`
  * wherever a color is a string, and the alternative themes (`themes/shadcn/`) are generated in
  * that form, so the default theme is written the same way.
@@ -17,7 +17,7 @@ import { repo } from "../port/lib";
 import { toOklchText } from "./oklch";
 
 const theme = path.join(repo, "packages", "theme");
-const files = ["theme.json", "finishes.json"];
+const files = ["theme.json", "semantics.json"];
 
 /** Every string in a JSON document, its colors converted; keys and numbers stay as they are. */
 const convert = (value: unknown): unknown => {

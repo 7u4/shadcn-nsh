@@ -1,0 +1,503 @@
+{
+  "type": {
+    "family": null,
+    "caption": {
+      "size": {
+        "pointer": 11,
+        "touch": 12
+      },
+      "line": {
+        "pointer": 15,
+        "touch": 16
+      },
+      "weight": "400",
+      "tracking": 0
+    },
+    "detail": {
+      "size": {
+        "pointer": 12,
+        "touch": 13
+      },
+      "line": {
+        "pointer": 17,
+        "touch": 18
+      },
+      "weight": "400",
+      "tracking": 0
+    },
+    "body": {
+      "size": {
+        "pointer": 13,
+        "touch": 15
+      },
+      "line": {
+        "pointer": 19,
+        "touch": 21
+      },
+      "weight": "400",
+      "tracking": 0
+    },
+    "label": {
+      "size": {
+        "pointer": 14,
+        "touch": 15
+      },
+      "line": {
+        "pointer": 20,
+        "touch": 21
+      },
+      "weight": "500",
+      "tracking": 0
+    },
+    "title": {
+      "size": {
+        "pointer": 13,
+        "touch": 13
+      },
+      "line": {
+        "pointer": 19,
+        "touch": 19
+      },
+      "weight": "600",
+      "tracking": 0
+    },
+    "headline": {
+      "size": {
+        "pointer": 20,
+        "touch": 22
+      },
+      "line": {
+        "pointer": 26,
+        "touch": 28
+      },
+      "weight": "600",
+      "tracking": 0
+    },
+    "display": {
+      "size": {
+        "pointer": 26,
+        "touch": 28
+      },
+      "line": {
+        "pointer": 32,
+        "touch": 34
+      },
+      "weight": "600",
+      "tracking": 0
+    }
+  },
+  "shape": {
+    "control": "{radius-control}",
+    "field": "{radius-field}",
+    "chip": "{radius-chip}",
+    "card": "{radius-card}",
+    "overlay": "{radius-overlay}",
+    "dialog": "{radius-dialog}",
+    "sheet": "{radius-sheet}",
+    "inset": "{radius}",
+    "curve": "continuous",
+    "corners": {
+      "field": "all"
+    }
+  },
+  "size": {
+    "hit": {
+      "pointer": 0,
+      "touch": 44
+    },
+    "density": {
+      "pointer": {
+        "row": 36,
+        "pad": 14,
+        "gap": 12,
+        "surface": 10
+      },
+      "touch": {
+        "row": 48,
+        "pad": 16,
+        "gap": 12,
+        "surface": 16
+      }
+    },
+    "control": {
+      "pointer": {
+        "row": 40,
+        "padding": 6,
+        "gap": 10,
+        "control": 16,
+        "corner": 5,
+        "check": 12,
+        "dot": 6,
+        "tabs": 30,
+        "line": 32,
+        "clear": 16,
+        "switch": "small"
+      },
+      "touch": {
+        "row": 44,
+        "padding": 8,
+        "gap": 12,
+        "control": 22,
+        "corner": 7,
+        "check": 16,
+        "dot": 8,
+        "tabs": 40,
+        "line": 44,
+        "clear": 20,
+        "switch": "regular"
+      }
+    },
+    "height": {
+      "pointer": {
+        "sm": 24,
+        "md": 28,
+        "lg": 34
+      },
+      "touch": {
+        "sm": 36,
+        "md": 40,
+        "lg": 48
+      }
+    }
+  },
+  "stroke": {
+    "hairline": 1,
+    "control": 1,
+    "indicator": 2
+  },
+  "focus": {
+    "style": "halo",
+    "width": 3,
+    "offset": 0
+  },
+  "state": {
+    "pressScale": 1,
+    "overlay": {
+      "hover": 0,
+      "focus": 0,
+      "pressed": 0,
+      "dragged": 0
+    },
+    "ripple": false,
+    "pressedOpacity": 0.7,
+    "disabled": {
+      "content": 0.5,
+      "container": 0.5
+    }
+  },
+  "motion": {
+    "press": {
+      "stiffness": 520,
+      "damping": 34
+    },
+    "settle": {
+      "stiffness": 320,
+      "damping": 30
+    },
+    "control": {
+      "stiffness": 1218,
+      "damping": 70
+    },
+    "move": {
+      "stiffness": 504,
+      "damping": 38
+    },
+    "enter": {
+      "duration": 420,
+      "easing": "out-cubic"
+    },
+    "shake": {
+      "duration": 500
+    }
+  },
+  "icon": {
+    "size": {
+      "pointer": {
+        "sm": 12,
+        "md": 14,
+        "lg": 15
+      },
+      "touch": {
+        "sm": 14,
+        "md": 16,
+        "lg": 18
+      }
+    }
+  },
+  "indicator": {
+    "tabs": "pill",
+    "nav": "fill",
+    "field": "box"
+  },
+  "finishes": {
+    "shared": {
+      "card": {
+        "backgroundImage": "linear-gradient(180deg, {card} 0%, {card} 100%)",
+        "material": null
+      },
+      "inset": {
+        "material": null
+      },
+      "field": {
+        "material": null
+      },
+      "raised": {
+        "backgroundColor": "{raised}",
+        "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+        "material": null,
+        "borderColor": "{glass-edge}"
+      },
+      "hover": {
+        "material": null,
+        "backgroundColor": "{hover}",
+        "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+        "borderColor": "{glass-edge}"
+      },
+      "pressed": {
+        "material": null,
+        "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+        "borderColor": "{glass-edge}"
+      },
+      "light": {
+        "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+        "borderColor": "{brand-edge}",
+        "material": null
+      },
+      "accent": {
+        "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+        "borderColor": "{brand-edge}",
+        "material": null
+      },
+      "track": {
+        "material": null,
+        "borderColor": "transparent"
+      },
+      "fill": {
+        "backgroundColor": "transparent",
+        "material": null,
+        "borderColor": "transparent"
+      },
+      "knob": {
+        "material": null,
+        "backgroundColor": "{knob}",
+        "backgroundImage": "linear-gradient(180deg, {knob} 0%, {knob} 100%)",
+        "borderColor": "transparent"
+      },
+      "knobOn": {
+        "backgroundColor": "{knob}",
+        "backgroundImage": "linear-gradient(180deg, {knob} 0%, {knob} 100%)",
+        "material": null,
+        "borderColor": "transparent"
+      },
+      "handle": {
+        "material": null,
+        "backgroundColor": "{knob}",
+        "backgroundImage": "linear-gradient(180deg, {knob} 0%, {knob} 100%)",
+        "borderColor": "transparent"
+      },
+      "pill": {
+        "backgroundColor": "{raised}",
+        "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+        "material": null,
+        "borderColor": "{glass-edge}"
+      },
+      "thumb": {
+        "material": null,
+        "backgroundColor": "{raised}",
+        "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+        "borderColor": "{glass-edge}"
+      },
+      "on": {
+        "material": null,
+        "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)"
+      },
+      "chip": {
+        "backgroundColor": "{raised}",
+        "backgroundImage": "linear-gradient(180deg, transparent 0%, transparent 100%)",
+        "borderColor": "transparent",
+        "material": null
+      },
+      "glass": {
+        "borderColor": "{glass-edge}",
+        "material": null,
+        "backgroundColor": "{raised}"
+      },
+      "menu": {
+        "backgroundColor": "{popover}",
+        "material": null
+      },
+      "dialog": {
+        "backgroundColor": "{card}",
+        "borderColor": "{border}",
+        "material": null
+      },
+      "tooltip": {
+        "backgroundColor": "{popover}",
+        "boxShadow": "none",
+        "borderColor": "{border}",
+        "material": null
+      },
+      "inverse": {
+        "backgroundColor": "{inverse}",
+        "material": null
+      },
+      "groove": {
+        "material": null
+      }
+    },
+    "light": {
+      "card": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 0 0 1px oklch(1 0 0 / 0.35), 0 1px 2px oklch(0.25 0.03 265 / 0.06), 0 12px 32px -14px oklch(0.3 0.06 265 / 0.28)"
+      },
+      "inset": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.35)"
+      },
+      "field": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0)"
+      },
+      "raised": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 1px 2px oklch(0.25 0.03 265 / 0.06)"
+      },
+      "hover": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 1px 2px oklch(0.25 0.03 265 / 0.06)"
+      },
+      "pressed": {
+        "backgroundColor": "oklch(from {muted} l c h / 0.26)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8)"
+      },
+      "light": {
+        "backgroundColor": "oklch(from {primary} l c h / 0.88)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.3), inset 0 -1px 0 oklch(0 0 0 / 0.203)"
+      },
+      "accent": {
+        "backgroundColor": "oklch(from {primary} l c h / 0.88)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.3), inset 0 -1px 0 oklch(0 0 0 / 0.203), inset 0 0 0 1px oklch(1 0 0 / 0.07), 0 1px 2px oklch(0.25 0.03 265 / 0.06), 0 8px 18px -9px oklch(0.3 0.06 265 / 0.28)"
+      },
+      "track": {
+        "boxShadow": "inset 0 1px 1.5px oklch(0.3 0.06 265 / 0.14), inset 0 -1px 0 oklch(1 0 0 / 0.85)"
+      },
+      "fill": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.3), inset 0 -1px 0 oklch(0 0 0 / 0.203)",
+        "backgroundImage": "linear-gradient(180deg, oklch(0.2 0 0 / 0.88) 0%, oklch(0.2 0 0 / 0.88) 100%)"
+      },
+      "knob": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0.3 0.06 265 / 0.3)"
+      },
+      "knobOn": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0.3 0.06 265 / 0.3)"
+      },
+      "handle": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0.3 0.06 265 / 0.3)"
+      },
+      "pill": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 1px 2px oklch(0.25 0.03 265 / 0.06)"
+      },
+      "thumb": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 1px 2px oklch(0.25 0.03 265 / 0.06)"
+      },
+      "on": {
+        "backgroundColor": "oklch(from {muted} l c h / 0.09)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.85)",
+        "borderColor": "oklch(from {muted} l c h / 0.13)"
+      },
+      "chip": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), inset 0 0 0 1px oklch(0.38 0.03 265 / 0.1)"
+      },
+      "glass": {
+        "backdropFilter": "blur(14px) saturate(180%)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.8), 0 0 0 1px oklch(0.38 0.03 265 / 0.1), 0 1px 2px oklch(0.25 0.03 265 / 0.06)"
+      },
+      "menu": {
+        "borderColor": "oklch(0.38 0.03 265 / 0.22)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0.38 0.03 265 / 0.16), 0 24px 60px -18px oklch(0.3 0.06 265 / 0.28), 0 6px 16px -6px oklch(0.25 0.03 265 / 0.14)"
+      },
+      "dialog": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0.38 0.03 265 / 0.16), 0 24px 60px -18px oklch(0.3 0.06 265 / 0.28), 0 6px 16px -6px oklch(0.25 0.03 265 / 0.14)"
+      },
+      "inverse": {
+        "borderColor": "oklch(0.38 0.03 265 / 0.22)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0.38 0.03 265 / 0.16), 0 24px 60px -18px oklch(0.3 0.06 265 / 0.28), 0 6px 16px -6px oklch(0.25 0.03 265 / 0.14)"
+      },
+      "groove": {
+        "boxShadow": "0 1px 0 oklch(1 0 0 / 0.35)"
+      }
+    },
+    "dark": {
+      "card": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.16), inset 0 0 0 1px oklch(1 0 0 / 0.04), 0 1px 2px oklch(0 0 0 / 0.1), 0 12px 32px -14px oklch(0 0 0 / 0.6)"
+      },
+      "inset": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.04)"
+      },
+      "field": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.15)"
+      },
+      "raised": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 1px 2px oklch(0 0 0 / 0.1)"
+      },
+      "hover": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 1px 2px oklch(0 0 0 / 0.1)"
+      },
+      "pressed": {
+        "backgroundColor": "oklch(from {muted} l c h / 0.11)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11)"
+      },
+      "light": {
+        "backgroundColor": "oklch(from {primary} l c h / 0.86)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0), inset 0 -1px 0 oklch(0 0 0 / 0.099)"
+      },
+      "accent": {
+        "backgroundColor": "oklch(from {primary} l c h / 0.86)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0), inset 0 -1px 0 oklch(0 0 0 / 0.099), inset 0 0 0 1px oklch(0 0 0 / 0.07), 0 1px 2px oklch(0 0 0 / 0.1), 0 8px 18px -9px oklch(0 0 0 / 0.6)"
+      },
+      "track": {
+        "boxShadow": "inset 0 1px 1.5px oklch(0 0 0 / 0.38), inset 0 -1px 0 oklch(1 0 0 / 0.09)"
+      },
+      "fill": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0), inset 0 -1px 0 oklch(0 0 0 / 0.099)",
+        "backgroundImage": "linear-gradient(180deg, oklch(0.94 0 0 / 0.86) 0%, oklch(0.94 0 0 / 0.86) 100%)"
+      },
+      "knob": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0 0 0 / 0.55)"
+      },
+      "knobOn": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0 0 0 / 0.55)"
+      },
+      "handle": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.9), inset 0 -1px 0 oklch(0 0 0 / 0.14), 0 1px 2px oklch(0 0 0 / 0.55)"
+      },
+      "pill": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 1px 2px oklch(0 0 0 / 0.1)"
+      },
+      "thumb": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 1px 2px oklch(0 0 0 / 0.1)"
+      },
+      "on": {
+        "backgroundColor": "oklch(from {muted} l c h / 0.07)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11)",
+        "borderColor": "oklch(from {muted} l c h / 0.06)"
+      },
+      "chip": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), inset 0 0 0 1px oklch(1 0 0 / 0.06)"
+      },
+      "glass": {
+        "backdropFilter": "blur(14px)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.11), 0 0 0 1px oklch(1 0 0 / 0.06), 0 1px 2px oklch(0 0 0 / 0.1)"
+      },
+      "menu": {
+        "borderColor": "oklch(1 0 0 / 0.06)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.16), inset 0 -1px 0 oklch(0 0 0 / 0), 0 24px 60px -18px oklch(0 0 0 / 0.6), 0 6px 16px -6px oklch(0 0 0 / 0.22)"
+      },
+      "dialog": {
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.16), inset 0 -1px 0 oklch(0 0 0 / 0), 0 24px 60px -18px oklch(0 0 0 / 0.6), 0 6px 16px -6px oklch(0 0 0 / 0.22)"
+      },
+      "inverse": {
+        "borderColor": "oklch(1 0 0 / 0.06)",
+        "boxShadow": "inset 0 1px 0 oklch(1 0 0 / 0.16), inset 0 -1px 0 oklch(0 0 0 / 0), 0 24px 60px -18px oklch(0 0 0 / 0.6), 0 6px 16px -6px oklch(0 0 0 / 0.22)"
+      },
+      "groove": {
+        "boxShadow": "0 1px 0 oklch(1 0 0 / 0.04)"
+      }
+    }
+  }
+}

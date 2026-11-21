@@ -1,6 +1,6 @@
 /**
  * The color codec the theme files are written with: sRGB ⇄ OKLCH, and the canonical `oklch()`
- * text a theme value carries (`packages/theme/theme.json`, `finishes.json`,
+ * text a theme value carries (`packages/theme/theme.json`, `semantics.json`,
  * `packages/theme/themes/<name>/*.json`). NSH reads `oklch()` everywhere a color is a string, next to
  * hex and `rgb()` (references/nsh/website/docs/styling.md#colors), so a theme stores its colors
  * in one space instead of sRGB's three channels.
@@ -217,7 +217,8 @@ const LITERAL = new RegExp(
  */
 export function toOklchText(text: string): string {
   return text.replace(LITERAL, (literal) => {
-    if (literal.toLowerCase() === "transparent") return literal;
+    if (literal.toLowerCase() === "transparent" || /^oklch\(\s*from\b/i.test(literal))
+      return literal;
     const parsed = parseOklch(literal);
     if (parsed) return oklchColor(parsed.l, parsed.c, parsed.h, parsed.a);
     return oklchText(parseColor(literal));
