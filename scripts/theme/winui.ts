@@ -867,8 +867,7 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
   return {
     id: "winui",
     name: "WinUI 3",
-    resolverDescription:
-      "DTCG 2025.10 resolver for the WinUI 3 (Windows 11 / Fluent 2, winui3/release/2.7.0) theme.",
+    resolverDescription: "WinUI 3 theme (Windows 11 / Fluent 2, winui3/release/2.7.0).",
     themeDescription:
       "Appearance-invariant base tokens and WinUI 3 style overrides (Segoe UI Variable, Consolas, double focus rings, timing motion).",
     finishesDescription:
@@ -884,6 +883,20 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
     radiusGroupDescription:
       "WinUI 3 corner radius scale: ControlCornerRadius 4px (controls/fields/chips/insets) and OverlayCornerRadius 8px (cards/overlays/dialogs/sheets).",
     style: winuiStyle,
+    designMd: {
+      overview:
+        "WinUI 3 / Fluent 2 (`winui3/release/2.7.0`): Windows 11 fill and stroke resources composited over `SolidBackgroundFillColorBase` (`#F3F3F3` light / `#202020` dark) with `#0078D4` accent, `Segoe UI Variable` + `Consolas`, double focus strokes, and deterministic timing curves.",
+      elevation:
+        "WinUI 3 ThemeShadow depths (2/8/16/32/128) paired with composited `ControlStrokeColorDefault` / `SurfaceStrokeColorDefault` borders and `material.windows` blur on `glass`, `menu`, and `tooltip` (`AcrylicInAppFillColorDefault` 0.85 light / 0.96 dark).",
+      dos: [
+        'Use `4px` `ControlCornerRadius` for controls/fields/chips/insets and `8px` `OverlayCornerRadius` for cards/overlays/dialogs/sheets with `shape.curve: "circular"`.',
+        'Use `focus.style: "double"` (2px outer `FocusStrokeColorOuter` + 1px inner `FocusStrokeColorInner`) and WinUI timing motion (`decelerate` / `point-to-point`).',
+        "Use `indicator` `underline` tabs/fields and leading `bar` navigation indicators with `Segoe UI Variable` (`{font.family.sans}`).",
+      ],
+      donts: [
+        "Do not substitute continuous squircle corners or spring physics for WinUI 3's circular corners and timing curves.",
+      ],
+    },
     cssVars: {
       theme: themeLevel(roles),
       light: roles.light,

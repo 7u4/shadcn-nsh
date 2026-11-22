@@ -694,8 +694,7 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
   return {
     id: "material",
     name: "Material",
-    resolverDescription:
-      "DTCG 2025.10 resolver for the Material 3 Expressive theme (material-web v34.0.21 / Compose M3 1.5.0).",
+    resolverDescription: "Material 3 Expressive theme (material-web v34.0.21 / Compose M3 1.5.0).",
     themeDescription: "Appearance-invariant base tokens and Material 3 Expressive style overrides.",
     finishesDescription:
       "Appearance-invariant surface finish recipes for Material 3 Expressive (Level 1-3 elevations, Android elevation metadata, no blur).",
@@ -709,6 +708,21 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
     radiusGroupDescription:
       "Material 3 Expressive corner scale (999px CornerFull controls, 4px CornerExtraSmall fields/menus, 12px CornerMedium cards/chips, 28px CornerExtraLarge dialogs/sheets; ShapeTokens.kt).",
     style: m3Style,
+    designMd: {
+      overview:
+        "Material 3 Expressive (`material-web` v34.0.21 / Compose Material 3 1.5.0) built from the `#6750A4` baseline with tonal surface containers, Expressive Tone 30 `on*Container` roles, state-layer overlays, and Expressive spatial/effects springs.",
+      elevation:
+        "Tonal surface stepping plus Material Web Level 1–3 shadows and `material.android.elevation` (1dp/3dp/6dp), with `stroke.surface: 0px` and no backdrop blur.",
+      dos: [
+        "Express interaction states via M3 state-layer ink overlays (`hover: 0.08`, `focus: 0.10`, `pressed: 0.10`, `dragged: 0.16`) and Android press ripples (`state.ripple: true`) with `state.press-scale: 1`.",
+        'Use `shape.curve: "circular"`, `shape.corners.field: "top"`, and `indicator` `underline` tabs/fields.',
+        "Keep `stroke.surface: 0px` on tonal/elevated containers so depth comes from tonal steps and elevation.",
+      ],
+      donts: [
+        "Do not add backdrop blur (`backdropFilter`) or surface borders (`stroke.surface > 0`) to M3 tonal surfaces.",
+        "Do not replace `outline` focus rings (`3px` width, `2px` offset) with halo rings.",
+      ],
+    },
     cssVars: {
       theme: themeLevel(roles),
       light: roles.light,
