@@ -19,6 +19,12 @@
 
 ### Changed
 
+- **Breaking:** **`semantics.json` and `theme.ts` use DTCG 2025.10 names (#237).** The compiled semantics file now names its fields the way the DTCG source in `packages/theme/tokens/` does. Every shipped theme renders the same as before. **To migrate a copied app:**
+  - in code: `font.line(role)` → `font.lineHeight(role)` (still points), `font.tracking(role)` → `font.letterSpacing(role)`, `TypeRole` → `TypographyRole`, `Timing.easing` → `Timing.timingFunction`. The `finish.*` getters still return NSH style keys (`backgroundColor`, `boxShadow` …);
+  - in `style()` / `semantics.json`: `type` → `typography` (`size` → `fontSize`, `line` → `lineHeight` as a ratio, `weight` → numeric `fontWeight`, `tracking` → `letterSpacing`, `family` → `fontFamily`); the `shape` radii, `size`, `stroke`, `focus` and `icon.size` move under `dimension` (`dimension.icon`), and `shape` keeps `curve` and `corners`; `state.pressScale` → `state["press-scale"]`, `state.pressedOpacity` → `state["pressed-opacity"]`; `motion.shake` → `duration.shake`, `motion.enter` → `transition.enter`; timing roles use `timingFunction` instead of `easing`;
+  - in finishes: `backgroundColor` → `background`, `backgroundImage` → `gradient`, `boxShadow` → `shadow`, `borderColor` → `border-color`;
+  - an unedited `lib/ui/semantics.json`: `shadcn-nsh add theme --overwrite` (or `init --theme <name> --overwrite`) replaces it. An edited one: move its keys to the new names by hand.
+
 - **Breaking:** **design-semantics standard: `theme.json` tokens and `semantics.json` (#228).** Theme data is split into flat NSH base tokens (`theme.json`: colors, all eight `radius-*` lengths, and fonts) and the cross-platform semantic layer (`semantics.json`: tiered sizes and type scale, enums, motion, and split `finishes`, referencing base tokens with `{token}`), so every value lives once and host `setThemeOverrides` reaches `shape.*` and `font.family()`. Every shipped theme stays pixel-identical. **To migrate a copied app:**
   - rename `lib/ui/finishes.json` to `lib/ui/semantics.json` (and any `themes/<name>/finishes.json` to `semantics.json`, updating `themes/<name>/index.ts` to pass `semantics` instead of `finishes` on `AppTheme`);
   - add the five new `radius-*` tokens (`radius-field`, `radius-chip`, `radius-overlay`, `radius-dialog`, `radius-sheet`) to `theme.json`'s `cssVars.theme`;
