@@ -197,6 +197,16 @@ function section(p: ReturnType<typeof palette>) {
     "down-tint": tints("destructive"),
     violet: p.violet,
     "window-control-off": p.windowControlOff,
+    dialog: "var(--card)",
+    "card-edge": "var(--border)",
+    bevel: "var(--border)",
+    "accent-bevel": "var(--brand-edge)",
+    disabled: "var(--raised)",
+    "disabled-foreground": "var(--muted-foreground)",
+    "accent-pressed": "var(--primary)",
+    "on-accent-pressed": "var(--on-brand)",
+    "selected-foreground": "var(--foreground)",
+    "pressed-foreground": "var(--foreground)",
   };
 }
 
@@ -212,8 +222,22 @@ const surface = (
   {
     shadow = "none",
     "border-color": borderColor = "transparent",
-  }: { shadow?: string; "border-color"?: string } = {},
-) => ({ background: color, gradient: flat(color), shadow, "border-color": borderColor });
+    "border-top-color": borderTopColor,
+    "border-bottom-color": borderBottomColor,
+  }: {
+    shadow?: string;
+    "border-color"?: string;
+    "border-top-color"?: string;
+    "border-bottom-color"?: string;
+  } = {},
+) => ({
+  background: color,
+  gradient: flat(color),
+  shadow,
+  "border-color": borderColor,
+  ...(borderTopColor !== undefined ? { "border-top-color": borderTopColor } : {}),
+  ...(borderBottomColor !== undefined ? { "border-bottom-color": borderBottomColor } : {}),
+});
 
 /**
  * One appearance's finishes: flat fills with a hairline, and three that are glass. Glass is the
@@ -227,18 +251,40 @@ function finishes(appearance: Appearance) {
   const glass = { glass: "regular", tint: null } as const;
   return {
     card: { gradient: flat(alias("card")), shadow: "none" },
+    section: { background: alias("card"), shadow: "none", "border-color": alias("card-edge") },
     inset: { shadow: "none" },
     field: { shadow: "none" },
     raised: {
       // The glass shows through the fill, so the gradient over it is clear, not the opaque token.
-      ...surface("oklch(from {raised} l c h / 0.72)", { shadow: hairline }),
+      ...surface("oklch(from {raised} l c h / 0.72)", {
+        shadow: hairline,
+        "border-top-color": "transparent",
+        "border-bottom-color": "transparent",
+      }),
       gradient: "linear-gradient(180deg, transparent 0%, transparent 100%)",
       material: { apple: glass },
     },
-    hover: surface(alias("hover")),
-    pressed: surface(alias("muted")),
-    light: surface(alias("primary")),
-    accent: surface(alias("primary")),
+    hover: surface(alias("hover"), {
+      "border-top-color": "transparent",
+      "border-bottom-color": "transparent",
+    }),
+    pressed: surface(alias("muted"), {
+      "border-top-color": "transparent",
+      "border-bottom-color": "transparent",
+    }),
+    disabled: surface(alias("disabled"), { "border-color": alias("border") }),
+    light: surface(alias("primary"), {
+      "border-top-color": "transparent",
+      "border-bottom-color": "transparent",
+    }),
+    accent: surface(alias("primary"), {
+      "border-top-color": "transparent",
+      "border-bottom-color": "transparent",
+    }),
+    accentPressed: surface(alias("accent-pressed"), {
+      "border-top-color": "transparent",
+      "border-bottom-color": "transparent",
+    }),
     track: { shadow: "none", "border-color": "transparent" },
     fill: {
       background: "transparent",
@@ -251,7 +297,10 @@ function finishes(appearance: Appearance) {
     handle: surface(alias("knob"), { shadow: lift(0.2) }),
     pill: surface(alias("raised"), { shadow: hairline }),
     thumb: surface(alias(appearance === "light" ? "knob" : "raised"), { shadow: lift(0.16) }),
-    on: surface(alias("muted")),
+    on: surface(alias("muted"), {
+      "border-top-color": "transparent",
+      "border-bottom-color": "transparent",
+    }),
     chip: surface(alias("muted")),
     glass: {
       background: "oklch(from {popover} l c h / 0.4)",
@@ -265,6 +314,10 @@ function finishes(appearance: Appearance) {
       shadow: `${hairline}, 0 8px 30px ${oklchColor(0, 0, 0, appearance === "light" ? 0.14 : 0.4)}`,
       "border-color": "transparent",
       material: { apple: glass, ios: { backdrop: "regular" } },
+    },
+    grabber: {
+      background: alias("raised"),
+      shadow: "none",
     },
     groove: { shadow: "none" },
   };
@@ -381,7 +434,7 @@ export const style = {
     overlay: { hover: 0, focus: 0, pressed: 0, dragged: 0 },
     ripple: false,
     "pressed-opacity": 0.7,
-    disabled: { content: 0.3, container: 0.3 },
+    disabled: { content: 0.3, fill: false },
   },
   duration: { shake: 500 },
   transition: {
@@ -515,7 +568,7 @@ export function appleDtcgOutput(): ThemeGeneratorOutput {
         "state.press-scale":
           "Scale factor applied while pressed (1 disables press shrinking; Apple dims via pressed-opacity).",
         "state.disabled":
-          "UIKit disabled opacity multipliers (0.3 for both content and containers).",
+          "UIKit disabled content opacity multiplier (0.3); containers keep resting fills.",
       },
     },
   };

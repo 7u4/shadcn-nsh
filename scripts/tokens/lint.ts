@@ -280,6 +280,14 @@ function validateExtAtPath(
     return;
   }
 
+  if (p === "state.disabled") {
+    checkUnknownKeys(where, ext, ["fill"], problems);
+    if (typeof ext.fill !== "boolean") {
+      problems.push(`${where}.fill must be a boolean`);
+    }
+    return;
+  }
+
   if (p === "indicator") {
     checkUnknownKeys(where, ext, ["tabs", "nav", "field"], problems);
     for (const field of ["tabs", "nav", "field"] as const) {
@@ -354,7 +362,11 @@ function validateExtAtPath(
     return;
   }
 
-  if (/^finish\.[A-Za-z0-9-]+\.(?:background|border-color)$/.test(p)) {
+  if (
+    /^finish\.[A-Za-z0-9-]+\.(?:background|border-color|border-top-color|border-bottom-color)$/.test(
+      p,
+    )
+  ) {
     checkUnknownKeys(where, ext, ["transparentKeyword", "colorOp"], problems);
     if ("transparentKeyword" in ext && ext.transparentKeyword !== true) {
       problems.push(`${where}.transparentKeyword must be true`);
@@ -689,8 +701,8 @@ function checkMergedSemantics(
     "state.overlay.pressed",
     "state.overlay.dragged",
     "state.pressed-opacity",
+    "state.accent-pressed-opacity",
     "state.disabled.content",
-    "state.disabled.container",
   ]) {
     const tok = getAtPath(resolved, unitPath);
     if (isTokenNode(tok)) {
@@ -700,11 +712,19 @@ function checkMergedSemantics(
       }
     }
   }
+  const disabledNode = getAtPath(resolved, "state.disabled") as Record<string, unknown> | undefined;
+  const disabledExt = (disabledNode?.$extensions as Record<string, unknown> | undefined)?.[
+    EXT_NS
+  ] as Record<string, unknown> | undefined;
+  if (typeof disabledExt?.fill !== "boolean") {
+    problems.push(`${label}: state.disabled.$extensions.${EXT_NS}.fill must be a boolean`);
+  }
   for (const dimGroupPath of [
     "dimension.stroke",
     "dimension.focus",
     "dimension.size",
     "dimension.icon",
+    "dimension.grabber",
   ]) {
     const group = getAtPath(resolved, dimGroupPath);
     if (!isRecord(group)) continue;

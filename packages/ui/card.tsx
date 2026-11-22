@@ -1,6 +1,6 @@
 // A card: the look (`cardLook`) and the seven parts that wear it.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
-import { colors, TERMINAL_GAP, terminal, font } from "@shadcn-nsh/theme";
+import { colors, platformMaterial, TERMINAL_GAP, terminal, font } from "@shadcn-nsh/theme";
 import type { TextStyle, TextProps, ViewProps, ViewStyle } from "nsh";
 import { split, Text, View } from "nsh";
 
@@ -146,9 +146,15 @@ export type CardFooterProps = ViewProps;
 
 /** A card's surface. */
 export function Card(props: CardProps) {
-  const [, rest] = split(props, ["style", "children"]);
+  const [, rest] = split(props, ["style", "hoverStyle", "children"]);
+  const look = cardLook();
   return (
-    <View {...rest} style={[cardLook().card, props.style ?? null]}>
+    <View
+      {...rest}
+      {...platformMaterial("section")}
+      style={[look.card, props.style ?? null]}
+      hoverStyle={props.hoverStyle}
+    >
       {props.children}
     </View>
   );

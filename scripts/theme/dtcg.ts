@@ -85,6 +85,7 @@ export interface ThemeStyleInput {
       pointer: { sm: number; md: number; lg: number };
       touch: { sm: number; md: number; lg: number };
     };
+    grabber?: { width: number; height: number };
   };
   shape: {
     curve: string;
@@ -95,7 +96,8 @@ export interface ThemeStyleInput {
     overlay: { hover: number; focus: number; pressed: number; dragged: number };
     ripple: boolean;
     "pressed-opacity": number;
-    disabled: { content: number; container: number };
+    "accent-pressed-opacity"?: number;
+    disabled: { content: number; fill: boolean };
   };
   duration: { shake: number };
   transition: { enter: { duration: number; timingFunction: string } };
@@ -541,6 +543,15 @@ function encodeFinishSection(
     if (typeof finish["border-color"] === "string") {
       group["border-color"] = encodeFinishColorToken(finish["border-color"], colorMap);
     }
+    if (typeof finish["border-top-color"] === "string") {
+      group["border-top-color"] = encodeFinishColorToken(finish["border-top-color"], colorMap);
+    }
+    if (typeof finish["border-bottom-color"] === "string") {
+      group["border-bottom-color"] = encodeFinishColorToken(
+        finish["border-bottom-color"],
+        colorMap,
+      );
+    }
 
     const ext: Record<string, unknown> = {};
     if ("backdropFilter" in finish) ext.backdropFilter = finish.backdropFilter;
@@ -724,6 +735,26 @@ function encodeSharedStyleOverrides(
     };
   }
 
+  if (style.dimension.grabber) {
+    const baseGrabber = getAt(baseShared, "dimension", "grabber");
+    const grabberOverrides: Record<string, unknown> = {};
+    for (const key of ["width", "height"] as const) {
+      const baseTok = getAt(baseGrabber, key);
+      const baseVal = (baseTok.$value as { value: number }).value;
+      if (style.dimension.grabber[key] !== baseVal) {
+        grabberOverrides[key] = {
+          $value: { value: style.dimension.grabber[key], unit: "px" },
+        };
+      }
+    }
+    if (Object.keys(grabberOverrides).length > 0) {
+      dimensionExtras.grabber = {
+        $description: desc("dimension.grabber", baseGrabber.$description),
+        ...grabberOverrides,
+      };
+    }
+  }
+
   // 3. shape ($extensions)
   const baseShape = getAt(baseShared, "shape");
   const baseShapeExt = getExtNs(baseShape);
@@ -783,13 +814,32 @@ function encodeSharedStyleOverrides(
     };
   }
 
+  const baseAccentPressedOpacity = getAt(baseState, "accent-pressed-opacity");
+  if (
+    style.state["accent-pressed-opacity"] !== undefined &&
+    style.state["accent-pressed-opacity"] !== baseAccentPressedOpacity.$value
+  ) {
+    stateOut["accent-pressed-opacity"] = {
+      $value: style.state["accent-pressed-opacity"],
+      $description: desc("state.accent-pressed-opacity", baseAccentPressedOpacity.$description),
+    };
+  }
+
   const baseDisabled = getAt(baseState, "disabled");
+  const baseDisabledContent = getAt(baseDisabled, "content");
+  const baseDisabledFill = (
+    (baseDisabled.$extensions as Record<string, Record<string, unknown>> | undefined)?.[EXT_NS] as
+      | Record<string, unknown>
+      | undefined
+  )?.fill;
   const disabledOverrides: Record<string, unknown> = {};
-  for (const key of ["content", "container"] as const) {
-    const baseTok = getAt(baseDisabled, key);
-    if (style.state.disabled[key] !== baseTok.$value) {
-      disabledOverrides[key] = { $value: style.state.disabled[key] };
-    }
+  if (style.state.disabled.content !== baseDisabledContent.$value) {
+    disabledOverrides.content = { $value: style.state.disabled.content };
+  }
+  if (style.state.disabled.fill !== baseDisabledFill) {
+    disabledOverrides.$extensions = {
+      [EXT_NS]: { fill: style.state.disabled.fill },
+    };
   }
   if (Object.keys(disabledOverrides).length > 0) {
     stateOut.disabled = {
@@ -1272,7 +1322,12 @@ export function emitDtcgTheme(
   const darkColorMap: Record<string, string> = { ...output.cssVars.theme, ...output.cssVars.dark };
 
   for (const [role, sharedFinish] of Object.entries(split.shared)) {
-    for (const field of ["background", "border-color"] as const) {
+    for (const field of [
+      "background",
+      "border-color",
+      "border-top-color",
+      "border-bottom-color",
+    ] as const) {
       const val = sharedFinish[field];
       if (typeof val !== "string" || !/^oklch\(\s*from\b/i.test(val.trim())) continue;
       const lightEncoded = JSON.stringify(encodeFinishColorToken(val, lightColorMap));
