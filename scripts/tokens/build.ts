@@ -1,6 +1,7 @@
 /**
- * Build & check compiled theme runtime files (`theme.json`, `semantics.json`) for every theme
- * whose source of truth lives in `packages/theme/tokens/themes/<id>/theme.resolver.json`.
+ * Build & check compiled theme runtime files (`theme.json`, `semantics.json`) and standalone
+ * per-appearance DTCG 2025.10 Format files (`light.tokens.json`, `dark.tokens.json`) for every
+ * theme whose source of truth lives in `packages/theme/tokens/themes/<id>/theme.resolver.json`.
  *
  *   bun run tokens:build          # write compiled files for every DTCG-sourced theme
  *   bun run tokens:build --check  # fail if any committed compiled file differs from its source
@@ -8,7 +9,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { compileSemanticsJson, compileThemeJson } from "./compile";
+import { compileAppearanceTokensJson, compileSemanticsJson, compileThemeJson } from "./compile";
 
 const defaultRepoRoot = path.resolve(import.meta.dir, "..", "..");
 
@@ -31,7 +32,7 @@ export function discoverDtcgThemes(repoRoot = defaultRepoRoot): string[] {
     .sort();
 }
 
-/** Compile a DTCG-sourced theme into all of its shipped runtime JSON targets. */
+/** Compile a DTCG-sourced theme into all of its shipped runtime and DTCG targets. */
 export function buildThemeTargets(themeId: string, repoRoot = defaultRepoRoot): CompiledTarget[] {
   const resolverPath = path.join(
     repoRoot,
@@ -41,10 +42,14 @@ export function buildThemeTargets(themeId: string, repoRoot = defaultRepoRoot): 
   );
   const themeText = `${JSON.stringify(compileThemeJson(resolverPath), null, 2)}\n`;
   const semanticsText = `${JSON.stringify(compileSemanticsJson(resolverPath), null, 2)}\n`;
+  const lightTokensText = `${JSON.stringify(compileAppearanceTokensJson(resolverPath, "light"), null, 2)}\n`;
+  const darkTokensText = `${JSON.stringify(compileAppearanceTokensJson(resolverPath, "dark"), null, 2)}\n`;
 
   const targets: CompiledTarget[] = [
     { relPath: `packages/theme/themes/${themeId}/theme.json`, content: themeText },
     { relPath: `packages/theme/themes/${themeId}/semantics.json`, content: semanticsText },
+    { relPath: `packages/theme/themes/${themeId}/light.tokens.json`, content: lightTokensText },
+    { relPath: `packages/theme/themes/${themeId}/dark.tokens.json`, content: darkTokensText },
   ];
 
   // The `default` theme is both the build-time root theme and the `theme-default` copy.
@@ -52,6 +57,8 @@ export function buildThemeTargets(themeId: string, repoRoot = defaultRepoRoot): 
     targets.unshift(
       { relPath: "packages/theme/theme.json", content: themeText },
       { relPath: "packages/theme/semantics.json", content: semanticsText },
+      { relPath: "packages/theme/light.tokens.json", content: lightTokensText },
+      { relPath: "packages/theme/dark.tokens.json", content: darkTokensText },
     );
   }
 
