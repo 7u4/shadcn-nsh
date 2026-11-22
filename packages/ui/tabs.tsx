@@ -13,8 +13,8 @@ import {
   shape,
   stroke,
   dimmed,
-  style as themeStyle,
-  tabsGeometry,
+  controls,
+  type Controls,
 } from "@shadcn-nsh/theme";
 import type { IconNode } from "lucide";
 import type { AndroidProps, JSX, StyleProp, ViewStyle } from "nsh";
@@ -127,26 +127,60 @@ export function tabsLook() {
  * (hover on the others, a press that dims, the focus ring, dimmed while
  * disabled).
  */
+interface TabsPreset {
+  indicator: "pill" | "underline";
+  indicatorThickness: number;
+  padX: number;
+  indicatorSpan: "tab" | "label";
+  indicatorCorners: "pill" | "top";
+}
+
+const tabsPresets: Record<Controls, TabsPreset> = {
+  base: {
+    indicator: "pill",
+    indicatorThickness: 2,
+    padX: 8,
+    indicatorSpan: "tab",
+    indicatorCorners: "pill",
+  },
+  // M3 PrimaryNavigationTab label-width 3dp indicator with top-only corners (PrimaryNavigationTabTokens.kt, _md-comp-primary-navigation-tab.scss:28, _tab.scss:92-103).
+  material: {
+    indicator: "underline",
+    indicatorThickness: 3,
+    padX: 8,
+    indicatorSpan: "label",
+    indicatorCorners: "top",
+  },
+  // WinUI 3 SelectorBar underline tab geometry with 3px pill-capped active indicator.
+  winui: {
+    indicator: "underline",
+    indicatorThickness: 3,
+    padX: 8,
+    indicatorSpan: "tab",
+    indicatorCorners: "pill",
+  },
+};
+
 export function underlineTabsLook() {
   return {
     get style(): ViewStyle {
       return { flexDirection: "row", gap: 2, paddingTop: 3 };
     },
     get indicatorStyle(): ViewStyle {
-      const g = tabsGeometry();
+      const g = tabsPresets[controls()];
       const corners: ViewStyle =
-        g["indicator-corners"] === "top"
+        g.indicatorCorners === "top"
           ? {
-              borderTopLeftRadius: stroke.indicator,
-              borderTopRightRadius: stroke.indicator,
+              borderTopLeftRadius: g.indicatorThickness,
+              borderTopRightRadius: g.indicatorThickness,
               borderBottomLeftRadius: 0,
               borderBottomRightRadius: 0,
             }
-          : { borderRadius: stroke.indicator / 2 };
+          : { borderRadius: g.indicatorThickness / 2 };
       return {
         bottom: 0,
-        height: stroke.indicator,
-        ...(g["indicator-span"] === "label" ? { marginHorizontal: g["pad-x"] } : {}),
+        height: g.indicatorThickness,
+        ...(g.indicatorSpan === "label" ? { marginHorizontal: g.padX } : {}),
         ...corners,
         backgroundColor: colors.brand,
       };
@@ -167,7 +201,7 @@ export function underlineTabsLook() {
         get style(): ViewStyle {
           return {
             height: controlSize.tabs,
-            paddingHorizontal: tabsGeometry()["pad-x"],
+            paddingHorizontal: tabsPresets[controls()].padX,
             marginBottom: 4,
             ...rounded(shape.control),
             borderWidth: stroke.control,
@@ -221,9 +255,9 @@ export function TabTitle(props: {
 }) {
   const on = follow(() => (props.selected ? 1 : 0), motion.move);
   const listVariant = ListVariantContext();
-  // A theme that marks the chosen tab with an underline also sets its label in the accent.
+  // A preset that marks the chosen tab with an underline also sets its label in the accent.
   const chosenInk = () =>
-    themeStyle().indicator.tabs === "underline" && (listVariant === "line" || props.underline)
+    tabsPresets[controls()].indicator === "underline" && (listVariant === "line" || props.underline)
       ? colors.brand
       : colors.foreground;
   const away = on.interpolate({ inputRange: [0, 1], outputRange: [1, 0] });
@@ -343,9 +377,9 @@ type TabsContextValue = {
 const TabsContext = context<TabsContextValue | null>(null);
 const ListVariantContext = context<TabsListVariant>("default");
 
-/** The variant a list wears when it names none: the theme's `indicator.tabs` (an underline, or the pill's capsule). */
+/** The variant a list wears when it names none: `tabsPresets[controls()].indicator` (an underline, or the pill's capsule). */
 const themeVariant = (): TabsListVariant =>
-  themeStyle().indicator.tabs === "underline" ? "line" : "default";
+  tabsPresets[controls()].indicator === "underline" ? "line" : "default";
 
 function useTabs() {
   return TabsContext();

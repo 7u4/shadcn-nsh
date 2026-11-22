@@ -79,37 +79,15 @@ export interface ThemeStyleInput {
         touch: { sm: number; md: number; lg: number };
       };
     };
-    stroke: { hairline: number; surface: number; control: number; indicator: number };
+    stroke: { hairline: number; surface: number; control: number };
     focus: { style: string; width: number; offset: number };
     icon: {
       pointer: { sm: number; md: number; lg: number };
       touch: { sm: number; md: number; lg: number };
     };
-    grabber?: { width: number; height: number };
-    checkbox?: Record<string, number | string | boolean>;
-    switch?: {
-      pointer: Record<string, number | string>;
-      touch: Record<string, number | string>;
-    };
-    slider?: {
-      pointer: Record<string, number | string | boolean>;
-      touch: Record<string, number | string | boolean>;
-    };
-    radio?: {
-      pointer: Record<string, number | string | boolean>;
-      touch: Record<string, number | string | boolean>;
-    };
-    progress?: Record<string, number | string | boolean>;
-    spinner?: Record<string, number | string | boolean>;
-    tabs?: Record<string, number | string>;
-    calendar?: {
-      pointer: Record<string, number | string>;
-      touch: Record<string, number | string>;
-    };
   };
   shape: {
     curve: string;
-    corners: { field: string };
   };
   state: {
     "press-scale": number;
@@ -127,7 +105,7 @@ export interface ThemeStyleInput {
     control: ThemeMotionRoleStyle;
     move: ThemeMotionRoleStyle;
   };
-  indicator: { tabs: string; nav: string; field: string };
+  controls?: "base" | "material" | "winui";
 }
 
 export interface ThemeGeneratorOutput {
@@ -653,41 +631,6 @@ function toDtcgFontFamilyRef(raw: string | null): string | null {
   return m ? `{font.family.${m[1]!}}` : raw;
 }
 
-function diffDimGroupWithExt(
-  groupPath: string,
-  values: Record<string, number | string | boolean> | undefined,
-  baseGroup: Record<string, unknown>,
-  extKeys: readonly string[],
-  desc: (key: string, fallback: unknown) => string,
-  dimDesc: (groupKey: string, tokKey: string) => string | undefined,
-): Record<string, unknown> | undefined {
-  if (!values) return undefined;
-  const baseExt = getExtNs(baseGroup);
-  const extDiff: Record<string, unknown> = {};
-  const dimDiff: Record<string, unknown> = {};
-  for (const k of extKeys) {
-    if (k in values && values[k] !== baseExt[k]) extDiff[k] = values[k];
-  }
-  for (const [k, v] of Object.entries(values)) {
-    if (extKeys.includes(k) || typeof v !== "number") continue;
-    const baseTok = getAt(baseGroup, k);
-    const baseV = (baseTok.$value as { value: number }).value;
-    if (v !== baseV) {
-      const d = dimDesc(groupPath, k);
-      dimDiff[k] = {
-        $value: { value: v, unit: "px" },
-        ...(d ? { $description: d } : {}),
-      };
-    }
-  }
-  if (Object.keys(extDiff).length === 0 && Object.keys(dimDiff).length === 0) return undefined;
-  return {
-    ...(Object.keys(extDiff).length > 0 ? { $extensions: { [EXT_NS]: extDiff } } : {}),
-    $description: desc(groupPath, baseGroup.$description),
-    ...dimDiff,
-  };
-}
-
 function encodeSharedStyleOverrides(
   style: ThemeStyleInput,
   baseShared: Record<string, unknown>,
@@ -700,7 +643,7 @@ function encodeSharedStyleOverrides(
   duration?: Record<string, unknown>;
   transition?: Record<string, unknown>;
   motion?: Record<string, unknown>;
-  indicator?: Record<string, unknown>;
+  controls?: Record<string, unknown>;
 } {
   const desc = (key: string, fallback: unknown): string =>
     styleDescs?.[key] ?? (typeof fallback === "string" ? fallback : key);
@@ -750,7 +693,7 @@ function encodeSharedStyleOverrides(
   const dimensionExtras: Record<string, unknown> = {};
   const baseStroke = getAt(baseShared, "dimension", "stroke");
   const strokeOverrides: Record<string, unknown> = {};
-  for (const key of ["hairline", "surface", "control", "indicator"] as const) {
+  for (const key of ["hairline", "surface", "control"] as const) {
     const baseTok = getAt(baseStroke, key);
     const baseVal = (baseTok.$value as { value: number }).value;
     if (style.dimension.stroke[key] !== baseVal) {
@@ -790,66 +733,11 @@ function encodeSharedStyleOverrides(
     };
   }
 
-  if (style.dimension.grabber) {
-    const baseGrabber = getAt(baseShared, "dimension", "grabber");
-    const grabberOverrides: Record<string, unknown> = {};
-    for (const key of ["width", "height"] as const) {
-      const baseTok = getAt(baseGrabber, key);
-      const baseVal = (baseTok.$value as { value: number }).value;
-      if (style.dimension.grabber[key] !== baseVal) {
-        grabberOverrides[key] = {
-          $value: { value: style.dimension.grabber[key], unit: "px" },
-        };
-      }
-    }
-    if (Object.keys(grabberOverrides).length > 0) {
-      dimensionExtras.grabber = {
-        $description: desc("dimension.grabber", baseGrabber.$description),
-        ...grabberOverrides,
-      };
-    }
-  }
-
-  if (style.dimension.checkbox) {
-    const cbOut = diffDimGroupWithExt(
-      "dimension.checkbox",
-      style.dimension.checkbox,
-      getAt(baseShared, "dimension", "checkbox"),
-      ["well", "has-target"],
-      desc,
-      (gPath, k) => styleDescs?.[`${gPath}.${k}`],
-    );
-    if (cbOut) dimensionExtras.checkbox = cbOut;
-  }
-
-  for (const [key, extKeys] of [
-    ["progress", ["track-role", "track-shape", "outlined"]],
-    ["spinner", ["stroke-share", "has-track", "track-alpha"]],
-    ["tabs", ["indicator-span", "indicator-corners"]],
-  ] as const) {
-    const val = style.dimension[key];
-    if (val) {
-      const out = diffDimGroupWithExt(
-        `dimension.${key}`,
-        val,
-        getAt(baseShared, "dimension", key),
-        extKeys,
-        desc,
-        (gPath, k) => styleDescs?.[`${gPath}.${k}`],
-      );
-      if (out) dimensionExtras[key] = out;
-    }
-  }
-
   // 3. shape ($extensions)
   const baseShape = getAt(baseShared, "shape");
   const baseShapeExt = getExtNs(baseShape);
-  const baseCorners = (baseShapeExt.corners as Record<string, unknown>) ?? {};
   const shapeExtOut: Record<string, unknown> = {};
   if (style.shape.curve !== baseShapeExt.curve) shapeExtOut.curve = style.shape.curve;
-  if (style.shape.corners.field !== baseCorners.field) {
-    shapeExtOut.corners = { field: style.shape.corners.field };
-  }
   const shape =
     Object.keys(shapeExtOut).length > 0
       ? {
@@ -1016,20 +904,15 @@ function encodeSharedStyleOverrides(
         }
       : undefined;
 
-  // 8. indicator
-  const baseIndicator = getAt(baseShared, "indicator");
-  const baseIndExt = getExtNs(baseIndicator);
-  const indExtOut: Record<string, unknown> = {};
-  for (const key of ["tabs", "nav", "field"] as const) {
-    if (style.indicator[key] !== baseIndExt[key]) {
-      indExtOut[key] = style.indicator[key];
-    }
-  }
-  const indicator =
-    Object.keys(indExtOut).length > 0
+  // 8. controls
+  const baseControls = getAt(baseShared, "controls");
+  const baseControlsPreset = getExtNs(baseControls).preset as string;
+  const preset = style.controls ?? baseControlsPreset;
+  const controls =
+    preset !== baseControlsPreset
       ? {
-          $description: desc("indicator", baseIndicator.$description),
-          $extensions: { [EXT_NS]: indExtOut },
+          $description: desc("controls", baseControls.$description),
+          $extensions: { [EXT_NS]: { preset } },
         }
       : undefined;
 
@@ -1041,7 +924,7 @@ function encodeSharedStyleOverrides(
     ...(duration ? { duration } : {}),
     ...(transition ? { transition } : {}),
     ...(motion ? { motion } : {}),
-    ...(indicator ? { indicator } : {}),
+    ...(controls ? { controls } : {}),
   };
 }
 
@@ -1161,43 +1044,8 @@ function encodeInputTierOverrides(
   );
   if (heightOut) sizeGroupOut.height = heightOut;
 
-  const tierDimDesc = (subKey: string, k: string) =>
-    styleDescs?.[`${tier}.${subKey}.${k}`] ?? styleDescs?.[`${subKey}.${k}`];
-
   const baseIcon = getAt(baseDim, "icon");
   const iconOut = diffDimSubgroup("dimension.icon", style.dimension.icon[tier], baseIcon);
-  const switchOut = diffDimGroupWithExt(
-    "dimension.switch",
-    style.dimension.switch?.[tier],
-    getAt(baseDim, "switch"),
-    ["knob-feedback"],
-    desc,
-    tierDimDesc,
-  );
-  const sliderOut = diffDimGroupWithExt(
-    "dimension.slider",
-    style.dimension.slider?.[tier],
-    getAt(baseDim, "slider"),
-    ["handle-shape", "outlined", "hover-brightness"],
-    desc,
-    tierDimDesc,
-  );
-  const radioOut = diffDimGroupWithExt(
-    "dimension.radio",
-    style.dimension.radio?.[tier],
-    getAt(baseDim, "radio"),
-    ["well", "checked-style", "has-target", "dot-feedback"],
-    desc,
-    tierDimDesc,
-  );
-  const calendarOut = diffDimGroupWithExt(
-    "dimension.calendar",
-    style.dimension.calendar?.[tier],
-    getAt(baseDim, "calendar"),
-    ["cell-shape", "today", "selected"],
-    desc,
-    tierDimDesc,
-  );
 
   const dimGroup: Record<string, unknown> = {};
   if (Object.keys(sizeGroupOut).length > 0) {
@@ -1209,10 +1057,6 @@ function encodeInputTierOverrides(
   if (iconOut) {
     dimGroup.icon = iconOut;
   }
-  if (switchOut) dimGroup.switch = switchOut;
-  if (sliderOut) dimGroup.slider = sliderOut;
-  if (radioOut) dimGroup.radio = radioOut;
-  if (calendarOut) dimGroup.calendar = calendarOut;
 
   if (Object.keys(fontGroup).length === 0 && Object.keys(dimGroup).length === 0) {
     return null;
@@ -1433,7 +1277,7 @@ export function emitDtcgTheme(
     ...(sharedStyle?.duration ? { duration: sharedStyle.duration } : {}),
     ...(sharedStyle?.transition ? { transition: sharedStyle.transition } : {}),
     ...(sharedStyle?.motion ? { motion: sharedStyle.motion } : {}),
-    ...(sharedStyle?.indicator ? { indicator: sharedStyle.indicator } : {}),
+    ...(sharedStyle?.controls ? { controls: sharedStyle.controls } : {}),
   };
 
   // 4. Split finishes into shared, light, and dark. Any field whose static DTCG color evaluation

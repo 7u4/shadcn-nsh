@@ -834,147 +834,15 @@ export const winuiStyle = {
       },
       height: { pointer: { sm: 24, md: 32, lg: 40 }, touch: { sm: 32, md: 40, lg: 48 } },
     },
-    stroke: { hairline: 1, surface: 1, control: 1, indicator: 3 },
+    stroke: { hairline: 1, surface: 1, control: 1 },
     focus: { style: "double", width: 2, offset: 0 },
     icon: {
       pointer: { sm: 12, md: 16, lg: 20 },
       touch: { sm: 16, md: 20, lg: 24 },
     },
-    grabber: { width: 36, height: 5 },
-    checkbox: {
-      border: 1,
-      target: 0,
-      well: "inset",
-      "has-target": false,
-    },
-    switch: {
-      pointer: {
-        width: 40,
-        height: 20,
-        "sm-width": 40,
-        "sm-height": 20,
-        border: 1,
-        "on-border": 0,
-        knob: 12,
-        "on-knob": 12,
-        "sm-knob": 12,
-        "sm-on-knob": 12,
-        "knob-hover": 14,
-        "knob-pressed-width": 17,
-        "knob-pressed-height": 14,
-        "knob-feedback": "stretch",
-      },
-      touch: {
-        width: 40,
-        height: 20,
-        "sm-width": 40,
-        "sm-height": 20,
-        border: 1,
-        "on-border": 0,
-        knob: 12,
-        "on-knob": 12,
-        "sm-knob": 12,
-        "sm-on-knob": 12,
-        "knob-hover": 14,
-        "knob-pressed-width": 17,
-        "knob-pressed-height": 14,
-        "knob-feedback": "stretch",
-      },
-    },
-    slider: {
-      pointer: {
-        band: 32,
-        rail: 4,
-        "thumb-width": 18,
-        "thumb-height": 18,
-        "thumb-pressed-width": 18,
-        "inner-dot": 12,
-        "inner-dot-hover": 14,
-        "inner-dot-pressed": 10,
-        "vertical-length": 128,
-        "handle-shape": "ring",
-        outlined: false,
-        "hover-brightness": false,
-      },
-      touch: {
-        band: 32,
-        rail: 4,
-        "thumb-width": 18,
-        "thumb-height": 18,
-        "thumb-pressed-width": 18,
-        "inner-dot": 12,
-        "inner-dot-hover": 14,
-        "inner-dot-pressed": 10,
-        "vertical-length": 144,
-        "handle-shape": "ring",
-        outlined: false,
-        "hover-brightness": false,
-      },
-    },
-    radio: {
-      pointer: {
-        size: 20,
-        dot: 12,
-        "dot-hover": 14,
-        "dot-pressed": 10,
-        border: 1,
-        target: 0,
-        well: "inset",
-        "checked-style": "fill",
-        "has-target": false,
-        "dot-feedback": "scale",
-      },
-      touch: {
-        size: 20,
-        dot: 12,
-        "dot-hover": 14,
-        "dot-pressed": 10,
-        border: 1,
-        target: 0,
-        well: "inset",
-        "checked-style": "fill",
-        "has-target": false,
-        "dot-feedback": "scale",
-      },
-    },
-    progress: {
-      height: 3,
-      "track-height": 1,
-      "track-role": "slider-track",
-      "track-shape": "hairline",
-      outlined: false,
-    },
-    spinner: {
-      "min-stroke": 1.5,
-      "stroke-share": 8,
-      "has-track": false,
-      "track-alpha": 0.25,
-    },
-    tabs: {
-      "pad-x": 8,
-      "indicator-span": "tab",
-      "indicator-corners": "pill",
-    },
-    calendar: {
-      pointer: {
-        cell: 40,
-        "outline-width": 2,
-        "cell-shape": "pill",
-        today: "fill",
-        selected: "outline",
-      },
-      touch: {
-        cell: 40,
-        "outline-width": 2,
-        "cell-shape": "pill",
-        today: "fill",
-        selected: "outline",
-      },
-    },
   },
   shape: {
     curve: "circular",
-    corners: { field: "all" },
   },
   state: {
     "press-scale": 1,
@@ -998,7 +866,7 @@ export const winuiStyle = {
     control: { duration: 167, timingFunction: "point-to-point" },
     move: { duration: 333, timingFunction: "point-to-point" },
   },
-  indicator: { tabs: "underline", nav: "bar", field: "underline" },
+  controls: "winui" as const,
 };
 
 /** WinUI 3 (Windows 11) theme data and DTCG descriptions ready for `emitDtcgTheme`. */
@@ -1130,7 +998,7 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
       dos: [
         'Use `4px` `ControlCornerRadius` for controls/fields/chips/insets and `8px` `OverlayCornerRadius` for cards/overlays/dialogs/sheets with `shape.curve: "circular"`.',
         'Use `focus.style: "double"` (2px outer `FocusStrokeColorOuter` + 1px inner `FocusStrokeColorInner`) and WinUI timing motion (`decelerate` / `point-to-point`).',
-        "Use `indicator` `underline` tabs/fields and leading `bar` navigation indicators with `Segoe UI Variable` (`{font.family.sans}`).",
+        'Use `controls: "winui"` (underlined tabs/fields and leading navigation bar indicators) with `Segoe UI Variable` (`{font.family.sans}`).',
       ],
       donts: [
         "Do not substitute continuous squircle corners or spring physics for WinUI 3's circular corners and timing curves.",
@@ -1196,7 +1064,6 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
           "WinUI 3 primary UI font stack (Segoe UI Variable, Segoe UI, sans-serif; typography.md).",
         typography:
           "WinUI 3 typography scale mapped from TextBlock_themeresources.xaml (400 and 600 weights only).",
-        "dimension.stroke.indicator": "3px active navigation/tab indicator width per WinUI 3.",
         "dimension.focus":
           "WinUI 3 double focus stroke (2px outer FocusStrokeColorOuter + 1px inner FocusStrokeColorInner, 0px offset).",
         "dimension.focus.width": "2px outer focus stroke width per WinUI 3.",
@@ -1214,70 +1081,7 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
         "motion.settle": "WinUI 3 250ms settle timing with Direct Entrance decelerate curve.",
         "motion.control": "WinUI 3 167ms control timing with Point-to-Point curve.",
         "motion.move": "WinUI 3 333ms move timing with Point-to-Point curve.",
-        "dimension.checkbox":
-          "WinUI 3 CheckBox resting ControlAltFillColorSecondary interior with 1px ControlStrongStrokeColorDefault border (CheckBox_themeresources.xaml in winui3/release/2.7.0).",
-        "dimension.switch":
-          "WinUI 3 ToggleSwitch 40x20 track, 1px off/0px on stroke, 12px knob scaling to 14px hover and 17x14 pressed (ToggleSwitch_themeresources.xaml:5,6,130,269,312 in winui3/release/2.7.0).",
-        "dimension.switch.width":
-          "WinUI 3 ToggleSwitch 40px track width (ToggleSwitch_themeresources.xaml:130).",
-        "dimension.switch.height":
-          "WinUI 3 ToggleSwitch 20px track height (ToggleSwitch_themeresources.xaml:130).",
-        "dimension.switch.sm-width": "WinUI 3 ToggleSwitch keeps 40px track width.",
-        "dimension.switch.sm-height": "WinUI 3 ToggleSwitch keeps 20px track height.",
-        "dimension.switch.on-border":
-          "WinUI 3 ToggleSwitch checked stroke thickness 0px (ToggleSwitchOnStrokeThickness=0, ToggleSwitch_themeresources.xaml:5).",
-        "dimension.switch.knob-hover":
-          "WinUI 3 ToggleSwitch knob expands to 14px on PointerOver (ToggleSwitch_themeresources.xaml:269).",
-        "dimension.switch.knob-pressed-width":
-          "WinUI 3 ToggleSwitch knob stretches to 17px wide on Pressed (ToggleSwitch_themeresources.xaml:312).",
-        "dimension.switch.knob-pressed-height":
-          "WinUI 3 ToggleSwitch knob is 14px tall on Pressed (ToggleSwitch_themeresources.xaml:315).",
-        "dimension.slider":
-          "WinUI 3 Slider: 18px outer thumb with 12px accent inner dot (14px hover, 10px pressed) on 4px track inside 32px band (Slider_themeresources.xaml in winui3/release/2.7.0).",
-        "dimension.slider.band":
-          "WinUI 3 Slider 32px hit band (SliderHorizontalHeight / SliderVerticalWidth=32, Slider_themeresources.xaml:167-168).",
-        "dimension.slider.rail":
-          "WinUI 3 Slider 4px track thickness (SliderTrackThemeHeight=4, Slider_themeresources.xaml:6).",
-        "dimension.slider.thumb-width":
-          "WinUI 3 Slider 18px outer thumb width (SliderHorizontalThumbWidth=18, Slider_themeresources.xaml:169).",
-        "dimension.slider.thumb-height":
-          "WinUI 3 Slider 18px outer thumb height (SliderHorizontalThumbHeight=18, Slider_themeresources.xaml:170).",
-        "dimension.slider.thumb-pressed-width":
-          "WinUI 3 Slider 18px outer thumb width stays constant when pressed.",
-        "dimension.slider.inner-dot":
-          "WinUI 3 Slider 12px inner accent circle (SliderInnerThumbWidth/Height=12, Slider_themeresources.xaml:166,173).",
-        "dimension.slider.inner-dot-hover":
-          "WinUI 3 Slider inner circle scales to 14px on PointerOver (Scale=1.167, Slider_themeresources.xaml:221).",
-        "dimension.slider.inner-dot-pressed":
-          "WinUI 3 Slider inner circle scales to 10px on Pressed (Scale=0.71, Slider_themeresources.xaml:233).",
-        "dimension.radio":
-          "WinUI 3 RadioButton: 20px outer circle with ControlAltFillColorSecondary rest interior and 12px inner dot (14px hover, 10px pressed; RadioButton_themeresources.xaml in winui3/release/2.7.0).",
-        "dimension.radio.size":
-          "WinUI 3 RadioButton 20px outer ellipse diameter (RadioButton_themeresources.xaml:147).",
-        "dimension.radio.dot":
-          "WinUI 3 RadioButton 12px inner glyph diameter (RadioButtonCheckGlyphSize=12, RadioButton_themeresources.xaml:179).",
-        "dimension.radio.dot-hover":
-          "WinUI 3 RadioButton 14px inner glyph diameter on PointerOver (RadioButtonCheckGlyphPointerOverSize=14, RadioButton_themeresources.xaml:180).",
-        "dimension.radio.dot-pressed":
-          "WinUI 3 RadioButton 10px inner glyph diameter on Pressed (RadioButton_themeresources.xaml:68-80).",
-        "dimension.progress":
-          "WinUI 3 ProgressBar: 3px indicator height centered over 1px ControlStrongStrokeColorDefault hairline track without border (ProgressBar_themeresources.xaml:7,29-32, ProgressBar.xaml:157-163).",
-        "dimension.progress.height":
-          "WinUI 3 ProgressBar 3px active indicator height (ProgressBarMinHeight=3).",
-        "dimension.progress.track-height":
-          "WinUI 3 ProgressBar 1px inactive hairline track height (ProgressBarTrackHeight=1).",
-        "dimension.spinner":
-          "WinUI 3 ProgressRing: 4px stroke at 32px default size (1/8 share) and transparent background track (ProgressRing_themeresources.xaml:10,17).",
-        "dimension.tabs":
-          "WinUI 3 SelectorBar underline tab geometry with 3px pill-capped active indicator.",
-        "dimension.calendar":
-          "WinUI 3 CalendarView: 40x40px circular cells (RoundedChromeEnabled=True), filled AccentFillColorDefault today cell, 2px accent-outlined selected cell (CalendarView_themeresources.xaml:62,244-245,767).",
-        "dimension.calendar.cell":
-          "WinUI 3 CalendarViewDayItem 40x40px minimum cell size (CalendarView_themeresources.xaml:244-245).",
-        "dimension.calendar.outline-width":
-          "WinUI 3 CalendarView 2px selected cell ring thickness (CalendarView_themeresources.xaml:767).",
-        indicator:
-          "WinUI 3 underlined tabs, NavigationView leading bar, and bottom-underlined text fields.",
+        controls: "WinUI 3 (winui3/release/2.7.0) control geometry presets.",
       },
     },
   };

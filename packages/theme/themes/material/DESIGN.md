@@ -244,7 +244,6 @@ spacing:
     hairline: 1px
     surface: 0px
     control: 1px
-    indicator: 3px
   focus:
     width: 3px
     offset: 2px
@@ -252,50 +251,6 @@ spacing:
     sm: 18px
     md: 20px
     lg: 24px
-  checkbox:
-    border: 2px
-    target: 40px
-  switch:
-    width: 52px
-    height: 32px
-    sm-width: 52px
-    sm-height: 32px
-    border: 2px
-    on-border: 0px
-    knob: 16px
-    on-knob: 24px
-    sm-knob: 16px
-    sm-on-knob: 24px
-    knob-hover: 16px
-    knob-pressed-width: 28px
-    knob-pressed-height: 28px
-  slider:
-    band: 44px
-    rail: 16px
-    thumb-width: 4px
-    thumb-height: 44px
-    thumb-pressed-width: 2px
-    inner-dot: 0px
-    inner-dot-hover: 0px
-    inner-dot-pressed: 0px
-    vertical-length: 128px
-  radio:
-    size: 20px
-    dot: 10px
-    dot-hover: 10px
-    dot-pressed: 10px
-    border: 2px
-    target: 40px
-  progress:
-    height: 4px
-    track-height: 4px
-  spinner:
-    min-stroke: 1.5px
-  tabs:
-    pad-x: 8px
-  calendar:
-    cell: 40px
-    outline-width: 1px
 motion:
   enter:
     duration: 500ms
@@ -541,11 +496,10 @@ Ergonomic sizing scales for pointer input.
 
 Tonal surface stepping plus Material Web Level 1–3 shadows and `material.android.elevation` (1dp/3dp/6dp), with `stroke.surface: 0px` and no backdrop blur.
 
-- **Strokes:** Border and indicator stroke widths.
+- **Strokes:** Border stroke widths.
   - `stroke.hairline` (1px): Hairline divider and outlined-variant stroke width.
   - `stroke.surface` (0px): 0px surface outline (M3 elevated/filled surfaces rely on elevation rather than outlines).
   - `stroke.control` (1px): Interactive control border width.
-  - `stroke.indicator` (3px): 3px active tab/navigation indicator width per M3.
 - **Focus indicator (`style: "outline"`):** M3 focus indicator: 3px solid outline offset 2px (_md-sys-state-focus-indicator.scss).
   - `focus.width` (3px): Focus ring stroke width.
   - `focus.offset` (2px): 2px outward focus indicator offset per M3.
@@ -555,7 +509,7 @@ Tonal surface stepping plus Material Web Level 1–3 shadows and `material.andro
 
 Material 3 Expressive corner scale (999px CornerFull controls, 4px CornerExtraSmall fields/menus, 12px CornerMedium cards/chips, 28px CornerExtraLarge dialogs/sheets; ShapeTokens.kt).
 
-M3 circular arc corners with top-only rounded corners on filled text fields (FilledTextFieldTokens.kt). (`curve: "circular"`, `corners.field: "top"`).
+M3 circular arc corners (ShapeTokens.kt). (`curve: "circular"`).
 
 Semantic corner radius roles referencing base dimension.radius.* tokens.
 
@@ -616,8 +570,6 @@ Appearance-invariant surface finish recipes (background, gradient, border, shado
 - **`finish.tooltip`**: M3 plain tooltip using inverse surface without shadow.
 - **`finish.inverse`** (backdropFilter: `none`; material: `{"android":{"elevation":6}}`): M3 snackbar/inverse surface with Level 3 shadow and 6dp Android elevation.
 - **`finish.groove`**: A groove cut inside a menu.
-
-- **Indicators** (`tabs: "underline"`, `nav: "fill"`, `field: "underline"`): M3 underlined tabs and filled-text-field underline indicator.
 - **Disabled handling** (content=0.38, fill=true): M3 disabled controls: 0.38 content opacity with fill: true (10% onSurface container, _md-comp-button-filled.scss).
 
 ## Do's and Don'ts
@@ -626,7 +578,7 @@ Appearance-invariant surface finish recipes (background, gradient, border, shado
 - **Do:** Read theme getters inside JSX render expressions or reactive effects so runtime theme switching (`selectTheme`) and light/dark appearance changes take effect on the next frame.
 - **Do:** Use `rounded(shape.<role>, inset)` for concentric nested radii inside cards, switches, and segmented controls.
 - **Do:** Express interaction states via M3 state-layer ink overlays (`hover: 0.08`, `focus: 0.10`, `pressed: 0.10`, `dragged: 0.16`) and Android press ripples (`state.ripple: true`) with `state.press-scale: 1`.
-- **Do:** Use `shape.curve: "circular"`, `shape.corners.field: "top"`, and `indicator` `underline` tabs/fields.
+- **Do:** Use `shape.curve: "circular"` and `controls: "material"` for top-rounded underlined fields and underlined tabs.
 - **Do:** Keep `stroke.surface: 0px` on tonal/elevated containers so depth comes from tonal steps and elevation.
 - **Don't:** Never write color literals (`#...`, `rgb()`, `oklch()`) in component, lib, or demo-adapter code.
 - **Don't:** Never store `colors.*`, `finish.*`, or `shape.*` values in module-level constants; they freeze on theme or appearance switches.

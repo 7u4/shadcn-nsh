@@ -224,94 +224,13 @@ export interface Timing {
   timingFunction: EasingCurve;
 }
 
-/** Surface treatment for an unchecked checkbox box or radio ring well. */
-export type ChoiceWell = "well" | "inset" | "outline";
-
-export interface CheckboxDim {
-  border: number;
-  target: number;
-  well: ChoiceWell;
-  "has-target": boolean;
-}
-
-export interface SwitchDim {
-  width: number;
-  height: number;
-  "sm-width": number;
-  "sm-height": number;
-  border: number;
-  "on-border": number;
-  knob: number;
-  "on-knob": number;
-  "sm-knob": number;
-  "sm-on-knob": number;
-  "knob-hover": number;
-  "knob-pressed-width": number;
-  "knob-pressed-height": number;
-  "knob-feedback": "none" | "expand" | "stretch";
-}
-
-export interface SliderDim {
-  band: number;
-  rail: number;
-  "thumb-width": number;
-  "thumb-height": number;
-  "thumb-pressed-width": number;
-  "inner-dot": number;
-  "inner-dot-hover": number;
-  "inner-dot-pressed": number;
-  "vertical-length": number;
-  "handle-shape": "circle" | "bar" | "ring";
-  outlined: boolean;
-  "hover-brightness": boolean;
-}
-
-export interface RadioDim {
-  size: number;
-  dot: number;
-  "dot-hover": number;
-  "dot-pressed": number;
-  border: number;
-  target: number;
-  well: ChoiceWell;
-  "checked-style": "fill" | "ring";
-  "has-target": boolean;
-  "dot-feedback": "none" | "scale";
-}
-
-export interface ProgressDim {
-  height: number;
-  "track-height": number;
-  "track-role": "track" | "slider-track";
-  "track-shape": "bar" | "hairline";
-  outlined: boolean;
-}
-
-export interface SpinnerDim {
-  "min-stroke": number;
-  "stroke-share": number;
-  "has-track": boolean;
-  "track-alpha": number;
-}
-
-export interface TabsDim {
-  "pad-x": number;
-  "indicator-span": "tab" | "label";
-  "indicator-corners": "pill" | "top";
-}
-
-export interface CalendarDim {
-  cell: number;
-  "outline-width": number;
-  "cell-shape": "control" | "pill";
-  today: "quiet" | "outline" | "fill";
-  selected: "fill" | "outline";
-}
+/** Named per-theme control geometry preset family (`controls` in `semantics.json`). */
+export type Controls = "base" | "material" | "winui";
 
 /**
  * The style of a theme: what `semantics.json` states beside its finishes, in DTCG field naming,
  * the same keys in every theme (`check:theme`). A string that names one of a list (a curve, a
- * timingFunction, an indicator) or numeric fontWeight is checked by `check:theme` (`scripts/theme/style.ts`).
+ * timingFunction, controls) or numeric fontWeight is checked by `check:theme` (`scripts/theme/style.ts`).
  * `docs/specs/native-themes.md` §3.2 says what each key is.
  */
 export interface Style {
@@ -343,22 +262,12 @@ export interface Style {
       control: Tiered<ControlSizes>;
       height: Tiered<Steps>;
     };
-    stroke: { hairline: number; surface: number; control: number; indicator: number };
+    stroke: { hairline: number; surface: number; control: number };
     focus: { style: string; width: number; offset: number };
     icon: Tiered<Steps>;
-    grabber: { width: number; height: number };
-    checkbox: CheckboxDim;
-    switch: Tiered<SwitchDim>;
-    slider: Tiered<SliderDim>;
-    radio: Tiered<RadioDim>;
-    progress: ProgressDim;
-    spinner: SpinnerDim;
-    tabs: TabsDim;
-    calendar: Tiered<CalendarDim>;
   };
   shape: {
     curve: string;
-    corners: { field: string };
   };
   state: {
     "press-scale": number;
@@ -381,7 +290,7 @@ export interface Style {
     control: Spring | TimingSpec;
     move: Spring | TimingSpec;
   };
-  indicator: { tabs: string; nav: string; field: string };
+  controls: Controls;
 }
 
 /**
@@ -1019,7 +928,7 @@ export const shape = {
   },
 };
 
-/** Line widths in points (`semantics.json`'s `dimension.stroke`): `hairline` a divider or outlined element's edge, `surface` a surface's outline (0 where surfaces stand by tone or shadow alone), `control` a control's edge, `indicator` a selection's bar. The focus ring's width is `dimension.focus.width`. */
+/** Line widths in points (`semantics.json`'s `dimension.stroke`): `hairline` a divider or outlined element's edge, `surface` a surface's outline (0 where surfaces stand by tone or shadow alone), `control` a control's edge. The focus ring's width is `dimension.focus.width`. */
 export const stroke = {
   get hairline() {
     return style().dimension.stroke.hairline;
@@ -1029,9 +938,6 @@ export const stroke = {
   },
   get control() {
     return style().dimension.stroke.control;
-  },
-  get indicator() {
-    return style().dimension.stroke.indicator;
   },
 };
 
@@ -1082,29 +988,8 @@ export function stateLayer(
 /** The smallest target a finger or a pointer gets (`dimension.size.hit` of the tier): 0 adds none. */
 export const hitTarget = (): number => style().dimension.size.hit[tier];
 
-/** Dimensions of checkbox geometry and state-layer target (`dimension.checkbox`). */
-export const checkboxGeometry = (): CheckboxDim => style().dimension.checkbox;
-
-/** Dimensions and feedback mode of switch geometry (`dimension.switch[tier]`). */
-export const switchGeometry = (): SwitchDim => style().dimension.switch[tier];
-
-/** Dimensions, handle shape, and track rules of slider geometry (`dimension.slider[tier]`). */
-export const sliderGeometry = (): SliderDim => style().dimension.slider[tier];
-
-/** Dimensions, checked ring mode, dot feedback, and state-layer target of radio geometry (`dimension.radio[tier]`). */
-export const radioGeometry = (): RadioDim => style().dimension.radio[tier];
-
-/** Dimensions, track role, shape, and rail border flag of linear progress (`dimension.progress`). */
-export const progressGeometry = (): ProgressDim => style().dimension.progress;
-
-/** Stroke ratio floor and background ring visibility of circular spinner (`dimension.spinner`). */
-export const spinnerGeometry = (): SpinnerDim => style().dimension.spinner;
-
-/** Underline tab horizontal padding and indicator span/corner geometry (`dimension.tabs`). */
-export const tabsGeometry = (): TabsDim => style().dimension.tabs;
-
-/** Day cell size, outline width, shape, and today/selected styling (`dimension.calendar[tier]`). */
-export const calendarGeometry = (): CalendarDim => style().dimension.calendar[tier];
+/** The active theme's control geometry preset family (`controls` in `semantics.json`). */
+export const controls = (): Controls => style().controls;
 
 /** A button's height by size (`dimension.size.height` of the tier). */
 export const controlHeight = {

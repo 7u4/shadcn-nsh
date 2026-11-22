@@ -9,7 +9,7 @@
         "dos": [
           "Use `4px` `ControlCornerRadius` for controls/fields/chips/insets and `8px` `OverlayCornerRadius` for cards/overlays/dialogs/sheets with `shape.curve: \"circular\"`.",
           "Use `focus.style: \"double\"` (2px outer `FocusStrokeColorOuter` + 1px inner `FocusStrokeColorInner`) and WinUI timing motion (`decelerate` / `point-to-point`).",
-          "Use `indicator` `underline` tabs/fields and leading `bar` navigation indicators with `Segoe UI Variable` (`{font.family.sans}`)."
+          "Use `controls: \"winui\"` (underlined tabs/fields and leading navigation bar indicators) with `Segoe UI Variable` (`{font.family.sans}`)."
         ],
         "donts": [
           "Do not substitute continuous squircle corners or spring physics for WinUI 3's circular corners and timing curves."
@@ -80,16 +80,6 @@
         "$description": "Corner radius for drawers and bottom sheets."
       }
     },
-    "stroke": {
-      "$description": "Border and indicator stroke widths.",
-      "indicator": {
-        "$value": {
-          "value": 3,
-          "unit": "px"
-        },
-        "$description": "3px active navigation/tab indicator width per WinUI 3."
-      }
-    },
     "focus": {
       "$extensions": {
         "dev.aning.shadcn-nsh": {
@@ -104,46 +94,6 @@
         },
         "$description": "2px outer focus stroke width per WinUI 3."
       }
-    },
-    "checkbox": {
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "well": "inset"
-        }
-      },
-      "$description": "WinUI 3 CheckBox resting ControlAltFillColorSecondary interior with 1px ControlStrongStrokeColorDefault border (CheckBox_themeresources.xaml in winui3/release/2.7.0)."
-    },
-    "progress": {
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "track-role": "slider-track",
-          "track-shape": "hairline",
-          "outlined": false
-        }
-      },
-      "$description": "WinUI 3 ProgressBar: 3px indicator height centered over 1px ControlStrongStrokeColorDefault hairline track without border (ProgressBar_themeresources.xaml:7,29-32, ProgressBar.xaml:157-163).",
-      "height": {
-        "$value": {
-          "value": 3,
-          "unit": "px"
-        },
-        "$description": "WinUI 3 ProgressBar 3px active indicator height (ProgressBarMinHeight=3)."
-      },
-      "track-height": {
-        "$value": {
-          "value": 1,
-          "unit": "px"
-        },
-        "$description": "WinUI 3 ProgressBar 1px inactive hairline track height (ProgressBarTrackHeight=1)."
-      }
-    },
-    "spinner": {
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "has-track": false
-        }
-      },
-      "$description": "WinUI 3 ProgressRing: 4px stroke at 32px default size (1/8 share) and transparent background track (ProgressRing_themeresources.xaml:10,17)."
     }
   },
   "font": {
@@ -531,13 +481,11 @@
       }
     }
   },
-  "indicator": {
-    "$description": "WinUI 3 underlined tabs, NavigationView leading bar, and bottom-underlined text fields.",
+  "controls": {
+    "$description": "WinUI 3 (winui3/release/2.7.0) control geometry presets.",
     "$extensions": {
       "dev.aning.shadcn-nsh": {
-        "tabs": "underline",
-        "nav": "bar",
-        "field": "underline"
+        "preset": "winui"
       }
     }
   }

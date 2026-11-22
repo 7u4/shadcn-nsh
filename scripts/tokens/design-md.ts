@@ -228,14 +228,6 @@ export function compileDesignMd(resolverPath: string): string {
     stroke: readDimLeaves(dimResolved.stroke as Record<string, unknown>),
     focus: readDimLeaves(dimResolved.focus as Record<string, unknown>),
     icon: readDimLeaves(dimResolved.icon as Record<string, unknown>),
-    checkbox: readDimLeaves(dimResolved.checkbox as Record<string, unknown>),
-    switch: readDimLeaves(dimResolved.switch as Record<string, unknown>),
-    slider: readDimLeaves(dimResolved.slider as Record<string, unknown>),
-    radio: readDimLeaves(dimResolved.radio as Record<string, unknown>),
-    progress: readDimLeaves(dimResolved.progress as Record<string, unknown>),
-    spinner: readDimLeaves(dimResolved.spinner as Record<string, unknown>),
-    tabs: readDimLeaves(dimResolved.tabs as Record<string, unknown>),
-    calendar: readDimLeaves(dimResolved.calendar as Record<string, unknown>),
   };
 
   // Motion (timing transitions and shake duration; springs have no DESIGN.md field and are documented in prose)
@@ -508,10 +500,8 @@ export function compileDesignMd(resolverPath: string): string {
     Record<string, unknown>
   >;
   const shapeExt = getExt(lightMerged.shape) ?? {};
-  const cornersExt = (shapeExt.corners as Record<string, unknown> | undefined) ?? {};
   const focusExt = getExt(focusGroup) ?? {};
   const stateExt = getExt(stateGroup) ?? {};
-  const indicatorExt = getExt(lightMerged.indicator) ?? {};
   const controlSizeExt = getExt(sizeGroup.control) ?? {};
 
   const pointerRaw = resolvePermutationDescriptions(absPath, "pointer");
@@ -655,7 +645,7 @@ export function compileDesignMd(resolverPath: string): string {
   const strokeDesc = getDesc(strokeGroup);
   if (strokeDesc) {
     lines.push(`- **Strokes:** ${strokeDesc}`);
-    for (const k of ["hairline", "surface", "control", "indicator"] as const) {
+    for (const k of ["hairline", "surface", "control"] as const) {
       const tok = strokeGroup[k];
       if (isTokenNode(tok)) {
         const d = fmtDim(tok.$value as DtcgDimension);
@@ -697,9 +687,7 @@ export function compileDesignMd(resolverPath: string): string {
   if (radiusGroupDesc) lines.push(radiusGroupDesc);
   if (shapeExtDesc) {
     if (radiusGroupDesc) lines.push("");
-    lines.push(
-      `${shapeExtDesc} (\`curve: "${String(shapeExt.curve)}"\`, \`corners.field: "${String(cornersExt.field)}"\`).`,
-    );
+    lines.push(`${shapeExtDesc} (\`curve: "${String(shapeExt.curve)}"\`).`);
   }
   if (shapeDimDesc) {
     lines.push("");
@@ -791,13 +779,6 @@ export function compileDesignMd(resolverPath: string): string {
     }
     const suffix = notes.length > 0 ? ` (${notes.join("; ")})` : "";
     lines.push(`- **\`finish.${role}\`**${suffix}: ${roleDesc ?? ""}`);
-  }
-  const indicatorDesc = getDesc(lightMerged.indicator);
-  if (indicatorDesc) {
-    lines.push("");
-    lines.push(
-      `- **Indicators** (\`tabs: "${String(indicatorExt.tabs)}"\`, \`nav: "${String(indicatorExt.nav)}"\`, \`field: "${String(indicatorExt.field)}"\`): ${indicatorDesc}`,
-    );
   }
   const disabledDesc = getDesc(stateGroup.disabled);
   if (disabledDesc) {

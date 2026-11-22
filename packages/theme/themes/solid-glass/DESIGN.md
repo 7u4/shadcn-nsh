@@ -244,7 +244,6 @@ spacing:
     hairline: 1px
     surface: 1px
     control: 1px
-    indicator: 2px
   focus:
     width: 3px
     offset: 0px
@@ -252,50 +251,6 @@ spacing:
     sm: 12px
     md: 14px
     lg: 15px
-  checkbox:
-    border: 1px
-    target: 0px
-  switch:
-    width: 28px
-    height: 16px
-    sm-width: 28px
-    sm-height: 16px
-    border: 1px
-    on-border: 1px
-    knob: 12px
-    on-knob: 12px
-    sm-knob: 12px
-    sm-on-knob: 12px
-    knob-hover: 12px
-    knob-pressed-width: 12px
-    knob-pressed-height: 12px
-  slider:
-    band: 20px
-    rail: 6px
-    thumb-width: 14px
-    thumb-height: 14px
-    thumb-pressed-width: 14px
-    inner-dot: 0px
-    inner-dot-hover: 0px
-    inner-dot-pressed: 0px
-    vertical-length: 128px
-  radio:
-    size: 16px
-    dot: 6px
-    dot-hover: 6px
-    dot-pressed: 6px
-    border: 1px
-    target: 0px
-  progress:
-    height: 6px
-    track-height: 6px
-  spinner:
-    min-stroke: 1.5px
-  tabs:
-    pad-x: 8px
-  calendar:
-    cell: 32px
-    outline-width: 1px
 motion:
   enter:
     duration: 420ms
@@ -541,11 +496,10 @@ Ergonomic sizing scales for pointer input.
 
 Layered glass elevation: surfaces combine translucent fills (`alpha < 1` over page grounds), top-edge inset highlights, `--glass-edge` borders, soft shadows, and backdrop blur (`glass`, `menu`, `dialog`, `tooltip`, `inverse`).
 
-- **Strokes:** Border and indicator stroke widths.
+- **Strokes:** Border stroke widths.
   - `stroke.hairline` (1px): Hairline divider and outlined-variant stroke width.
   - `stroke.surface` (1px): Container surface border width (cards, drawers, overlays).
   - `stroke.control` (1px): Interactive control border width.
-  - `stroke.indicator` (2px): Active tab and navigation indicator stroke width.
 - **Focus indicator (`style: "halo"`):** Focus ring geometry and style enum.
   - `focus.width` (3px): Focus ring stroke width.
   - `focus.offset` (0px): Focus ring outward offset from control bounds.
@@ -555,7 +509,7 @@ Layered glass elevation: surfaces combine translucent fills (`alpha < 1` over pa
 
 Base corner radius scale (14px base, 0.8x control, 1.4x card) referenced by semantic shape roles.
 
-Non-dimensional corner curve and field corner geometry. (`curve: "continuous"`, `corners.field: "all"`).
+Non-dimensional corner curve. (`curve: "continuous"`).
 
 Semantic corner radius roles referencing base dimension.radius.* tokens.
 
@@ -616,8 +570,6 @@ Appearance-invariant surface finish recipes (background, gradient, border, shado
 - **`finish.tooltip`**: A tooltip face: the popover pane, without a shadow.
 - **`finish.inverse`** (backdropFilter: `none`): The inverse surface: a toast face.
 - **`finish.groove`**: A groove cut inside a menu.
-
-- **Indicators** (`tabs: "pill"`, `nav: "fill"`, `field: "box"`): Visual indicator style enums.
 - **Disabled handling** (content=0.5, fill=false): Disabled content opacity multiplier and whether containers switch to a dedicated disabled fill.
 
 ## Do's and Don'ts
