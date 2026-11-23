@@ -1,3 +1,4 @@
+import { font } from "@shadcn-nsh/theme";
 // The reference of `avatar.tsx`: the same scene with the identity look spread on `nsh/base`'s
 // Avatar, the way the official example (`references/nsh/website/demos/el-avatar.tsx`) writes it.
 // It differs from the component page only in the parts it names.
@@ -223,7 +224,8 @@ function App() {
                 <Text
                   style={{
                     fontSize: side / 3.2,
-                    fontWeight: "600",
+                    // The count's weight is the theme's title weight (500 in material).
+                    fontWeight: font.weight("title"),
                     color: ui().muted,
                     fontVariant: ["tabular-nums"],
                   }}
