@@ -30,6 +30,8 @@
 
 ### Changed
 
+- **Component pages no longer compare with shadcn/ui (#298).** The `Differences from shadcn/ui` section is gone from all 33 pages that had it; facts about this library's own API it held (no radio-group part in `Menu` / `ContextMenu` / `Menubar`, `Pressable`'s missing hint prop, `CodeBlock`'s single colour, …) now sit in Usage, Examples or API. A page runs Installation, Usage, optional Composition, Examples, API, and `check:pages` rejects the old section. The header's `Official:` links and the coverage page stay.
+
 - **Switch knob, radio dot and scrollbar thumb resize smoothly (#291).** Their size feedback (`material`'s expanding handle, `winui`'s stretching thumb and scaling dot, the scrollbar thumb's hover growth) is a transform instead of a width and height that snapped, and it rides the theme's `motion.fast` with the switch's travel instead of fixed `100`–`300 ms`. `lib/motion` gains `cssMotion()`, a motion role as a CSS transition. Resting, hover, pressed and checked geometry is unchanged.
 - **`lib/utils` is split by what it holds; single-consumer modules move into their component (#292).** `Live` / `read` are in `lib/live-value` and `PartMap` / `mergeClasses` / `mergePartMap` / `joinClass` in `lib/class-names` (registry items `live-value` and `class-names` replace `utils`); `formatColor` and `inkOn` are exported from `color-picker` (the `color-format` item is gone); `icon-canvas` and `icon-image` are one `lib/icon-drawing`. **To migrate a copied app:** import from `@/lib/ui/live-value` or `@/lib/ui/class-names` instead of `@/lib/ui/utils`, and `formatColor` / `inkOn` from the color picker.
 
