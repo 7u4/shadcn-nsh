@@ -118,13 +118,13 @@ export const choiceWell = (o?: { disabled?: boolean; well?: ChoiceWell }): ViewS
         backgroundColor: alpha(colors.input, 0.3),
         backgroundImage: "none",
         borderColor: alpha(colors.foreground, o?.disabled ? 0.4 : 0.2),
-        boxShadow: finish.field.boxShadow,
+        boxShadow: finish.inset.boxShadow,
       }
     : {
         backgroundColor: colors.field,
         backgroundImage: "none",
         borderColor: colors.input,
-        boxShadow: finish.field.boxShadow,
+        boxShadow: finish.inset.boxShadow,
       };
 };
 
@@ -224,7 +224,7 @@ export function ChoiceLight(props: { on: AnimatedValue; radius: number; border?:
         bottom: -b,
         borderRadius: props.radius,
         borderWidth: stroke.control,
-        ...finish.light,
+        ...finish.accent,
         opacity: props.on,
       }}
     />
@@ -238,7 +238,7 @@ const MARK_WEIGHT = 3.84;
 /**
  * What a checkbox's box shows (its `indicator`): citrus with a check or a
  * dash, drawn with the same bold pen. Each part follows the value on a
- * spring of its own (`motion.control`) and grows in from 75%, so a check
+ * spring of its own (`motion.fast`) and grows in from 75%, so a check
  * turning into a dash crosses over on a fill that stays; at once with
  * reduced motion.
  */
@@ -259,7 +259,7 @@ export function CheckboxMark(props: { mark: CheckboxMarkKind } & ChoiceOptions) 
         transform: [{ scale: amount.interpolate({ inputRange: [0, 1], outputRange: [0.75, 1] }) }],
       }}
     >
-      <Icon icon={icon} size={checkSize} tint={colors.onBrand} weight={MARK_WEIGHT} />
+      <Icon icon={icon} size={checkSize} tint={colors.primaryForeground} weight={MARK_WEIGHT} />
     </View>
   );
   const cb = checkboxPresets[controls()];
@@ -362,7 +362,7 @@ export function choiceTileLook(on: Live<boolean>, o?: ChoiceTileOptions): Choice
       return { opacity: dimmed.disabled };
     },
     get android(): AndroidProps | undefined {
-      return pressRipple(lit() ? "on-brand-tint" : "foreground", o?.disabled);
+      return pressRipple(lit() ? "accent-foreground" : "foreground", o?.disabled);
     },
   };
 }

@@ -25,6 +25,7 @@ import {
   signal,
   split,
   Text,
+  token,
   View,
 } from "nsh";
 import { Progress as BaseProgress, type ProgressProps as BaseProgressProps } from "nsh/base";
@@ -50,7 +51,7 @@ export const progressRemaining = (value: number) => `${Math.max(0, Math.min(100,
 interface ProgressPreset {
   height: number;
   trackHeight: number;
-  trackRole: "track" | "slider-track";
+  trackRole: "track" | "brand-tint" | "input";
   trackShape: "bar" | "hairline";
   outlined: boolean;
 }
@@ -61,7 +62,7 @@ const progressPresets: Record<Controls, ProgressPreset> = {
   material: {
     height: 4,
     trackHeight: 4,
-    trackRole: "slider-track",
+    trackRole: "brand-tint",
     trackShape: "bar",
     outlined: false,
   },
@@ -69,7 +70,7 @@ const progressPresets: Record<Controls, ProgressPreset> = {
   winui: {
     height: 3,
     trackHeight: 1,
-    trackRole: "slider-track",
+    trackRole: "input",
     trackShape: "hairline",
     outlined: false,
   },
@@ -81,7 +82,7 @@ const progressPresets: Record<Controls, ProgressPreset> = {
 export function progressRail(height?: number): ViewStyle {
   const g = progressPresets[controls()];
   const h = height ?? g.height;
-  const trackColor = g.trackRole === "slider-track" ? colors.sliderTrack : colors.track;
+  const trackColor = token(g.trackRole);
   const band = (h - g.trackHeight) / 2;
   const trackFill: ViewStyle =
     g.trackShape === "hairline"
@@ -96,13 +97,13 @@ export function progressRail(height?: number): ViewStyle {
     overflow: "hidden",
     ...trackFill,
     ...(g.outlined
-      ? { boxShadow: insetEdge(finish.track.borderColor, finish.track.boxShadow) }
+      ? { boxShadow: insetEdge(finish.inset.borderColor, finish.inset.boxShadow) }
       : {}),
   };
 }
 
 /** A bar's fill, `height` points tall (default `progressPresets[controls()].height`): the slider's citrus run
- * (`finish.fill`: its gradient, over a `transparent` bottom), or a tone's color
+ * (`finish.accent`: its gradient, over a `transparent` bottom), or a tone's color
  * (`up` for done, `warn`, `destructive`; `accent` is the run). Neither has an edge, so a tone's bar and
  * the run read as one kind of bar. */
 export function progressFill(height?: number, tone?: Tone): ViewStyle {
@@ -377,7 +378,7 @@ export function ProgressStepMark(props: { state: Live<ProgressStepState> }) {
     const next = state();
     if (next === shown) return;
     shown = next;
-    if (!reduceMotion()) void animate(pop, 1, motion.move, { velocity: 4 });
+    if (!reduceMotion()) void animate(pop, 1, motion.default, { velocity: 4 });
   });
   const look = progressStepsLook();
   return (

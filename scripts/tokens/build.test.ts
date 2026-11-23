@@ -301,15 +301,14 @@ describe("DTCG source lint", () => {
         "packages/theme/tokens/themes/default/finishes.shared.tokens.json",
       );
       const fin = JSON.parse(fs.readFileSync(finPath, "utf8"));
-      fin.finish.card.$extensions["dev.aning.shadcn-nsh"].material = {
-        apple: { glass: "frosted", tint: "{color.missing}" },
-      };
+      fin.finish.card.$extensions["dev.aning.shadcn-nsh"].material = "frosted";
+      fin.finish.raised.$extensions["dev.aning.shadcn-nsh"].elevation = -2;
       fs.writeFileSync(finPath, JSON.stringify(fin, null, 2));
     });
     const text = problems.join("\n");
     expect(text).toContain("shape.$extensions");
-    expect(text).toContain("apple.glass");
-    expect(text).toContain("missing");
+    expect(text).toContain('"frosted"');
+    expect(text).toContain("elevation must be a non-negative number");
   });
 
   test("rejects invalid controls preset enum value and shape.corners.button in $extensions", () => {
@@ -412,12 +411,9 @@ describe("DTCG source lint", () => {
       themeDoc.dimension.radius.container.$value.value = -4;
       fs.writeFileSync(themePath, JSON.stringify(themeDoc, null, 2));
 
-      const finPath = path.join(
-        tmp,
-        "packages/theme/tokens/themes/default/finishes.shared.tokens.json",
-      );
+      const finPath = path.join(tmp, "packages/theme/tokens/themes/default/light.tokens.json");
       const finDoc = JSON.parse(fs.readFileSync(finPath, "utf8"));
-      finDoc.finish.field.shadow.$extensions["dev.aning.shadcn-nsh"] = { none: false };
+      finDoc.shadow.sm.$extensions = { "dev.aning.shadcn-nsh": { none: false } };
       fs.writeFileSync(finPath, JSON.stringify(finDoc, null, 2));
     });
     const text = problems.join("\n");
@@ -438,8 +434,8 @@ describe("DTCG source lint", () => {
       const sgDark = JSON.parse(fs.readFileSync(sgDarkPath, "utf8"));
       // Corrupt ring-halo (mix of translucent ring 0.4 alpha and transparent) -> must fail.
       sgDark.color["ring-halo"].$value.alpha = 0.5;
-      // Corrupt finish.on.border-color (alpha colorOp) -> must fail.
-      sgDark.finish.on["border-color"].$value.alpha = 0.9;
+      // Corrupt finish.accent.background (alpha colorOp) -> must fail.
+      sgDark.finish.accent.background.$value.alpha = 0.9;
       fs.writeFileSync(sgDarkPath, JSON.stringify(sgDark, null, 2));
 
       const problems = lintDtcgTheme(
@@ -450,7 +446,7 @@ describe("DTCG source lint", () => {
         "color.ring-halo: static $value differs from live colorOp evaluation",
       );
       expect(problems).toContain(
-        "finish.on.border-color: static $value differs from live colorOp evaluation",
+        "finish.accent.background: static $value differs from live colorOp evaluation",
       );
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
@@ -468,8 +464,8 @@ describe("DTCG source lint", () => {
       appearance: "light",
       input: "touch",
     }).resolved as Record<string, any>;
-    expect(applePointer.dimension.size.density.row.$value.value).toBe(32);
-    expect(appleTouch.dimension.size.density.row.$value.value).toBe(44);
+    expect(applePointer.dimension.size.height.md.$value.value).toBe(28);
+    expect(appleTouch.dimension.size.height.md.$value.value).toBe(44);
     expect(applePointer.typography.body.$value.fontSize.value).toBe(13);
     expect(appleTouch.typography.body.$value.fontSize.value).toBe(17);
 
@@ -479,26 +475,26 @@ describe("DTCG source lint", () => {
       appearance: "light",
       input: "pointer",
     }).merged as Record<string, any>;
-    expect(winuiMerged.motion.press.timing.$value.duration.value).toBe(83);
-    expect(winuiMerged.motion.press.$extensions).toBeUndefined();
+    expect(winuiMerged.motion.fast.timing.$value.duration.value).toBe(83);
+    expect(winuiMerged.motion.fast.$extensions).toBeUndefined();
 
     const backToSpring = mergeTokenTrees(structuredClone(winuiMerged), {
       motion: {
-        press: {
+        fast: {
           $extensions: { "dev.aning.shadcn-nsh": { spring: { stiffness: 500, damping: 30 } } },
         },
       },
     }) as Record<string, any>;
-    expect(backToSpring.motion.press.timing).toBeUndefined();
-    expect(backToSpring.motion.press.$extensions["dev.aning.shadcn-nsh"].spring).toEqual({
+    expect(backToSpring.motion.fast.timing).toBeUndefined();
+    expect(backToSpring.motion.fast.$extensions["dev.aning.shadcn-nsh"].spring).toEqual({
       stiffness: 500,
       damping: 30,
     });
 
-    // 3. WinUI font-sans, brand-fill = var(--primary), and Material alias-backed colorOp (down-tint)
+    // 3. WinUI font-sans, sidebar-primary = var(--primary), and Material alias-backed colorOp (down-tint)
     const winuiTheme = compileThemeJson(winuiResolver);
     expect(winuiTheme.cssVars.theme["font-sans"]).toBe("Segoe UI Variable, Segoe UI, sans-serif");
-    expect(winuiTheme.cssVars.theme["brand-fill"]).toBe("var(--primary)");
+    expect(winuiTheme.cssVars.light["sidebar-primary"]).toBe("var(--primary)");
     expect(Object.keys(winuiTheme.cssVars.theme).at(-1)).toBe("font-sans");
 
     const matResolver = path.join(
@@ -507,22 +503,20 @@ describe("DTCG source lint", () => {
     );
     const matTheme = compileThemeJson(matResolver);
     expect(matTheme.cssVars.light["down-tint"]).toBe(
-      "color-mix(in srgb, var(--down) 12%, transparent)",
+      "color-mix(in srgb, var(--destructive) 12%, transparent)",
     );
   });
 
-  test("rejects out-of-range state opacities and negative stroke/shake values", () => {
+  test("rejects out-of-range state opacities and negative stroke widths", () => {
     const problems = withMutatedDefault((tmp) => {
       const p = path.join(tmp, "packages/theme/tokens/base/style.shared.tokens.json");
       const doc = JSON.parse(fs.readFileSync(p, "utf8"));
       doc.state.overlay.hover.$value = 1.5;
       doc.dimension.stroke.hairline.$value.value = -0.5;
-      doc.duration.shake.$value.value = -10;
       fs.writeFileSync(p, JSON.stringify(doc, null, 2));
     }).join("\n");
     expect(problems).toContain("state.overlay.hover is 1.5, not in [0, 1]");
     expect(problems).toContain("dimension.stroke.hairline value -0.5 must be >= 0");
-    expect(problems).toContain("duration.shake value -10 must be >= 0");
   });
 });
 
@@ -631,21 +625,18 @@ describe("per-appearance standalone .tokens.json distribution", () => {
           expect(cssColor, `color.${key}`).toBe(expectedColors[key]);
         }
 
-        // Typography at pointer tier
-        const rawFontFamily = doc.typography.$extensions?.[EXT_NS]?.fontFamily ?? null;
-        const fontMatch =
-          typeof rawFontFamily === "string"
-            ? /^\{font\.family\.([a-z0-9-]+)\}$/.exec(rawFontFamily)
-            : null;
-        expect(fontMatch ? `{font-${fontMatch[1]}}` : rawFontFamily).toBe(
-          semanticsJson.typography.fontFamily,
-        );
+        // Typography at pointer tier: one family for every role, and line heights stated as points
         for (const role of TYPE_ROLES) {
           const val = resolved.typography[role].$value as DtcgTypography;
+          expect(doc.typography[role].$value.fontFamily).toBe("{font.family.sans}");
           expect((val.fontSize as { value: number }).value).toBe(
             semanticsJson.typography[role].fontSize.pointer,
           );
-          expect(val.lineHeight).toBe(semanticsJson.typography[role].lineHeight.pointer);
+          const size = (val.fontSize as { value: number }).value;
+          const multiple = val.lineHeight as number;
+          expect(Math.round(size * multiple)).toBe(
+            semanticsJson.typography[role].lineHeight.pointer,
+          );
           expect(val.fontWeight).toBe(semanticsJson.typography[role].fontWeight);
           expect(val.letterSpacing.value).toBe(semanticsJson.typography[role].letterSpacing);
         }
@@ -698,9 +689,7 @@ describe("per-appearance standalone .tokens.json distribution", () => {
         expect(doc.shape.$extensions[EXT_NS]).toEqual(semanticsJson.shape);
         expect(doc.state["press-scale"].$value).toBe(semanticsJson.state["press-scale"]);
         expect(doc.state["pressed-opacity"].$value).toBe(semanticsJson.state["pressed-opacity"]);
-        expect(doc.state["accent-pressed-opacity"].$value).toBe(
-          semanticsJson.state["accent-pressed-opacity"],
-        );
+        expect(doc.state["rest-opacity"].$value).toBe(semanticsJson.state["rest-opacity"]);
         expect(doc.state.$extensions[EXT_NS].ripple).toBe(semanticsJson.state.ripple);
         for (const [k, tok] of Object.entries(doc.state.overlay as Record<string, any>)) {
           if (k.startsWith("$")) continue;
@@ -711,7 +700,7 @@ describe("per-appearance standalone .tokens.json distribution", () => {
           expect(tok.$value).toBe(semanticsJson.state.disabled[k]);
         }
         expect(doc.state.disabled.$extensions[EXT_NS].fill).toBe(semanticsJson.state.disabled.fill);
-        expect(doc.duration.shake.$value.value).toBe(semanticsJson.duration.shake);
+        expect(doc.duration, "no duration group").toBeUndefined();
 
         const bezierNameOf = (tf: [number, number, number, number], ref: string) => {
           const name = /^\{cubicBezier\.([a-z0-9-]+)\}$/.exec(ref)?.[1];
@@ -731,7 +720,7 @@ describe("per-appearance standalone .tokens.json distribution", () => {
           ),
         }).toEqual(semanticsJson.transition.enter);
 
-        for (const role of ["press", "settle", "control", "move"] as const) {
+        for (const role of ["fast", "default", "slow"] as const) {
           const spring = doc.motion[role].$extensions?.[EXT_NS]?.spring;
           if (spring) {
             expect(spring).toEqual(semanticsJson.motion[role]);
@@ -761,6 +750,42 @@ describe("per-appearance standalone .tokens.json distribution", () => {
             ? toFlatRef(tok.$value)
             : formatDtcgColor(tok.$value as DtcgColor);
         };
+        // The appearance's shadow scale, decoded the way the compiler joins a finish's refs to it.
+        const fmtLen = (d: { value: number; unit: string }) =>
+          d.value === 0 ? "0" : `${d.value}${d.unit}`;
+        const formatShadowLayers = (raw: DtcgShadowItem | DtcgShadowItem[]): string =>
+          (Array.isArray(raw) ? raw : [raw])
+            .map((s) => {
+              const parts: string[] = [];
+              if (s.inset) parts.push("inset");
+              parts.push(fmtLen(s.offsetX), fmtLen(s.offsetY), fmtLen(s.blur));
+              if (s.spread.value !== 0) parts.push(fmtLen(s.spread));
+              parts.push(
+                typeof s.color === "string" ? toFlatRef(s.color) : formatDtcgColor(s.color),
+              );
+              return parts.join(" ");
+            })
+            .join(", ");
+        const shadowParts = new Map<string, string | null>();
+        const walkShadow = (node: Record<string, any>, prefix: string) => {
+          for (const [key, value] of Object.entries(node)) {
+            if (key.startsWith("$") || value === null || typeof value !== "object") continue;
+            const name = prefix ? `${prefix}.${key}` : key;
+            if ("$value" in value) {
+              shadowParts.set(
+                name,
+                value.$extensions?.[EXT_NS]?.none
+                  ? null
+                  : formatShadowLayers(value.$value as DtcgShadowItem),
+              );
+            } else {
+              walkShadow(value as Record<string, any>, name);
+            }
+          }
+        };
+        walkShadow(doc.shadow as Record<string, any>, "");
+        expect([...shadowParts.keys()].length, "a shadow scale").toBeGreaterThan(0);
+
         const mergedFinishes = mergeFinishes(semanticsJson.finishes, appearance);
         const docFinishRoles = Object.keys(doc.finish).filter((k) => !k.startsWith("$"));
         expect(docFinishRoles.sort()).toEqual(Object.keys(mergedFinishes).sort());
@@ -783,44 +808,40 @@ describe("per-appearance standalone .tokens.json distribution", () => {
             compiled.gradient = `linear-gradient(${angle}deg, ${stops.join(", ")})`;
           }
           if (g.shadow) {
-            if (g.shadow.$extensions?.[EXT_NS]?.none) {
-              compiled.shadow = "none";
-            } else {
-              const raw = g.shadow.$value;
-              const items = (Array.isArray(raw) ? raw : [raw]) as DtcgShadowItem[];
-              compiled.shadow = items
+            const raw = g.shadow.$value;
+            const items = (Array.isArray(raw) ? raw : [raw]) as (DtcgShadowItem | string)[];
+            compiled.shadow =
+              items
                 .map((s) => {
-                  const fmtLen = (d: { value: number; unit: string }) =>
-                    d.value === 0 ? "0" : `${d.value}${d.unit}`;
-                  const parts: string[] = [];
-                  if (s.inset) parts.push("inset");
-                  parts.push(fmtLen(s.offsetX), fmtLen(s.offsetY), fmtLen(s.blur));
-                  if (s.spread.value !== 0) parts.push(fmtLen(s.spread));
-                  parts.push(
-                    typeof s.color === "string" ? toFlatRef(s.color) : formatDtcgColor(s.color),
-                  );
-                  return parts.join(" ");
+                  if (typeof s === "string") {
+                    const name = /^\{shadow\.([a-z0-9.-]+)\}$/.exec(s)?.[1];
+                    expect(name, `finish.${role} names a shadow part`).toBeTruthy();
+                    return shadowParts.get(name!) ?? null;
+                  }
+                  return formatShadowLayers(s);
                 })
-                .join(", ");
-            }
+                .filter((layer): layer is string => layer !== null && layer !== undefined)
+                .join(", ") || "none";
           }
           if (g["border-color"]) compiled["border-color"] = toFinishColor(g["border-color"]);
           if (g["border-top-color"])
             compiled["border-top-color"] = toFinishColor(g["border-top-color"]);
           if (g["border-bottom-color"])
             compiled["border-bottom-color"] = toFinishColor(g["border-bottom-color"]);
+          if (g.foreground) compiled.foreground = toFinishColor(g.foreground);
+          // Only a theme that paints its own pressed accent states these.
+          if (g["pressed-background"])
+            compiled["pressed-background"] = toFinishColor(g["pressed-background"]);
+          if (g["pressed-foreground"])
+            compiled["pressed-foreground"] = toFinishColor(g["pressed-foreground"]);
+          if (g["pressed-opacity"]) compiled["pressed-opacity"] = g["pressed-opacity"].$value;
           const gExt = g.$extensions?.[EXT_NS];
           if (gExt && "backdropFilter" in gExt) compiled.backdropFilter = gExt.backdropFilter;
+          // A material is the recipe's name; `"none"` compiles to `null`, as an absent gradient does.
           if (gExt && "material" in gExt) {
-            const mat = structuredClone(gExt.material);
-            if (mat?.apple && typeof mat.apple.tint === "string") {
-              mat.apple.tint = toFlatRef(mat.apple.tint);
-            }
-            if (mat?.android?.ripple && typeof mat.android.ripple.color === "string") {
-              mat.android.ripple.color = toFlatRef(mat.android.ripple.color);
-            }
-            compiled.material = mat;
+            compiled.material = gExt.material === "none" ? null : gExt.material;
           }
+          if (gExt && "elevation" in gExt) compiled.elevation = gExt.elevation;
           expect(compiled, `finish.${role}`).toEqual(mergedFinishes[role]);
         }
       });
@@ -906,7 +927,8 @@ describe("generated DESIGN.md validation and compiled equality", () => {
           fontFamily: expectedFamily,
           fontSize: `${expectedSize.value}${expectedSize.unit}`,
           fontWeight: expected.fontWeight,
-          lineHeight: expected.lineHeight,
+          // DESIGN.md states the line box in points; the DTCG source keeps the multiple
+          lineHeight: `${Math.round(expectedSize.value * (expected.lineHeight as number))}${expectedSize.unit}`,
           letterSpacing: `${expected.letterSpacing.value}${expected.letterSpacing.unit}`,
         });
       }
@@ -946,10 +968,7 @@ describe("generated DESIGN.md validation and compiled equality", () => {
         delay: `${enter.delay.value}${enter.delay.unit}`,
         timingFunction: `cubic-bezier(${(enter.timingFunction as number[]).join(", ")})`,
       });
-      expect(yaml.motion.shake).toEqual({
-        duration: `${lightDoc.duration.shake.$value.value}${lightDoc.duration.shake.$value.unit}`,
-      });
-      for (const role of ["press", "settle", "control", "move"] as const) {
+      for (const role of ["fast", "default", "slow"] as const) {
         const timingTok = lightDoc.motion[role]?.timing;
         if (timingTok) {
           const val = timingTok.$value as DtcgTransition;

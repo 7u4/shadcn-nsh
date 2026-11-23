@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import {
+  checkScales,
   checkStyle,
   easingNames,
   leaves,
@@ -32,10 +33,10 @@ describe("checkStyle", () => {
 
   test("names a key that was deleted", () => {
     const file = copy();
-    delete file.motion.press.damping;
+    delete file.motion.default.damping;
     const problems = check(file);
     expect(problems).toHaveLength(1);
-    expect(problems[0]).toContain("motion.press.damping");
+    expect(problems[0]).toContain("motion.default.damping");
     expect(problems[0]).toContain("missing");
   });
 
@@ -103,55 +104,34 @@ describe("checkStyle", () => {
     expect(problems.join("\n")).toContain("radius-missing");
   });
 
-  test("accepts null or a fontFamily `{token}` on typography.fontFamily, rejects literals and wrong kinds", () => {
-    const withSans = new Map(kinds);
-    withSans.set("font-sans", "fontFamily");
-
-    const ok = copy();
-    ok.typography.fontFamily = "{font-sans}";
-    expect(check(ok, withSans)).toEqual([]);
-
-    const literal = copy();
-    literal.typography.fontFamily = "sans";
-    expect(check(literal, withSans)[0]).toContain("typography.fontFamily");
-
-    const wrongKind = copy();
-    wrongKind.typography.fontFamily = "{radius-container}";
-    expect(check(wrongKind, withSans)[0]).toContain("not a fontFamily");
-
-    const unknown = copy();
-    unknown.typography.fontFamily = "{font-display}";
-    expect(check(unknown, withSans)[0]).toContain("font-display");
-  });
-
   test("accepts double focus style and timing motion roles, rejecting invalid shapes and timingFunctions", () => {
     const ok = copy();
     ok.dimension.focus.style = "double";
-    ok.motion.press = { duration: 150, timingFunction: "emphasized-decelerate" };
-    ok.motion.control = { duration: 167, timingFunction: "decelerate" };
+    ok.motion.fast = { duration: 150, timingFunction: "emphasized-decelerate" };
+    ok.motion.default = { duration: 167, timingFunction: "decelerate" };
     ok.transition.enter = { duration: 250, timingFunction: "point-to-point" };
     expect(check(ok)).toEqual([]);
 
     for (const timingFunction of easingNames) {
       const withEasing = copy();
-      withEasing.motion.move = { duration: 200, timingFunction };
+      withEasing.motion.slow = { duration: 200, timingFunction };
       withEasing.transition.enter.timingFunction = timingFunction;
       expect(check(withEasing), timingFunction).toEqual([]);
     }
 
     const mixed = copy();
-    mixed.motion.press = { stiffness: 300, duration: 150 };
+    mixed.motion.fast = { stiffness: 300, duration: 150 };
     expect(check(mixed).join("\n")).toContain("mixes spring keys");
 
     const badTiming = copy();
-    badTiming.motion.press = { duration: -10, timingFunction: "unknown-curve" };
+    badTiming.motion.fast = { duration: -10, timingFunction: "unknown-curve" };
     const timingProblems = check(badTiming).join("\n");
-    expect(timingProblems).toContain("motion.press.duration");
-    expect(timingProblems).toContain("motion.press.timingFunction");
+    expect(timingProblems).toContain("motion.fast.duration");
+    expect(timingProblems).toContain("motion.fast.timingFunction");
 
     const missingTimingField = copy();
-    missingTimingField.motion.settle = { duration: 200 };
-    expect(check(missingTimingField).join("\n")).toContain("motion.settle.timingFunction");
+    missingTimingField.motion.default = { duration: 200 };
+    expect(check(missingTimingField).join("\n")).toContain("motion.default.timingFunction");
   });
 
   test("semanticsWithStyle preserves default style and updates press-scale", () => {
@@ -179,5 +159,17 @@ describe("scaledRadii", () => {
 
   test("refuses a negative radius", () => {
     expect(() => scaledRadii({ control: -1, container: 12, modal: 14 })).toThrow();
+  });
+});
+
+describe("checkScales", () => {
+  test("a touch target under 44 points fails unless the theme cites it", () => {
+    const file = copy();
+    file.dimension.size.hit = { pointer: 0, touch: 40 };
+    expect(checkScales("semantics.json", file, "default")).toContain(
+      "semantics.json: `dimension.size.hit.touch` is 40, below the 44-point touch target",
+    );
+    const cited = new Map([["default:dimension.size.hit.touch", new Set([40])]]);
+    expect(checkScales("semantics.json", file, "default", cited)).toEqual([]);
   });
 });

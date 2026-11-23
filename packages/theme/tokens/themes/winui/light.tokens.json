@@ -304,11 +304,7 @@
       "$description": "Fifth chart series color (WinUI ControlStrongFillColorDefault)."
     },
     "sidebar": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.96415, 0, 0],
-        "hex": "#f3f3f3"
-      },
+      "$value": "{color.background}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -317,11 +313,7 @@
       "$description": "NavigationView expanded pane background matching window base."
     },
     "sidebar-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.21779, 0, 0],
-        "hex": "#1a1a1a"
-      },
+      "$value": "{color.foreground}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "ink"
@@ -330,11 +322,7 @@
       "$description": "Sidebar primary ink (WinUI TextFillColorPrimary)."
     },
     "sidebar-primary": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.49147, 0.15959, 254.594],
-        "hex": "#005fb8"
-      },
+      "$value": "{color.primary}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "brand"
@@ -343,11 +331,7 @@
       "$description": "Sidebar primary accent matching AccentFillColorDefault."
     },
     "sidebar-primary-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [1, 0, 0],
-        "hex": "#ffffff"
-      },
+      "$value": "{color.primary-foreground}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "brand"
@@ -356,11 +340,7 @@
       "$description": "Sidebar primary ink matching TextOnAccentFillColorPrimary."
     },
     "sidebar-accent": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.93705, 0, 0],
-        "hex": "#eaeaea"
-      },
+      "$value": "{color.accent}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -369,11 +349,7 @@
       "$description": "Sidebar active item fill (WinUI SubtleFillColorSecondary)."
     },
     "sidebar-accent-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.21779, 0, 0],
-        "hex": "#1a1a1a"
-      },
+      "$value": "{color.foreground}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "ink"
@@ -382,11 +358,7 @@
       "$description": "Sidebar active item ink (WinUI TextFillColorPrimary)."
     },
     "sidebar-border": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.92191, 0, 0],
-        "hex": "#e5e5e5"
-      },
+      "$value": "{color.line}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "chrome"
@@ -395,11 +367,7 @@
       "$description": "Sidebar separator stroke (WinUI DividerStrokeColorDefault)."
     },
     "sidebar-ring": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.21779, 0, 0],
-        "hex": "#1a1a1a"
-      },
+      "$value": "{color.ring}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "chrome"
@@ -445,32 +413,6 @@
         }
       },
       "$description": "Flyout and acrylic border (WinUI SurfaceStrokeColorFlyout composited over base)."
-    },
-    "scrollbar-thumb": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.62006, 0, 0],
-        "hex": "#868686"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Static scrollbar thumb color (WinUI ControlStrongFillColorDefault)."
-    },
-    "scrollbar-thumb-hover": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.62006, 0, 0],
-        "hex": "#868686"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Static scrollbar hover color (WinUI ControlStrongFillColorDefault)."
     },
     "field": {
       "$value": {
@@ -576,15 +518,6 @@
       },
       "$description": "Switch and slider track (WinUI ControlAltFillColorSecondary)."
     },
-    "slider-track": {
-      "$value": "{color.input}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "surface"
-        }
-      },
-      "$description": "WinUI 3 inactive slider track aliased to {color.input} (SliderTrackFill -> ControlStrongFillColorDefault, Slider_themeresources.xaml:20 in winui3/release/2.7.0)."
-    },
     "knob": {
       "$value": {
         "colorSpace": "oklch",
@@ -597,19 +530,6 @@
         }
       },
       "$description": "Unchecked switch thumb (WinUI TextFillColorSecondary)."
-    },
-    "code": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.21779, 0, 0],
-        "hex": "#1a1a1a"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Inline code ink (WinUI TextFillColorPrimary)."
     },
     "info": {
       "$value": {
@@ -650,19 +570,6 @@
       },
       "$description": "Success semantic color (WinUI SystemFillColorSuccess)."
     },
-    "down": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.53615, 0.19119, 30.071],
-        "hex": "#c42b1c"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "status"
-        }
-      },
-      "$description": "Negative trend color matching WinUI SystemFillColorCritical."
-    },
     "brand-tint": {
       "$value": {
         "colorSpace": "oklch",
@@ -675,19 +582,6 @@
         }
       },
       "$description": "10% accent wash composited opaque over window base."
-    },
-    "on-brand-tint": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.21779, 0, 0],
-        "hex": "#1a1a1a"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Ink on brand-tint surfaces (WinUI TextFillColorPrimary)."
     },
     "inverse": {
       "$value": {
@@ -714,19 +608,6 @@
         }
       },
       "$description": "Ink on inverse surface (WinUI TextFillColorPrimary)."
-    },
-    "inverse-muted": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.47478, 0, 0],
-        "hex": "#5c5c5c"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Secondary ink on inverse surface (WinUI TextFillColorSecondary)."
     },
     "inverse-brand": {
       "$value": {
@@ -818,150 +699,251 @@
         }
       },
       "$description": "Library-retained violet data-series hue (no WinUI equivalent)."
-    },
-    "window-control-off": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.89535, 0.00406, 286.317],
-        "hex": "#dcdcdf"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Library-retained unfocused window traffic-light fill (no WinUI equivalent)."
-    },
-    "dialog": {
-      "$value": "{color.background}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "surface"
-        }
-      },
-      "$description": "ContentDialog surface aliased to {color.background} (SolidBackgroundFillColorBase)."
-    },
-    "card-edge": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.92191, 0, 0],
-        "hex": "#e5e5e5"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Card border stroke (WinUI CardStrokeColorDefault composited over base)."
-    },
-    "bevel": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.84522, 0, 0],
-        "hex": "#cccccc"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Standard button elevation bevel stroke (WinUI ControlStrokeColorSecondary composited over base)."
-    },
-    "accent-bevel": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.52768, 0.14982, 252.341],
-        "hex": "#146cbe"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Accent button top/side bevel stroke (WinUI ControlStrokeColorOnAccentDefault composited over primary)."
-    },
-    "disabled": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.97015, 0, 0],
-        "hex": "#f5f5f5"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "surface"
-        }
-      },
-      "$description": "Disabled control container fill (WinUI ControlFillColorDisabled composited over base)."
-    },
-    "disabled-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.68949, 0, 0],
-        "hex": "#9b9b9b"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Disabled control text/icon ink (WinUI TextFillColorDisabled composited over base)."
-    },
-    "accent-pressed": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.5773, 0.13223, 250.006],
-        "hex": "#317dc4"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Pressed accent control fill (WinUI AccentFillColorTertiary composited over base)."
-    },
-    "on-accent-pressed": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.87245, 0.03754, 247.003],
-        "hex": "#c2d8ed"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Pressed accent control ink (WinUI TextOnAccentFillColorSecondary composited over accent-pressed)."
-    },
-    "selected-foreground": {
-      "$value": "{color.on-brand}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Ink on checked ToggleButton / active AccentFillColorDefault controls aliased to {color.on-brand}."
-    },
-    "pressed-foreground": {
-      "$value": "{color.muted-foreground}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Pressed standard control ink aliased to {color.muted-foreground} (WinUI TextFillColorSecondary)."
     }
   },
-  "finish": {
-    "$description": "Sparse light-mode surface finish overrides.",
-    "card": {
-      "shadow": {
+  "shadow": {
+    "sm": {
+      "$description": "A control's cast shadow, on the surface it sits on.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ],
+      "$extensions": {
+        "dev.aning.shadcn-nsh": {
+          "none": true
+        }
+      }
+    },
+    "md": {
+      "$description": "A card's cast shadow: the surface is one step off the page.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.12,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.14,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "lg": {
+      "$description": "An overlay's shadow: a menu floats well above the page.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.2,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.24,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 16,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 32,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "xl": {
+      "$description": "A dialog's shadow: the page waits behind it.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.2,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.24,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 64,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 128,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "inset": {
+      "$description": "A well's shadow: light falls into a groove.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        }
+      ],
+      "$extensions": {
+        "dev.aning.shadcn-nsh": {
+          "none": true
+        }
+      }
+    },
+    "edge": {
+      "surface": {
+        "$description": "The hard edge of a raised surface: its highlight, its hairline. (the accent's).",
         "$type": "shadow",
         "$value": [
           {
             "color": {
               "colorSpace": "oklch",
               "components": [0, 0, 0],
-              "alpha": 0.12,
+              "alpha": 0,
               "hex": "#000000"
             },
             "offsetX": {
@@ -973,31 +955,7 @@
               "unit": "px"
             },
             "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
               "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.14,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 4,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 8,
               "unit": "px"
             },
             "spread": {
@@ -1005,7 +963,59 @@
               "unit": "px"
             }
           }
-        ]
+        ],
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "none": true
+          }
+        }
+      },
+      "accent": {
+        "$description": "The accent fill's edge: its highlight and its own cast. (the accent's).",
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": {
+              "colorSpace": "oklch",
+              "components": [0, 0, 0],
+              "alpha": 0,
+              "hex": "#000000"
+            },
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 0,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 0,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
+          }
+        ],
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "none": true
+          }
+        }
+      }
+    }
+  },
+  "finish": {
+    "card": {
+      "border-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.92191, 0, 0],
+          "hex": "#e5e5e5"
+        }
       }
     },
     "raised": {
@@ -1015,127 +1025,41 @@
       },
       "border-bottom-color": {
         "$type": "color",
-        "$value": "{color.bevel}"
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.84522, 0, 0],
+          "hex": "#cccccc"
+        }
       }
     },
-    "hover": {
-      "border-top-color": {
+    "overlay": {
+      "background": {
         "$type": "color",
-        "$value": "{color.border}"
-      },
-      "border-bottom-color": {
-        "$type": "color",
-        "$value": "{color.bevel}"
-      }
-    },
-    "handle": {
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.12,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 0,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.14,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.98212, 0, 0],
+          "alpha": 0.85,
+          "hex": "#f9f9f9"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "colorOp": {
+              "op": "alpha",
+              "color": "{color.popover}",
+              "alpha": 0.85
             }
           }
-        ]
+        }
       }
     },
-    "thumb": {
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.12,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 0,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.14,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          }
-        ]
+    "modal": {
+      "border-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.81093, 0, 0],
+          "hex": "#c1c1c1"
+        }
       }
     },
     "glass": {
@@ -1156,287 +1080,72 @@
             }
           }
         }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.2,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 0,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 8,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.24,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 16,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 32,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          }
-        ]
       }
     },
-    "menu": {
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.2,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 0,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 8,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.24,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 16,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 32,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          }
-        ]
-      }
-    },
-    "dialog": {
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.2,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 0,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 8,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.24,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 64,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 128,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          }
-        ]
-      },
+    "accent": {
       "border-color": {
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.81093, 0, 0],
-          "hex": "#c1c1c1"
+          "components": [0.52768, 0.14982, 252.341],
+          "hex": "#146cbe"
+        }
+      },
+      "border-top-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.52768, 0.14982, 252.341],
+          "hex": "#146cbe"
+        }
+      },
+      "pressed-background": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.5773, 0.13223, 250.006],
+          "hex": "#317dc4"
+        }
+      },
+      "pressed-foreground": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.87245, 0.03754, 247.003],
+          "hex": "#c2d8ed"
         }
       }
     },
-    "tooltip": {
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.12,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 0,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.14,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 8,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 16,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          }
-        ]
+    "hover": {
+      "border-top-color": {
+        "$type": "color",
+        "$value": "{color.border}"
+      },
+      "border-bottom-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.84522, 0, 0],
+          "hex": "#cccccc"
+        }
       }
     },
-    "inverse": {
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.2,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 0,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 8,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [0, 0, 0],
-              "alpha": 0.24,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 16,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 32,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          }
-        ]
+    "disabled": {
+      "background": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.97015, 0, 0],
+          "hex": "#f5f5f5"
+        }
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.68949, 0, 0],
+          "hex": "#9b9b9b"
+        }
       }
     }
   }

@@ -845,7 +845,7 @@ function Player() {
     playing();
     if (reduceMotion()) return;
     pop.set(0.7);
-    void animate(pop, 1, motion.press);
+    void animate(pop, 1, motion.default);
   });
   const time = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   const cycle = () => {
@@ -906,7 +906,7 @@ function Player() {
               width: "100%",
               borderRadius: 2,
               backgroundColor: colors.primary,
-              backgroundImage: terminal ? undefined : finish.fill.backgroundImage,
+              backgroundImage: terminal ? undefined : finish.accent.backgroundImage,
               transformOrigin: "left",
               transform: [{ scaleX: progress }],
             }}
@@ -1064,7 +1064,7 @@ function Palette() {
   const y = createAnimatedValue(0);
   effect(() => {
     const to = at() * step;
-    void animate(y, to, motion.settle);
+    void animate(y, to, motion.default);
   });
   const current = () => TOOLS[at()];
   return (
@@ -1089,7 +1089,7 @@ function Palette() {
                 height: TOOL.side,
                 borderRadius: TOOL.side / 4 + 1,
                 borderWidth: 1,
-                ...finish.on,
+                ...finish.accent,
                 transform: [{ translateY: y }],
               }}
             />
@@ -1108,7 +1108,7 @@ function Palette() {
                 }}
                 {...toggleLook({ disabled: () => t().value === "eraser" })}
                 // The thumb shows the chosen tool (a terminal's band is the on fill); no hover over it.
-                pressedStyle={terminal ? finish.on : undefined}
+                pressedStyle={terminal ? finish.accent : undefined}
                 hoverStyle={tool() === t().value || t().value === "eraser" ? undefined : hovered()}
               >
                 <ToolIcon

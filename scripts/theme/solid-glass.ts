@@ -1,5 +1,5 @@
 import type { ThemeGeneratorOutput } from "./dtcg";
-import { withoutMaterial } from "./material";
+import { finishes, shadows } from "./finishes/solid-glass";
 /**
  * Solid Glass (deeplethe/solid-glass) as this library's DTCG 2025.10 source.
  *
@@ -26,13 +26,11 @@ import { withoutMaterial } from "./material";
  */
 import { over } from "./oklch";
 import { scaledRadii } from "./style";
-import { withSurfaces } from "./surfaces";
 
 /** One appearance of the stylesheet's variables, by name (without the `--`). */
 type Source = Record<string, string>;
 
 /** A finish role, as `semantics.json` writes it: the keys the default theme declares for the role. */
-type Finish = Record<string, string>;
 
 /** `:root`: the panes in daylight, on a cool grey page. */
 const LIGHT: Source = {
@@ -223,17 +221,6 @@ function mixed(appearance: Appearance) {
   };
 }
 
-/**
- * A solid pane of the ink: `color-mix(in oklch, var(--primary) var(--primary-solid), transparent)`,
- * the fill of a primary button, a run in a rail, a checked box.
- */
-function solid(appearance: Appearance): string {
-  const s = source(appearance);
-  const { l, c, h } = coords(s("primary"));
-  const share = Number(s("primary-solid").replace("%", "")) / 100;
-  return `oklch(${l} ${c} ${h} / ${share})`;
-}
-
 /** A tone's translucent tint, as the theme's `*-tint` tokens write it. */
 const tint = (tone: string) => `color-mix(in srgb, var(--${tone}) 10%, transparent)`;
 
@@ -251,38 +238,6 @@ function laid(appearance: Appearance) {
     popover: over(s("popover"), background),
     sidebar: over(s("sidebar"), background),
     inset: over(s("panel"), card),
-  };
-}
-
-/** A finish names the theme's token instead of writing its colour (`{raised}`): one shape, the theme's colours. */
-const alias = (token: string) => `{${token}}`;
-
-/** Whether a colour lets the surface behind it through (an alpha below 1). */
-const seeThrough = (color: string) => coords(color).a < 1;
-
-/**
- * A pane filled with a token at another alpha — `oklch(from {muted} l c h / 0.26)`, the one
- * relative colour a finish writes (docs/specs/theme-roles.md) — and the clear gradient an
- * always-translucent pane carries: the engine draws it over the colour, and the same translucent
- * colour twice would double its alpha.
- */
-const paneAt = (token: string, a: number) => ({
-  background: `oklch(from {${token}} l c h / ${a})`,
-  gradient: "linear-gradient(180deg, transparent 0%, transparent 100%)",
-});
-
-/**
- * A pane's fill: a finish's colour and the gradient over it, which every theme states. `token` names
- * the colour where the theme has one. A translucent pane's gradient is transparent at both stops —
- * the engine draws it over the colour, and the same translucent colour twice would double its alpha
- * — while an opaque one repeats its own colour at both.
- */
-function pane(color: string, token?: string) {
-  const fill = token ?? color;
-  const stop = seeThrough(color) ? "transparent" : fill;
-  return {
-    background: fill,
-    gradient: `linear-gradient(180deg, ${stop} 0%, ${stop} 100%)`,
   };
 }
 
@@ -339,15 +294,13 @@ function section(appearance: Appearance): Record<string, string> {
     "sidebar-foreground": s("sidebar-foreground"),
     "sidebar-primary": "var(--primary)",
     "sidebar-primary-foreground": "var(--primary-foreground)",
-    "sidebar-accent": s("sidebar-accent"),
-    "sidebar-accent-foreground": "var(--foreground)",
+    "sidebar-accent": "var(--accent)",
+    "sidebar-accent-foreground": "var(--accent-foreground)",
     "sidebar-border": s("sidebar-border"),
     "sidebar-ring": "var(--ring)",
     // A surface inside a card is the thinnest pane; a control on it is clear glass.
     inset: panes.inset,
     raised: s("glass-control"),
-    "scrollbar-thumb": "color-mix(in srgb, var(--muted-foreground) 50%, var(--background))",
-    "scrollbar-thumb-hover": "color-mix(in srgb, var(--muted-foreground) 80%, var(--background))",
     // The edge a filled pane draws: the stylesheet's primary-button hairline,
     // `color-mix(in oklab, var(--primary) 55%, var(--primary-edge))`, mixed here because the two
     // ends are greys and the mix is one value (`mixed`).
@@ -364,272 +317,52 @@ function section(appearance: Appearance): Record<string, string> {
     // pale page, darker on the dark one).
     faint: s("ring"),
     // Links and small marks keep the teal (`--brand`); the main action's fill is the ink's pane
-    // (`--primary`), which is what `brand-fill` below names.
+    // (`--primary`).
     brand: s("brand"),
     // A switch's rail before it is on: shadcn's `bg-input`, cut into the surface as a groove.
     track: s("input"),
-    "slider-track": "var(--track)",
     knob: s("knob"),
-    // Code inside insets is set in the text colour; the stylesheet's `--code-inline` (a red) is
-    // for a span of inline code, which no role of this library holds.
-    code: "var(--foreground)",
     // The tones beside the accent: the stylesheet's own status colours ("hue means finished or
     // stopped"), and for `violet` the colour it sets a name in.
     info: s("status-done"),
     warn: s("status-interrupted"),
     up: s("success"),
-    down: "var(--destructive)",
     "brand-tint": s("brand-muted"),
-    "on-brand-tint": "var(--foreground)",
     inverse: "var(--popover)",
     "inverse-foreground": "var(--foreground)",
-    "inverse-muted": "var(--muted-foreground)",
     "inverse-brand": "var(--primary-foreground)",
     "info-tint": tint("info"),
     "warn-tint": tint("warn"),
     "destructive-tint": tint("destructive"),
     "up-tint": tint("up"),
-    "down-tint": tint("down"),
+    "down-tint": tint("destructive"),
     violet: s("syn-name"),
-    // The macOS traffic lights are the system's, and the stylesheet has no such tokens: like the
-    // text beside them, all three go quiet (the ring's grey) while the window is in the background.
-    "window-control-off": s("ring"),
-    dialog: "var(--card)",
-    "card-edge": "var(--border)",
-    bevel: "var(--border)",
-    "accent-bevel": "var(--brand-edge)",
-    disabled: "var(--raised)",
-    "disabled-foreground": "var(--muted-foreground)",
-    "accent-pressed": "var(--primary)",
-    "on-accent-pressed": "var(--on-brand)",
-    "selected-foreground": "var(--foreground)",
-    "pressed-foreground": "var(--foreground)",
   };
 }
 
 /** The theme's own tokens, shared by the appearances (a colour may name one: `var(--primary)`). */
 function themeLevel(): Record<string, string> {
-  const s = source("light");
   return {
     // Solid Glass stepped corner radii: 11 px controls, 14 px containers, 20 px modals.
     ...scaledRadii({ control: 11, container: 14, modal: 20 }),
-    // The monospaced family: NSH's generic `monospace`, the system's own — neither theme ships a
-    // font face. A theme that names one states its family here (the app imports the file).
+    // The families: NSH's generic `system-ui` and `monospace`, the system's own — neither theme
+    // ships a font face. A theme that names one states its family here (the app imports the file).
+    "font-sans": "system-ui",
     "font-mono": "monospace",
-    // The main action is the ink's solid pane; `on-brand` is what reads on it.
-    "brand-fill": "var(--primary)",
-    "on-brand": "var(--primary-foreground)",
-    // The stylesheet has no scrim of its own; shadcn's dialog overlay is `bg-black/50`.
+    // The stylesheet has no scrim of its own; shadcn's modal overlay is `bg-black/50`.
     scrim: "oklch(0 0 0 / 0.5)",
     // The ground a photograph sits on, and white ink on it. Neither flips.
     media: "oklch(0.1869 0.0151 266.766)",
     "on-media": "oklch(1 0 0)",
-    "chart-foreground": s("foreground"),
-    "window-close": s("destructive"),
-    "window-minimize": s("ring"),
-    "window-zoom": s("chart-3"),
-    "window-control-ink": "color-mix(in srgb, oklch(0 0 0) 50%, transparent)",
-    "window-control-edge": "color-mix(in srgb, oklch(0 0 0) 12%, transparent)",
   };
 }
 
-/**
- * One appearance's finishes: the material, role by role.
- *
- * Three of the stylesheet's rules decide them, and not one of them is a gradient: the finish is at
- * the edge (rim + hairline + shadow), thickness is tiered (`panel` < `card` < `popover`), and every
- * state wears the same small pane of clear glass. Where a part already draws a 1-point border (a
- * button, a field, a popup) the hairline is that border and the lines are drawn inside it: the
- * stylesheet warns that a hairline drawn outside a see-through border reads as a second ring.
- */
-function finishes(appearance: Appearance): Record<string, Finish> {
-  const s = source(appearance);
-  const m = mixed(appearance);
-  /** A clear pane: the line of light inside its top edge and the short shadow it stands on. */
-  const control = `inset 0 1px 0 ${s("glass-control-rim")}, 0 1px 2px ${s("glass-contact")}`;
-  /** A knob: the brightest pane, lit on top, shaded along its foot, standing proud of its rail. */
-  const knob = [
-    "inset 0 1px 0 oklch(1 0 0 / 90%)",
-    "inset 0 -1px 0 oklch(0 0 0 / 14%)",
-    `0 1px 2px ${s("knob-shade")}`,
-  ].join(", ");
-  return {
-    // A card's pane: the rim and the faint inner hairline inside the card's own border, the
-    // contact shadow, and the shade gathered underneath. Its face carries no gradient of two
-    // colours: one colour at both stops is what this material states.
-    card: {
-      gradient: `linear-gradient(180deg, ${alias("card")} 0%, ${alias("card")} 100%)`,
-      shadow: [
-        `inset 0 1px 0 ${s("glass-rim")}`,
-        `inset 0 0 0 1px ${s("glass-inner")}`,
-        `0 1px 2px ${s("glass-contact")}`,
-        `0 12px 32px -14px ${s("glass-shade")}`,
-      ].join(", "),
-    },
-    section: {
-      background: alias("card"),
-      shadow: "none",
-      "border-color": alias("card-edge"),
-    },
-    // The thinnest pane, laid into a card: the faint line of light inside its top edge.
-    inset: { shadow: `inset 0 1px 0 ${s("glass-inner")}` },
-    // A field is a pane of clear glass to type on: the line of light inside its top edge, and the
-    // hairline its border draws.
-    field: { shadow: `inset 0 1px 0 ${s("field-rim")}` },
-    // A control that does not ask to be pressed is clear glass.
-    raised: {
-      ...pane(s("glass-control"), alias("raised")),
-      shadow: control,
-      "border-color": alias("glass-edge"),
-      "border-top-color": alias("glass-edge"),
-      "border-bottom-color": alias("glass-edge"),
-      backdropFilter: "none",
-    },
-    // Under the pointer the theme's own step fills it; the pane keeps its rim and its shadow.
-    hover: {
-      ...pane(s("hover"), alias("hover")),
-      shadow: control,
-      "border-color": alias("glass-edge"),
-      "border-top-color": alias("glass-edge"),
-      "border-bottom-color": alias("glass-edge"),
-    },
-    // Pressed, it sits down on the page: the shadow under it goes and the pane darkens a step.
-    // The stylesheet draws no press of its own beyond that, so `state["press-scale"]` below is 1.
-    pressed: {
-      ...paneAt("muted", coords(s("glass-state-armed")).a),
-      shadow: `inset 0 1px 0 ${s("glass-control-rim")}`,
-      "border-color": alias("glass-edge"),
-      "border-top-color": alias("glass-edge"),
-      "border-bottom-color": alias("glass-edge"),
-    },
-    disabled: {
-      background: alias("disabled"),
-      gradient: `linear-gradient(180deg, ${alias("disabled")} 0%, ${alias("disabled")} 100%)`,
-      shadow: "none",
-      "border-color": alias("border"),
-    },
-    // Small things filled with the ink — a checked box, a switch that is on, the filled part of a
-    // bar — are the solid pane without the shadow a button stands on.
-    light: {
-      ...paneAt("primary", Number(s("primary-solid").replace("%", "")) / 100),
-      shadow: `inset 0 1px 0 ${s("primary-rim")}, inset 0 -1px 0 ${m.under}`,
-      "border-color": alias("brand-edge"),
-      "border-top-color": alias("brand-edge"),
-      "border-bottom-color": alias("brand-edge"),
-    },
-    // The primary button: the same pane, standing on its shadow.
-    accent: {
-      ...paneAt("primary", Number(s("primary-solid").replace("%", "")) / 100),
-      shadow: [
-        `inset 0 1px 0 ${s("primary-rim")}`,
-        `inset 0 -1px 0 ${m.under}`,
-        `inset 0 0 0 1px ${s("primary-inner")}`,
-        `0 1px 2px ${s("glass-contact")}`,
-        `0 8px 18px -9px ${s("glass-shade")}`,
-      ].join(", "),
-      "border-color": alias("brand-edge"),
-      "border-top-color": alias("brand-edge"),
-      "border-bottom-color": alias("brand-edge"),
-    },
-    accentPressed: {
-      ...paneAt("accent-pressed", Number(s("primary-solid").replace("%", "")) / 100),
-      shadow: [
-        `inset 0 1px 0 ${s("primary-rim")}`,
-        `inset 0 -1px 0 ${m.under}`,
-        `inset 0 0 0 1px ${s("primary-inner")}`,
-        `0 1px 2px ${s("glass-contact")}`,
-        `0 8px 18px -9px ${s("glass-shade")}`,
-      ].join(", "),
-      "border-color": alias("brand-edge"),
-      "border-top-color": alias("brand-edge"),
-      "border-bottom-color": alias("brand-edge"),
-    },
-    // A track is a groove cut into the surface, so the light falls the other way: a shade under
-    // its upper lip, a line of light along its lower one. Its edge is the theme's `border`.
-    track: {
-      shadow: `inset 0 1px 1.5px ${s("well-shade")}, inset 0 -1px 0 ${s("well-rim")}`,
-      "border-color": "transparent",
-    },
-    // A run of the ink in a rail or a progress bar: the small solid pane. One colour, no
-    // gradient.
-    fill: {
-      // The run's colour is the gradient's, at both stops even though it is translucent: the
-      // colour under it stays clear, or it would show through and tint the run.
-      background: "transparent",
-      gradient: `linear-gradient(180deg, ${solid(appearance)} 0%, ${solid(appearance)} 100%)`,
-      shadow: `inset 0 1px 0 ${s("primary-rim")}, inset 0 -1px 0 ${m.under}`,
-      "border-color": "transparent",
-    },
-    // A switch's knob, a slider's thumb: the brightest pane there is.
-    knob: { ...pane(s("knob"), alias("knob")), shadow: knob, "border-color": "transparent" },
-    // On, a switch's knob is the same pane: the stylesheet does not paint it differently.
-    knobOn: { ...pane(s("knob"), alias("knob")), shadow: knob, "border-color": "transparent" },
-    // A slider's thumb is a switch's knob: the stylesheet gives both the one rule.
-    handle: { ...pane(s("knob"), alias("knob")), shadow: knob, "border-color": "transparent" },
-    // A tray a segment sits in, and the chosen segment lying in it: clear glass.
-    pill: {
-      ...pane(s("glass-control"), alias("raised")),
-      shadow: control,
-      "border-color": alias("glass-edge"),
-    },
-    thumb: {
-      ...pane(s("glass-control"), alias("raised")),
-      shadow: control,
-      "border-color": alias("glass-edge"),
-    },
-    // What stays chosen: a small pane of clear glass — a faint tint, a line of light along the
-    // top, a hairline round it, and no shadow, or a row starts to look like a raised button.
-    on: {
-      ...paneAt("muted", coords(s("glass-state")).a),
-      shadow: `inset 0 1px 0 ${s("glass-state-rim")}`,
-      "border-color": `oklch(from {muted} l c h / ${coords(s("glass-state-edge")).a})`,
-      "border-top-color": `oklch(from {muted} l c h / ${coords(s("glass-state-edge")).a})`,
-      "border-bottom-color": `oklch(from {muted} l c h / ${coords(s("glass-state-edge")).a})`,
-    },
-    // A small label that holds something (a key, a chip): clear glass, both lines inside its edge.
-    chip: {
-      ...pane(s("glass-control"), alias("raised")),
-      shadow: `inset 0 1px 0 ${s("glass-control-rim")}, inset 0 0 0 1px ${s("glass-edge")}`,
-      "border-color": "transparent",
-    },
-    // A control over a photo: the stylesheet's clear glass (`.glass-control`), the one role here
-    // that also blurs.
-    glass: {
-      background: alias("raised"),
-      shadow: `inset 0 1px 0 ${s("glass-control-rim")}, 0 0 0 1px ${s("glass-edge")}, 0 1px 2px ${s("glass-contact")}`,
-      "border-color": alias("glass-edge"),
-      backdropFilter: appearance === "dark" ? "blur(14px)" : "blur(14px) saturate(180%)",
-    },
-    // A floating surface: the thickest glass — a firmer hairline, a shade along its foot, and the
-    // lift of standing well off the page. Its hairline is its border, so no ring goes outside it.
-    menu: {
-      background: alias("popover"),
-      shadow: [
-        `inset 0 1px 0 ${s("glass-rim")}`,
-        `inset 0 -1px 0 ${s("popover-under")}`,
-        `0 24px 60px -18px ${s("glass-shade")}`,
-        `0 6px 16px -6px ${s("glass-lift")}`,
-      ].join(", "),
-      "border-color": s("popover-edge"),
-      backdropFilter: "none",
-    },
-    grabber: {
-      background: alias("raised"),
-      shadow: "none",
-    },
-    // The lip of light under a separator cut into the surface: the glass's faint inner line.
-    groove: { shadow: `0 1px 0 ${s("glass-inner")}` },
-  };
-}
-
-/** Theme data and theme-specific DTCG descriptions ready for `emitDtcgTheme`. */
 export function themeFiles(): ThemeGeneratorOutput {
   const paneAndTokenDescriptions = {
     card: "Opaque composite of Solid Glass card pane over background canvas (no blur on card role).",
     popover: "Opaque composite of Solid Glass popover pane over background canvas.",
     sidebar: "Opaque composite of Solid Glass panel pane over background canvas.",
     inset: "Opaque composite of Solid Glass thinnest panel pane laid over card.",
-    "slider-track": "Inactive slider track fill aliased to {color.track}.",
     "brand-edge": "Primary button hairline mixed from --primary and --primary-edge.",
     "glass-edge": "Hairline border on Solid Glass panes (--glass-edge).",
     "brand-tint": "Static translucent teal brand wash (--brand-muted).",
@@ -653,7 +386,7 @@ export function themeFiles(): ThemeGeneratorOutput {
       overview:
         "Solid Glass (`deeplethe/solid-glass`, MIT): panes of smoky translucent glass with top-edge light rims, hairline glass borders, and ambient drop shadows (`state.press-scale: 1`).",
       elevation:
-        "Layered glass elevation: surfaces combine translucent fills (`alpha < 1` over page grounds), top-edge inset highlights, `--glass-edge` borders, soft shadows, and backdrop blur (`glass`, `menu`, `dialog`, `tooltip`, `inverse`).",
+        "Layered glass elevation: surfaces combine translucent fills (`alpha < 1` over page grounds), top-edge inset highlights, `--glass-edge` borders, soft shadows, and backdrop blur (`glass`, `menu`, `modal`, `tooltip`, `inverse`).",
       dos: [
         "Keep press interactions flat (`state.press-scale: 1`); pressed panes deepen and drop shadow rather than shrinking.",
         "Keep gradient stops `transparent` on translucent `background` finishes so alpha is not doubled by the canvas.",
@@ -667,24 +400,15 @@ export function themeFiles(): ThemeGeneratorOutput {
       light: section("light"),
       dark: section("dark"),
     },
-    finishes: {
-      light: withoutMaterial(withSurfaces(finishes("light"))),
-      dark: withoutMaterial(withSurfaces(finishes("dark"))),
-    },
+    finishes,
+    shadows,
     descriptions: {
       style: {
         "state.press-scale":
           "Scale factor applied while pressed (1 disables press shrinking for Solid Glass panes).",
       },
       sharedColors: {
-        "brand-fill": "Primary action fill, aliased to {color.primary}.",
-        "on-brand":
-          "Foreground text and icons on brand-fill surfaces, aliased to {color.primary-foreground}.",
         scrim: "Translucent backdrop scrim behind modals and sheets (50% black).",
-        "window-close": "macOS window close traffic-light fill mapped to destructive red.",
-        "window-minimize":
-          "macOS window minimize traffic-light fill mapped to Solid Glass ring grey.",
-        "window-zoom": "macOS window zoom traffic-light fill mapped to Solid Glass chart-3 grey.",
       },
       lightColors: paneAndTokenDescriptions,
       darkColors: paneAndTokenDescriptions,

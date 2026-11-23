@@ -199,46 +199,6 @@
       },
       "$description": "Overlay outline edge (M3 outlineVariant)."
     },
-    "scrollbar-thumb": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.53444, 0.01466, 305.844],
-        "hex": "#6f6b74"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": "{color.muted-foreground}",
-            "percent": 50,
-            "b": "{color.background}"
-          }
-        }
-      },
-      "$description": "Scrollbar thumb resting fill."
-    },
-    "scrollbar-thumb-hover": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.71477, 0.0165, 307.443],
-        "hex": "#a6a0ab"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": "{color.muted-foreground}",
-            "percent": 80,
-            "b": "{color.background}"
-          }
-        }
-      },
-      "$description": "Scrollbar thumb fill on pointer hover."
-    },
     "field": {
       "$value": {
         "colorSpace": "oklch",
@@ -355,15 +315,6 @@
       },
       "$description": "Switch and slider track fill (M3 surfaceContainerHighest)."
     },
-    "slider-track": {
-      "$value": "{color.brand-tint}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "surface"
-        }
-      },
-      "$description": "M3 Expressive inactive slider track fill aliased to {color.brand-tint} (SecondaryContainer, Compose SliderTokens.kt)."
-    },
     "knob": {
       "$value": {
         "colorSpace": "oklch",
@@ -376,15 +327,6 @@
         }
       },
       "$description": "Unchecked switch thumb fill (M3 outline)."
-    },
-    "code": {
-      "$value": "{color.foreground}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Monospace code text ink inside recessed wells."
     },
     "info": {
       "$value": {
@@ -438,19 +380,6 @@
       },
       "$description": "Opaque selected chip/tile fill (M3 secondaryContainer)."
     },
-    "on-brand-tint": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.91633, 0.03651, 303.106],
-        "hex": "#e8def8"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Ink on selected chip/tile fills (M3 Expressive onSecondaryContainer)."
-    },
     "inverse": {
       "$value": {
         "colorSpace": "oklch",
@@ -476,15 +405,6 @@
         }
       },
       "$description": "Ink on inverse surfaces (M3 inverseOnSurface)."
-    },
-    "inverse-muted": {
-      "$value": "{color.inverse-foreground}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Supporting text and close icon on inverse snackbars, aliased to {color.inverse-foreground} (Compose SnackbarTokens.kt)."
     },
     "inverse-brand": {
       "$value": {
@@ -588,7 +508,7 @@
           "colorOp": {
             "op": "mix",
             "space": "srgb",
-            "a": "{color.down}",
+            "a": "{color.destructive}",
             "percent": 12,
             "b": "transparent"
           }
@@ -745,11 +665,7 @@
       "$description": "Focus indicator ring color (M3 secondary)."
     },
     "sidebar": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.18738, 0.01241, 300.422],
-        "hex": "#141218"
-      },
+      "$value": "{color.background}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -767,11 +683,7 @@
       "$description": "Primary text and icon ink inside the sidebar."
     },
     "sidebar-accent": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.40052, 0.034, 298.591],
-        "hex": "#4a4458"
-      },
+      "$value": "{color.accent}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -780,11 +692,7 @@
       "$description": "Sidebar active item fill (M3 secondaryContainer)."
     },
     "sidebar-accent-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.91633, 0.03651, 303.106],
-        "hex": "#e8def8"
-      },
+      "$value": "{color.accent-foreground}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "ink"
@@ -793,11 +701,7 @@
       "$description": "Sidebar active item text ink (M3 Expressive onSecondaryContainer)."
     },
     "sidebar-border": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.39805, 0.01736, 303.721],
-        "hex": "#49454f"
-      },
+      "$value": "{color.border}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "chrome"
@@ -831,165 +735,377 @@
         }
       },
       "$description": "Focus indicator ring color inside the sidebar."
-    },
-    "down": {
-      "$value": "{color.destructive}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "status"
+    }
+  },
+  "shadow": {
+    "sm": {
+      "$description": "A control's cast shadow, on the surface it sits on.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.3,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.15,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 1,
+            "unit": "px"
+          }
         }
-      },
-      "$description": "Negative trend and decline semantic color."
+      ]
     },
-    "window-control-off": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.39805, 0.01736, 303.721],
-        "hex": "#49454f"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
+    "md": {
+      "$description": "A card's cast shadow: the surface is one step off the page.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.3,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.15,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 1,
+            "unit": "px"
+          }
         }
-      },
-      "$description": "Unfocused window traffic-light fill (M3 outlineVariant)."
+      ]
     },
-    "dialog": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.2859, 0.01293, 298.633],
-        "hex": "#2b2930"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "surface"
+    "lg": {
+      "$description": "An overlay's shadow: a menu floats well above the page.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.3,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.15,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 6,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 2,
+            "unit": "px"
+          }
         }
-      },
-      "$description": "Modal dialog surface (M3 surfaceContainerHigh)."
+      ]
     },
-    "card-edge": {
-      "$value": "{color.border}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
+    "xl": {
+      "$description": "A dialog's shadow: the page waits behind it.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.3,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0.15,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 3,
+            "unit": "px"
+          }
         }
-      },
-      "$description": "Card border hairline aliased to {color.border}."
+      ]
     },
-    "bevel": {
-      "$value": "{color.border}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
+    "inset": {
+      "$description": "A well's shadow: light falls into a groove.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [0, 0, 0],
+            "alpha": 0,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 0,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 0,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
         }
-      },
-      "$description": "Control elevation bevel stroke aliased to {color.border}."
-    },
-    "accent-bevel": {
-      "$value": "{color.brand-edge}",
+      ],
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "role": "chrome"
+          "none": true
         }
-      },
-      "$description": "Accent bevel stroke aliased to {color.brand-edge}."
+      }
     },
-    "disabled": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.91401, 0.01366, 314.754],
-        "alpha": 0.1,
-        "hex": "#e6e0e9"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "surface",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": "{color.foreground}",
-            "percent": 10,
-            "b": "transparent"
+    "edge": {
+      "surface": {
+        "$description": "The hard edge of a raised surface: its highlight, its hairline. (the accent's).",
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": {
+              "colorSpace": "oklch",
+              "components": [0, 0, 0],
+              "alpha": 0,
+              "hex": "#000000"
+            },
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 0,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 0,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
+          }
+        ],
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "none": true
           }
         }
       },
-      "$description": "Disabled control container fill (10% onSurface over transparent)."
-    },
-    "disabled-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.91401, 0.01366, 314.754],
-        "alpha": 0.38,
-        "hex": "#e6e0e9"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": "{color.foreground}",
-            "percent": 38,
-            "b": "transparent"
+      "accent": {
+        "$description": "The accent fill's edge: its highlight and its own cast. (the accent's).",
+        "$type": "shadow",
+        "$value": [
+          {
+            "color": {
+              "colorSpace": "oklch",
+              "components": [0, 0, 0],
+              "alpha": 0,
+              "hex": "#000000"
+            },
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 0,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 0,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
+          }
+        ],
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "none": true
           }
         }
-      },
-      "$description": "Disabled control content ink (38% onSurface over transparent)."
-    },
-    "accent-pressed": {
-      "$value": "{color.primary}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Pressed accent fill aliased to {color.primary} (state layer applies press)."
-    },
-    "on-accent-pressed": {
-      "$value": "{color.on-brand}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Pressed accent ink aliased to {color.on-brand}."
-    },
-    "selected-foreground": {
-      "$value": "{color.on-brand-tint}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Ink on tonal selected controls (M3 Expressive onSecondaryContainer)."
-    },
-    "pressed-foreground": {
-      "$value": "{color.foreground}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Pressed ink aliased to {color.foreground}."
+      }
     }
   },
   "finish": {
-    "$description": "Sparse dark-mode surface finish overrides.",
-    "grabber": {
+    "modal": {
       "background": {
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
-          "components": [0.82875, 0.01776, 308.223],
-          "alpha": 0.4,
-          "hex": "#cac4d0"
+          "components": [0.2859, 0.01293, 298.633],
+          "hex": "#2b2930"
+        }
+      }
+    },
+    "disabled": {
+      "background": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.91401, 0.01366, 314.754],
+          "alpha": 0.1,
+          "hex": "#e6e0e9"
         },
         "$extensions": {
           "dev.aning.shadcn-nsh": {
             "colorOp": {
               "op": "alpha",
-              "color": "{color.muted-foreground}",
-              "alpha": 0.4
+              "color": "{color.foreground}",
+              "alpha": 0.1
+            }
+          }
+        }
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [0.91401, 0.01366, 314.754],
+          "alpha": 0.38,
+          "hex": "#e6e0e9"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "colorOp": {
+              "op": "alpha",
+              "color": "{color.foreground}",
+              "alpha": 0.38
             }
           }
         }

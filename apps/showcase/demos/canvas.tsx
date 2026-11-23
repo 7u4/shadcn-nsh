@@ -845,7 +845,7 @@ function Compositing() {
             second + 52,
             centerY + 36,
           );
-          paper.addColorStop(0, colors.brandFill);
+          paper.addColorStop(0, colors.primary);
           paper.addColorStop(1, colors.up);
           cx.fillStyle = paper;
           cx.beginPath();
@@ -880,7 +880,7 @@ function Compositing() {
           lit.addColorStop(0, colors.primary);
           lit.addColorStop(0.35, colors.warn);
           lit.addColorStop(0.75, colors.destructive);
-          lit.addColorStop(1, colors.down);
+          lit.addColorStop(1, colors.destructive);
           cx.fillStyle = lit;
           cx.beginPath();
           cx.arc(third, centerY, 30, 0, TAU);

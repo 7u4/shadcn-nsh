@@ -1,7 +1,7 @@
 import { finish } from "@shadcn-nsh/theme";
 // A tooltip: the look (`tooltipLook`, `tooltipText`, `tooltipNote`) at the top, and the parts below.
 // From NSH's examples/nsh-gallery-ui (Apache-2.0, © Longbridge; see NOTICE): yours to change.
-import type { JSX, StyleProp, ViewStyle } from "nsh";
+import type { JSX, StyleProp, TextStyle, ViewStyle } from "nsh";
 import { context, split, View } from "nsh";
 import {
   Tooltip as BaseTooltip,
@@ -22,7 +22,7 @@ export interface TooltipLookOptions {
 
 /**
  * A tooltip's bubble (`class` and `style`, on the view inside `nsh/base`'s `Tooltip`):
- * the theme's tooltip finish (`finish.tooltip`: today the `popover` surface with the border's
+ * the theme's tooltip finish (`finish.inverse`: today the `popover` surface with the border's
  * edge, so it reads as the menus and popovers do in both appearances). One line: a row 8 points apart, 8 by 4 points of padding,
  * the theme's control corners (`radius-control`); `rich`: a column, 10 points of
  * padding, the theme's base corners (`radius`).
@@ -35,13 +35,13 @@ export function tooltipLook(o?: TooltipLookOptions) {
       : "flex-row items-center gap-2 rounded-(--radius-control) border px-2 py-1",
     style: {
       get backgroundColor() {
-        return finish.tooltip.backgroundColor;
+        return finish.inverse.backgroundColor;
       },
       get boxShadow() {
-        return finish.tooltip.boxShadow;
+        return finish.inverse.boxShadow;
       },
       get borderColor() {
-        return finish.tooltip.borderColor;
+        return finish.inverse.borderColor;
       },
     } satisfies ViewStyle,
   };
@@ -50,8 +50,12 @@ export function tooltipLook(o?: TooltipLookOptions) {
 /** A tooltip's text (`class`): 12 points in the inverse foreground (`inverse-foreground`). */
 export const tooltipText = "text-xs text-inverse-foreground";
 
-/** A tooltip's quieter text (`class`): a shortcut's keys, a time, in `inverse-muted`. */
-export const tooltipNote = "text-xs text-inverse-muted";
+/** A tooltip's quieter text (`style`): a shortcut's keys, a time, 12 points over 16 in the inverse finish's ink. */
+export const tooltipNote = (): TextStyle => ({
+  fontSize: 12,
+  lineHeight: 16,
+  color: finish.inverse.foreground,
+});
 // @port end
 
 /** Why a tooltip closed (`onOpenChange`'s `reason`): `nsh/base`'s `OpenChangeReason`, under this part's name. */

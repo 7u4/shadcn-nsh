@@ -6,15 +6,7 @@ colors:
   scrim: "#00000066"
   media: "#10131a"
   on-media: "#ffffff"
-  chart-foreground: "#000000"
-  window-close: "#ff5f57"
-  window-minimize: "#febc2e"
-  window-zoom: "#28c840"
-  window-control-ink: "#00000080"
-  window-control-edge: "#0000001f"
   light:
-    brand-fill: "#007aff"
-    on-brand: "#ffffff"
     background: "#f2f2f7"
     foreground: "#000000"
     card: "#ffffff"
@@ -49,8 +41,6 @@ colors:
     inset: "#f4f4f5"
     raised: "#efeff0"
     glass-edge: "#dcdcdd"
-    scrollbar-thumb: "#bebec2"
-    scrollbar-thumb-hover: "#9f9fa3"
     field: "#efeff0"
     line: "#dcdcdd"
     hover: "#0000000f"
@@ -59,18 +49,13 @@ colors:
     brand: "#007aff"
     brand-edge: "#dcdcdd"
     track: "#e9e9eb"
-    slider-track: "#e9e9eb"
     knob: "#ffffff"
-    code: "#000000"
     info: "#007aff"
     warn: "#ff9500"
     up: "#34c759"
-    down: "#ff3b30"
     brand-tint: "#007aff1f"
-    on-brand-tint: "#000000"
     inverse: "#ffffff"
     inverse-foreground: "#000000"
-    inverse-muted: "#8a8a8e"
     inverse-brand: "#ffffff"
     info-tint: "#007aff1f"
     warn-tint: "#ff95001f"
@@ -78,20 +63,7 @@ colors:
     up-tint: "#34c7591f"
     down-tint: "#ff3b301f"
     violet: "#af52de"
-    window-control-off: "#e4e4e6"
-    dialog: "#ffffff"
-    card-edge: "#dcdcdd"
-    bevel: "#dcdcdd"
-    accent-bevel: "#dcdcdd"
-    disabled: "#efeff0"
-    disabled-foreground: "#8a8a8e"
-    accent-pressed: "#007aff"
-    on-accent-pressed: "#ffffff"
-    selected-foreground: "#000000"
-    pressed-foreground: "#000000"
   dark:
-    brand-fill: "#0a84ff"
-    on-brand: "#ffffff"
     background: "#000000"
     foreground: "#ffffff"
     card: "#1c1c1e"
@@ -126,8 +98,6 @@ colors:
     inset: "#2c2c30"
     raised: "#323236"
     glass-edge: "#353538"
-    scrollbar-thumb: "#4c4c4f"
-    scrollbar-thumb-hover: "#7a7a7f"
     field: "#323236"
     line: "#353538"
     hover: "#ffffff0f"
@@ -136,18 +106,13 @@ colors:
     brand: "#0a84ff"
     brand-edge: "#353538"
     track: "#39393d"
-    slider-track: "#39393d"
     knob: "#ffffff"
-    code: "#ffffff"
     info: "#0a84ff"
     warn: "#ff9f0a"
     up: "#30d158"
-    down: "#ff453a"
     brand-tint: "#0a84ff1f"
-    on-brand-tint: "#ffffff"
     inverse: "#2c2c2e"
     inverse-foreground: "#ffffff"
-    inverse-muted: "#98989f"
     inverse-brand: "#ffffff"
     info-tint: "#0a84ff1f"
     warn-tint: "#ff9f0a1f"
@@ -155,59 +120,48 @@ colors:
     up-tint: "#30d1581f"
     down-tint: "#ff453a1f"
     violet: "#bf5af2"
-    window-control-off: "#3d3d41"
-    dialog: "#1c1c1e"
-    card-edge: "#353538"
-    bevel: "#353538"
-    accent-bevel: "#353538"
-    disabled: "#323236"
-    disabled-foreground: "#98989f"
-    accent-pressed: "#0a84ff"
-    on-accent-pressed: "#ffffff"
-    selected-foreground: "#ffffff"
-    pressed-foreground: "#ffffff"
 typography:
   caption:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 10px
     fontWeight: 400
-    lineHeight: 1.3
+    lineHeight: 13px
     letterSpacing: 0px
   detail:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 11px
     fontWeight: 400
-    lineHeight: 1.2727272727272727
+    lineHeight: 14px
     letterSpacing: 0px
   body:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 13px
     fontWeight: 400
-    lineHeight: 1.2307692307692308
+    lineHeight: 16px
     letterSpacing: 0px
   label:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 13px
     fontWeight: 500
-    lineHeight: 1.2307692307692308
+    lineHeight: 16px
     letterSpacing: 0px
   title:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 13px
     fontWeight: 600
-    lineHeight: 1.2307692307692308
+    lineHeight: 16px
     letterSpacing: 0px
   headline:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 22px
     fontWeight: 600
-    lineHeight: 1.1818181818181819
+    lineHeight: 26px
     letterSpacing: 0px
   display:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 26px
     fontWeight: 600
-    lineHeight: 1.2307692307692308
+    lineHeight: 32px
     letterSpacing: 0px
 rounded:
   control: 8px
@@ -216,42 +170,31 @@ rounded:
 spacing:
   hit: 0px
   density:
-    row: 32px
-    pad: 14px
+    pad: 16px
     gap: 12px
-    surface: 12px
   control:
-    row: 36px
-    padding: 6px
-    gap: 10px
-    control: 16px
-    check: 12px
+    padding: 8px
+    gap: 8px
     dot: 6px
-    tabs: 28px
-    line: 28px
-    clear: 16px
   height:
     sm: 24px
     md: 28px
     lg: 32px
   stroke:
     hairline: 0.5px
-    surface: 0.5px
     control: 1px
   focus:
     width: 3px
     offset: 0px
   icon:
     sm: 12px
-    md: 14px
-    lg: 16px
+    md: 16px
+    lg: 20px
 motion:
   enter:
     duration: 420ms
     delay: 0ms
     timingFunction: "cubic-bezier(0.333333, 1, 0.666667, 1)"
-  shake:
-    duration: 500ms
 components:
   button-primary:
     backgroundColor: "{colors.light.primary}"
@@ -281,16 +224,16 @@ components:
     backgroundColor: "{colors.light.inset}"
     textColor: "{colors.light.foreground}"
     rounded: "{rounded.control}"
-    padding: "{spacing.density.surface}"
+    padding: "{spacing.control.padding}"
   input-field:
-    backgroundColor: "{colors.light.field}"
+    backgroundColor: "{colors.light.inset}"
     textColor: "{colors.light.foreground}"
     typography: "{typography.label}"
     rounded: "{rounded.control}"
     height: "{spacing.height.md}"
     padding: "{spacing.control.padding}"
   badge-chip:
-    backgroundColor: "{colors.light.muted}"
+    backgroundColor: "{colors.light.secondary}"
     textColor: "{colors.light.secondary-foreground}"
     typography: "{typography.caption}"
     rounded: "{rounded.control}"
@@ -301,13 +244,13 @@ components:
     rounded: "{rounded.container}"
     padding: "{spacing.control.padding}"
   dialog:
-    backgroundColor: "{colors.light.dialog}"
+    backgroundColor: "{colors.light.card}"
     textColor: "{colors.light.card-foreground}"
     typography: "{typography.body}"
     rounded: "{rounded.modal}"
     padding: "{spacing.density.pad}"
   tooltip:
-    backgroundColor: "{colors.light.popover}"
+    backgroundColor: "#ffffffb8"
     textColor: "{colors.light.inverse-foreground}"
     typography: "{typography.detail}"
     rounded: "{rounded.container}"
@@ -317,27 +260,27 @@ components:
     typography: "{typography.body}"
     rounded: "{rounded.container}"
   switch-track:
-    backgroundColor: "{colors.light.track}"
+    backgroundColor: "{colors.light.inset}"
     rounded: "{rounded.control}"
   switch-track-on:
     backgroundColor: "{colors.light.primary}"
   switch-knob:
     backgroundColor: "{colors.light.knob}"
   switch-knob-on:
-    backgroundColor: "{colors.light.knob}"
+    backgroundColor: "{colors.light.primary-foreground}"
   slider-handle:
     backgroundColor: "{colors.light.knob}"
   tabs-thumb:
-    backgroundColor: "{colors.light.knob}"
+    backgroundColor: "#efeff0b8"
     textColor: "{colors.light.foreground}"
     typography: "{typography.label}"
     rounded: "{rounded.control}"
   toggle-on:
-    backgroundColor: "{colors.light.muted}"
-    textColor: "{colors.light.foreground}"
+    backgroundColor: "{colors.light.primary}"
+    textColor: "{colors.light.primary-foreground}"
     rounded: "{rounded.control}"
   glass-overlay:
-    backgroundColor: "#ffffff66"
+    backgroundColor: "#ffffffb8"
     textColor: "{colors.light.popover-foreground}"
     rounded: "{rounded.container}"
 ---
@@ -373,16 +316,12 @@ Apple Human Interface Guidelines / UIKit system palette (`systemBlue`, `systemGr
 - **`field`** (light `#efeff0`, dark `#323236`): Form input background (UIKit tertiarySystemFill composited over card).
 - **`hover`** (light `#0000000f`, dark `#ffffff0f`): Pointer hover tint (6% foreground ink over transparent).
 - **`track`** (light `#e9e9eb`, dark `#39393d`): Switch and slider track (UIKit secondarySystemFill composited over card).
-- **`slider-track`** (light `#e9e9eb`, dark `#39393d`): Inactive slider track fill aliased to {color.track}.
 - **`knob`** (`#ffffff`): Switch knob and slider handle (pure white).
 - **`inverse`** (light `#ffffff`, dark `#2c2c2e`): High-contrast surface for toasts and tooltips.
-- **`dialog`** (light `#ffffff`, dark `#1c1c1e`): Modal dialog container surface.
-- **`disabled`** (light `#efeff0`, dark `#323236`): Disabled control container surface.
 
 ### Ink
 
 - **`on-media`** (`#ffffff`): White ink over photographs and dark media surfaces; invariant across appearances.
-- **`chart-foreground`** (`#000000`): Dark ink on light chart tiles matching UIKit light label (#000000).
 - **`foreground`** (light `#000000`, dark `#ffffff`): Primary label ink (UIKit label).
 - **`card-foreground`** (light `#000000`, dark `#ffffff`): Primary text and icon ink on card surfaces.
 - **`popover-foreground`** (light `#000000`, dark `#ffffff`): Primary text and icon ink on popover surfaces.
@@ -392,17 +331,10 @@ Apple Human Interface Guidelines / UIKit system palette (`systemBlue`, `systemGr
 - **`sidebar-foreground`** (light `#000000`, dark `#ffffff`): Primary text and icon ink inside the sidebar.
 - **`sidebar-accent-foreground`** (light `#000000`, dark `#ffffff`): Text and icon ink on active sidebar rows.
 - **`faint`** (light `#c5c5c7`, dark `#5a5a5f`): Tertiary label ink for placeholders and quiet captions (UIKit tertiaryLabel).
-- **`code`** (light `#000000`, dark `#ffffff`): Monospace code text ink inside recessed wells.
 - **`inverse-foreground`** (light `#000000`, dark `#ffffff`): Primary text ink on inverse surfaces.
-- **`inverse-muted`** (light `#8a8a8e`, dark `#98989f`): Secondary text, spinner, and close-icon ink on inverse surfaces.
-- **`disabled-foreground`** (light `#8a8a8e`, dark `#98989f`): Disabled control label and icon ink.
-- **`selected-foreground`** (light `#000000`, dark `#ffffff`): Label and icon ink on selected or toggled-on controls.
-- **`pressed-foreground`** (light `#000000`, dark `#ffffff`): Label and icon ink on pressed neutral or ghost controls.
 
 ### Brand
 
-- **`brand-fill`** (light `#007aff`, dark `#0a84ff`): Primary brand action fill, aliased to {color.primary} (UIKit systemBlue).
-- **`on-brand`** (`#ffffff`): Foreground text and icons on brand-fill surfaces, aliased to {color.primary-foreground}.
 - **`primary`** (light `#007aff`, dark `#0a84ff`): System accent blue (UIKit systemBlue).
 - **`primary-foreground`** (`#ffffff`): Text and icon ink on primary brand action fills.
 - **`sidebar-primary`** (light `#007aff`, dark `#0a84ff`): Primary action highlight color in the sidebar.
@@ -410,10 +342,7 @@ Apple Human Interface Guidelines / UIKit system palette (`systemBlue`, `systemGr
 - **`brand`** (light `#007aff`, dark `#0a84ff`): Inline brand accent ink (UIKit systemBlue).
 - **`brand-edge`** (light `#dcdcdd`, dark `#353538`): Hairline border on primary accent-filled controls.
 - **`brand-tint`** (light `#007aff1f`, dark `#0a84ff1f`): Translucent brand wash (12% brand over transparent).
-- **`on-brand-tint`** (light `#000000`, dark `#ffffff`): Text and icon ink on brand-tint surfaces.
 - **`inverse-brand`** (`#ffffff`): Accent action color on inverse surfaces.
-- **`accent-pressed`** (light `#007aff`, dark `#0a84ff`): Accent control fill while pressed.
-- **`on-accent-pressed`** (`#ffffff`): Ink on pressed accent control fills.
 
 ### Status
 
@@ -426,7 +355,6 @@ Apple Human Interface Guidelines / UIKit system palette (`systemBlue`, `systemGr
 - **`info`** (light `#007aff`, dark `#0a84ff`): Informational semantic color (UIKit systemBlue).
 - **`warn`** (light `#ff9500`, dark `#ff9f0a`): Warning semantic color (UIKit systemOrange).
 - **`up`** (light `#34c759`, dark `#30d158`): Positive trend semantic color (UIKit systemGreen).
-- **`down`** (light `#ff3b30`, dark `#ff453a`): Negative trend and decline semantic color.
 - **`info-tint`** (light `#007aff1f`, dark `#0a84ff1f`): Translucent informational wash (12% info over transparent).
 - **`warn-tint`** (light `#ff95001f`, dark `#ff9f0a1f`): Translucent warning wash (12% warn over transparent).
 - **`destructive-tint`** (light `#ff3b301f`, dark `#ff453a1f`): Translucent destructive wash (12% destructive over transparent).
@@ -436,49 +364,39 @@ Apple Human Interface Guidelines / UIKit system palette (`systemBlue`, `systemGr
 
 ### Chrome
 
-- **`window-close`** (`#ff5f57`): macOS window close traffic-light button fill.
-- **`window-minimize`** (`#febc2e`): macOS window minimize traffic-light button fill.
-- **`window-zoom`** (`#28c840`): macOS window zoom traffic-light button fill.
-- **`window-control-ink`** (`#00000080`): Glyph ink inside macOS window traffic-light buttons.
-- **`window-control-edge`** (`#0000001f`): Hairline border around macOS window traffic-light buttons.
 - **`border`** (light `#dcdcdd`, dark `#353538`): Hairline separator (UIKit separator hairline composited over card).
 - **`input`** (light `#c6c6c8`, dark `#3e3e41`): Input control border (UIKit separator composited over card).
 - **`ring`** (light `#007aff`, dark `#0a84ff`): Focus ring color matching UIKit systemBlue.
 - **`sidebar-border`** (light `#dcdcdd`, dark `#353538`): Sidebar divider and toolbar hairline border color.
 - **`sidebar-ring`** (light `#007aff`, dark `#0a84ff`): Focus indicator ring color inside the sidebar.
 - **`glass-edge`** (light `#dcdcdd`, dark `#353538`): Hairline border on glass, pill, and floating overlay surfaces.
-- **`scrollbar-thumb`** (light `#bebec2`, dark `#4c4c4f`): Scrollbar thumb resting fill.
-- **`scrollbar-thumb-hover`** (light `#9f9fa3`, dark `#7a7a7f`): Scrollbar thumb fill on pointer hover.
 - **`line`** (light `#dcdcdd`, dark `#353538`): Inset divider hairline (UIKit hairline composited over card).
 - **`ring-halo`** (light `#007aff4d`, dark `#0a84ff4d`): Outer keyboard focus halo (30% ring color over transparent).
-- **`window-control-off`** (light `#e4e4e6`, dark `#3d3d41`): Unfocused window traffic-light fill (UIKit systemFill composited over card).
-- **`card-edge`** (light `#dcdcdd`, dark `#353538`): Hairline border on card and section containers.
-- **`bevel`** (light `#dcdcdd`, dark `#353538`): Directional control elevation bevel stroke.
-- **`accent-bevel`** (light `#dcdcdd`, dark `#353538`): Accent control elevation top and side bevel stroke.
 
 ## Typography
 
 Semantic typography roles referencing tier-specific font.size and font.line-height.
 
 - **Font stacks:** Font family stacks.
+  - `sans` (`system-ui`): Primary sans-serif font family stack.
   - `mono` (`monospace`): Monospace font family for code blocks and numeric readouts.
-  - Semantic body `fontFamily`: `null` (system UI default).
+  - Every role's `fontFamily` is `{font.family.sans}`.
 
-- **`caption`** (10px (touch: 12px), weight 400, line-height 1.30, letter-spacing 0px): Small captions and segmented counter labels.
-- **`detail`** (11px (touch: 13px), weight 400, line-height 1.27, letter-spacing 0px): Sidebar section labels, counts, and supporting metadata.
-- **`body`** (13px (touch: 17px), weight 400, line-height 1.23, letter-spacing 0px): Standard body copy, list rows, and dialog content.
-- **`label`** (13px (touch: 17px), weight 500, line-height 1.23, letter-spacing 0px): Control labels, form labels, and interactive triggers.
-- **`title`** (13px (touch: 17px), weight 600, line-height 1.23, letter-spacing 0px): Card and section headings.
-- **`headline`** (22px, weight 600, line-height 1.18, letter-spacing 0px): Page-level headings.
-- **`display`** (26px (touch: 34px), weight 600, line-height 1.23, letter-spacing 0px): Large display numerals and hero headings.
+- **`caption`** (10px (touch: 12px), weight 400, line-height 13px, line-height 16px on touch, letter-spacing 0px): Small captions and segmented counter labels.
+- **`detail`** (11px (touch: 13px), weight 400, line-height 14px, line-height 18px on touch, letter-spacing 0px): Sidebar section labels, counts, and supporting metadata.
+- **`body`** (13px (touch: 17px), weight 400, line-height 16px, line-height 22px on touch, letter-spacing 0px): Standard body copy, list rows, and dialog content.
+- **`label`** (13px (touch: 17px), weight 500, line-height 16px, line-height 22px on touch, letter-spacing 0px): Control labels, form labels, and interactive triggers.
+- **`title`** (13px (touch: 17px), weight 600, line-height 16px, line-height 22px on touch, letter-spacing 0px): Card and section headings.
+- **`headline`** (22px, weight 600, line-height 26px, line-height 28px on touch, letter-spacing 0px): Page-level headings.
+- **`display`** (26px (touch: 34px), weight 600, line-height 32px, line-height 41px on touch, letter-spacing 0px): Large display numerals and hero headings.
 
 ## Layout
 
 Ergonomic sizing scales for pointer input.
 
 - **Hit target:** Minimum hit target size (0 disables padding expansion).
-- **Density:** Page-level row, padding, gap, and surface spacing metrics.
-- **Control geometry:** Control internal geometry and switch size tier.
+- **Density:** Page-level padding and gap.
+- **Control geometry:** Control internal spacing and switch size tier.
 - **Control heights:** Standard control heights (sm, md, lg).
 - **Switch size tier (pointer):** `regular`.
 - **Icons:** Standard icon dimensions (sm, md, lg).
@@ -492,7 +410,6 @@ Apple Liquid Glass and Retina hairline depth: `glass`, `menu`, and `raised` fini
 
 - **Strokes:** Border stroke widths.
   - `stroke.hairline` (0.5px): Retina 0.5px hairline divider width per Apple HIG.
-  - `stroke.surface` (0.5px): Retina 0.5px container surface hairline width per Apple HIG.
   - `stroke.control` (1px): Interactive control border width.
 - **Focus indicator (`style: "halo"`):** Focus ring geometry and style enum.
   - `focus.width` (3px): Focus ring stroke width.
@@ -513,14 +430,12 @@ Semantic corner radius roles by layer, referencing base dimension.radius.* token
 
 ## Motion & Micro-interaction
 
-Interactive spring and timing physics roles.
+Interactive spring and timing physics roles: fast, default, slow.
 
 - **`enter`** (420ms, `cubic-bezier(0.333333, 1, 0.666667, 1)`): Default surface entrance transition.
-- **`shake`** (500ms): Duration of validation-error shake animation.
-- **`press`** (spring: stiffness=520, damping=34 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): Spring or timing physics for press-down feedback.
-- **`settle`** (spring: stiffness=320, damping=30 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): Spring or timing physics for release settling.
-- **`control`** (spring: stiffness=1218, damping=70 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): Spring or timing physics for small control toggles and thumbs.
-- **`move`** (spring: stiffness=504, damping=38 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): Spring or timing physics for layout and indicator movement.
+- **`fast`** (spring: stiffness=1218, damping=70 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): Quickest response: small control toggles and thumbs.
+- **`default`** (spring: stiffness=520, damping=34 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): Everyday feedback: presses, releases and modest movement.
+- **`slow`** (spring: stiffness=320, damping=30 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): Slowest: large surfaces and long-travel layout movement.
 - **Press & ripple** (`press-scale: 1`, `pressed-opacity: 0.7`, `ripple: false`): Interaction state opacities, press scale, and ripple switch.
 - **Timing curves:** Named timing curves shared across themes.
 
@@ -530,35 +445,18 @@ Voice & Content Strategy is intentionally omitted: this theme defines visual tok
 
 ## Components
 
-Appearance-invariant surface finish recipes (background, gradient, border, shadow, blur, material).
-
-- **`finish.card`**: The card face: an inner highlight, a hairline, a contact shadow and a cast one.
-- **`finish.section`**: The flat surface a section's content or card sits on (no shadow by default).
-- **`finish.inset`**: The well inside a card: sunk by its inner shadow alone.
-- **`finish.field`**: A field well: its edge and its inner shadow.
-- **`finish.raised`** (backdropFilter: `blur(30px)`; material: `{"apple":{"glass":"regular","tint":null}}`): Raised control surface with Liquid Glass material (regular) and hairline shadow.
-- **`finish.hover`**: The step the surface takes under the pointer.
-- **`finish.pressed`**: The step it takes while pressed.
-- **`finish.disabled`**: A disabled control container surface.
-- **`finish.light`**: The main action brightest step: the accent gradient.
-- **`finish.accent`**: The accent face (the same as light).
-- **`finish.accentPressed`**: The accent control surface while pressed (identical to accent when dimmed via state.accent-pressed-opacity).
-- **`finish.track`**: A groove: an inner shadow and an edge.
-- **`finish.fill`**: The filled run: a slider, a progress bar, a switch that is on.
-- **`finish.knob`**: A switch knob, off.
-- **`finish.knobOn`**: A switch knob, on.
-- **`finish.handle`**: A slider handle (kept apart from knob).
-- **`finish.pill`**: The upstream capsule, left to the app.
-- **`finish.thumb`**: The chosen segment of a segmented control or a tag.
-- **`finish.on`**: A chosen switch or box, and the mark on it.
-- **`finish.chip`**: A chosen value label inside a field: a fill, an inner highlight and an edge.
-- **`finish.glass`** (backdropFilter: `blur(30px)`; material: `{"apple":{"glass":"regular","tint":null},"ios":{"backdrop":"thin"}}`): Liquid Glass overlay surface with translucent popover fill, 30px blur fallback, and regular/thin Apple material.
-- **`finish.menu`** (backdropFilter: `blur(30px)`; material: `{"apple":{"glass":"regular","tint":null},"ios":{"backdrop":"regular"}}`): Floating menu/popover surface with translucent popover fill, hairline + drop shadow, and Liquid Glass material.
-- **`finish.dialog`**: A dialog face: the card colour with the menu shadow.
-- **`finish.grabber`**: The drag handle pill at the top of a bottom sheet.
-- **`finish.tooltip`**: A tooltip face: the popover pane, without a shadow.
-- **`finish.inverse`** (backdropFilter: `blur(30px)`; material: `{"apple":{"glass":"regular","tint":null},"ios":{"backdrop":"regular"}}`): Toast/inverse floating surface using Liquid Glass material over inverse fill.
-- **`finish.groove`**: A groove cut inside a menu.
+- **`finish.card`**: A surface that holds content: a card, a section.
+- **`finish.inset`**: A well cut into a surface: an inset, a field, a track, a groove.
+- **`finish.raised`** (backdropFilter: `blur(30px)`; material: `"glass"`): A control on a surface: a button, a chip, a pill.
+- **`finish.overlay`** (backdropFilter: `blur(30px)`; material: `"glass"`): A panel floating over the page: a menu, a toast.
+- **`finish.modal`**: A surface the page waits for: a dialog, a sheet.
+- **`finish.inverse`** (backdropFilter: `blur(30px)`; material: `"glass"`): The page's inverse: an inverse surface, a tooltip.
+- **`finish.glass`** (backdropFilter: `blur(30px)`; material: `"glass"`): A translucent surface: what is behind it shows through.
+- **`finish.accent`**: The accent's own surface, with its ink.
+- **`finish.knob`**: A knob: a switch's thumb, a slider's handle, a segmented thumb.
+- **`finish.hover`**: A control under the pointer.
+- **`finish.pressed`**: A control held down.
+- **`finish.disabled`**: A control that cannot be used.
 - **Disabled handling** (content=0.3, fill=false): UIKit disabled content opacity multiplier (0.3); containers keep resting fills.
 
 ## Do's and Don'ts
@@ -572,5 +470,5 @@ Appearance-invariant surface finish recipes (background, gradient, border, shado
 - **Don't:** Never write color literals (`#...`, `rgb()`, `oklch()`) in component, lib, or demo-adapter code.
 - **Don't:** Never store `colors.*`, `finish.*`, or `shape.*` values in module-level constants; they freeze on theme or appearance switches.
 - **Don't:** Never delete finish fields or alter the merged finish key set across appearances or themes.
-- **Don't:** Do not replace Retina `0.5px` `stroke.hairline`/`stroke.surface` with thick borders or `circular` corners.
+- **Don't:** Do not replace Retina `0.5px` `stroke.hairline` with thick borders or `circular` corners.
 - **Don't:** Do not set `macos.backdrop` when Liquid Glass `glassEffect` is active on macOS 26+.

@@ -530,8 +530,8 @@ export function ChatDemo() {
     };
 
     // Motion, sprung natively when the state changes.
-    const menuValue = follow(() => (menu() ? 1 : 0), motion.settle);
-    const bannerValue = follow(() => (banner() ? 1 : 0), motion.settle);
+    const menuValue = follow(() => (menu() ? 1 : 0), motion.default);
+    const bannerValue = follow(() => (banner() ? 1 : 0), motion.default);
 
     const streaming = () => liveId() !== null;
     const canSend = () => !!draft().trim() || !!attachment();
@@ -945,7 +945,7 @@ export function ChatDemo() {
                 minHeight: 48,
                 paddingHorizontal: 14,
                 ...rounded(shape.container),
-                ...finish.menu,
+                ...finish.overlay,
                 borderWidth: 1,
                 borderColor: alpha(bannerKind() === "offline" ? colors.warn : colors.up, 0.35),
               }}
@@ -1011,7 +1011,7 @@ export function ChatDemo() {
               <View
                 style={{
                   ...rounded(shape.container),
-                  ...finish.menu,
+                  ...finish.overlay,
                   borderWidth: 1,
                   paddingVertical: 6,
                   // 460 at most, and short of a low window: its rows scroll.
@@ -1119,7 +1119,7 @@ export function ChatDemo() {
               borderRadius: terminal ? 0 : 24,
               ...(terminal ? {} : rounded(24)),
               // Glass like the menu above it, without the blur: nothing scrolls under it.
-              ...finish.menu,
+              ...finish.overlay,
               backdropFilter: undefined,
               borderWidth: 1,
               padding: 6,
@@ -1209,7 +1209,7 @@ export function ChatDemo() {
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: colors.primary,
-                    ...finish.light,
+                    ...finish.accent,
                   }}
                   hoverStyle={{ opacity: 0.86 }}
                   activeStyle={pressSink(0.9).activeStyle}

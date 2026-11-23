@@ -79,50 +79,6 @@
   "typography": {
     "$type": "typography",
     "$description": "WinUI 3 typography scale mapped from TextBlock_themeresources.xaml (400 and 600 weights only).",
-    "$extensions": {
-      "dev.aning.shadcn-nsh": {
-        "fontFamily": "{font.family.sans}"
-      }
-    },
-    "caption": {
-      "$value": {
-        "fontFamily": "{font.family.sans}",
-        "fontSize": "{font.size.caption}",
-        "fontWeight": 400,
-        "lineHeight": "{font.line-height.caption}",
-        "letterSpacing": {
-          "value": 0,
-          "unit": "px"
-        }
-      },
-      "$description": "Small captions and segmented counter labels."
-    },
-    "detail": {
-      "$value": {
-        "fontFamily": "{font.family.sans}",
-        "fontSize": "{font.size.detail}",
-        "fontWeight": 400,
-        "lineHeight": "{font.line-height.detail}",
-        "letterSpacing": {
-          "value": 0,
-          "unit": "px"
-        }
-      },
-      "$description": "Sidebar section labels, counts, and supporting metadata."
-    },
-    "body": {
-      "$value": {
-        "fontFamily": "{font.family.sans}",
-        "fontSize": "{font.size.body}",
-        "fontWeight": 400,
-        "lineHeight": "{font.line-height.body}",
-        "letterSpacing": {
-          "value": 0,
-          "unit": "px"
-        }
-      },
-      "$description": "Standard body copy, list rows, and dialog content."
-    },
     "label": {
       "$value": {
         "fontFamily": "{font.family.sans}",
@@ -135,45 +91,6 @@
         }
       },
       "$description": "Control labels, form labels, and interactive triggers."
-    },
-    "title": {
-      "$value": {
-        "fontFamily": "{font.family.sans}",
-        "fontSize": "{font.size.title}",
-        "fontWeight": 600,
-        "lineHeight": "{font.line-height.title}",
-        "letterSpacing": {
-          "value": 0,
-          "unit": "px"
-        }
-      },
-      "$description": "Card and section headings."
-    },
-    "headline": {
-      "$value": {
-        "fontFamily": "{font.family.sans}",
-        "fontSize": "{font.size.headline}",
-        "fontWeight": 600,
-        "lineHeight": "{font.line-height.headline}",
-        "letterSpacing": {
-          "value": 0,
-          "unit": "px"
-        }
-      },
-      "$description": "Page-level headings."
-    },
-    "display": {
-      "$value": {
-        "fontFamily": "{font.family.sans}",
-        "fontSize": "{font.size.display}",
-        "fontWeight": 600,
-        "lineHeight": "{font.line-height.display}",
-        "letterSpacing": {
-          "value": 0,
-          "unit": "px"
-        }
-      },
-      "$description": "Large display numerals and hero headings."
     }
   },
   "shape": {
@@ -187,24 +104,6 @@
   "color": {
     "$type": "color",
     "$description": "Appearance-invariant C-layer color roles shared by light and dark modes.",
-    "brand-fill": {
-      "$value": "{color.primary}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Primary brand action fill, aliased to {color.primary} (WinUI AccentFillColorDefault)."
-    },
-    "on-brand": {
-      "$value": "{color.primary-foreground}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Foreground text and icons on brand-fill surfaces, aliased to {color.primary-foreground} (WinUI TextOnAccentFillColorPrimary)."
-    },
     "scrim": {
       "$value": {
         "colorSpace": "oklch",
@@ -217,7 +116,7 @@
           "role": "surface"
         }
       },
-      "$description": "Translucent backdrop scrim behind dialogs and overlays (WinUI SmokeFillColorDefault #4D000000)."
+      "$description": "Translucent backdrop scrim behind modals and overlays (WinUI SmokeFillColorDefault #4D000000)."
     },
     "media": {
       "$value": {
@@ -244,86 +143,6 @@
         }
       },
       "$description": "White ink over photographs and dark media surfaces; invariant across appearances."
-    },
-    "chart-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.21779, 0, 0],
-        "hex": "#1a1a1a"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Dark ink on light chart tiles matching WinUI light TextFillColorPrimary."
-    },
-    "window-close": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.6936, 0.19638, 26.364],
-        "hex": "#ff5f57"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "macOS window close traffic-light button fill."
-    },
-    "window-minimize": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.83478, 0.1612, 80.911],
-        "hex": "#febc2e"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "macOS window minimize traffic-light button fill."
-    },
-    "window-zoom": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0.72803, 0.21734, 144.712],
-        "hex": "#28c840"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "macOS window zoom traffic-light button fill."
-    },
-    "window-control-ink": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0, 0, 0],
-        "alpha": 0.5,
-        "hex": "#000000"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Glyph ink inside macOS window traffic-light buttons (50% black literal)."
-    },
-    "window-control-edge": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [0, 0, 0],
-        "alpha": 0.12,
-        "hex": "#000000"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Hairline border around macOS window traffic-light buttons (12% black literal)."
     }
   },
   "state": {
@@ -336,10 +155,6 @@
     "pressed-opacity": {
       "$value": 1,
       "$description": "Content stays full opacity when pressed (1; fill brush swap shows press)."
-    },
-    "accent-pressed-opacity": {
-      "$value": 1,
-      "$description": "Pressed opacity for accent controls when no pressed accent finish replaces it."
     },
     "disabled": {
       "$description": "WinUI 3 disabled styling: 0.36 TextFillColorDisabled content with fill: true container override.",
@@ -372,9 +187,9 @@
     }
   },
   "motion": {
-    "$description": "Interactive spring and timing physics roles.",
-    "press": {
-      "$description": "WinUI 3 ToggleSwitch press timing (83ms decelerate, ToggleSwitch_themeresources.xaml:321).",
+    "$description": "Interactive spring and timing physics roles: fast, default, slow.",
+    "fast": {
+      "$description": "WinUI 3 ControlFasterAnimationDuration (83ms, decelerate; ToggleSwitch_themeresources.xaml:321).",
       "timing": {
         "$type": "transition",
         "$value": {
@@ -388,11 +203,29 @@
           },
           "timingFunction": "{cubicBezier.decelerate}"
         },
-        "$description": "Timing curve and duration for press."
+        "$description": "Timing curve and duration for fast."
       }
     },
-    "settle": {
-      "$description": "WinUI 3 250ms settle timing with Direct Entrance decelerate curve.",
+    "default": {
+      "$description": "WinUI 3 ControlFastAnimationDuration (167ms, decelerate; Common_themeresources_any.xaml).",
+      "timing": {
+        "$type": "transition",
+        "$value": {
+          "duration": {
+            "value": 167,
+            "unit": "ms"
+          },
+          "delay": {
+            "value": 0,
+            "unit": "ms"
+          },
+          "timingFunction": "{cubicBezier.decelerate}"
+        },
+        "$description": "Timing curve and duration for default."
+      }
+    },
+    "slow": {
+      "$description": "WinUI 3 ControlNormalAnimationDuration (250ms, decelerate; motion.md).",
       "timing": {
         "$type": "transition",
         "$value": {
@@ -406,43 +239,7 @@
           },
           "timingFunction": "{cubicBezier.decelerate}"
         },
-        "$description": "Timing curve and duration for settle."
-      }
-    },
-    "control": {
-      "$description": "WinUI 3 167ms control timing with Point-to-Point curve.",
-      "timing": {
-        "$type": "transition",
-        "$value": {
-          "duration": {
-            "value": 167,
-            "unit": "ms"
-          },
-          "delay": {
-            "value": 0,
-            "unit": "ms"
-          },
-          "timingFunction": "{cubicBezier.point-to-point}"
-        },
-        "$description": "Timing curve and duration for control."
-      }
-    },
-    "move": {
-      "$description": "WinUI 3 333ms move timing with Point-to-Point curve.",
-      "timing": {
-        "$type": "transition",
-        "$value": {
-          "duration": {
-            "value": 333,
-            "unit": "ms"
-          },
-          "delay": {
-            "value": 0,
-            "unit": "ms"
-          },
-          "timingFunction": "{cubicBezier.point-to-point}"
-        },
-        "$description": "Timing curve and duration for move."
+        "$description": "Timing curve and duration for slow."
       }
     }
   },

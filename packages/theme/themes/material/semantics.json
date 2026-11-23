@@ -1,14 +1,13 @@
 {
   "typography": {
-    "fontFamily": null,
     "caption": {
       "fontSize": {
         "pointer": 11,
         "touch": 11
       },
       "lineHeight": {
-        "pointer": 1.4545454545454546,
-        "touch": 1.4545454545454546
+        "pointer": 16,
+        "touch": 16
       },
       "fontWeight": 500,
       "letterSpacing": 0.5
@@ -19,8 +18,8 @@
         "touch": 12
       },
       "lineHeight": {
-        "pointer": 1.3333333333333333,
-        "touch": 1.3333333333333333
+        "pointer": 16,
+        "touch": 16
       },
       "fontWeight": 400,
       "letterSpacing": 0.4
@@ -31,8 +30,8 @@
         "touch": 14
       },
       "lineHeight": {
-        "pointer": 1.4285714285714286,
-        "touch": 1.4285714285714286
+        "pointer": 20,
+        "touch": 20
       },
       "fontWeight": 400,
       "letterSpacing": 0.25
@@ -43,8 +42,8 @@
         "touch": 14
       },
       "lineHeight": {
-        "pointer": 1.4285714285714286,
-        "touch": 1.4285714285714286
+        "pointer": 20,
+        "touch": 20
       },
       "fontWeight": 500,
       "letterSpacing": 0.1
@@ -55,8 +54,8 @@
         "touch": 16
       },
       "lineHeight": {
-        "pointer": 1.5,
-        "touch": 1.5
+        "pointer": 24,
+        "touch": 24
       },
       "fontWeight": 500,
       "letterSpacing": 0.15
@@ -67,8 +66,8 @@
         "touch": 24
       },
       "lineHeight": {
-        "pointer": 1.3333333333333333,
-        "touch": 1.3333333333333333
+        "pointer": 32,
+        "touch": 32
       },
       "fontWeight": 400,
       "letterSpacing": 0
@@ -79,8 +78,8 @@
         "touch": 36
       },
       "lineHeight": {
-        "pointer": 1.2222222222222223,
-        "touch": 1.2222222222222223
+        "pointer": 44,
+        "touch": 44
       },
       "fontWeight": 400,
       "letterSpacing": 0
@@ -94,54 +93,38 @@
     },
     "size": {
       "hit": {
-        "pointer": 44,
+        "pointer": 0,
         "touch": 48
       },
       "density": {
         "pointer": {
-          "row": 48,
           "pad": 16,
-          "gap": 12,
-          "surface": 12
+          "gap": 12
         },
         "touch": {
-          "row": 56,
           "pad": 16,
-          "gap": 12,
-          "surface": 16
+          "gap": 12
         }
       },
       "control": {
         "pointer": {
-          "row": 48,
           "padding": 8,
-          "gap": 12,
-          "control": 18,
-          "check": 18,
+          "gap": 8,
           "dot": 10,
-          "tabs": 48,
-          "line": 48,
-          "clear": 20,
           "switch": "regular"
         },
         "touch": {
-          "row": 56,
-          "padding": 10,
-          "gap": 12,
-          "control": 18,
-          "check": 18,
+          "padding": 8,
+          "gap": 8,
           "dot": 10,
-          "tabs": 48,
-          "line": 56,
-          "clear": 24,
           "switch": "regular"
         }
       },
       "height": {
         "pointer": {
-          "sm": 32,
-          "md": 40,
-          "lg": 56
+          "sm": 24,
+          "md": 32,
+          "lg": 48
         },
         "touch": {
           "sm": 32,
@@ -152,7 +135,6 @@
     },
     "stroke": {
       "hairline": 1,
-      "surface": 0,
       "control": 1
     },
     "focus": {
@@ -162,12 +144,12 @@
     },
     "icon": {
       "pointer": {
-        "sm": 18,
+        "sm": 16,
         "md": 20,
         "lg": 24
       },
       "touch": {
-        "sm": 18,
+        "sm": 16,
         "md": 20,
         "lg": 24
       }
@@ -189,14 +171,11 @@
     },
     "ripple": true,
     "pressed-opacity": 1,
-    "accent-pressed-opacity": 1,
+    "rest-opacity": 0.38,
     "disabled": {
       "content": 0.38,
       "fill": true
     }
-  },
-  "duration": {
-    "shake": 500
   },
   "transition": {
     "enter": {
@@ -205,254 +184,150 @@
     }
   },
   "motion": {
-    "press": {
+    "fast": {
       "stiffness": 800,
       "damping": 33.94
     },
-    "settle": {
+    "default": {
       "stiffness": 380,
       "damping": 31.19
     },
-    "control": {
-      "stiffness": 1600,
-      "damping": 80
-    },
-    "move": {
-      "stiffness": 380,
-      "damping": 31.19
+    "slow": {
+      "stiffness": 200,
+      "damping": 22.63
     }
   },
   "controls": "material",
   "finishes": {
     "shared": {
       "card": {
-        "gradient": "linear-gradient(180deg, {card} 0%, {card} 100%)",
-        "material": {
-          "android": {
-            "elevation": 1
-          }
-        },
-        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)"
-      },
-      "section": {
         "background": "{card}",
         "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+        "foreground": "{foreground}",
         "border-color": "transparent",
-        "material": {
-          "android": {
-            "elevation": 1
-          }
-        }
+        "material": null,
+        "elevation": 1
       },
       "inset": {
-        "material": null,
-        "shadow": "none"
-      },
-      "field": {
         "shadow": "none",
+        "foreground": "{foreground}",
         "material": null
       },
       "raised": {
         "background": "{raised}",
-        "gradient": "linear-gradient(180deg, {raised} 0%, {raised} 100%)",
+        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+        "foreground": "{foreground}",
         "backdropFilter": "none",
-        "material": {
-          "android": {
-            "elevation": 1
-          }
-        },
-        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
-        "border-color": "transparent",
-        "border-top-color": "transparent",
-        "border-bottom-color": "transparent"
-      },
-      "hover": {
-        "material": {
-          "android": {
-            "elevation": 1
-          }
-        },
-        "background": "{raised}",
-        "gradient": "linear-gradient(180deg, {hover} 0%, {hover} 100%)",
-        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
-        "border-color": "transparent",
-        "border-top-color": "transparent",
-        "border-bottom-color": "transparent"
-      },
-      "pressed": {
-        "material": {
-          "android": {
-            "elevation": 1
-          }
-        },
-        "background": "{raised}",
-        "gradient": "linear-gradient(180deg, {raised} 0%, {raised} 100%)",
-        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
-        "border-color": "transparent",
-        "border-top-color": "transparent",
-        "border-bottom-color": "transparent"
-      },
-      "disabled": {
-        "background": "{disabled}",
-        "gradient": "linear-gradient(180deg, {disabled} 0%, {disabled} 100%)",
-        "shadow": "none",
-        "border-color": "transparent",
-        "material": null
-      },
-      "light": {
-        "background": "{primary}",
-        "gradient": "linear-gradient(180deg, {primary} 0%, {primary} 100%)",
+        "material": null,
         "border-color": "transparent",
         "border-top-color": "transparent",
         "border-bottom-color": "transparent",
-        "material": null,
-        "shadow": "none"
+        "elevation": 1
       },
-      "accent": {
-        "background": "{primary}",
-        "gradient": "linear-gradient(180deg, {primary} 0%, {primary} 100%)",
-        "border-color": "transparent",
-        "border-top-color": "transparent",
-        "border-bottom-color": "transparent",
-        "material": null,
-        "shadow": "none"
-      },
-      "accentPressed": {
-        "background": "{accent-pressed}",
-        "gradient": "linear-gradient(180deg, {accent-pressed} 0%, {accent-pressed} 100%)",
-        "border-color": "transparent",
-        "border-top-color": "transparent",
-        "border-bottom-color": "transparent",
-        "material": null,
-        "shadow": "none"
-      },
-      "track": {
-        "material": null,
-        "shadow": "none",
-        "border-color": "{input}"
-      },
-      "fill": {
-        "background": "transparent",
-        "shadow": "none",
-        "material": null,
-        "gradient": "linear-gradient(180deg, {primary} 0%, {primary} 100%)",
-        "border-color": "transparent"
-      },
-      "knob": {
-        "material": null,
-        "background": "{knob}",
-        "gradient": "linear-gradient(180deg, {knob} 0%, {knob} 100%)",
-        "shadow": "none",
-        "border-color": "transparent"
-      },
-      "knobOn": {
-        "background": "{on-brand}",
-        "gradient": "linear-gradient(180deg, {on-brand} 0%, {on-brand} 100%)",
-        "shadow": "none",
-        "material": null,
-        "border-color": "transparent"
-      },
-      "handle": {
-        "material": null,
-        "background": "{primary}",
-        "gradient": "linear-gradient(180deg, {primary} 0%, {primary} 100%)",
-        "shadow": "none",
-        "border-color": "transparent"
-      },
-      "pill": {
-        "background": "{raised}",
-        "gradient": "linear-gradient(180deg, {raised} 0%, {raised} 100%)",
-        "material": {
-          "android": {
-            "elevation": 1
-          }
-        },
-        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
-        "border-color": "transparent"
-      },
-      "thumb": {
-        "material": null,
-        "background": "{secondary}",
-        "gradient": "linear-gradient(180deg, {secondary} 0%, {secondary} 100%)",
-        "shadow": "none",
-        "border-color": "transparent"
-      },
-      "on": {
-        "material": null,
-        "background": "{secondary}",
-        "gradient": "linear-gradient(180deg, {secondary} 0%, {secondary} 100%)",
-        "shadow": "none",
-        "border-color": "transparent",
-        "border-top-color": "transparent",
-        "border-bottom-color": "transparent"
-      },
-      "chip": {
-        "background": "{background}",
-        "gradient": "linear-gradient(180deg, {background} 0%, {background} 100%)",
-        "border-color": "{border}",
-        "material": null,
-        "shadow": "none"
-      },
-      "glass": {
-        "border-color": "transparent",
-        "backdropFilter": "none",
-        "material": {
-          "android": {
-            "elevation": 3
-          }
-        },
+      "overlay": {
         "background": "{popover}",
-        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 2px 6px 2px oklch(0 0 0 / 0.15)"
-      },
-      "menu": {
-        "background": "{popover}",
+        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 2px 6px 2px oklch(0 0 0 / 0.15)",
+        "foreground": "{foreground}",
         "border-color": "transparent",
         "backdropFilter": "none",
-        "material": {
-          "android": {
-            "elevation": 3
-          }
-        },
-        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 2px 6px 2px oklch(0 0 0 / 0.15)"
+        "material": null,
+        "elevation": 3
       },
-      "dialog": {
-        "background": "{dialog}",
+      "modal": {
+        "shadow": "0 1px 3px oklch(0 0 0 / 0.3), 0 4px 8px 3px oklch(0 0 0 / 0.15)",
+        "foreground": "{foreground}",
         "border-color": "transparent",
-        "material": {
-          "android": {
-            "elevation": 6
-          }
-        },
-        "shadow": "0 1px 3px oklch(0 0 0 / 0.3), 0 4px 8px 3px oklch(0 0 0 / 0.15)"
-      },
-      "grabber": {
-        "background": "oklch(from {muted-foreground} l c h / 0.4)",
-        "shadow": "none",
-        "material": null
-      },
-      "tooltip": {
-        "background": "{inverse}",
-        "shadow": "none",
-        "border-color": "transparent",
-        "material": null
+        "material": null,
+        "elevation": 6
       },
       "inverse": {
         "background": "{inverse}",
+        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 2px 6px 2px oklch(0 0 0 / 0.15)",
+        "foreground": "{inverse-foreground}",
         "border-color": "transparent",
         "backdropFilter": "none",
-        "material": {
-          "android": {
-            "elevation": 6
-          }
-        },
-        "shadow": "0 1px 3px oklch(0 0 0 / 0.3), 0 4px 8px 3px oklch(0 0 0 / 0.15)"
-      },
-      "groove": {
         "material": null,
-        "shadow": "none"
+        "elevation": 6
+      },
+      "glass": {
+        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+        "foreground": "{foreground}",
+        "border-color": "transparent",
+        "backdropFilter": "none",
+        "material": null,
+        "background": "{popover}",
+        "elevation": 3
+      },
+      "accent": {
+        "background": "{primary}",
+        "shadow": "none",
+        "foreground": "{primary-foreground}",
+        "border-color": "transparent",
+        "border-top-color": "transparent",
+        "border-bottom-color": "transparent",
+        "pressed-opacity": 1,
+        "material": null
+      },
+      "knob": {
+        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+        "foreground": "{foreground}",
+        "material": null,
+        "background": "{knob}",
+        "border-color": "transparent"
+      },
+      "hover": {
+        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+        "foreground": "{foreground}",
+        "material": null,
+        "background": "{raised}",
+        "border-color": "transparent",
+        "border-top-color": "transparent",
+        "border-bottom-color": "transparent",
+        "elevation": 1
+      },
+      "pressed": {
+        "shadow": "none",
+        "foreground": "{foreground}",
+        "material": null,
+        "background": "{raised}",
+        "border-color": "transparent",
+        "border-top-color": "transparent",
+        "border-bottom-color": "transparent",
+        "elevation": 1
+      },
+      "disabled": {
+        "background": "oklch(from {foreground} l c h / 0.1)",
+        "shadow": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+        "foreground": "oklch(from {foreground} l c h / 0.38)",
+        "border-color": "transparent",
+        "material": null
       }
     },
-    "light": {},
-    "dark": {}
+    "light": {
+      "modal": {
+        "background": "oklch(0.93251 0.01479 312.24)"
+      }
+    },
+    "dark": {
+      "modal": {
+        "background": "oklch(0.2859 0.01293 298.633)"
+      }
+    }
+  },
+  "elevation": {
+    "light": {
+      "sm": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+      "md": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+      "lg": "0 1px 2px oklch(0 0 0 / 0.3), 0 2px 6px 2px oklch(0 0 0 / 0.15)",
+      "xl": "0 1px 3px oklch(0 0 0 / 0.3), 0 4px 8px 3px oklch(0 0 0 / 0.15)",
+      "inset": null
+    },
+    "dark": {
+      "sm": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+      "md": "0 1px 2px oklch(0 0 0 / 0.3), 0 1px 3px 1px oklch(0 0 0 / 0.15)",
+      "lg": "0 1px 2px oklch(0 0 0 / 0.3), 0 2px 6px 2px oklch(0 0 0 / 0.15)",
+      "xl": "0 1px 3px oklch(0 0 0 / 0.3), 0 4px 8px 3px oklch(0 0 0 / 0.15)",
+      "inset": null
+    }
   }
 }

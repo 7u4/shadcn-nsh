@@ -57,7 +57,7 @@ const hoverOf = (state: TabState) =>
  * A tab strip's look, the gallery's section switcher: a capsule track
  * `controlSize.tabs` high (30 with a pointer, 40 on a touch screen), sunk
  * into the surface with a hairline edge, the tabs sharing its width; the
- * selected tab's pill (`indicatorStyle`, `finish.thumb`) springs to the next
+ * selected tab's pill (`indicatorStyle`, `finish.raised`) springs to the next
  * one natively. `tab(state)`: a tab's props (hover on the others, the focus
  * ring, dimmed while disabled). Pair each tab with a `TabTitle`.
  */
@@ -76,7 +76,7 @@ export function tabsLook() {
         borderWidth: stroke.control,
         borderColor: colors.border,
         backgroundColor: colors.inset,
-        boxShadow: finish.track.boxShadow,
+        boxShadow: finish.inset.boxShadow,
       };
     },
     get indicatorStyle(): ViewStyle {
@@ -85,7 +85,7 @@ export function tabsLook() {
         bottom: inset,
         borderRadius: inner() / 2,
         borderWidth: stroke.control,
-        ...finish.thumb,
+        ...finish.raised,
       };
     },
     tab(state: TabState): TabLook {
@@ -237,7 +237,7 @@ export const TAB_ICON_ROOM = TAB_ICON + 6;
 
 /**
  * A tab's label (and icon, and a count in a capsule): the text color while
- * selected, fading in as the indicator arrives (`motion.move`), the icon's
+ * selected, fading in as the indicator arrives (`motion.default`), the icon's
  * two tints crossing over. It keeps its natural width (never truncated) and
  * reports it without the icon (`onWidth`): the same whether the icon shows
  * or not, so a row deciding on its icons by it never flips back.
@@ -253,7 +253,7 @@ export function TabTitle(props: {
   underline?: boolean;
   onWidth?: (bare: number) => void;
 }) {
-  const on = follow(() => (props.selected ? 1 : 0), motion.move);
+  const on = follow(() => (props.selected ? 1 : 0), motion.default);
   const listVariant = ListVariantContext();
   // A preset that marks the chosen tab with an underline also sets its label in the accent.
   const chosenInk = () =>

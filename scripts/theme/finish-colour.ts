@@ -17,9 +17,12 @@ import { findTokenRefs, type TokenKind } from "./tokens";
 export const colourFields = [
   "background",
   "gradient",
+  "foreground",
   "border-color",
   "border-top-color",
   "border-bottom-color",
+  "pressed-background",
+  "pressed-foreground",
 ] as const;
 
 /** One field's colour, and what the spec says about it. */

@@ -23,19 +23,14 @@ const defaultMerged = {
   dark: mergeFinishes(defaultSemantics.finishes, "dark"),
 };
 
-/** Optional C-layer tokens that a theme may declare only when it sets a family. */
-const optionalThemeTokens = new Set(["font-sans"]);
-
 /** The alternative themes: a directory each, holding the two files of the same shape. */
 const alternatives = readdirSync(join(theme, "themes"), { withFileTypes: true })
   .filter((entry) => entry.isDirectory() && entry.name !== "native")
   .map((entry) => entry.name);
 
 const sorted = (value: object) => Object.keys(value).sort();
-const requiredThemeKeys = (vars: Vars) =>
-  Object.keys(vars)
-    .filter((key) => !optionalThemeTokens.has(key))
-    .sort();
+/** Every token a theme declares: the sets are equal, so `font-sans` is not optional. */
+const requiredThemeKeys = (vars: Vars) => Object.keys(vars).sort();
 
 /** Every string a theme file holds, at any depth (a gradient's stops and a shadow's colors are in one). */
 function strings(value: unknown): string[] {
@@ -66,7 +61,7 @@ describe("themes/", () => {
       const themeFile = read(`themes/${name}/theme.json`) as ThemeFile;
       const semantics = read(`themes/${name}/semantics.json`) as SemanticsFile;
 
-      test("declares the default theme's keys, and no others (except optional font-sans)", () => {
+      test("declares the default theme's keys, and no others", () => {
         expect(requiredThemeKeys(themeFile.cssVars.theme), "theme").toEqual(
           requiredThemeKeys(defaults.cssVars.theme),
         );
@@ -78,12 +73,26 @@ describe("themes/", () => {
       });
 
       test("resolves to the default finishes' roles and field sets after merging", () => {
+        // A flat theme leaves out the gradient, a theme of no platform material the material,
+        // an opaque one the backdropFilter, only the platform's own layers an elevation, and only a
+        // theme that paints its own pressed accent the pressed fill and ink: every other field of a
+        // role is the set default states.
+        const optional = new Set([
+          "gradient",
+          "material",
+          "elevation",
+          "backdropFilter",
+          "pressed-background",
+          "pressed-foreground",
+        ]);
+        const requiredFields = (finish: Record<string, unknown>) =>
+          sorted(Object.keys(finish).filter((field) => !optional.has(field)));
         for (const appearance of ["light", "dark"] as const) {
           const merged = mergeFinishes(semantics.finishes, appearance);
           expect(sorted(merged), appearance).toEqual(sorted(defaultMerged[appearance]));
           for (const [role, finish] of Object.entries(merged)) {
-            expect(sorted(finish), `${appearance}.${role}`).toEqual(
-              sorted(defaultMerged[appearance][role]!),
+            expect(requiredFields(finish), `${appearance}.${role}`).toEqual(
+              requiredFields(defaultMerged[appearance][role]!),
             );
           }
         }

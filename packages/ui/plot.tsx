@@ -41,7 +41,7 @@ export {
 /** The series' colors, in order (`theme.json`'s `chart-1` to `chart-5`):
  * the brand's citrus first, then graphite from dark to light, so one series
  * leads and the rest stay as quiet as the interface. Rises and falls take
- * `colors.up` / `colors.down`. */
+ * `colors.up` / `colors.destructive`. */
 export const seriesColors = (): string[] => [
   chart.chart1,
   chart.chart2,
@@ -122,8 +122,8 @@ export const plotAxisText = (): TextStyle => ({
 
 /** A floating tooltip's card: the menu's surface, the theme's `radius` corners. */
 export const plotTooltip = (): ViewStyle => ({
-  ...finish.menu,
-  borderWidth: terminal ? stroke.hairline : stroke.surface,
+  ...finish.overlay,
+  borderWidth: stroke.hairline,
   ...rounded(shape.container),
   paddingHorizontal: 10,
   paddingVertical: 8,

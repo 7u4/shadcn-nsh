@@ -131,19 +131,21 @@ function Faq(props: { log: (text: string) => void }) {
                       ...rounded(7),
                       alignItems: "center",
                       justifyContent: "center",
-                      backgroundColor: open().includes(q().value)
-                        ? colors.brandFill
-                        : colors.raised,
+                      backgroundColor: open().includes(q().value) ? colors.primary : colors.raised,
                       boxShadow: open().includes(q().value)
-                        ? finish.light.boxShadow
-                        : finish.chip.boxShadow,
+                        ? finish.accent.boxShadow
+                        : finish.raised.boxShadow,
                     }}
                     class="transition-colors duration-200 motion-reduce:transition-none"
                   >
                     <Icon
                       icon={q().icon}
                       size={size.check}
-                      tint={open().includes(q().value) ? colors.onBrand : colors.mutedForeground}
+                      tint={
+                        open().includes(q().value)
+                          ? colors.primaryForeground
+                          : colors.mutedForeground
+                      }
                     />
                   </View>
                 }

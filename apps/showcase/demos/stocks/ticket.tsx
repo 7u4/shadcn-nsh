@@ -82,7 +82,7 @@ export function createBanner() {
           height: 34,
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: message().side === "buy" ? colors.up : colors.down,
+          backgroundColor: message().side === "buy" ? colors.up : colors.destructive,
           borderRadius: 17,
         }}
       >
@@ -125,7 +125,7 @@ function Step(props: { plus: boolean; label: string; onPress: () => void }) {
           alignItems: "center",
           justifyContent: "center",
           borderRadius: shape.control,
-          ...finish.pill,
+          ...finish.raised,
           borderWidth: 1,
         }}
       >
@@ -198,7 +198,7 @@ export function Ticket(props: {
     limit.set(
       Math.max(props.stock.tick, Math.round(limit() / props.stock.tick + steps) * props.stock.tick),
     );
-  const tone = () => (props.side() === "buy" ? colors.up : colors.down);
+  const tone = () => (props.side() === "buy" ? colors.up : colors.destructive);
   const verb = () => (props.side() === "buy" ? "Buy" : "Sell");
   return (
     <View style={{ gap: 16, paddingTop: terminal ? 0 : 4 }}>

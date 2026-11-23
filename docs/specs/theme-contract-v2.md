@@ -1,8 +1,9 @@
 # 主题契约 v2：按层定角色，同类少值
 
 - 日期：2026-11-22
-- 状态：已审定（2026-11-22），按第 9 节的顺序逐步实施，每步一个 PR
+- 状态：已实施（2026-11-23），第 9 节的 7 步都已落地
 - 修订：2026-11-22 补入字体与分发产物（#259）；同日补入 D4–D7（指示器与描边进控件预设、描边两档、交互状态、阴影刻度）与其余风格组的去向
+- 修订：2026-11-23 实施审计：`density.surface` 删掉，区块面的圆角读 `shape.container`；填充色按下变淡写成 `accent` 的 `pressed-opacity`，不进 `state`（D6）；`inverse` 的字色是 `{inverse-foreground}`；分段与胶囊标签页选中的那块读 `raised` 而不是 `knob`（`knob` 在暗色下是白色圆点，上面写不了字，第 5 节）；touch 档 `size.hit` 不小于 44，平台例外点名（第 3 节）
 - 取代：[`theme-roles.md`](theme-roles.md) 中与本文冲突的部分；每一步落地时，`theme-roles.md`、[`native-themes.md`](native-themes.md)、[`design-tokens.md`](design-tokens.md)、[`design-semantics.md`](design-semantics.md)、`docs/GLOSSARY.md`、`docs/ARCHITECTURE.md` 在同一个 PR 里改成新的事实
 - 决定记录：[`docs/decisions/0001-theme-contract-v2.md`](../decisions/0001-theme-contract-v2.md)
 
@@ -17,20 +18,20 @@
 
 ## 现状（`main` 9daf2dcb）
 
-| 类       | 现在                                                                                                                                                     | 问题                                                                                                                                 |
-| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| 颜色     | `cssVars.light` 74 个角色（其中 A 层 31 个），另有 `cssVars.theme` 里 11 个颜色键                                                                        | `sidebar-*`、`slider-track`、`dialog`、`code`、`scrollbar-thumb`、`window-*` 以组件命名；多个角色在 4–5 套主题里只是别的角色的 alias |
-| 圆角     | 8 个（`radius`、`-card`、`-control`、`-field`、`-chip`、`-overlay`、`-dialog`、`-sheet`）                                                                | 按组件族命名；`control` 同时表示"按钮是胶囊"和"页内元素的圆角"（#253）                                                               |
-| 高度     | default 指针档有 7 个：24/28/30/32/34/36/40                                                                                                              | 同类值太多                                                                                                                           |
-| 间距     | default 有 6/10/12/14                                                                                                                                    | 不在 4 的网格上                                                                                                                      |
-| 图标     | default 有 12/14/15/16                                                                                                                                   | 4 个值                                                                                                                               |
-| 字阶     | 7 级；default 的 `title` 13 小于 `label` 14；行高是比例小数                                                                                              | 层级倒挂；行高不在网格上                                                                                                             |
-| 弹簧     | 4 个：`press` 520/34 与 `move` 504/38 几乎相同                                                                                                           | 冗余                                                                                                                                 |
-| 控件几何 | `checkbox` / `switch` / `slider` / `radio` / `progress` / `spinner` / `tabs` / `calendar` 8 组，100 多个值；default、shadcn、solid-glass、apple 完全相同 | 是组件的事，却放在主题里；主题作者只能照抄                                                                                           |
-| finish   | 27 个，多数以组件命名（`knob`、`knobOn`、`handle`、`thumb`、`pill`、`chip`、`grabber`、`tooltip`、`groove`、`on`、`fill`）                               | 按组件分                                                                                                                             |
-| 阴影     | default 28 条不同的 `shadow`，solid-glass 27 条                                                                                                          | 没有层级刻度                                                                                                                         |
-| 平涂渐变 | 每套主题有 13–17 处 `linear-gradient(x 0%, x 100%)`                                                                                                      | 为满足"字段必须有"而写的空值                                                                                                         |
-| 材质     | finish 里直接写平台对象（`material.apple` 等）；fallback 靠 `checkGlassFallback` 在 lint 时兜底（#251、#252）                                            | 每个主题自己拼平台参数，容易漏 fallback                                                                                              |
+| 类       | 现在                                                                                                                                                     | 问题                                                                                                                 |
+| -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| 颜色     | `cssVars.light` 67 个角色（其中 A 层 31 个），另有 `cssVars.theme` 里 11 个颜色键                                                                        | `sidebar-*`、`dialog`、`code`、`scrollbar-thumb`、`window-*` 以组件命名；多个角色在 4–5 套主题里只是别的角色的 alias |
+| 圆角     | 8 个（`radius`、`-card`、`-control`、`-field`、`-chip`、`-overlay`、`-dialog`、`-sheet`）                                                                | 按组件族命名；`control` 同时表示"按钮是胶囊"和"页内元素的圆角"（#253）                                               |
+| 高度     | default 指针档有 7 个：24/28/30/32/34/36/40                                                                                                              | 同类值太多                                                                                                           |
+| 间距     | default 有 6/10/12/14                                                                                                                                    | 不在 4 的网格上                                                                                                      |
+| 图标     | default 有 12/14/15/16                                                                                                                                   | 4 个值                                                                                                               |
+| 字阶     | 7 级；default 的 `title` 13 小于 `label` 14；行高是比例小数                                                                                              | 层级倒挂；行高不在网格上                                                                                             |
+| 弹簧     | 4 个：`press` 520/34 与 `move` 504/38 几乎相同                                                                                                           | 冗余                                                                                                                 |
+| 控件几何 | `checkbox` / `switch` / `slider` / `radio` / `progress` / `spinner` / `tabs` / `calendar` 8 组，100 多个值；default、shadcn、solid-glass、apple 完全相同 | 是组件的事，却放在主题里；主题作者只能照抄                                                                           |
+| finish   | 27 个，多数以组件命名（`knob`、`knobOn`、`handle`、`thumb`、`pill`、`chip`、`grabber`、`tooltip`、`groove`、`on`、`fill`）                               | 按组件分                                                                                                             |
+| 阴影     | default 28 条不同的 `shadow`，solid-glass 27 条                                                                                                          | 没有层级刻度                                                                                                         |
+| 平涂渐变 | 每套主题有 13–17 处 `linear-gradient(x 0%, x 100%)`                                                                                                      | 为满足"字段必须有"而写的空值                                                                                         |
+| 材质     | finish 里直接写平台对象（`material.apple` 等）；fallback 靠 `checkGlassFallback` 在 lint 时兜底（#251、#252）                                            | 每个主题自己拼平台参数，容易漏 fallback                                                                              |
 
 ## 原则
 
@@ -71,16 +72,7 @@
 
 ### 删除与去向
 
-**第 1 批：纯 alias。** 读这些角色的组件改读去向列中的角色（或 finish）。
-
-| 角色                                        | 去向                                                                                                       |
-| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `on-brand-tint`                             | `accent-foreground`（6 套主题都相等）                                                                      |
-| `inverse-muted`                             | `muted-foreground`；material 下 M3 snackbar 辅文取 `inverse-foreground`，这个差异放进 `inverse` finish     |
-| `down`                                      | `destructive`（6 套主题都相等）                                                                            |
-| `card-edge`                                 | `card` finish 的 `border-color`（winui 写 `CardStrokeColorDefault`，material 写 `transparent`）            |
-| `selected-foreground`、`pressed-foreground` | 各主题 finish 的前景字段（`foreground` / `accent-foreground` / `primary-foreground` / `muted-foreground`） |
-| `slider-track`                              | 控件预设引用的角色（base → `track`，material → `brand-tint`，winui → `input`）                             |
+**第 1 批：纯 alias（✅ #262）。** 已删除的七个角色，其读者改读 `accent-foreground`、`destructive`、`card` / `pressed` / `on` / `inverse` finish 的前景字段，以及控件预设的 `trackRole`；`sidebar-*` 保留为 A 层 alias，`down-tint` 与 tone `"down"` 不动。
 
 验收：6 套主题、83 页、亮暗渲染与这一步之前**逐像素相同**。
 
@@ -135,7 +127,7 @@
 | 图标 | 3 档 `sm` / `md` / `lg`，分指针、触屏两档。勾、清除钮、控件内字形都从这 3 档里取                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | 字阶 | 保留 7 级。字号**不降序**：`caption` ≤ `detail` ≤ `body` ≤ `label` ≤ `title` < `headline` < `display`（修掉 default 的 `title` 13 < `label` 14）。行高用整数 px：原生主题照官方字阶（Apple、M3、WinUI 3 各有出处），自有主题取 4 的倍数                                                                                                                                                                                                                                                                                                                                                                        |
 | 字体 | 每套主题只定义两个字体族 `font.family.sans` 与 `font.family.mono`，输出为 A 层的 `font-sans` / `font-mono`；用系统字体的主题写通用族（`system-ui`、`monospace`），NSH 把通用族当作系统字体。NSH 用 `font-sans` 画所有没写字体的文字，所以 `typography` 组上的 `fontFamily` 扩展、`semantics.json` 的 `typography.fontFamily` 和 `font.family()` 一并删除。7 个字阶复合 token 的 `fontFamily` 是 DTCG typography 类型的必填字段，设计工具导入时要用，一律写成 `{font.family.sans}`，不再写死 `["system-ui", "sans-serif"]`（现在 winui 导出的字阶丢了 Segoe UI Variable）。等宽文字只经 `mono()` 读 `font-mono` |
-| 动效 | 3 个弹簧 `fast` / `default` / `slow`，按速度命名，不按组件命名。用途固定：控件状态（开关、勾选）用 `fast`，按压与移动用 `default`，落定与面板进出用 `slow`。winui 从官方时长里取 3 个。material 的 `move` 现在是 380，归到 `default` 后会变快，实施时要对照 M3 motion scheme 核对                                                                                                                                                                                                                                                                                                                              |
+| 动效 | 3 个弹簧 `fast` / `default` / `slow`，按速度命名，不按组件命名。用途固定：控件状态（开关、勾选）用 `fast`，按压与移动用 `default`，落定与面板进出用 `slow`。winui 从官方时长里取 3 个。material 取三条空间弹簧：`FastSpatial` 800/ζ0.6 作 `fast`、`DefaultSpatial` 380/ζ0.8 作 `default`（也就是 `move` 原来的值）、`SlowSpatial` 200/ζ0.8 作 `slow`（`ExpressiveMotionTokens.kt`）                                                                                                                                                                                                                            |
 | 时长 | `duration.shake`（6 套主题都是 500）移进组件                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | 描边 | 两档：`hairline`（分隔线、面的边）与 `control`（控件描边）。`surface` 在 5 套主题里等于 `hairline`，并入；material 的面"不画边"改由 finish 表达（`border-color: transparent` 或不写边），布局可能差 1px，要审截图。`indicator`（标签页、侧栏指示条的粗细）移进控件预设                                                                                                                                                                                                                                                                                                                                         |
 | 保留 | `shape.curve`（continuous / circular）、`size.hit`（平台最小点击区）、`dimension.focus`（焦点样式、宽度、偏移，属状态层）、`transition.enter`（一条进场过渡，归动效）照旧，各是一个值或一个枚举                                                                                                                                                                                                                                                                                                                                                                                                                |
@@ -160,18 +152,18 @@
 
 ## 5 finish：按层，加阴影刻度
 
-| finish（层） | 并入的旧 finish                                      |
-| ------------ | ---------------------------------------------------- |
-| `card`       | `card`、`section`                                    |
-| `inset`      | `inset`、`field`、`track`、`groove`                  |
-| `raised`     | `raised`、`light`、`chip`、`pill`                    |
-| `overlay`    | `menu`（菜单、选择框、弹出面板）                     |
-| `modal`      | `dialog`                                             |
-| `inverse`    | `inverse`、`tooltip`                                 |
-| `glass`      | `glass`                                              |
-| `accent`     | `accent`、`fill`、`on`                               |
-| `knob`       | `knob`；`knobOn`、`handle`、`thumb` 的差异进控件预设 |
-| 状态         | `hover`、`pressed`（含 `accentPressed`）、`disabled` |
+| finish（层） | 并入的旧 finish                                                                  |
+| ------------ | -------------------------------------------------------------------------------- |
+| `card`       | `card`、`section`                                                                |
+| `inset`      | `inset`、`field`、`track`、`groove`                                              |
+| `raised`     | `raised`、`light`、`chip`、`pill`                                                |
+| `overlay`    | `menu`（菜单、选择框、弹出面板）                                                 |
+| `modal`      | `dialog`                                                                         |
+| `inverse`    | `inverse`、`tooltip`                                                             |
+| `glass`      | `glass`                                                                          |
+| `accent`     | `accent`、`fill`、`on`                                                           |
+| `knob`       | `knob`；`knobOn`、`handle` 的差异进控件预设；`thumb` 改归 `raised`（2026-11-23） |
+| 状态         | `hover`、`pressed`（含 `accentPressed`）、`disabled`                             |
 
 `grabber` 不再是 finish，归 sheet 的控件预设。
 
@@ -212,11 +204,11 @@
 | 配方      | 用在                                                                   | 展开                                                                                                                                                                                                                                                                                                             |
 | --------- | ---------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `none`    | default、shadcn、solid-glass、material 的所有层；apple、winui 的其余层 | 不展开                                                                                                                                                                                                                                                                                                           |
-| `glass`   | apple 的 `overlay`、`inverse`、`raised`、`glass`                       | `glassEffect` regular + 层色作 tint（iOS / macOS 26+）；macOS 26 以前用 `macos.backdrop` 的 `menu` / `popover` 材质；iOS 用 `ios.backdropMaterial`；fallback：`backdropFilter: blur(30px)`，层色不透明度不低于 0.72                                                                                              |
+| `glass`   | apple 的 `overlay`、`inverse`、`raised`、`glass`                       | `glassEffect` regular + 层色作 tint（iOS / macOS 26+）；iOS 用 `ios.backdropMaterial`（26 以下的模糊）；fallback：`backdropFilter: blur(30px)`，层色不透明度不低于 0.72。不写 `macos.backdrop`：显式的它会盖过 26+ 的 `glassEffect`，26 以下由模糊回落兜住                                                       |
 | `acrylic` | winui 的 `overlay`                                                     | `backdropFilter: blur(30px)`（`AcrylicBrush.h` `sc_blurRadius`）加层色。亮：`#FCFCFC` tint 0，luminosity 0.85；暗：`#2C2C2C` tint 0.15，luminosity 0.96（`AcrylicInAppFillColorDefaultBrush`，`AcrylicBrush_themeresources.xaml` @ `1b5b1a0`）。fallback：不透明的 `FallbackColor`（亮 `#F9F9F9`，暗 `#2C2C2C`） |
 
 - 每个配方都给出 fallback：模糊半径，以及层色的最低不透明度。不画模糊的平台（Linux / GPUI）也不会透出背后的内容。这条取代 `checkGlassFallback`（#251）：fallback 由配方保证，不再靠 lint 兜底。
-- 数值（例如 0.72）在实施时用平台截图核对。
+- 数值（例如 0.72）在实施时用平台截图核对；验收里那条逐字节相同，`material` 主题除外：它的 `material.android.elevation` 挪到新的 `elevation` 字段（`material` 里不再有平台对象），`platformMaterial()` 仍给出同一个 `android.elevation`，渲染不变，产物变了表示法。
 - 不做，记为差异：
   - Acrylic 的噪点（`sc_noiseOpacity` 0.02）、luminosity 混合与饱和度 1.25；
   - Mica、macOS `behindWindow` 与侧栏 vibrancy，这些是窗口级的，属于应用；
@@ -250,21 +242,21 @@
 每步一个 issue、一个 PR，串行：
 
 1. ✅ B2 合并（#256），作为基线
-2. 控件预设（第 4 节，含 D4 的指示器、输入框圆角与指示条粗细），逐像素相同；输入框 #249 排在这一步之后，直接写进预设
-3. 圆角（第 2 节，#253）
-4. 颜色：第 1 批（逐像素相同）→ 第 2 批 → 第 3 批
-5. 尺度（第 3 节），含字体
-6. finish 按层与阴影刻度（第 5 节）
-7. 材质（第 6 节）
+2. ✅ 控件预设（#268）（第 4 节，含 D4 的指示器、输入框圆角与指示条粗细），逐像素相同；输入框 #249 排在这一步之后，直接写进预设
+3. ✅ 圆角（第 2 节，#253，#269）
+4. 颜色：第 1 批（逐像素相同，✅ #262）→ 第 2 批（✅ #263）→ 第 3 批（✅ #264）
+5. ✅ 尺度（第 3 节），含字体（#265）
+6. ✅ finish 按层与阴影刻度（第 5 节，#266）
+7. ✅ 材质（第 6 节， #267）
 
 ## 10 已确认的问题
 
-| #   | 问题                                                                                   | 建议                                                                                                                                                                                                                                                                                 |
-| --- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| D1  | `sidebar-*`：删掉，还是作为对外格式保留？                                              | ✅ 已确认（2026-11-22）：**保留为 A 层 alias，组件不读。** NSH 的 `Theme` 就是 shadcn 的 31 个槽，缺一个就退回 neutral 灰，应用里写的 `bg-sidebar` 会变色。这改了之前"第 2 批删掉其余 `sidebar-*`"的计划                                                                             |
-| D2  | 材质是写在 finish 的字段里，还是按层固定？                                             | ✅ 已确认（2026-11-22）：**写在 finish 的 `material` 字段里，用枚举（方案 A）。** apple 现在在 `raised` 上也用玻璃（#252），按层固定会丢掉这个选择                                                                                                                                   |
-| D3  | finish 数量                                                                            | ✅ 已确认（2026-11-22）：**9 层 + 3 种状态 = 12 个**，M3 中过于个性化的差异按原则 6 裁剪。（比之前说的"约 8 个"多了 `modal` 和 `inverse`）。M3 的对话框（`SurfaceContainerHigh`）与菜单（`SurfaceContainer`）颜色不同，提示与 toast 的反色面也是一层，和第 2 节圆角的 `modal` 对得上 |
-| D4  | 以组件命名的形态选择（`indicator.*`、`shape.corners.field`、`stroke.indicator`）放哪？ | ✅ 已确认（2026-11-22）：**并入控件预设**（第 4 节）                                                                                                                                                                                                                                 |
-| D5  | 描边 4 个值                                                                            | ✅ 已确认（2026-11-22）：**收成 `hairline`、`control` 两档**，`surface` 并入 `hairline`，`indicator` 进控件预设（第 3 节）                                                                                                                                                           |
-| D6  | `state` 组                                                                             | ✅ 已确认（2026-11-22）：**保留在主题**，只把 `accent-pressed-opacity` 并入第 3 批的 `state.pressed`（第 7 节）                                                                                                                                                                      |
-| D7  | 阴影                                                                                   | ✅ 已确认（2026-11-22）：**拆成投影 4 档、内阴影 1 个、边光 2 个**；源码在亮暗 DTCG 文件，编译进 `semantics.json`，不进 `theme.json`（第 5 节）                                                                                                                                      |
+| #   | 问题                                                                                   | 建议                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| --- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D1  | `sidebar-*`：删掉，还是作为对外格式保留？                                              | ✅ 已确认（2026-11-22）：**保留为 A 层 alias，组件不读。** NSH 的 `Theme` 就是 shadcn 的 31 个槽，缺一个就退回 neutral 灰，应用里写的 `bg-sidebar` 会变色。这改了之前"第 2 批删掉其余 `sidebar-*`"的计划                                                                                                                                                                                                                                                                                                                                                                            |
+| D2  | 材质是写在 finish 的字段里，还是按层固定？                                             | ✅ 已确认（2026-11-22）：**写在 finish 的 `material` 字段里，用枚举（方案 A）。** apple 现在在 `raised` 上也用玻璃（#252），按层固定会丢掉这个选择                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| D3  | finish 数量                                                                            | ✅ 已确认（2026-11-22）：**9 层 + 3 种状态 = 12 个**，M3 中过于个性化的差异按原则 6 裁剪。（比之前说的"约 8 个"多了 `modal` 和 `inverse`）。M3 的对话框（`SurfaceContainerHigh`）与菜单（`SurfaceContainer`）颜色不同，提示与 toast 的反色面也是一层，和第 2 节圆角的 `modal` 对得上                                                                                                                                                                                                                                                                                                |
+| D4  | 以组件命名的形态选择（`indicator.*`、`shape.corners.field`、`stroke.indicator`）放哪？ | ✅ 已确认（2026-11-22）：**并入控件预设**（第 4 节）                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| D5  | 描边 4 个值                                                                            | ✅ 已确认（2026-11-22）：**收成 `hairline`、`control` 两档**，`surface` 并入 `hairline`，`indicator` 进控件预设（第 3 节）                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| D6  | `state` 组                                                                             | ✅ 已确认（2026-11-22）：**保留在主题**，只把 `accent-pressed-opacity` 并入第 3 批的 `state.pressed`（第 7 节）。**第 3 批实际（#264）：** `state` 只读亮色指针档、不随外观翻转，而 winui 的禁用与按下颜色明暗不同，所以这些颜色落进 `finish.disabled` / `finish.accentPressed` 的 `background`、`foreground`；`accent-pressed-opacity` 合进 `accentPressed` 的底色。**第 6 步之后（2026-11-23）：** `accentPressed` 并进 `accent`，按下变淡成了 `accent` 的 `pressed-opacity`（数，Material / WinUI 写 1），换面的颜色是 `accent` 的 `pressed-background` / `pressed-foreground`。 |
+| D7  | 阴影                                                                                   | ✅ 已确认（2026-11-22）：**拆成投影 4 档、内阴影 1 个、边光 2 个**；源码在亮暗 DTCG 文件，编译进 `semantics.json`，不进 `theme.json`（第 5 节）                                                                                                                                                                                                                                                                                                                                                                                                                                     |

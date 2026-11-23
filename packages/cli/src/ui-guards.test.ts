@@ -65,6 +65,8 @@ const sources = [...components, ...lib, ...theme, ...adapter, ...demos];
 const exempt: Record<string, string> = {
   "packages/ui/avatar.tsx":
     "the identity ring: twelve hues computed from the name (gpui-component's avatar), each with its own background, ink and edge; no token can name a color derived from a name",
+  "packages/ui/title-bar.tsx":
+    "the traffic lights keep macOS's own hues (#FF5F57, #FEBC2E, #28C840), their 50% black ink and 12% black edge: a window's close, minimize and zoom are Apple's whatever the theme, the one place a color is written out (ARCHITECTURE.md P3)",
   "packages/ui/lib/icons.tsx":
     "the check mark's SVG carries #000 as template ink; `CheckMark` draws it in the caller's `tint` (`tintColor`), so the color shown is the theme's",
   "packages/ui/lib/color-format.ts":
@@ -190,8 +192,8 @@ describe("component sources (a finish is handed out as a copy)", () => {
     expect(sharedFinishes("hoverStyle: finish.hover,")).toHaveLength(1);
     expect(sharedFinishes("<View style={finish.raised} />")).toHaveLength(1);
     expect(sharedFinishes("return { ...finish.inset };")).toEqual([]);
-    expect(sharedFinishes("...(flat || ghost ? {} : finish.field),")).toEqual([]);
-    expect(sharedFinishes("...(on() ? finish.knobOn : finish.knob),")).toEqual([]);
+    expect(sharedFinishes("...(flat || ghost ? {} : finish.inset),")).toEqual([]);
+    expect(sharedFinishes("...(on() ? finish.accent : finish.knob),")).toEqual([]);
     expect(sharedFinishes("boxShadow: finish.raised.boxShadow,")).toEqual([]);
   });
 });

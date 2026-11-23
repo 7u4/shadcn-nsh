@@ -23,6 +23,7 @@ import {
   checkTimingSpec,
   easingNames,
   isValidPressScale,
+  motionRoleNames,
   shapeRadiusRoles,
   whitelists,
 } from "../theme/style";
@@ -302,14 +303,6 @@ function validateExtAtPath(
     return;
   }
 
-  if (p === "typography") {
-    checkUnknownKeys(where, ext, ["fontFamily"], problems);
-    if (ext.fontFamily !== null && typeof ext.fontFamily !== "string") {
-      problems.push(`${where}.fontFamily must be null or a "{font.family.*}" reference`);
-    }
-    return;
-  }
-
   if (/^motion\.[a-z0-9-]+$/.test(p)) {
     checkUnknownKeys(where, ext, ["spring"], problems);
     if (!isRecord(ext.spring)) {
@@ -329,10 +322,24 @@ function validateExtAtPath(
     return;
   }
 
+  if (/^shadow\.[a-z0-9.-]+$/.test(p)) {
+    checkUnknownKeys(where, ext, ["none"], problems);
+    if ("none" in ext && ext.none !== true) {
+      problems.push(`${where}.none must be true`);
+    }
+    return;
+  }
+
   if (/^finish\.[A-Za-z0-9-]+$/.test(p)) {
-    checkUnknownKeys(where, ext, ["backdropFilter", "material"], problems);
+    checkUnknownKeys(where, ext, ["backdropFilter", "material", "elevation"], problems);
     if ("backdropFilter" in ext && !isNonEmptyString(ext.backdropFilter)) {
       problems.push(`${where}.backdropFilter must be a non-empty string`);
+    }
+    if (
+      "elevation" in ext &&
+      (typeof ext.elevation !== "number" || !Number.isFinite(ext.elevation) || ext.elevation < 0)
+    ) {
+      problems.push(`${where}.elevation must be a non-negative number`);
     }
     return;
   }
@@ -357,15 +364,14 @@ function validateExtAtPath(
   }
 
   if (/^finish\.[A-Za-z0-9-]+\.shadow$/.test(p)) {
-    checkUnknownKeys(where, ext, ["none"], problems);
-    if (ext.none !== true) {
-      problems.push(`${where}.none must be true`);
-    }
+    problems.push(
+      `${where}: a finish names the shadow scale's parts and writes no shadow of its own`,
+    );
     return;
   }
 
   if (
-    /^finish\.[A-Za-z0-9-]+\.(?:background|border-color|border-top-color|border-bottom-color)$/.test(
+    /^finish\.[A-Za-z0-9-]+\.(?:background|foreground|border-color|border-top-color|border-bottom-color)$/.test(
       p,
     )
   ) {
@@ -606,6 +612,83 @@ function checkReferenceTypes(
   walk(merged, "");
 }
 
+/** The parts a theme's shadow scale may hold: four levels, one inset, two edges (7 at most). */
+const SHADOW_LEVELS = ["sm", "md", "lg", "xl", "inset"] as const;
+const SHADOW_EDGES = ["surface", "accent"] as const;
+const FINISH_ROLES_MAX = 12;
+
+function scaleParts(node: Record<string, unknown>, prefix = ""): string[] {
+  return Object.entries(node).flatMap(([k, v]) => {
+    if (k.startsWith("$") || !isRecord(v)) return [];
+    const name = prefix ? `${prefix}.${k}` : k;
+    return isTokenNode(v) ? [name] : scaleParts(v, name);
+  });
+}
+
+/**
+ * The layers: a theme's `shadow` scale is small and named (`sm`…`xl`, `inset`, up to two `edge`s),
+ * every finish names parts of it instead of writing a shadow, and no finish paints a gradient of
+ * one colour twice.
+ */
+function checkFinishLayers(
+  label: string,
+  merged: Record<string, unknown>,
+  problems: string[],
+): void {
+  const scale = isRecord(merged.shadow) ? merged.shadow : {};
+  const parts = scaleParts(scale);
+  const allowed = new Set<string>([...SHADOW_LEVELS, ...SHADOW_EDGES.map((e) => `edge.${e}`)]);
+  for (const part of parts) {
+    if (!allowed.has(part)) {
+      problems.push(`${label}: shadow.${part} is not a scale part (${[...allowed].join(", ")})`);
+    }
+  }
+  if (parts.length > 7) {
+    problems.push(`${label}: the shadow scale has ${parts.length} parts, more than 7`);
+  }
+
+  const finishes = isRecord(merged.finish) ? merged.finish : {};
+  const roles = Object.keys(finishes).filter((k) => !k.startsWith("$"));
+  if (roles.length > FINISH_ROLES_MAX) {
+    problems.push(`${label}: ${roles.length} finishes, more than ${FINISH_ROLES_MAX}`);
+  }
+  for (const role of roles) {
+    const node = finishes[role];
+    if (!isRecord(node)) continue;
+    const shadow = node.shadow;
+    if (!isTokenNode(shadow)) {
+      problems.push(`${label}: finish.${role} has no shadow`);
+      continue;
+    }
+    const value = shadow.$value;
+    const refs = Array.isArray(value) ? value : [value];
+    if (!refs.every((r) => typeof r === "string" && /^\{shadow\.[a-z0-9.-]+\}$/.test(r))) {
+      problems.push(
+        `${label}: finish.${role}.shadow writes its own shadow; name the scale's parts instead, like ["{shadow.edge.surface}", "{shadow.sm}"]`,
+      );
+      continue;
+    }
+    for (const ref of refs as string[]) {
+      const part = ref.slice("{shadow.".length, -1);
+      if (!parts.includes(part)) {
+        problems.push(
+          `${label}: finish.${role}.shadow names {shadow.${part}}, which this theme's scale does not define`,
+        );
+      }
+    }
+
+    const gradient = node.gradient;
+    if (isTokenNode(gradient) && Array.isArray(gradient.$value)) {
+      const stops = gradient.$value.filter(isRecord).map((stop) => JSON.stringify(stop.color));
+      if (stops.length > 1 && new Set(stops).size === 1) {
+        problems.push(
+          `${label}: finish.${role}.gradient is one colour from top to bottom — write a flat fill instead`,
+        );
+      }
+    }
+  }
+}
+
 function checkMergedSemantics(
   label: string,
   merged: Record<string, unknown>,
@@ -614,20 +697,16 @@ function checkMergedSemantics(
   requireDescriptions: boolean,
   problems: string[],
 ): void {
-  // Typography extension & weights
+  // Typography: one family for every role, from `font.family.sans`; and whitelisted weights
   const typoGroup = merged.typography;
   if (isRecord(typoGroup)) {
     const ext =
       isRecord(typoGroup.$extensions) && isRecord(typoGroup.$extensions[EXT_NS])
         ? typoGroup.$extensions[EXT_NS]
         : undefined;
-    if (ext && typeof ext.fontFamily === "string") {
-      checkTypedRef(
-        `${label}: typography.$extensions.fontFamily`,
-        ext.fontFamily,
-        "fontFamily",
-        tokenTypes,
-        problems,
+    if (ext && "fontFamily" in ext) {
+      problems.push(
+        `${label}: typography.$extensions.fontFamily is gone — every role's fontFamily is \`{font.family.sans}\``,
       );
     }
     for (const role of TYPE_ROLES) {
@@ -638,9 +717,9 @@ function checkMergedSemantics(
           `${label}: typography.${role}.fontWeight is ${JSON.stringify(tok.$value.fontWeight)}, not in whitelist`,
         );
       }
-      if (ext && typeof ext.fontFamily === "string" && tok.$value.fontFamily !== ext.fontFamily) {
+      if (tok.$value.fontFamily !== "{font.family.sans}") {
         problems.push(
-          `${label}: typography.${role}.fontFamily must match typography.$extensions.fontFamily (${ext.fontFamily})`,
+          `${label}: typography.${role}.fontFamily is ${JSON.stringify(tok.$value.fontFamily)}, not \`{font.family.sans}\``,
         );
       }
     }
@@ -715,7 +794,6 @@ function checkMergedSemantics(
     "state.overlay.pressed",
     "state.overlay.dragged",
     "state.pressed-opacity",
-    "state.accent-pressed-opacity",
     "state.disabled.content",
   ]) {
     const tok = getAtPath(resolved, unitPath);
@@ -757,18 +835,10 @@ function checkMergedSemantics(
     };
     walkDim(group, dimGroupPath);
   }
-  const shakeTok = getAtPath(resolved, "duration.shake");
-  if (isTokenNode(shakeTok) && isRecord(shakeTok.$value)) {
-    const val = shakeTok.$value.value;
-    if (typeof val !== "number" || !Number.isFinite(val) || val < 0) {
-      problems.push(`${label}: duration.shake value ${JSON.stringify(val)} must be >= 0`);
-    }
-  }
-
   // Motion roles: spring OR timing (never mixed, never missing)
   const motionGroup = merged.motion;
   if (isRecord(motionGroup)) {
-    for (const role of ["press", "settle", "control", "move"] as const) {
+    for (const role of motionRoleNames) {
       const roleNode = motionGroup[role];
       if (!isRecord(roleNode)) {
         problems.push(`${label}: motion.${role} is missing`);
@@ -864,7 +934,9 @@ function checkMergedSemantics(
         isRecord(group.$extensions) && isRecord(group.$extensions[EXT_NS])
           ? group.$extensions[EXT_NS]
           : {};
-      problems.push(...checkMaterial(label, role, { material: ext.material }, colorKinds, "dtcg"));
+      problems.push(
+        ...checkMaterial(label, role, { material: ext.material, elevation: ext.elevation }),
+      );
     }
   }
 
@@ -980,6 +1052,7 @@ export function lintDtcgTheme(
       checkExtensionNodes(label, merged, problems, "merged");
       checkReferenceTypes(label, merged, tokenTypes, problems);
       checkColorOpAccuracy(label, merged, resolved, tokenTypes, problems);
+      checkFinishLayers(label, merged, problems);
       checkMergedSemantics(label, merged, resolved, tokenTypes, requireDescriptions, problems);
     }
   }

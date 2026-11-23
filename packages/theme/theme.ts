@@ -4,9 +4,6 @@ import type {
   AnimatedValue,
   BackdropMaterial,
   Easing as EasingCurve,
-  MacOsBackdropBlending,
-  MacOsBackdropMaterial,
-  MacOsBackdropState,
   TextStyle,
   Theme,
   Tokens,
@@ -26,6 +23,7 @@ import {
   token,
 } from "nsh";
 
+import { materials, type FinishMaterial, type MaterialRecipe } from "./materials";
 import semantics from "./semantics.json";
 
 // @port theme.ts
@@ -54,44 +52,7 @@ export const TERMINAL_GAP = 24;
 /** Whether the app shows its dark palette; reactive: reading it subscribes. */
 export const isDark = () => colorScheme() !== "light";
 
-/**
- * The platform's own material a finish asks for, one entry per platform that has one (an
- * absent platform draws the finish as it is: its fill, its blur, its shadow). Values are NSH's:
- * `styling.md` lists them, the allow-lists of `scripts/theme/material.ts` hold a theme to them.
- */
-export interface Material {
-  /** Liquid Glass on iOS and macOS 26 and later: it rides in the finish's style as `glassEffect`
-   * and `glassTintColor`, so every platform without it keeps the finish's `backdropFilter`. */
-  apple?: {
-    glass: "regular" | "clear";
-    /** The glass's tint: a color of the theme (`{glass}`, an alias), or `null` for the system's own. */
-    tint: string | null;
-  };
-  /** The system blur material of the finish's `backdropFilter` on iOS (`ios={{ backdropMaterial }}`). */
-  ios?: { backdrop: BackdropMaterial };
-  /** An `NSVisualEffectView` below the view on macOS (`macos={{ backdrop }}`). */
-  macos?: {
-    backdrop: MacOsBackdropMaterial;
-    blending?: MacOsBackdropBlending;
-    state?: MacOsBackdropState;
-  };
-  /** The system's blur of what is behind a transparent window on Windows 11 (`windows={{ backdrop }}`). */
-  windows?: { backdrop: WindowsBackdropMaterial };
-  /** Android's ripple and elevation (`android={{ ripple, elevation }}`). */
-  android?: {
-    /** A press's ripple: `{ color }` is a `{token}` reference; optional shape flags follow NSH's `Ripple`. */
-    ripple?: {
-      color: string;
-      borderless?: boolean;
-      radius?: number;
-      foreground?: boolean;
-    };
-    /** Surface elevation in points (`android={{ elevation }}`). */
-    elevation?: number;
-  };
-}
-
-/** A surface's finish as `semantics.json` writes it: DTCG finish fields (`background`, `gradient`, `shadow`, `border-color`) plus `backdropFilter` and the `material` it asks of the platform (`null`: none). */
+/** A surface's finish as `semantics.json` writes it: DTCG finish fields (`background`, `gradient`, `shadow`, `border-color`) plus `backdropFilter`, the `material` it asks of the platform (`null`: none) and the elevation that material's platform draws it at. */
 export interface Finish {
   background?: string;
   gradient?: string;
@@ -100,7 +61,25 @@ export interface Finish {
   "border-top-color"?: string;
   "border-bottom-color"?: string;
   backdropFilter?: string;
-  material: Material | null;
+  /**
+   * The fill and ink a theme paints instead of the accent while a filled control is pressed. Stated
+   * only by a theme whose press swaps the accent out.
+   */
+  "pressed-background"?: string;
+  "pressed-foreground"?: string;
+  /**
+   * How far the accent dims while a filled control is pressed, fill and ink together: every theme
+   * states it on `accent`, 1 where its press swaps the accent out or lays a state layer over it.
+   */
+  "pressed-opacity"?: number;
+  /** The ink on this finish's surface (a color, not a spread style key): every finish states one. */
+  foreground: string;
+  /** The platform's own material the layer asks for: `null` asks nothing of it (see `materials`).
+   * A theme's sources spell that `"none"`; compiled, a finish that asks for nothing states no
+   * material at all, as a flat one states no gradient. */
+  material: FinishMaterial | null;
+  /** The elevation the layer's material draws it at, in points (`android={{ elevation }}`): Android's own shadow. */
+  elevation?: number;
 }
 
 /** The `finishes` block of `semantics.json`: fields shared by both appearances plus sparse light/dark overrides. */
@@ -111,7 +90,7 @@ export interface SplitFinishes {
 }
 
 /**
- * What a component reads of a finish (`finish.menu`): the style keys, spread into a `style`. A
+ * What a component reads of a finish (`finish.overlay`): the style keys, spread into a `style`. A
  * finish whose `material` has `apple` also has `glassEffect` (and `glassTintColor`, unless its tint is
  * `null`); otherwise these keys are not there at all. `material` itself is never a style key.
  */
@@ -123,43 +102,56 @@ export type FinishStyle = {
   borderTopColor?: string;
   borderBottomColor?: string;
   backdropFilter?: string;
+  /** The ink on this finish's surface, read by what draws text over it. */
+  foreground: string;
+  /**
+   * The fill and ink a theme paints instead of this finish's while a filled control is pressed, read
+   * by what draws the press; absent where the theme keeps the finish and dims it.
+   */
+  pressedBackground?: string;
+  pressedForeground?: string;
+  /** How far a filled control dims while it is pressed (`accent` states it; 1: no dimming). */
+  pressedOpacity?: number;
   glassEffect?: "regular" | "clear";
   glassTintColor?: string;
 };
 
-/** The finishes' roles: the keys of `semantics.json`'s `finishes` block. */
+/** The finishes' roles: the layers a surface can be. A control that differs sits in a control's own preset (`switch`, `slider`, `segmented`, `tabs`, `sheet`), not in a finish. */
 export type FinishRole =
   | "card"
-  | "section"
   | "inset"
-  | "field"
   | "raised"
+  | "overlay"
+  | "modal"
+  | "inverse"
+  | "glass"
+  | "accent"
+  | "knob"
   | "hover"
   | "pressed"
-  | "disabled"
-  | "light"
-  | "accent"
-  | "accentPressed"
-  | "track"
-  | "fill"
-  | "knob"
-  | "knobOn"
-  | "handle"
-  | "pill"
-  | "thumb"
-  | "on"
-  | "chip"
-  | "glass"
-  | "menu"
-  | "dialog"
-  | "grabber"
-  | "tooltip"
-  | "inverse"
-  | "groove";
+  | "disabled";
 
-/** What a theme's `semantics.json` holds: its style groups and its split finishes (`shared` + sparse `light`/`dark`). */
+/** The shadow scale's levels: a control, a card, a floating panel, a dialog. */
+export type ElevationLevel = "sm" | "md" | "lg" | "xl";
+
+/**
+ * One appearance's shadow scale, as `semantics.json` writes it: the steps a finish names, plus the
+ * one `inset` and the two hard edges (`edge.surface`, `edge.accent`). A part a theme has no value
+ * for is `null` — a finish that names it simply does not wear it.
+ */
+export interface Elevation {
+  sm: string | null;
+  md: string | null;
+  lg: string | null;
+  xl: string | null;
+  inset: string | null;
+  edge?: { surface: string | null; accent: string | null };
+}
+
+/** What a theme's `semantics.json` holds: its style groups, its split finishes (`shared` + sparse `light`/`dark`) and the shadow scale per appearance. */
 export interface Semantics extends Style {
   finishes: SplitFinishes;
+  elevation: { light: Elevation; dark: Elevation };
 }
 
 /** A value for each tier: a pointer's (a desktop) and a touch screen's. */
@@ -168,7 +160,7 @@ export interface Tiered<T> {
   touch: T;
 }
 
-/** One typography role: fontSize and unitless lineHeight multiplier per tier, numeric fontWeight (400..700), letterSpacing in points. */
+/** One typography role: fontSize in points and lineHeight in whole points per tier, numeric fontWeight (400..700), letterSpacing in points. */
 export interface TypographyRole {
   fontSize: Tiered<number>;
   lineHeight: Tiered<number>;
@@ -176,26 +168,18 @@ export interface TypographyRole {
   letterSpacing: number;
 }
 
-/** The sizes of a list of controls in one tier: see `controlSize`. */
-export interface ControlSizes {
-  row: number;
+/** What a control's own spacing reads in one tier: the padding inside its box, the gap beside it, a radio's dot, and which switch size sits beside a label. Rows and glyphs come from the height and icon scales, not from here. */
+export interface ControlMetrics {
   padding: number;
   gap: number;
-  control: number;
-  check: number;
   dot: number;
-  tabs: number;
-  line: number;
-  clear: number;
   switch: string;
 }
 
-/** A page's density in one tier: see `density`. */
-export interface DensitySizes {
-  row: number;
+/** A page's density in one tier: its padding and its gaps. Rows come from the height scale, a section's corners from `shape.container`. */
+export interface DensitySpacing {
   pad: number;
   gap: number;
-  surface: number;
 }
 
 /** Three steps of one size, small to large. */
@@ -234,8 +218,6 @@ export type Controls = "base" | "material" | "winui";
  */
 export interface Style {
   typography: {
-    /** `null` is the system font. */
-    fontFamily: string | null;
     caption: TypographyRole;
     detail: TypographyRole;
     body: TypographyRole;
@@ -252,11 +234,11 @@ export interface Style {
     };
     size: {
       hit: Tiered<number>;
-      density: Tiered<DensitySizes>;
-      control: Tiered<ControlSizes>;
+      density: Tiered<DensitySpacing>;
+      control: Tiered<ControlMetrics>;
       height: Tiered<Steps>;
     };
-    stroke: { hairline: number; surface: number; control: number };
+    stroke: { hairline: number; control: number };
     focus: { style: string; width: number; offset: number };
     icon: Tiered<Steps>;
   };
@@ -270,22 +252,18 @@ export interface Style {
     "press-scale": number;
     overlay: { hover: number; focus: number; pressed: number; dragged: number };
     ripple: boolean;
+    /** Opacity of a passive indicator at rest (a scrollbar's thumb), `rest-opacity`. */
+    "rest-opacity": number;
     "pressed-opacity": number;
-    "accent-pressed-opacity": number;
     disabled: { content: number; fill: boolean };
-  };
-  duration: {
-    /** A rejected value's shake, the length of `nsh`'s `play("shake")` preset. */
-    shake: number;
   };
   transition: {
     enter: TimingSpec;
   };
   motion: {
-    press: Spring | TimingSpec;
-    settle: Spring | TimingSpec;
-    control: Spring | TimingSpec;
-    move: Spring | TimingSpec;
+    fast: Spring | TimingSpec;
+    default: Spring | TimingSpec;
+    slow: Spring | TimingSpec;
   };
   controls: Controls;
 }
@@ -307,7 +285,6 @@ export interface AppTheme {
 }
 
 /** The build-time semantics: `semantics.json` beside this file (the app's `nsh-ui.json` names the theme they belong to). */
-// JSON types a `material.apple.glass` as `string`; `check:theme` holds the file to "regular" | "clear".
 const builtIn = semantics as Semantics;
 
 /** The theme `selectTheme` put in; `null` while the app shows its build-time one. */
@@ -340,7 +317,7 @@ export function reactive<T extends object>(keys: readonly (keyof T)[], read: () 
 /** The tier a pointer's screen (a desktop) or a touch screen reads: `platform.desktop`, fixed for the run. */
 export const tier: "pointer" | "touch" = platform.desktop ? "pointer" : "touch";
 
-/** A bare `{token}` reference (used by `dimension.shape.*` and `typography.fontFamily`). */
+/** A bare `{token}` reference (used by `dimension.shape.*`). */
 const tokenRef = /^\{([a-z0-9-]+)\}$/;
 
 /** The one relative color a finish writes: a token's color at another alpha. */
@@ -360,17 +337,6 @@ const resolveDimension = (value: string): number => {
     if (typeof resolved === "number") return resolved;
   }
   return Number(value);
-};
-
-/** Resolve a `{token}` font family reference through `token()` reactively, or `null` for system default. */
-const resolveFont = (value: string | null): string | null => {
-  if (value === null) return null;
-  const match = tokenRef.exec(value);
-  if (match) {
-    const resolved = token(match[1] as keyof Tokens);
-    return typeof resolved === "string" ? resolved : null;
-  }
-  return value;
 };
 
 /**
@@ -405,13 +371,18 @@ const finishOf = (role: FinishRole): Finish => {
 };
 
 /** The material one finish role asks for in the semantics in use, in the appearance shown (reactive). */
-const materialOf = (role: FinishRole): Material | null => finishOf(role).material;
+const materialOf = (role: FinishRole): FinishMaterial | null => finishOf(role).material;
 
-/** The style keys a finish's glass adds: `glassEffect` always, `glassTintColor` when it names a tint. */
+/** The recipe of the material a finish asks for, in the appearance shown (reactive); `undefined` for `null`. */
+const recipeOf = (role: FinishRole): MaterialRecipe | undefined => {
+  const material = materialOf(role);
+  return material === null ? undefined : materials[material];
+};
+
+/** The style keys a finish's glass adds: `glassEffect` and the layer's own colour as its tint. */
 const glassKeys = (role: FinishRole): readonly string[] => {
-  const glass = materialOf(role)?.apple;
-  if (glass === undefined) return [];
-  return glass.tint === null ? ["glassEffect"] : ["glassEffect", "glassTintColor"];
+  const recipe = recipeOf(role);
+  return recipe?.glassEffect === undefined ? [] : ["glassEffect", "glassTintColor"];
 };
 
 /**
@@ -421,12 +392,16 @@ const glassKeys = (role: FinishRole): readonly string[] => {
  * subscribes to the appearance, to the theme `selectTheme` put in, and to
  * host token overrides.
  *
- * `material` is not one of its keys: the glass of `material.apple` is two style keys (NSH's
- * `glassEffect` and `glassTintColor`), which the object has only while the finish asks for them, so
- * a finish with `material: null` spreads into exactly the keys it always had. The platform props of
- * the material (`ios`, `macos`, `windows`) are not style keys and come from `platformMaterial`.
+ * `material` and `elevation` are not among its keys: a glass material is two style keys instead
+ * (NSH's `glassEffect` and `glassTintColor`), which the object has only while the finish asks for
+ * them, so a finish with `material: null` spreads into exactly the keys it always had. The platform
+ * props of the material (its `ios` and `windows` blurs, its `android` elevation) come from
+ * `platformMaterial`.
  */
-const finishStyleKeys: Record<Exclude<keyof Finish, "material">, keyof FinishStyle> = {
+const finishStyleKeys: Record<
+  Exclude<keyof Finish, "material" | "elevation" | "foreground" | `pressed-${string}`>,
+  keyof FinishStyle
+> = {
   background: "backgroundColor",
   gradient: "backgroundImage",
   shadow: "boxShadow",
@@ -443,23 +418,60 @@ function themed(role: FinishRole): FinishStyle {
     ...builtIn.finishes.dark[role],
     ...builtIn.finishes.light[role],
   };
-  for (const key of Object.keys(builtInRole) as (keyof Finish)[]) {
-    if (key === "material") continue;
+  for (const key of Object.keys(finishStyleKeys) as (keyof typeof finishStyleKeys)[]) {
+    if (!(key in builtInRole)) continue;
     const styleKey = finishStyleKeys[key];
     Object.defineProperty(out, styleKey, {
       enumerable: true,
       configurable: true,
       get: () => {
         const value = finishOf(role)[key];
+        if (key === "backdropFilter") {
+          // A material guarantees its blur: a platform that draws no glass nor the host's blur still
+          // blurs what is behind the layer, at the recipe's radius.
+          const recipe = recipeOf(role);
+          if (recipe !== undefined && (value === undefined || value === "none")) {
+            return `blur(${recipe.fallback.blur}px)`;
+          }
+        }
         return typeof value === "string" ? alias(value) : undefined;
       },
     });
   }
+  // The surface's ink is a color, not a style key: read it by name, and keep it out of a spread.
+  Object.defineProperty(out, "foreground", {
+    enumerable: false,
+    configurable: true,
+    get: () => alias(finishOf(role).foreground),
+  });
+  // The theme's own pressed fill and ink, where it states them; a spread never wears them.
+  Object.defineProperty(out, "pressedBackground", {
+    enumerable: false,
+    configurable: true,
+    get: () => {
+      const value = finishOf(role)["pressed-background"];
+      return typeof value === "string" ? alias(value) : undefined;
+    },
+  });
+  Object.defineProperty(out, "pressedForeground", {
+    enumerable: false,
+    configurable: true,
+    get: () => {
+      const value = finishOf(role)["pressed-foreground"];
+      return typeof value === "string" ? alias(value) : undefined;
+    },
+  });
+  Object.defineProperty(out, "pressedOpacity", {
+    enumerable: false,
+    configurable: true,
+    get: () => finishOf(role)["pressed-opacity"],
+  });
   const glass = (key: string): string | undefined => {
-    const apple = materialOf(role)?.apple;
-    if (apple === undefined) return undefined;
-    if (key === "glassEffect") return apple.glass;
-    return apple.tint === null ? undefined : alias(apple.tint);
+    const recipe = recipeOf(role);
+    if (recipe?.glassEffect === undefined) return undefined;
+    if (key === "glassEffect") return recipe.glassEffect;
+    const background = finishOf(role).background;
+    return background === undefined ? undefined : alias(background);
   };
   return new Proxy(out, {
     ownKeys: (target) => [...Reflect.ownKeys(target), ...glassKeys(role)],
@@ -476,73 +488,38 @@ function themed(role: FinishRole): FinishStyle {
   });
 }
 
-/** What `platformMaterial` returns: the platform props a finish's `material` asks for. A platform it asks
- * nothing of has `undefined`. */
+/** What `platformMaterial` returns: the platform props a finish's material asks for. A platform it
+ * asks nothing of has `undefined`. */
 export interface MaterialProps {
   ios?: { backdropMaterial: BackdropMaterial };
-  macos?: {
-    backdrop: {
-      material: MacOsBackdropMaterial;
-      blending?: MacOsBackdropBlending;
-      state?: MacOsBackdropState;
-    };
-  };
   windows?: { backdrop: { material: WindowsBackdropMaterial } };
-  android?: {
-    ripple?: { color?: string; borderless?: boolean; radius?: number; foreground?: boolean };
-    elevation?: number;
-  };
+  android?: { elevation?: number };
 }
 
 /**
- * The platform props of a finish's `material`: `ios={{ backdropMaterial }}`, `macos={{ backdrop }}`,
- * `windows={{ backdrop }}` and `android={{ ripple, elevation }}`, for the view that draws the finish.
- * They are props, not style keys, so a component spreads them on the same view that spreads `finish.<role>`
- * into its `style`:
+ * The platform props of a finish's material, for the view that draws the finish: NSH's `ios`
+ * backdrop material, the `windows` backdrop blur and Android's `elevation`. They are props, not
+ * style keys, so a component spreads them on the same view that spreads `finish.<role>` into its
+ * `style`:
  *
- *     <View {...platformMaterial("menu")} style={{ ...finish.menu }} />
+ *     <View {...platformMaterial("overlay")} style={{ ...finish.overlay }} />
  *
- * Its four keys are getters, so they follow `selectTheme` and the appearance as `finish` does, and
- * a finish with `material: null` (every finish the library ships) gives `undefined` for all four: the
- * view is drawn as it was. The Liquid Glass of `material.apple` needs no prop: it is in the style.
+ * Its keys are getters, so they follow `selectTheme` and the appearance as `finish` does, and a
+ * finish whose `material` is `null` and which states no `elevation` (every layer of the themes that
+ * imitate no platform) gives `undefined` for all three: the view is drawn as it was. The Liquid
+ * Glass of a glass material needs no prop: `glassEffect` and `glassTintColor` are in the style.
  */
 export function platformMaterial(role: FinishRole): MaterialProps {
   return {
     get ios() {
-      const ios = materialOf(role)?.ios;
-      return ios === undefined ? undefined : { backdropMaterial: ios.backdrop };
-    },
-    get macos() {
-      const macos = materialOf(role)?.macos;
-      if (macos === undefined) return undefined;
-      const { backdrop: material, blending, state } = macos;
-      return {
-        backdrop: {
-          material,
-          ...(blending === undefined ? {} : { blending }),
-          ...(state === undefined ? {} : { state }),
-        },
-      };
+      return recipeOf(role)?.props.ios;
     },
     get windows() {
-      const windows = materialOf(role)?.windows;
-      return windows === undefined ? undefined : { backdrop: { material: windows.backdrop } };
+      return recipeOf(role)?.props.windows;
     },
     get android() {
-      const android = materialOf(role)?.android;
-      if (android === undefined) return undefined;
-      const { ripple, elevation } = android;
-      return {
-        ...(ripple === undefined
-          ? {}
-          : {
-              ripple: {
-                ...ripple,
-                color: alias(ripple.color),
-              },
-            }),
-        ...(elevation === undefined ? {} : { elevation }),
-      };
+      const { elevation } = finishOf(role);
+      return elevation === undefined ? undefined : { elevation };
     },
   };
 }
@@ -579,10 +556,6 @@ export interface Palette {
   faint: string;
   /** The accent as a foreground: text, icons, lines, small marks. */
   brand: string;
-  /** The accent as a fill (buttons, bubbles), with `onBrand` on it. */
-  brandFill: string;
-  /** Text on the accent fill. */
-  onBrand: string;
   /** The main action's fill (the theme's `primary`): the citrus, in both appearances. */
   primary: string;
   /** Text on `primary`. */
@@ -595,57 +568,23 @@ export interface Palette {
   sidebarBorder: string;
   /** A switch's track when off. */
   track: string;
-  /** A slider's inactive track fill (`{track}` by default; `brand-tint` in Material; `input` in WinUI). */
-  sliderTrack: string;
   /** A switch's knob when off. */
   knob: string;
-  /** Code inside insets. */
-  code: string;
-  /** The ink on a `brand-tint` surface: a chosen tile, a tinted bubble. */
-  onBrandTint: string;
   /** The surface of a tip or a toast, read apart from the page's: a flat theme's popover, an inverted pane in Material. */
   inverse: string;
   /** Text on `inverse`. */
   inverseForeground: string;
-  /** Secondary ink on `inverse`: a toast's description, spinner and close icon, a tooltip's note. */
-  inverseMuted: string;
   /** The accent on `inverse`: a toast's action. */
   inverseBrand: string;
-  /** Modal dialog container surface. */
-  dialog: string;
-  /** Hairline border on card and section containers. */
-  cardEdge: string;
-  /** Directional control elevation bevel stroke. */
-  bevel: string;
-  /** Accent control elevation top and side bevel stroke. */
-  accentBevel: string;
-  /** Disabled control container surface. */
-  disabled: string;
-  /** Disabled control label and icon ink. */
-  disabledForeground: string;
-  /** Accent control fill while pressed. */
-  accentPressed: string;
-  /** Ink on pressed accent control fills. */
-  onAccentPressed: string;
-  /** Label and icon ink on selected or toggled-on controls. */
-  selectedForeground: string;
-  /** Label and icon ink on pressed neutral or ghost controls. */
-  pressedForeground: string;
   /** The tone colors: information, a warning, a failure, a gain, a loss. */
   info: string;
   warn: string;
   destructive: string;
   up: string;
-  down: string;
   /** The ground a photograph or a video sits on. It does not flip: dark in either appearance. */
   media: string;
   /** White ink on a photograph or any other surface that is not the theme's. It does not flip. */
   onMedia: string;
-  /**
-   * Dark ink on a light chart tile. A dark tile uses `on-media` instead (`data-dark:`), because
-   * `nsh/base` marks a plot cell dark from its own OKLab lightness, not from the appearance.
-   */
-  chartForeground: string;
 }
 
 /** An object whose getters read the theme's tokens: reads in a reactive
@@ -678,55 +617,22 @@ export const colors: Palette = tokens<keyof Palette>({
   mutedForeground: "muted-foreground",
   faint: "faint",
   brand: "brand",
-  brandFill: "brand-fill",
-  onBrand: "on-brand",
   primary: "primary",
   primaryForeground: "primary-foreground",
   sidebar: "sidebar",
   sidebarAccent: "sidebar-accent",
   sidebarBorder: "sidebar-border",
   track: "track",
-  sliderTrack: "slider-track",
   knob: "knob",
-  code: "code",
   info: "info",
   warn: "warn",
   destructive: "destructive",
   up: "up",
-  down: "down",
   media: "media",
   onMedia: "on-media",
-  chartForeground: "chart-foreground",
-  onBrandTint: "on-brand-tint",
   inverse: "inverse",
   inverseForeground: "inverse-foreground",
-  inverseMuted: "inverse-muted",
   inverseBrand: "inverse-brand",
-  dialog: "dialog",
-  cardEdge: "card-edge",
-  bevel: "bevel",
-  accentBevel: "accent-bevel",
-  disabled: "disabled",
-  disabledForeground: "disabled-foreground",
-  accentPressed: "accent-pressed",
-  onAccentPressed: "on-accent-pressed",
-  selectedForeground: "selected-foreground",
-  pressedForeground: "pressed-foreground",
-});
-
-/**
- * The window buttons an app draws for a frameless window on macOS (the
- * traffic lights): close, minimize and zoom in the system's hues, the
- * glyphs' ink over them, their hairline edge, and `off`, all three while
- * the window is in the background.
- */
-export const windowControls = tokens<"close" | "minimize" | "zoom" | "ink" | "edge" | "off">({
-  close: "window-close",
-  minimize: "window-minimize",
-  zoom: "window-zoom",
-  ink: "window-control-ink",
-  edge: "window-control-edge",
-  off: "window-control-off",
 });
 
 /**
@@ -759,54 +665,43 @@ export const tints = tokens({
 });
 
 /**
- * Light and depth, kept quiet: one-color edges (corners join cleanly), a
- * hard 1-point drop under what stands up and a 1-point inner shade in what
- * is sunk; only floating surfaces (menus, glass) cast a soft
- * shadow. `hover` and `pressed` are a raised control's states, `fill` a
- * slider's or a progress bar's run of the accent; `knob` a switch's knob on its
- * sunk track, `knobOn` the white one with an olive edge on the citrus.
- * `handle` is a slider's thumb, the knob's twin here; a theme whose thumb
- * wears an edge the switch's knob does not (shadcn's `border-primary`) tells
- * them apart. `thumb` is a segmented control's or a tab strip's selected segment on
- * its sunk track: the raised fill dark; white with a soft drop light, where
- * the raised fill is all but the track's color.
- * `on` is what stays on (a toggle, a chosen tool, a selected button): a
- * fill that stands off every surface it sits on, and off a raised control
- * at rest, further than a hover does, so on and off read apart at a
- * glance. Dark, a step lighter than the raised fill; light, where a raised
- * fill is all but the color of the card and the inset under it, a deeper
- * neutral with an edge. `groove` is a hairline's lip of light under it, a
- * menu's separator cut into the surface.
+ * Light and depth, kept quiet: a control on a card stands off it by a step (`raised`: a hard drop
+ * below, a highlight above, a hairline), a card stands off the page by the next one (`card`), a
+ * panel floats (`overlay`), a dialog waits above the page (`modal`). What is sunk (`inset`: a field,
+ * a track, a groove) is drawn by an inner shade and an edge, never by a fill alone.
+ *
+ * The layers are what a surface is, not what draws it: `accent` is the accent's own face (a filled
+ * button, a chosen switch, a progress run), `inverse` the page's inverse (a toast, a tooltip),
+ * `glass` a translucent pane, `knob` the small thing that moves (a switch's thumb, a slider's
+ * handle, a chosen segment). `hover`, `pressed` and `disabled` are the steps a control takes — a
+ * control that differs (an open switch's thumb, a slider's thumb, a segmented control's thumb, a
+ * sheet's grabber) says so in its own preset, not in a finish of its own.
  */
 export const finish: Record<FinishRole, FinishStyle> = {
   card: themed("card"),
-  section: themed("section"),
   inset: themed("inset"),
-  field: themed("field"),
   raised: themed("raised"),
+  overlay: themed("overlay"),
+  modal: themed("modal"),
+  inverse: themed("inverse"),
+  glass: themed("glass"),
+  accent: themed("accent"),
+  knob: themed("knob"),
   hover: themed("hover"),
   pressed: themed("pressed"),
   disabled: themed("disabled"),
-  light: themed("light"),
-  accent: themed("accent"),
-  accentPressed: themed("accentPressed"),
-  track: themed("track"),
-  fill: themed("fill"),
-  knob: themed("knob"),
-  knobOn: themed("knobOn"),
-  handle: themed("handle"),
-  pill: themed("pill"),
-  thumb: themed("thumb"),
-  on: themed("on"),
-  chip: themed("chip"),
-  glass: themed("glass"),
-  menu: themed("menu"),
-  dialog: themed("dialog"),
-  grabber: themed("grabber"),
-  tooltip: themed("tooltip"),
-  inverse: themed("inverse"),
-  groove: themed("groove"),
 };
+
+/**
+ * A step of the shadow scale, in the appearance shown (`semantics.json`'s `elevation`): `sm` a
+ * control's cast, `md` a card's, `lg` an overlay's, `xl` a dialog's. A finish already wears the
+ * steps it names, so a component reads this only where it draws a shadow without a finish; a theme
+ * that has no value for a step gives `"none"`. Reactive: reading it follows `selectTheme`.
+ */
+export function elevation(level: ElevationLevel): string {
+  const scale = isDark() ? builtIn.elevation.dark : builtIn.elevation.light;
+  return scale[level] ?? "none";
+}
 
 /**
  * How far a press sinks a control, as the theme in use says (`semantics.json`'s `state["press-scale"]`):
@@ -852,7 +747,13 @@ export type Tone = "neutral" | "accent" | "info" | "warn" | "destructive" | "up"
  * the token (`brand`).
  */
 export const toneColor = (tone: Tone) =>
-  tone === "neutral" ? colors.mutedForeground : tone === "accent" ? colors.brand : colors[tone];
+  tone === "neutral"
+    ? colors.mutedForeground
+    : tone === "accent"
+      ? colors.brand
+      : tone === "down"
+        ? colors.destructive
+        : colors[tone];
 
 /**
  * The tint of a tone. `accent` reads `tints.brand` (the `brand-tint` token); the other tones share
@@ -868,24 +769,20 @@ export const toneTint = (tone: Tone) =>
  * use the system font with tabular numbers instead. */
 export const mono = () => token("font-mono");
 
-/** A typography role of `semantics.json`'s `typography`: every one but `fontFamily`. */
-export type TypeName = Exclude<keyof Style["typography"], "fontFamily">;
+/** A typography role of `semantics.json`'s `typography`: the seven text roles. */
+export type TypeName = keyof Style["typography"];
 
 /**
  * One facet of a typography role, read from the style in use (reactive: reading it in JSX, a `draw` or
  * an effect follows `selectTheme`). A component reads only the facets it set before, so text that
  * leaves its weight or line height to the text around it still does:
  * `style={{ fontSize: font.size("label"), fontWeight: font.weight("label") }}`.
- * `size` and `lineHeight` take the tier of the screen (`tier`); `lineHeight` resolves the unitless
- * DTCG ratio to rounded points for NSH.
+ * `size` and `lineHeight` take the tier of the screen (`tier`); `lineHeight` is the theme's
+ * line height in points (a whole number of pixels).
  */
 export const font = {
-  family: () => resolveFont(style().typography.fontFamily),
   size: (role: TypeName) => style().typography[role].fontSize[tier],
-  lineHeight: (role: TypeName) => {
-    const t = style().typography[role];
-    return Math.round(t.fontSize[tier] * t.lineHeight[tier]);
-  },
+  lineHeight: (role: TypeName) => style().typography[role].lineHeight[tier],
   weight: (role: TypeName) =>
     style().typography[role].fontWeight as NonNullable<TextStyle["fontWeight"]>,
   letterSpacing: (role: TypeName) => style().typography[role].letterSpacing,
@@ -916,13 +813,10 @@ export const shape = {
   },
 };
 
-/** Line widths in points (`semantics.json`'s `dimension.stroke`): `hairline` a divider or outlined element's edge, `surface` a surface's outline (0 where surfaces stand by tone or shadow alone), `control` a control's edge. The focus ring's width is `dimension.focus.width`. */
+/** Line widths in points (`semantics.json`'s `dimension.stroke`): `hairline` a divider's or a surface's edge (0 where surfaces stand by tone or shadow alone), `control` a control's edge. The focus ring's width is `dimension.focus.width`. */
 export const stroke = {
   get hairline() {
     return style().dimension.stroke.hairline;
-  },
-  get surface() {
-    return style().dimension.stroke.surface;
   },
   get control() {
     return style().dimension.stroke.control;
@@ -930,10 +824,15 @@ export const stroke = {
 };
 
 /**
- * How far a control fades (`semantics.json`'s `state`): `pressed` is the opacity of a pressed
- * control (`pressed-opacity`), `disabled` that of a disabled control's content when drawn as one.
+ * How far a control fades (`semantics.json`'s `state`): `rest` is the opacity a passive indicator
+ * sits at (`rest-opacity`), `pressed` that of a pressed control (`pressed-opacity`), `disabled` that of
+ * a disabled control's content when drawn as one. How far a filled control dims while it is pressed
+ * is the accent's own (`finish.accent.pressedOpacity`).
  */
 export const dimmed = {
+  get rest() {
+    return style().state["rest-opacity"];
+  },
   get pressed() {
     return style().state["pressed-opacity"];
   },
@@ -1076,35 +975,30 @@ const motionRole = (read: () => Spring | TimingSpec): Spring | Timing => {
 };
 
 /**
- * The motion every control shares: quick, slightly springy (or timed when a theme supplies
- * `{ duration, timingFunction }`). `control` and `move` are gpui-kit's `spring_control` (a 180 ms
- * response, no overshoot: a mark or a fill coming and going) and `spring_move` (280 ms, a
- * damping ratio of 0.85: a thumb or an indicator traveling) as a unit mass's stiffness
- * (2π / response)² and damping 2 · ratio · 2π / response.
+ * The three springs a theme offers: `fast` (a small control's state coming and going), `default`
+ * (the one most feedback uses: a press, a release, a modest move) and `slow` (a large surface or a
+ * long-travel movement). A spring, unless a theme times them with `{ duration, timingFunction }`.
+ * `enter` is a surface's entrance, which is always timed.
  */
 export const motion = {
-  press: motionRole(() => style().motion.press),
-  settle: motionRole(() => style().motion.settle),
-  control: motionRole(() => style().motion.control),
-  move: motionRole(() => style().motion.move),
+  fast: motionRole(() => style().motion.fast),
+  default: motionRole(() => style().motion.default),
+  slow: motionRole(() => style().motion.slow),
   get enter(): Timing {
     const { duration, timingFunction } = style().transition.enter;
     return { duration, timingFunction: easings[timingFunction] };
   },
-  get shake() {
-    return { duration: style().duration.shake };
-  },
 };
 
 /**
- * Drive `value` to `to` using `config` (a theme `Spring` or `Timing`, `motion.control` by
+ * Drive `value` to `to` using `config` (a theme `Spring` or `Timing`, `motion.default` by
  * default). Lands immediately when `reduceMotion()` is active. Optional `springExtra` (such as an
  * initial `velocity`) applies only when `config` is a spring.
  */
 export function animate(
   value: AnimatedValue,
   to: number,
-  config: Spring | Timing = motion.control,
+  config: Spring | Timing = motion.default,
   springExtra?: { velocity?: number; mass?: number },
 ): Promise<{ finished: boolean }> {
   if (reduceMotion()) {
@@ -1129,10 +1023,7 @@ export function animate(
  * the pointer drives (a dragged thumb, a hover's place) is set in the same
  * frame, never animated toward the pointer.
  */
-export function follow(
-  target: () => number,
-  config: Spring | Timing = motion.control,
-): AnimatedValue {
+export function follow(target: () => number, config: Spring | Timing = motion.fast): AnimatedValue {
   const v = createAnimatedValue(target());
   let shown = target();
   effect(() => {
@@ -1196,14 +1087,14 @@ export const focusRing = (offset?: number): ViewStyle => {
  */
 
 /**
- * A theme's fill for a run, a bar or a slider's range: its gradient, and the color under it. The
- * gradient carries the color (a flat theme repeats one color in both stops); the theme keeps its
- * `backgroundColor` transparent, since a color under the gradient shows through and tints the run.
+ * A theme's fill for a run, a bar or a slider's range: the accent's own face, its gradient and the
+ * colour under it. The gradient carries the colour where a theme has one; the colour under it shows
+ * through the translucent stops, so the two never drift apart.
  */
 export function fillStyle(): ViewStyle {
   return {
-    backgroundColor: finish.fill.backgroundColor,
-    backgroundImage: finish.fill.backgroundImage,
+    backgroundColor: finish.accent.backgroundColor,
+    backgroundImage: finish.accent.backgroundImage,
   };
 }
 

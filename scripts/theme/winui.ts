@@ -16,8 +16,7 @@
  * composited opaque over the window base (`SolidBackgroundFillColorBase`: `#F3F3F3` light,
  * `#202020` dark) — except `brand-edge`, which composites `ControlStrokeColorOnAccentSecondary`
  * over the accent fill `primary` — and emitted as canonical `oklch()` (`oklch.ts`). Alpha is
- * retained only where the role is an overlay or wash (`scrim`, `window-control-ink`,
- * `window-control-edge`).
+ * retained only where the role is an overlay or wash (`scrim`).
  *
  * WinUI XAML does not ship hex values for `SystemAccentColor*`; those come from the OS
  * `UISettings` at runtime. The default accent `#0078D4` uses Windows 11's default blue ramp
@@ -25,6 +24,7 @@
  * Any other host-supplied accent derives its 6 tiers perceptually in OKLCH.
  */
 import type { ThemeGeneratorOutput } from "./dtcg";
+import { finishes, shadows } from "./finishes/winui";
 import {
   oklchColor,
   oklchText,
@@ -274,18 +274,7 @@ export function winuiAccent(accent: string = WINUI_DEFAULT_ACCENT): WinuiAccent 
 }
 
 /** Colour keys of `cssVars.theme` in `packages/theme/theme.json` (excludes non-colour keys: radii, fonts). */
-export type WinuiThemeRole =
-  | "brand-fill"
-  | "on-brand"
-  | "scrim"
-  | "media"
-  | "on-media"
-  | "chart-foreground"
-  | "window-close"
-  | "window-minimize"
-  | "window-zoom"
-  | "window-control-ink"
-  | "window-control-edge";
+export type WinuiThemeRole = "scrim" | "media" | "on-media";
 
 /** Colour keys of `cssVars.light` and `cssVars.dark` in `packages/theme/theme.json`. */
 export type WinuiAppearanceRole =
@@ -323,8 +312,6 @@ export type WinuiAppearanceRole =
   | "inset"
   | "raised"
   | "glass-edge"
-  | "scrollbar-thumb"
-  | "scrollbar-thumb-hover"
   | "field"
   | "line"
   | "hover"
@@ -333,36 +320,20 @@ export type WinuiAppearanceRole =
   | "brand"
   | "brand-edge"
   | "track"
-  | "slider-track"
   | "knob"
-  | "code"
   | "info"
   | "warn"
   | "up"
-  | "down"
   | "brand-tint"
-  | "on-brand-tint"
   | "inverse"
   | "inverse-foreground"
-  | "inverse-muted"
   | "inverse-brand"
   | "info-tint"
   | "warn-tint"
   | "destructive-tint"
   | "up-tint"
   | "down-tint"
-  | "violet"
-  | "window-control-off"
-  | "dialog"
-  | "card-edge"
-  | "bevel"
-  | "accent-bevel"
-  | "disabled"
-  | "disabled-foreground"
-  | "accent-pressed"
-  | "on-accent-pressed"
-  | "selected-foreground"
-  | "pressed-foreground";
+  | "violet";
 
 export interface WinuiRoles {
   theme: Record<WinuiThemeRole, string>;
@@ -370,16 +341,13 @@ export interface WinuiRoles {
   dark: Record<WinuiAppearanceRole, string>;
 }
 
-// Library-shared values with no WinUI counterpart (`violet` data series and `window-control-off`
-// used by `title-bar.tsx` macOS traffic lights).
+// Library-shared values with no WinUI counterpart (`violet` data series).
 const LIBRARY_KEPT = {
   light: {
     violet: "oklch(0.5339 0.1647 289.689)",
-    windowControlOff: "oklch(0.89535 0.00406 286.317)",
   },
   dark: {
     violet: "oklch(0.76787 0.13219 294.446)",
-    windowControlOff: "oklch(0.40108 0.01081 264.446)",
   },
 } as const;
 
@@ -412,8 +380,6 @@ function buildAppearance(
   const destructiveTint = onBase(w.SystemFillColorCriticalBackground);
   // 10% accent wash composited opaque over the window base (no WinUI resource equivalent).
   const brandTint = over(withAlpha(primary, 0.1), background);
-  // WinUI `AccentFillColorTertiary` (`AccentFillColorDefault` @ 0.80 alpha) composited over base.
-  const accentPressed = over(withAlpha(primary, 0.8), background);
 
   return {
     background,
@@ -443,19 +409,17 @@ function buildAppearance(
     "chart-4": destructive,
     "chart-5": controlStrong,
     // `NavigationViewExpandedPaneBackground` is transparent over the window base.
-    sidebar: background,
-    "sidebar-foreground": foreground,
-    "sidebar-primary": primary,
-    "sidebar-primary-foreground": primaryForeground,
-    "sidebar-accent": accent,
-    "sidebar-accent-foreground": foreground,
-    "sidebar-border": divider,
-    "sidebar-ring": ring,
+    sidebar: "var(--background)",
+    "sidebar-foreground": "var(--foreground)",
+    "sidebar-primary": "var(--primary)",
+    "sidebar-primary-foreground": "var(--primary-foreground)",
+    "sidebar-accent": "var(--accent)",
+    "sidebar-accent-foreground": "var(--foreground)",
+    "sidebar-border": "var(--line)",
+    "sidebar-ring": "var(--ring)",
     inset,
     raised: secondary,
     "glass-edge": onBase(w.SurfaceStrokeColorFlyout),
-    "scrollbar-thumb": controlStrong,
-    "scrollbar-thumb-hover": controlStrong,
     field: secondary,
     line: divider,
     hover: onBase(w.ControlFillColorSecondary),
@@ -466,21 +430,16 @@ function buildAppearance(
     // composited over the accent fill `primary`, not over the base background.
     "brand-edge": compositeWinui(w.ControlStrokeColorOnAccentSecondary, primary),
     track: inset,
-    "slider-track": "var(--input)",
     knob: mutedForeground,
-    code: foreground,
     // `SystemFillColorAttentionBrush`: `SystemAccentColor` (`#0078D4`) in light, `SystemAccentColorLight2` in dark.
     info: appearance === "light" ? tiers.base : tiers.light2,
     warn,
     up,
-    down: destructive,
     "brand-tint": brandTint,
-    "on-brand-tint": foreground,
     // Non-transient `TeachingTipBackgroundBrush` (`SolidBackgroundFillColorTertiary`,
     // `TeachingTip_themeresources.xaml:9,31`); `tooltip` finish uses Acrylic `{popover}` instead.
     inverse: onBase(w.SolidBackgroundFillColorTertiary),
     "inverse-foreground": foreground,
-    "inverse-muted": mutedForeground,
     // `Toast`'s action uses `buttonLook("default")` (`finish.accent` = `{primary}`).
     "inverse-brand": primaryForeground,
     "info-tint": onBase(w.SystemFillColorAttentionBackground),
@@ -489,17 +448,6 @@ function buildAppearance(
     "up-tint": onBase(w.SystemFillColorSuccessBackground),
     "down-tint": destructiveTint,
     violet: LIBRARY_KEPT[appearance].violet,
-    "window-control-off": LIBRARY_KEPT[appearance].windowControlOff,
-    dialog: "var(--background)",
-    "card-edge": onBase(w.CardStrokeColorDefault),
-    bevel: onBase(w.ControlStrokeColorSecondary),
-    "accent-bevel": compositeWinui(w.ControlStrokeColorOnAccentDefault, primary),
-    disabled: onBase(w.ControlFillColorDisabled),
-    "disabled-foreground": onBase(w.TextFillColorDisabled),
-    "accent-pressed": accentPressed,
-    "on-accent-pressed": compositeWinui(w.TextOnAccentFillColorSecondary, accentPressed),
-    "selected-foreground": "var(--on-brand)",
-    "pressed-foreground": "var(--muted-foreground)",
   };
 }
 
@@ -514,74 +462,15 @@ export function winuiRoles(accent: string = WINUI_DEFAULT_ACCENT): WinuiRoles {
 
   return {
     theme: {
-      // `brand-fill` / `on-brand` follow the appearance's primary pair (`AccentFillColorDefault` +
-      // `TextOnAccentFillColorPrimary`): white on Dark1 in light, black on Light2 in dark.
-      "brand-fill": "var(--primary)",
-      "on-brand": "var(--primary-foreground)",
       // Overlay scrim retains alpha (`SmokeFillColorDefault` #4D000000, identical in light & dark).
       scrim: toOklchText(argbToCssHex(WINUI.light.SmokeFillColorDefault)),
       media: "oklch(0.1869 0.0151 266.766)",
       "on-media": toOklchText("#FFFFFF"),
-      "chart-foreground": light.foreground,
-      // `packages/ui/title-bar.tsx` draws macOS traffic lights from `windowControls` regardless of
-      // theme, so the library-shared traffic-light tones stay (Class B gap under #235).
-      "window-close": toOklchText("#FF5F57"),
-      "window-minimize": toOklchText("#FEBC2E"),
-      "window-zoom": toOklchText("#28C840"),
-      "window-control-ink": withAlpha("#000000", 0.5),
-      "window-control-edge": withAlpha("#000000", 0.12),
     },
     light,
     dark,
   };
 }
-
-const alias = (token: string) => `{${token}}`;
-const flat = (color: string) => `linear-gradient(180deg, ${color} 0%, ${color} 100%)`;
-
-/**
- * Two-layer ambient + key CSS shadow derived from WinUI 3 layering depths (`layering.md`,
- * `shadows.md`: control 2, card 8, tooltip 16, flyout/menu/glass 32, dialog 128) using the
- * two-layer ambient + key formula (`depth <= 16`: ambient 2px at 0.12/0.24, key `depth/2` `depth`
- * at 0.14/0.28; `depth > 16`: ambient 8px at 0.2/0.4, key `depth/2` `depth` at 0.24/0.48).
- * Approximates WinUI's dynamic 3D `ThemeShadow` in CSS.
- */
-const elevationShadow = (depth: 2 | 8 | 16 | 32 | 128, appearance: Appearance) => {
-  const [ambientBlur, ambient, key] =
-    depth <= 16
-      ? appearance === "light"
-        ? [2, 0.12, 0.14]
-        : [2, 0.24, 0.28]
-      : appearance === "light"
-        ? [8, 0.2, 0.24]
-        : [8, 0.4, 0.48];
-  return `0 0 ${ambientBlur}px ${oklchColor(0, 0, 0, ambient)}, 0 ${depth / 2}px ${depth}px ${oklchColor(0, 0, 0, key)}`;
-};
-
-const surface = (
-  color: string,
-  {
-    shadow = "none",
-    "border-color": borderColor = "transparent",
-    "border-top-color": borderTopColor,
-    "border-bottom-color": borderBottomColor,
-    material = null,
-  }: {
-    shadow?: string;
-    "border-color"?: string;
-    "border-top-color"?: string;
-    "border-bottom-color"?: string;
-    material?: { windows: { backdrop: "blur" } } | null;
-  } = {},
-) => ({
-  background: color,
-  gradient: flat(color),
-  shadow,
-  "border-color": borderColor,
-  ...(borderTopColor !== undefined ? { "border-top-color": borderTopColor } : {}),
-  ...(borderBottomColor !== undefined ? { "border-bottom-color": borderBottomColor } : {}),
-  material,
-});
 
 /**
  * Shared theme-level tokens (`cssVars.theme`) for WinUI 3: `ControlCornerRadius` 4 (controls and
@@ -602,182 +491,48 @@ function themeLevel(roles: WinuiRoles): Record<string, string> {
 
 /**
  * All 23 finish roles for WinUI 3 (`{token}` references; `glass`, `menu`, and `tooltip` ask
- * Windows for `{ windows: { backdrop: "blur" } }` as the Acrylic stand-in).
- */
-function finishes(appearance: Appearance): Record<string, Record<string, unknown>> {
-  const controlShadow = elevationShadow(2, appearance);
-  const flyoutShadow = elevationShadow(32, appearance);
-  const blurMaterial = { windows: { backdrop: "blur" as const } };
-  // `ContentDialogBorderBrush` -> `SurfaceStrokeColorDefault` (`#66757575` composited on base;
-  // flyouts keep `glass-edge` / `SurfaceStrokeColorFlyout`).
-  const dialogBorder = compositeWinui(
-    WINUI[appearance].SurfaceStrokeColorDefault,
-    WINUI[appearance].SolidBackgroundFillColorBase,
-  );
-  // `AcrylicInAppFillColorDefaultBrush` `TintLuminosityOpacity`: 0.85 light / 0.96 dark.
-  // Light TintColor `#FCFCFC` is approximated via `{popover}` (`#F9F9F9` fallback) so `glass` stays token-linked.
-  const glassOpacity = appearance === "light" ? 0.85 : 0.96;
-  return {
-    card: {
-      gradient: flat(alias("card")),
-      shadow: elevationShadow(8, appearance),
-      material: null,
-    },
-    section: {
-      background: alias("card"),
-      shadow: "none",
-      "border-color": alias("card-edge"),
-      material: null,
-    },
-    inset: { shadow: "none", material: null },
-    field: { shadow: "none", material: null },
-    raised: {
-      ...surface(alias("raised"), {
-        shadow: "none",
-        "border-color": alias("border"),
-        "border-top-color": appearance === "light" ? alias("border") : alias("bevel"),
-        "border-bottom-color": appearance === "light" ? alias("bevel") : alias("border"),
-      }),
-      backdropFilter: "none",
-    },
-    hover: surface(alias("hover"), {
-      shadow: "none",
-      "border-color": alias("border"),
-      "border-top-color": appearance === "light" ? alias("border") : alias("bevel"),
-      "border-bottom-color": appearance === "light" ? alias("bevel") : alias("border"),
-    }),
-    pressed: surface(alias("muted"), {
-      shadow: "none",
-      "border-color": alias("border"),
-      "border-top-color": alias("border"),
-      "border-bottom-color": alias("border"),
-    }),
-    disabled: surface(alias("disabled"), { shadow: "none", "border-color": alias("border") }),
-    light: surface(alias("primary"), {
-      shadow: "none",
-      "border-color": alias("accent-bevel"),
-      "border-top-color": alias("accent-bevel"),
-      "border-bottom-color": alias("brand-edge"),
-    }),
-    accent: surface(alias("primary"), {
-      shadow: "none",
-      "border-color": alias("accent-bevel"),
-      "border-top-color": alias("accent-bevel"),
-      "border-bottom-color": alias("brand-edge"),
-    }),
-    // `AccentButtonBorderBrushPressed` -> `ControlFillColorTransparentBrush`
-    // (`Button_themeresources.xaml` in `winui3/release/2.7.0`).
-    accentPressed: surface(alias("accent-pressed"), {
-      shadow: "none",
-      "border-color": "transparent",
-      "border-top-color": "transparent",
-      "border-bottom-color": "transparent",
-    }),
-    track: { shadow: "none", "border-color": alias("input"), material: null },
-    fill: {
-      background: "transparent",
-      gradient: flat(alias("primary")),
-      shadow: "none",
-      "border-color": "transparent",
-      material: null,
-    },
-    knob: surface(alias("knob")),
-    knobOn: surface(alias("primary-foreground")),
-    handle: surface(alias("popover"), { shadow: controlShadow, "border-color": alias("border") }),
-    pill: surface(alias("raised"), { shadow: "none", "border-color": alias("border") }),
-    thumb: surface(alias("popover"), { shadow: controlShadow, "border-color": alias("border") }),
-    on: surface(alias("primary"), {
-      shadow: "none",
-      "border-color": alias("accent-bevel"),
-      "border-top-color": alias("accent-bevel"),
-      "border-bottom-color": alias("brand-edge"),
-    }),
-    chip: surface(alias("raised"), { shadow: "none", "border-color": alias("border") }),
-    glass: {
-      background: `oklch(from {popover} l c h / ${glassOpacity})`,
-      shadow: flyoutShadow,
-      "border-color": alias("glass-edge"),
-      backdropFilter: "blur(30px)",
-      material: blurMaterial,
-    },
-    menu: {
-      background: alias("popover"),
-      shadow: flyoutShadow,
-      "border-color": alias("glass-edge"),
-      backdropFilter: "none",
-      material: blurMaterial,
-    },
-    dialog: {
-      background: alias("dialog"),
-      shadow: elevationShadow(128, appearance),
-      "border-color": dialogBorder,
-      material: null,
-    },
-    grabber: {
-      background: alias("raised"),
-      shadow: "none",
-      material: null,
-    },
-    tooltip: {
-      background: alias("popover"),
-      shadow: elevationShadow(16, appearance),
-      "border-color": alias("glass-edge"),
-      material: blurMaterial,
-    },
-    inverse: {
-      background: alias("inverse"),
-      shadow: flyoutShadow,
-      "border-color": alias("glass-edge"),
-      backdropFilter: "none",
-      material: null,
-    },
-    groove: { shadow: "none", material: null },
-  };
-}
-
 /** WinUI 3 style groups (`semantics.json`); verified values in `docs/specs/native-themes.md` §3.2. */
 export const winuiStyle = {
   typography: {
-    fontFamily: "{font-sans}",
     caption: {
       fontSize: { pointer: 12, touch: 12 },
-      lineHeight: { pointer: 16 / 12, touch: 16 / 12 },
+      lineHeight: { pointer: 16, touch: 16 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     detail: {
       fontSize: { pointer: 12, touch: 12 },
-      lineHeight: { pointer: 16 / 12, touch: 16 / 12 },
+      lineHeight: { pointer: 16, touch: 16 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     body: {
       fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20 / 14, touch: 20 / 14 },
+      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     label: {
       fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20 / 14, touch: 20 / 14 },
+      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     title: {
       fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20 / 14, touch: 20 / 14 },
+      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 600,
       letterSpacing: 0,
     },
     headline: {
       fontSize: { pointer: 20, touch: 20 },
-      lineHeight: { pointer: 28 / 20, touch: 28 / 20 },
+      lineHeight: { pointer: 28, touch: 28 },
       fontWeight: 600,
       letterSpacing: 0,
     },
     display: {
       fontSize: { pointer: 28, touch: 28 },
-      lineHeight: { pointer: 36 / 28, touch: 36 / 28 },
+      lineHeight: { pointer: 36, touch: 36 },
       fontWeight: 600,
       letterSpacing: 0,
     },
@@ -791,39 +546,17 @@ export const winuiStyle = {
     size: {
       hit: { pointer: 0, touch: 40 },
       density: {
-        // Standard WinUI `ListViewItemMinHeight` = 40 (`ListViewItem_themeresources.xaml:14`).
-        pointer: { row: 40, pad: 16, gap: 8, surface: 4 },
-        touch: { row: 40, pad: 16, gap: 8, surface: 8 },
+        pointer: { pad: 12, gap: 8 },
+        touch: { pad: 12, gap: 8 },
       },
       control: {
-        pointer: {
-          row: 32,
-          padding: 6,
-          gap: 8,
-          control: 20,
-          check: 12,
-          dot: 12,
-          tabs: 32,
-          line: 32,
-          clear: 16,
-          switch: "regular",
-        },
-        touch: {
-          row: 40,
-          padding: 8,
-          gap: 8,
-          control: 20,
-          check: 12,
-          dot: 12,
-          tabs: 40,
-          line: 40,
-          clear: 20,
-          switch: "regular",
-        },
+        // WinUI's own 6px inset inside a control (`Button_themeresources.xaml`); 8 beside it.
+        pointer: { padding: 6, gap: 8, dot: 12, switch: "regular" },
+        touch: { padding: 6, gap: 8, dot: 12, switch: "regular" },
       },
       height: { pointer: { sm: 24, md: 32, lg: 40 }, touch: { sm: 32, md: 40, lg: 48 } },
     },
-    stroke: { hairline: 1, surface: 1, control: 1 },
+    stroke: { hairline: 1, control: 1 },
     focus: { style: "double", width: 2, offset: 0 },
     icon: {
       pointer: { sm: 12, md: 16, lg: 20 },
@@ -841,22 +574,23 @@ export const winuiStyle = {
     overlay: { hover: 0, focus: 0, pressed: 0, dragged: 0 },
     ripple: false,
     "pressed-opacity": 1,
-    "accent-pressed-opacity": 1,
+    "rest-opacity": 0.5,
     // Disabled containers switch to the dedicated disabled brush (`ControlFillColorDisabled` /
     // `TextFillColorDisabled`) when `fill: true`; `content: 0.36` matches `TextFillColorDisabled`.
     disabled: { content: 0.36, fill: true },
   },
-  duration: { shake: 500 },
   transition: {
     enter: { duration: 250, timingFunction: "decelerate" },
   },
   motion: {
-    // WinUI 3 timing durations and curves (`motion.md`, `Common_themeresources_any.xaml:602-606`,
-    // `ToggleSwitch_themeresources.xaml:321`).
-    press: { duration: 83, timingFunction: "decelerate" },
-    settle: { duration: 250, timingFunction: "decelerate" },
-    control: { duration: 167, timingFunction: "point-to-point" },
-    move: { duration: 333, timingFunction: "point-to-point" },
+    // Three of WinUI 3's four control durations, named by speed (`motion.md`,
+    // `Common_themeresources_any.xaml:602-606`): Faster (83, ToggleSwitch's press,
+    // `ToggleSwitch_themeresources.xaml:321`), Fast (167, the standard control response) and
+    // Normal (250, a panel's entrance). Slow (333) is the fourth and the least used, so `move`
+    // takes Normal.
+    fast: { duration: 83, timingFunction: "decelerate" },
+    default: { duration: 167, timingFunction: "decelerate" },
+    slow: { duration: 250, timingFunction: "decelerate" },
   },
   controls: "winui" as const,
 };
@@ -905,8 +639,6 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
     raised: "Raised control fill (WinUI ControlFillColorDefault composited over base).",
     "glass-edge":
       "Flyout and acrylic border (WinUI SurfaceStrokeColorFlyout composited over base).",
-    "scrollbar-thumb": "Static scrollbar thumb color (WinUI ControlStrongFillColorDefault).",
-    "scrollbar-thumb-hover": "Static scrollbar hover color (WinUI ControlStrongFillColorDefault).",
     field: "Text input surface (WinUI ControlFillColorDefault composited over base).",
     line: "Hairline divider stroke (WinUI DividerStrokeColorDefault).",
     hover: "Pointer hover fill (WinUI ControlFillColorSecondary composited over base).",
@@ -917,20 +649,15 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
     "brand-edge":
       "Accent button bottom bevel stroke (WinUI ControlStrokeColorOnAccentSecondary composited over primary).",
     track: "Switch and slider track (WinUI ControlAltFillColorSecondary).",
-    "slider-track":
-      "WinUI 3 inactive slider track aliased to {color.input} (SliderTrackFill -> ControlStrongFillColorDefault, Slider_themeresources.xaml:20 in winui3/release/2.7.0).",
     knob: "Unchecked switch thumb (WinUI TextFillColorSecondary).",
     code: "Inline code ink (WinUI TextFillColorPrimary).",
     info: "Informational semantic color (WinUI SystemFillColorAttentionBrush).",
     warn: "Caution semantic color (WinUI SystemFillColorCaution).",
     up: "Success semantic color (WinUI SystemFillColorSuccess).",
-    down: "Negative trend color matching WinUI SystemFillColorCritical.",
     "brand-tint": "10% accent wash composited opaque over window base.",
-    "on-brand-tint": "Ink on brand-tint surfaces (WinUI TextFillColorPrimary).",
     inverse:
       "TeachingTip/toast surface (WinUI SolidBackgroundFillColorTertiary composited over base).",
     "inverse-foreground": "Ink on inverse surface (WinUI TextFillColorPrimary).",
-    "inverse-muted": "Secondary ink on inverse surface (WinUI TextFillColorSecondary).",
     "inverse-brand": "Action ink on inverse surface matching TextOnAccentFillColorPrimary.",
     "info-tint":
       "Informational wash (WinUI SystemFillColorAttentionBackground composited over base).",
@@ -941,26 +668,6 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
     "down-tint":
       "Negative trend wash (WinUI SystemFillColorCriticalBackground composited over base).",
     violet: "Library-retained violet data-series hue (no WinUI equivalent).",
-    "window-control-off":
-      "Library-retained unfocused window traffic-light fill (no WinUI equivalent).",
-    dialog: "ContentDialog surface aliased to {color.background} (SolidBackgroundFillColorBase).",
-    "card-edge": "Card border stroke (WinUI CardStrokeColorDefault composited over base).",
-    bevel:
-      "Standard button elevation bevel stroke (WinUI ControlStrokeColorSecondary composited over base).",
-    "accent-bevel":
-      "Accent button top/side bevel stroke (WinUI ControlStrokeColorOnAccentDefault composited over primary).",
-    disabled:
-      "Disabled control container fill (WinUI ControlFillColorDisabled composited over base).",
-    "disabled-foreground":
-      "Disabled control text/icon ink (WinUI TextFillColorDisabled composited over base).",
-    "accent-pressed":
-      "Pressed accent control fill (WinUI AccentFillColorTertiary composited over base).",
-    "on-accent-pressed":
-      "Pressed accent control ink (WinUI TextOnAccentFillColorSecondary composited over accent-pressed).",
-    "selected-foreground":
-      "Ink on checked ToggleButton / active AccentFillColorDefault controls aliased to {color.on-brand}.",
-    "pressed-foreground":
-      "Pressed standard control ink aliased to {color.muted-foreground} (WinUI TextFillColorSecondary).",
   };
 
   return {
@@ -1001,55 +708,15 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
       light: roles.light,
       dark: roles.dark,
     },
-    finishes: {
-      light: finishes("light"),
-      dark: finishes("dark"),
-    },
+    finishes,
+    shadows,
     descriptions: {
       sharedColors: {
-        "brand-fill":
-          "Primary brand action fill, aliased to {color.primary} (WinUI AccentFillColorDefault).",
-        "on-brand":
-          "Foreground text and icons on brand-fill surfaces, aliased to {color.primary-foreground} (WinUI TextOnAccentFillColorPrimary).",
         scrim:
-          "Translucent backdrop scrim behind dialogs and overlays (WinUI SmokeFillColorDefault #4D000000).",
-        "chart-foreground":
-          "Dark ink on light chart tiles matching WinUI light TextFillColorPrimary.",
-        "window-control-ink":
-          "Glyph ink inside macOS window traffic-light buttons (50% black literal).",
-        "window-control-edge":
-          "Hairline border around macOS window traffic-light buttons (12% black literal).",
+          "Translucent backdrop scrim behind modals and overlays (WinUI SmokeFillColorDefault #4D000000).",
       },
       lightColors: colorDescs,
       darkColors: colorDescs,
-      finishes: {
-        card: "WinUI 3 card surface with layering depth-8 two-layer ThemeShadow approximation.",
-        section:
-          "WinUI 3 section card surface using CardBackgroundFillColorDefault and CardStrokeColorDefault border (no drop shadow).",
-        raised:
-          "WinUI 3 standard control surface with ControlElevationBorderBrush top/bottom bevel and no drop shadow.",
-        hover:
-          "WinUI 3 hovered control surface with ControlFillColorSecondary fill and ControlElevationBorderBrush bevel.",
-        pressed:
-          "WinUI 3 pressed control surface with ControlFillColorTertiary/muted fill, flat border, and no shadow.",
-        disabled:
-          "WinUI 3 disabled control container using ControlFillColorDisabled and ControlStrokeColorDefault border.",
-        accent:
-          "WinUI 3 accent control surface using AccentFillColorDefault and AccentControlElevationBorderBrush bevel.",
-        accentPressed:
-          "WinUI 3 pressed accent control surface using AccentFillColorTertiary and transparent directional borders (AccentButtonBorderBrushPressed -> ControlFillColorTransparentBrush, WinUI 2.7.0 Button_themeresources.xaml).",
-        handle: "WinUI 3 slider handle using popover fill, depth-2 shadow, and border.",
-        thumb: "WinUI 3 segmented thumb using popover fill, depth-2 shadow, and border.",
-        on: "WinUI 3 checked ToggleButton / active surface using AccentFillColorDefault and AccentControlElevationBorderBrush bevel.",
-        glass:
-          "WinUI 3 AcrylicInApp surface with per-appearance TintLuminosityOpacity (0.85 light / 0.96 dark), depth-32 shadow, and Windows blur backdrop.",
-        menu: "WinUI 3 Acrylic flyout/menu surface with depth-32 shadow and Windows blur backdrop.",
-        dialog:
-          "WinUI 3 ContentDialog surface with depth-128 shadow and composited SurfaceStrokeColorDefault border.",
-        tooltip:
-          "WinUI 3 ToolTip surface with depth-16 shadow, glass-edge border, and Windows blur backdrop.",
-        inverse: "WinUI 3 TeachingTip/toast surface with depth-32 shadow and glass-edge border.",
-      },
       style: {
         "font.family.mono": "WinUI 3 monospace font stack (Consolas, monospace).",
         "font.family.sans":
@@ -1068,11 +735,11 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
           "WinUI 3 disabled styling: 0.36 TextFillColorDisabled content with fill: true container override.",
         "transition.enter":
           "WinUI 3 250ms entrance transition with Direct Entrance decelerate curve (motion.md).",
-        "motion.press":
-          "WinUI 3 ToggleSwitch press timing (83ms decelerate, ToggleSwitch_themeresources.xaml:321).",
-        "motion.settle": "WinUI 3 250ms settle timing with Direct Entrance decelerate curve.",
-        "motion.control": "WinUI 3 167ms control timing with Point-to-Point curve.",
-        "motion.move": "WinUI 3 333ms move timing with Point-to-Point curve.",
+        "motion.fast":
+          "WinUI 3 ControlFasterAnimationDuration (83ms, decelerate; ToggleSwitch_themeresources.xaml:321).",
+        "motion.default":
+          "WinUI 3 ControlFastAnimationDuration (167ms, decelerate; Common_themeresources_any.xaml).",
+        "motion.slow": "WinUI 3 ControlNormalAnimationDuration (250ms, decelerate; motion.md).",
         controls: "WinUI 3 (winui3/release/2.7.0) control geometry presets.",
       },
     },

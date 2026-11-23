@@ -15,10 +15,10 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 import { colourFields, readColour } from "./theme/finish-colour";
-import { checkGlassFallback, checkMaterial } from "./theme/material";
+import { checkMaterial, checkMaterialFill } from "./theme/material";
 import { parseColor } from "./theme/oklch";
-import { specBlock, specParts, specRows } from "./theme/spec";
-import { checkStyle } from "./theme/style";
+import { scaleCitations, specBlock, specParts, specRows } from "./theme/spec";
+import { checkScales, checkStyle, citedValues } from "./theme/style";
 import {
   findTokenRefs,
   mergeFinishes,
@@ -43,9 +43,13 @@ interface Finish {
   background?: string;
   gradient?: string;
   shadow?: string;
+  foreground?: string;
   "border-color"?: string;
   "border-top-color"?: string;
   "border-bottom-color"?: string;
+  "pressed-background"?: string;
+  "pressed-foreground"?: string;
+  "pressed-opacity"?: number;
   backdropFilter?: string;
   material?: unknown;
 }
@@ -82,6 +86,9 @@ const themes = readdirSync(join(root, "packages/theme/themes"))
 const spec = read("docs/specs/theme-roles.md");
 /** What the spec names: the A and C layers, and every finish's row. */
 const specPartsOf = specParts(spec);
+
+/** The values the spec cites off the 4 px grid, by theme and key. */
+const cited = citedValues(scaleCitations(spec));
 
 const failures: string[] = [];
 const fail = (message: string) => failures.push(message);
@@ -259,6 +266,17 @@ for (const theme of themes) {
   }
 }
 
+/** Fields a finish may leave out: a flat look states no gradient, an opaque one no backdrop, only
+ * the platform's own layers state an elevation, and only a theme whose press swaps the accent out
+ * states the pressed fill and ink. */
+const optionalFields = new Set([
+  "elevation",
+  "material",
+  "gradient",
+  "backdropFilter",
+  "pressed-background",
+  "pressed-foreground",
+]);
 const shapeOf = new Map<string, string[]>();
 for (const appearance of appearances)
   for (const [role, finish] of Object.entries(defaultMerged[appearance]))
@@ -286,11 +304,16 @@ for (const theme of themes) {
       const want = shapeOf.get(`${role}.${appearance}`);
       if (want === undefined) continue;
       for (const field of want)
-        if (field !== "material" && !have.includes(field))
+        if (!optionalFields.has(field) && !have.includes(field))
           fail(`${path}: ${role}.${field} is missing, and every finish states a ${field}`);
       for (const field of have)
-        if (!want.includes(field))
+        if (!want.includes(field) && !optionalFields.has(field))
           fail(`${path}: ${role}.${field} is not a field the default theme's \`${role}\` states`);
+
+      // A press dims the accent to a visible opacity, or not at all (1).
+      const dim = finish["pressed-opacity"];
+      if (dim !== undefined && (typeof dim !== "number" || dim <= 0 || dim > 1))
+        fail(`${path}: ${role}.pressed-opacity is ${String(dim)}, not a number in (0, 1]`);
 
       const base = defaultMerged[appearance][role];
       if (base !== undefined && paints(finish) !== paints(base))
@@ -316,11 +339,10 @@ for (const theme of themes) {
           );
       }
 
-      // The platform material: stated on every finish, from NSH's lists, its tint a colour token.
-      for (const problem of checkMaterial(path, `${role}.${appearance}`, finish, kinds))
-        fail(problem);
-      for (const problem of checkGlassFallback(path, `${role}.${appearance}`, finish))
-        fail(problem);
+      // The platform material: stated on every finish, one of the recipes, over a fill the recipe's
+      // fallback can stand in for where the platform draws none.
+      for (const problem of checkMaterial(path, `${role}.${appearance}`, finish)) fail(problem);
+      for (const problem of checkMaterialFill(path, `${role}.${appearance}`, finish)) fail(problem);
 
       // `shadow` is ink, except any `{token}` it names must exist and be a `"color"` token.
       for (const name of findTokenRefs(finish.shadow ?? "")) {
@@ -336,25 +358,37 @@ for (const theme of themes) {
   }
 }
 
-// 4b. Every theme states the same style (typography, dimension, shape, state, duration, transition,
-// motion, controls), with `{token}` references typed by DTCG `$type`.
+// 4b. Every theme states the same style (typography, dimension, shape, state, transition, motion,
+// controls), with `{token}` references typed by DTCG `$type` and sizes on the scales.
 for (const theme of themes) {
   const path = `packages/theme/themes/${theme}/semantics.json`;
+  const file = readJson<Record<string, unknown>>(path);
   const kinds = tokenKinds(tokensOf.get(theme)!.cssVars);
   for (const problem of checkStyle(
     path,
-    readJson<Record<string, unknown>>(path),
+    file,
     defaultSemantics as unknown as Record<string, unknown>,
     kinds,
   ))
     fail(problem);
+  for (const problem of checkScales(path, file, theme, cited)) fail(problem);
 }
 
 // 5. Nothing in the files is written and never read.
+// Two tokens need no reader of this library's: `font-sans` is every text's default family, which
+// NSH applies itself (`Theme::font_sans` reads the token), and `radius` is the A layer's base slot
+// an app's own Tailwind utilities take (`rounded-lg`, `rounded-(--radius)`).
+const platformTokens = new Set(["radius", "font-sans"]);
 const shared = new Set(Object.keys(tokensOf.get(first)?.cssVars.theme ?? {}));
 const shadcn = new Set(slots);
 for (const name of names)
-  if (!shadcn.has(name) && !shared.has(name) && !readsToken(name) && !unread.has(name))
+  if (
+    !shadcn.has(name) &&
+    !shared.has(name) &&
+    !platformTokens.has(name) &&
+    !readsToken(name) &&
+    !unread.has(name)
+  )
     fail(`packages/theme/theme.json: token \`${name}\` is read nowhere and not left to the app`);
 for (const role of defaultRoles)
   if (!readsRole(role) && !unread.has(role))
@@ -372,8 +406,7 @@ const isColour = (value: string) => {
   }
 };
 for (const [name, value] of Object.entries(themeBlock)) {
-  // `radius` is the shadcn A-layer base slot reserved for application Tailwind utilities (`rounded-lg`, `rounded-(--radius)`).
-  if (name !== "radius" && !readsToken(name) && !unread.has(name))
+  if (!platformTokens.has(name) && !readsToken(name) && !unread.has(name))
     fail(`packages/theme/theme.json: token \`${name}\` is read nowhere and not left to the app`);
   if (name.startsWith("font-") && isColour(value))
     fail(

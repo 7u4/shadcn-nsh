@@ -107,7 +107,7 @@ export function codeBlockLook(): CodeBlockLook {
       fontFamily: mono(),
       fontSize: font.size(codeRole(size)),
       lineHeight: font.lineHeight(codeRole(size)),
-      color: variant === "destructive" ? colors.destructive : colors.code,
+      color: variant === "destructive" ? colors.destructive : colors.foreground,
     }),
     line: (variant, size) => ({
       flexDirection: "row",
@@ -122,7 +122,7 @@ export function codeBlockLook(): CodeBlockLook {
           : variant === "added"
             ? alpha(colors.up, 0.14)
             : variant === "removed"
-              ? alpha(colors.down, 0.14)
+              ? alpha(colors.destructive, 0.14)
               : "transparent",
     }),
     gutter: (variant, size, digits) => ({
@@ -142,7 +142,12 @@ export function codeBlockLook(): CodeBlockLook {
       fontSize: font.size(codeRole(size)),
       lineHeight: font.lineHeight(codeRole(size)),
       width: Math.ceil(font.size(codeRole(size)) * DIGIT * 2),
-      color: variant === "added" ? colors.up : variant === "removed" ? colors.down : "transparent",
+      color:
+        variant === "added"
+          ? colors.up
+          : variant === "removed"
+            ? colors.destructive
+            : "transparent",
     }),
     footer: (variant, size) => ({
       flexDirection: "row",

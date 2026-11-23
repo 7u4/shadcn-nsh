@@ -6,12 +6,11 @@ function App() {
   return (
     <View>
       <Text>{`raised=${finish.raised.backgroundColor}`}</Text>
-      <Text>{`menu=${finish.menu.borderColor}`}</Text>
+      <Text>{`menu=${finish.overlay.borderColor}`}</Text>
       <Text>{`text=${colors.foreground}`}</Text>
       <Text>{`muted=${colors.mutedForeground}`}</Text>
       <Text>{`media=${colors.media}`}</Text>
       <Text>{`on-media=${colors.onMedia}`}</Text>
-      <Text>{`chart-ink=${colors.chartForeground}`}</Text>
     </View>
   );
 }

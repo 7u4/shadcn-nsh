@@ -87,7 +87,7 @@ function SectorBar(props: { label: string; change: () => number; scale: () => nu
           <View style={{ flex: 1 }}>
             <SpringBar
               share={() => (props.change() < 0 ? share() : 0)}
-              color={colors.down}
+              color={colors.destructive}
               from="right"
               height={8}
               radius={2}
@@ -147,7 +147,7 @@ function Breadth(props: { market: Market }) {
           >
             <View style={{ flex: b().up, backgroundColor: colors.up }} />
             <View style={{ flex: b().flat, backgroundColor: colors.faint }} />
-            <View style={{ flex: b().down, backgroundColor: colors.down }} />
+            <View style={{ flex: b().down, backgroundColor: colors.destructive }} />
           </View>
         </If>
         <View style={{ flexDirection: "row" }}>
@@ -163,7 +163,7 @@ function Breadth(props: { market: Market }) {
               textAlign: "right",
               fontSize: 12,
               fontVariant: ["tabular-nums"],
-              color: colors.down,
+              color: colors.destructive,
             }}
           >
             {b().down} down
@@ -299,13 +299,13 @@ function MarketStrip(props: { market: Market }) {
               justifyContent: "center",
               borderWidth: 1,
               borderRadius: 16,
-              ...(running() ? finish.pill : finish.accent),
+              ...(running() ? finish.raised : finish.accent),
             }}
           >
             <Icon
               icon={running() ? Pause : Play}
               size={13}
-              tint={running() ? colors.mutedForeground : colors.onBrand}
+              tint={running() ? colors.mutedForeground : colors.primaryForeground}
             />
           </View>
         </If>

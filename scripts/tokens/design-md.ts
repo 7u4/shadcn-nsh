@@ -183,7 +183,7 @@ export function compileDesignMd(resolverPath: string): string {
       fontFamily: string;
       fontSize: string;
       fontWeight: number;
-      lineHeight: number;
+      lineHeight: string;
       letterSpacing: string;
     }
   > = {};
@@ -193,11 +193,13 @@ export function compileDesignMd(resolverPath: string): string {
       ? val.fontFamily.join(", ")
       : String(val.fontFamily);
     const fontSize = val.fontSize as DtcgDimension;
+    // DTCG's `lineHeight` is a multiple of the font size; a design language states the line box in points.
+    const lineHeight = Math.round(fontSize.value * (val.lineHeight as number));
     typographyYaml[role] = {
       fontFamily,
       fontSize: fmtDim(fontSize),
       fontWeight: val.fontWeight,
-      lineHeight: val.lineHeight as number,
+      lineHeight: `${lineHeight}${fontSize.unit}`,
       letterSpacing: fmtDim(val.letterSpacing),
     };
   }
@@ -230,7 +232,7 @@ export function compileDesignMd(resolverPath: string): string {
     icon: readDimLeaves(dimResolved.icon as Record<string, unknown>),
   };
 
-  // Motion (timing transitions and shake duration; springs have no DESIGN.md field and are documented in prose)
+  // Motion (the entrance transition's timing; springs have no DESIGN.md field and are documented in prose)
   const motionYaml: Record<string, Record<string, string>> = {};
   const enterVal = (lightResolved.transition as Record<string, Record<string, unknown>>).enter!
     .$value as DtcgTransition;
@@ -239,13 +241,8 @@ export function compileDesignMd(resolverPath: string): string {
     delay: `${enterVal.delay.value}${enterVal.delay.unit}`,
     timingFunction: `cubic-bezier(${(enterVal.timingFunction as number[]).join(", ")})`,
   };
-  const shakeDur = (lightResolved.duration as Record<string, Record<string, unknown>>).shake!
-    .$value as { value: number; unit: string };
-  motionYaml.shake = {
-    duration: `${shakeDur.value}${shakeDur.unit}`,
-  };
   const motionRes = (lightResolved.motion ?? {}) as Record<string, Record<string, unknown>>;
-  for (const role of ["press", "settle", "control", "move"] as const) {
+  for (const role of ["fast", "default", "slow"] as const) {
     const timingNode = motionRes[role]?.timing;
     if (isTokenNode(timingNode)) {
       const val = timingNode.$value as DtcgTransition;
@@ -322,10 +319,17 @@ export function compileDesignMd(resolverPath: string): string {
     return fallbackColor ? colorRefOf(fallbackColor) : undefined;
   };
 
+  /** A finish's ink: its `foreground`, as a colour-role reference where it is one. */
+  const resolveFinishInk = (role: string): string | undefined =>
+    resolveColorField(
+      finishesRaw[role]?.foreground as Record<string, unknown> | undefined,
+      finishesRes[role]?.foreground as Record<string, unknown> | undefined,
+    );
+
   const componentsYaml: Record<string, Record<string, string>> = {
     "button-primary": {
-      ...(resolveFinishBg("light", "primary")
-        ? { backgroundColor: resolveFinishBg("light", "primary")! }
+      ...(resolveFinishBg("accent", "primary")
+        ? { backgroundColor: resolveFinishBg("accent", "primary")! }
         : {}),
       textColor: colorRefOf("primary-foreground"),
       typography: "{typography.label}",
@@ -364,11 +368,11 @@ export function compileDesignMd(resolverPath: string): string {
         : {}),
       textColor: colorRefOf("foreground"),
       rounded: "{rounded.control}",
-      padding: "{spacing.density.surface}",
+      padding: "{spacing.control.padding}",
     },
     "input-field": {
-      ...(resolveFinishBg("field", "field")
-        ? { backgroundColor: resolveFinishBg("field", "field")! }
+      ...(resolveFinishBg("inset", "inset")
+        ? { backgroundColor: resolveFinishBg("inset", "inset")! }
         : {}),
       textColor: colorRefOf("foreground"),
       typography: "{typography.label}",
@@ -377,16 +381,14 @@ export function compileDesignMd(resolverPath: string): string {
       padding: "{spacing.control.padding}",
     },
     "badge-chip": {
-      ...(resolveFinishBg("chip", "secondary")
-        ? { backgroundColor: resolveFinishBg("chip", "secondary")! }
-        : {}),
+      backgroundColor: colorRefOf("secondary"),
       textColor: colorRefOf("secondary-foreground"),
       typography: "{typography.caption}",
       rounded: "{rounded.control}",
     },
     "menu-popover": {
-      ...(resolveFinishBg("menu", "popover")
-        ? { backgroundColor: resolveFinishBg("menu", "popover")! }
+      ...(resolveFinishBg("overlay", "popover")
+        ? { backgroundColor: resolveFinishBg("overlay", "popover")! }
         : {}),
       textColor: colorRefOf("popover-foreground"),
       typography: "{typography.body}",
@@ -394,8 +396,8 @@ export function compileDesignMd(resolverPath: string): string {
       padding: "{spacing.control.padding}",
     },
     dialog: {
-      ...(resolveFinishBg("dialog", "card")
-        ? { backgroundColor: resolveFinishBg("dialog", "card")! }
+      ...(resolveFinishBg("modal", "card")
+        ? { backgroundColor: resolveFinishBg("modal", "card")! }
         : {}),
       textColor: colorRefOf("card-foreground"),
       typography: "{typography.body}",
@@ -403,8 +405,8 @@ export function compileDesignMd(resolverPath: string): string {
       padding: "{spacing.density.pad}",
     },
     tooltip: {
-      ...(resolveFinishBg("tooltip", "inverse")
-        ? { backgroundColor: resolveFinishBg("tooltip", "inverse")! }
+      ...(resolveFinishBg("inverse", "inverse")
+        ? { backgroundColor: resolveFinishBg("inverse", "inverse")! }
         : {}),
       textColor: colorRefOf("inverse-foreground"),
       typography: "{typography.detail}",
@@ -419,40 +421,40 @@ export function compileDesignMd(resolverPath: string): string {
       rounded: "{rounded.container}",
     },
     "switch-track": {
-      ...(resolveFinishBg("track", "track")
-        ? { backgroundColor: resolveFinishBg("track", "track")! }
+      ...(resolveFinishBg("inset", "inset")
+        ? { backgroundColor: resolveFinishBg("inset", "inset")! }
         : {}),
       rounded: "{rounded.control}",
     },
-    ...(resolveFinishBg("fill", "primary")
-      ? { "switch-track-on": { backgroundColor: resolveFinishBg("fill", "primary")! } }
+    ...(resolveFinishBg("accent", "primary")
+      ? { "switch-track-on": { backgroundColor: resolveFinishBg("accent", "primary")! } }
       : {}),
     "switch-knob": {
       ...(resolveFinishBg("knob", "knob")
         ? { backgroundColor: resolveFinishBg("knob", "knob")! }
         : {}),
     },
-    ...(resolveFinishBg("knobOn", "knob")
-      ? { "switch-knob-on": { backgroundColor: resolveFinishBg("knobOn", "knob")! } }
+    ...(resolveFinishInk("accent")
+      ? { "switch-knob-on": { backgroundColor: resolveFinishInk("accent")! } }
       : {}),
     "slider-handle": {
-      ...(resolveFinishBg("handle", "knob")
-        ? { backgroundColor: resolveFinishBg("handle", "knob")! }
+      ...(resolveFinishBg("knob", "knob")
+        ? { backgroundColor: resolveFinishBg("knob", "knob")! }
         : {}),
     },
     "tabs-thumb": {
-      ...(resolveFinishBg("thumb", "raised")
-        ? { backgroundColor: resolveFinishBg("thumb", "raised")! }
+      ...(resolveFinishBg("raised", "raised")
+        ? { backgroundColor: resolveFinishBg("raised", "raised")! }
         : {}),
       textColor: colorRefOf("foreground"),
       typography: "{typography.label}",
       rounded: "{rounded.control}",
     },
     "toggle-on": {
-      ...(resolveFinishBg("on", "accent")
-        ? { backgroundColor: resolveFinishBg("on", "accent")! }
+      ...(resolveFinishBg("accent", "primary")
+        ? { backgroundColor: resolveFinishBg("accent", "primary")! }
         : {}),
-      textColor: colorRefOf("foreground"),
+      textColor: resolveFinishInk("accent") ?? colorRefOf("primary-foreground"),
       rounded: "{rounded.control}",
     },
     "glass-overlay": {
@@ -494,7 +496,6 @@ export function compileDesignMd(resolverPath: string): string {
   const stateGroup = (lightMerged.state ?? {}) as Record<string, Record<string, unknown>>;
   const motionGroup = (lightMerged.motion ?? {}) as Record<string, Record<string, unknown>>;
   const transitionGroup = (lightMerged.transition ?? {}) as Record<string, Record<string, unknown>>;
-  const durationGroup = (lightMerged.duration ?? {}) as Record<string, Record<string, unknown>>;
   const cubicBezierGroup = (lightMerged.cubicBezier ?? {}) as Record<
     string,
     Record<string, unknown>
@@ -581,12 +582,7 @@ export function compileDesignMd(resolverPath: string): string {
       const val = Array.isArray(tok.$value) ? tok.$value.join(", ") : String(tok.$value);
       lines.push(`  - \`${k}\` (\`${val}\`): ${getDesc(tok) ?? ""}`);
     }
-    const semanticFam = getExt(typoGroup)?.fontFamily;
-    const semanticFamLabel =
-      semanticFam === null || semanticFam === undefined
-        ? "`null` (system UI default)"
-        : `\`${typeof semanticFam === "string" ? semanticFam : JSON.stringify(semanticFam)}\``;
-    lines.push(`  - Semantic body \`fontFamily\`: ${semanticFamLabel}.`);
+    lines.push("  - Every role's `fontFamily` is `{font.family.sans}`.");
   }
   lines.push("");
   for (const role of TYPE_ROLES) {
@@ -595,10 +591,15 @@ export function compileDesignMd(resolverPath: string): string {
     const touchFontSize = isRecord(touchTypo.fontSize)
       ? fmtDim(touchTypo.fontSize as unknown as DtcgDimension)
       : t.fontSize;
+    const touchLineHeight = isRecord(touchTypo.fontSize)
+      ? `${Math.round((touchTypo.fontSize as unknown as DtcgDimension).value * (touchTypo.lineHeight as number))}${(touchTypo.fontSize as unknown as DtcgDimension).unit}`
+      : t.lineHeight;
     const touchNote = touchFontSize !== t.fontSize ? ` (touch: ${touchFontSize})` : "";
+    const touchLine =
+      touchLineHeight !== t.lineHeight ? `, line-height ${touchLineHeight} on touch` : "";
     const roleDesc = getDesc(typoGroup[role]) ?? "";
     lines.push(
-      `- **\`${role}\`** (${t.fontSize}${touchNote}, weight ${t.fontWeight}, line-height ${t.lineHeight.toFixed(2)}, letter-spacing ${t.letterSpacing}): ${roleDesc}`,
+      `- **\`${role}\`** (${t.fontSize}${touchNote}, weight ${t.fontWeight}, line-height ${t.lineHeight}${touchLine}, letter-spacing ${t.letterSpacing}): ${roleDesc}`,
     );
   }
   lines.push("");
@@ -715,11 +716,7 @@ export function compileDesignMd(resolverPath: string): string {
       `- **\`enter\`** (${motionYaml.enter!.duration}, \`${motionYaml.enter!.timingFunction}\`): ${getDesc(enterNode) ?? ""}`,
     );
   }
-  const shakeNode = durationGroup.shake;
-  if (shakeNode) {
-    lines.push(`- **\`shake\`** (${motionYaml.shake!.duration}): ${getDesc(shakeNode) ?? ""}`);
-  }
-  for (const role of ["press", "settle", "control", "move"] as const) {
+  for (const role of ["fast", "default", "slow"] as const) {
     const roleNode = motionGroup[role];
     const roleExt = getExt(roleNode);
     const desc = getDesc(roleNode) ?? "";
@@ -776,9 +773,11 @@ export function compileDesignMd(resolverPath: string): string {
     if (typeof extL?.backdropFilter === "string") {
       notes.push(`backdropFilter: \`${extL.backdropFilter}\``);
     }
-    if (extL?.material || extD?.material) {
-      notes.push(`material: \`${JSON.stringify(extL?.material ?? extD?.material)}\``);
+    const material = extL?.material ?? extD?.material;
+    if (material !== undefined && material !== "none") {
+      notes.push(`material: \`${JSON.stringify(material)}\``);
     }
+    if (typeof extL?.elevation === "number") notes.push(`elevation: ${extL.elevation}`);
     const suffix = notes.length > 0 ? ` (${notes.join("; ")})` : "";
     lines.push(`- **\`finish.${role}\`**${suffix}: ${roleDesc ?? ""}`);
   }

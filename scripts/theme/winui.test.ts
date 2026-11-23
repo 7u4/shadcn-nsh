@@ -71,7 +71,6 @@ const PUBLISHED_ROLES: Record<Appearance, readonly [string, string][]> = {
     ["chart-2", "#0f7b0f"],
     ["chart-3", "#9d5d00"],
     ["chart-5", "#868686"],
-    ["sidebar-border", "#e5e5e5"],
     ["inset", "#ededed"],
     ["glass-edge", "#e5e5e5"],
     ["hover", "#f6f6f6"],
@@ -84,7 +83,6 @@ const PUBLISHED_ROLES: Record<Appearance, readonly [string, string][]> = {
     ["destructive-tint", "#fde7e9"],
     ["up-tint", "#dff6dd"],
     ["inverse", "#f9f9f9"],
-    ["inverse-muted", "#5c5c5c"],
   ],
   dark: [
     ["background", "#202020"],
@@ -104,7 +102,6 @@ const PUBLISHED_ROLES: Record<Appearance, readonly [string, string][]> = {
     ["chart-2", "#6ccb5f"],
     ["chart-3", "#fce100"],
     ["chart-5", "#9a9a9a"],
-    ["sidebar-border", "#323232"],
     ["inset", "#1d1d1d"],
     ["glass-edge", "#1a1a1a"],
     ["hover", "#323232"],
@@ -117,7 +114,6 @@ const PUBLISHED_ROLES: Record<Appearance, readonly [string, string][]> = {
     ["destructive-tint", "#442726"],
     ["up-tint", "#393d1b"],
     ["inverse", "#282828"],
-    ["inverse-muted", "#cccccc"],
   ],
 };
 
@@ -160,14 +156,27 @@ describe("winuiRoles() key coverage and format", () => {
     expect(Object.keys(roles.dark).sort()).toEqual(expectedDarkKeys);
   });
 
+  test("sidebar slots are aliases to the A/B roles with the same value", () => {
+    for (const appearance of ["light", "dark"] as const) {
+      const roles = winuiRoles()[appearance];
+      expect(roles["sidebar-border"]).toBe("var(--line)");
+      expect(roles["sidebar"]).toBe("var(--background)");
+      expect(roles["sidebar-ring"]).toBe("var(--ring)");
+    }
+  });
+
   test("every value is a canonical oklch() string or var(--*) alias, and only overlays/washes keep alpha", () => {
-    const allowedAlpha = new Set(["scrim", "window-control-ink", "window-control-edge"]);
-    const themeAliases = new Set(["brand-fill", "on-brand"]);
+    const allowedAlpha = new Set(["scrim"]);
+    const themeAliases = new Set<string>();
     const appearanceAliases = new Set([
-      "dialog",
-      "selected-foreground",
-      "pressed-foreground",
-      "slider-track",
+      "sidebar",
+      "sidebar-foreground",
+      "sidebar-primary",
+      "sidebar-primary-foreground",
+      "sidebar-accent",
+      "sidebar-accent-foreground",
+      "sidebar-border",
+      "sidebar-ring",
     ]);
     for (const [sectionName, section] of [
       ["theme", roles.theme],
@@ -239,15 +248,13 @@ describe("WCAG contrast for default accent", () => {
   const roles = winuiRoles();
 
   test("shared theme pairs have contrast >= 4.5", () => {
-    expect(roles.theme["brand-fill"]).toBe("var(--primary)");
-    expect(roles.theme["on-brand"]).toBe("var(--primary-foreground)");
     for (const s of [roles.light, roles.dark]) {
       expect(wcagContrast(s["primary-foreground"], s.primary)).toBeGreaterThanOrEqual(4.5);
     }
     expect(wcagContrast(roles.theme["on-media"], roles.theme.media)).toBeGreaterThanOrEqual(4.5);
-    expect(
-      wcagContrast(roles.theme["chart-foreground"], roles.light.background),
-    ).toBeGreaterThanOrEqual(4.5);
+    expect(wcagContrast(roles.light.foreground, roles.light.background)).toBeGreaterThanOrEqual(
+      4.5,
+    );
   });
 
   for (const appearance of ["light", "dark"] as const) {
@@ -280,35 +287,22 @@ describe("WCAG contrast for default accent", () => {
           s["sidebar-accent"],
         ],
         ["inverse-foreground/inverse", s["inverse-foreground"], s.inverse],
-        ["inverse-muted/inverse", s["inverse-muted"], s.inverse],
         ["inverse-foreground/popover (tooltip)", s["inverse-foreground"], s.popover],
-        ["inverse-muted/popover (tooltip)", s["inverse-muted"], s.popover],
         ["inverse-brand/primary", s["inverse-brand"], s.primary],
-        ["on-brand-tint/brand-tint", s["on-brand-tint"], s["brand-tint"]],
-        ["code/inset", s.code, s.inset],
-        ["code/muted", s.code, s.muted],
+        ["foreground/inset", s.foreground, s.inset],
+        ["foreground/muted", s.foreground, s.muted],
         ["brand/background", s.brand, s.background],
         ["brand/card", s.brand, s.card],
-        ["pressed-foreground/pressed", resolveAlias(s["pressed-foreground"]), s.background],
-        [
-          "selected-foreground/primary (toggle on)",
-          resolveAlias(s["selected-foreground"]),
-          s.primary,
-        ],
         ["warn/warn-tint", s.warn, s["warn-tint"]],
         ["up/up-tint", s.up, s["up-tint"]],
         ["destructive/destructive-tint", s.destructive, s["destructive-tint"]],
-        ["down/down-tint", s.down, s["down-tint"]],
       ];
       for (const [label, fg, bg] of pairs) {
-        expect(wcagContrast(fg, bg), `${appearance} ${label}`).toBeGreaterThanOrEqual(4.5);
+        expect(
+          wcagContrast(resolveAlias(fg), resolveAlias(bg)),
+          `${appearance} ${label}`,
+        ).toBeGreaterThanOrEqual(4.5);
       }
-      // `TextOnAccentFillColorSecondary` (0.7 white light / 0.5 black dark) on `AccentFillColorTertiary`
-      // is WinUI 3's genuine subtle pressed ink state (~2.95–3.10 contrast).
-      expect(
-        wcagContrast(s["on-accent-pressed"], s["accent-pressed"]),
-        `${appearance} on-accent-pressed/accent-pressed`,
-      ).toBeGreaterThanOrEqual(2.8);
     });
   }
 });
@@ -327,19 +321,27 @@ describe("compiled winui theme files", () => {
     const files = shipped;
     expect(files.theme.name).toBe("WinUI 3");
     expect(files.theme.cssVars.theme["font-mono"]).toBe("Consolas, monospace");
-    expect(Object.keys(files.theme.cssVars.theme)).toEqual([
-      ...Object.keys(defaultTheme.cssVars.theme),
-      "font-sans",
-    ]);
+    expect(Object.keys(files.theme.cssVars.theme)).toEqual(Object.keys(defaultTheme.cssVars.theme));
+    expect(files.theme.cssVars.theme["font-sans"]).toBe("Segoe UI Variable, Segoe UI, sans-serif");
     expect(Object.keys(files.theme.cssVars.light)).toEqual(Object.keys(defaultTheme.cssVars.light));
     expect(Object.keys(files.theme.cssVars.dark)).toEqual(Object.keys(defaultTheme.cssVars.dark));
 
-    expect(files.semantics.motion.press).toEqual({ duration: 83, timingFunction: "decelerate" });
-    expect(files.semantics.dimension.size.density.pointer.row).toBe(40);
-    expect(files.semantics.finishes.shared.tooltip).toMatchObject({
-      background: "{popover}",
+    expect(files.semantics.motion.fast).toEqual({ duration: 83, timingFunction: "decelerate" });
+    expect(files.semantics.dimension.size.height.pointer).toEqual({ sm: 24, md: 32, lg: 40 });
+    // A flyout is the overlay layer: Acrylic, its tint over the blur, the flyout's stroke.
+    expect(files.semantics.finishes.shared.overlay).toMatchObject({
       "border-color": "{glass-edge}",
-      material: { windows: { backdrop: "blur" } },
+      material: "acrylic",
+    });
+    expect(files.semantics.finishes.light.overlay).toMatchObject({
+      background: "oklch(from {popover} l c h / 0.85)",
+    });
+    expect(files.semantics.finishes.dark.overlay).toMatchObject({
+      background: "oklch(from {popover} l c h / 0.96)",
+    });
+    expect(files.semantics.finishes.shared.inverse).toMatchObject({
+      background: "{inverse}",
+      "border-color": "{glass-edge}",
     });
     expect(files.semantics.finishes.light.glass).toMatchObject({
       background: "oklch(from {popover} l c h / 0.85)",
@@ -347,49 +349,63 @@ describe("compiled winui theme files", () => {
     expect(files.semantics.finishes.dark.glass).toMatchObject({
       background: "oklch(from {popover} l c h / 0.96)",
     });
-    expect(files.semantics.finishes.light.menu?.shadow).toContain("0 16px 32px");
-    expect(files.semantics.finishes.light.dialog?.shadow).toContain("0 64px 128px");
-    expect(hexOf(String(files.semantics.finishes.light.dialog?.["border-color"]))).toBe("#c1c1c1");
-    expect(hexOf(String(files.semantics.finishes.dark.dialog?.["border-color"]))).toBe("#424242");
-    expect(files.semantics.state["accent-pressed-opacity"]).toBe(1);
+    expect(files.semantics.finishes.light.overlay?.shadow).toContain("0 16px 32px");
+    expect(files.semantics.finishes.light.modal?.shadow).toContain("0 64px 128px");
+    expect(hexOf(String(files.semantics.finishes.light.modal?.["border-color"]))).toBe("#c1c1c1");
+    expect(hexOf(String(files.semantics.finishes.dark.modal?.["border-color"]))).toBe("#424242");
     expect(files.semantics.finishes.shared.raised).toMatchObject({
       "border-color": "{border}",
       shadow: "none",
     });
     expect(files.semantics.finishes.light.raised).toMatchObject({
       "border-top-color": "{border}",
-      "border-bottom-color": "{bevel}",
+      "border-bottom-color": "oklch(0.84522 0 0)",
     });
     expect(files.semantics.finishes.dark.raised).toMatchObject({
-      "border-top-color": "{bevel}",
+      "border-top-color": "oklch(0.32897 0 0)",
       "border-bottom-color": "{border}",
     });
     expect(files.semantics.finishes.shared.accent).toMatchObject({
-      "border-color": "{accent-bevel}",
-      "border-top-color": "{accent-bevel}",
       "border-bottom-color": "{brand-edge}",
+      foreground: "{primary-foreground}",
       shadow: "none",
     });
-    expect(files.semantics.finishes.shared.on).toMatchObject({
-      background: "{primary}",
-      "border-color": "{accent-bevel}",
-      "border-top-color": "{accent-bevel}",
-      "border-bottom-color": "{brand-edge}",
+    expect(files.semantics.finishes.light.accent).toMatchObject({
+      "border-color": "oklch(0.52768 0.14982 252.341)",
+      "border-top-color": "oklch(0.52768 0.14982 252.341)",
+      // WinUI swaps the accent for `AccentFillColorTertiary` on a press, ink `TextOnAccentFillColorSecondary`.
+      "pressed-background": "oklch(0.5773 0.13223 250.006)",
+      "pressed-foreground": "oklch(0.87245 0.03754 247.003)",
     });
-    expect(files.semantics.finishes.shared.section).toMatchObject({
-      "border-color": "{card-edge}",
+    expect(files.semantics.finishes.dark.accent).toMatchObject({
+      "border-color": "oklch(0.81732 0.11439 230)",
+      "border-top-color": "oklch(0.81732 0.11439 230)",
+      "pressed-background": "oklch(0.70029 0.10192 230.522)",
+      "pressed-foreground": "oklch(0.42706 0.05878 229.834)",
+    });
+    // The neutral press stays the neutral one: `SubtleFillColorSecondary` over the base, in
+    // `TextFillColorSecondary`.
+    expect(files.semantics.finishes.shared.pressed).toMatchObject({
+      background: "{muted}",
+      foreground: "{muted-foreground}",
       shadow: "none",
     });
-    expect(files.semantics.finishes.shared.accentPressed).toMatchObject({
-      background: "{accent-pressed}",
-      "border-color": "transparent",
-      "border-top-color": "transparent",
-      "border-bottom-color": "transparent",
-      shadow: "none",
+    expect(files.semantics.finishes.light.card).toMatchObject({
+      "border-color": "oklch(0.92191 0 0)",
+    });
+    expect(files.semantics.finishes.dark.card).toMatchObject({
+      "border-color": "oklch(0.23075 0 0)",
     });
     expect(files.semantics.finishes.shared.disabled).toMatchObject({
-      background: "{disabled}",
       "border-color": "{border}",
+    });
+    expect(files.semantics.finishes.light.disabled).toMatchObject({
+      background: "oklch(0.97015 0 0)",
+      foreground: "oklch(0.68949 0 0)",
+    });
+    expect(files.semantics.finishes.dark.disabled).toMatchObject({
+      background: "oklch(0.28502 0 0)",
+      foreground: "oklch(0.54863 0 0)",
     });
 
     const kinds = tokenKinds(files.theme.cssVars);

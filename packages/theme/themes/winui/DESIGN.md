@@ -6,15 +6,7 @@ colors:
   scrim: "#0000004d"
   media: "#10131a"
   on-media: "#ffffff"
-  chart-foreground: "#1a1a1a"
-  window-close: "#ff5f57"
-  window-minimize: "#febc2e"
-  window-zoom: "#28c840"
-  window-control-ink: "#00000080"
-  window-control-edge: "#0000001f"
   light:
-    brand-fill: "#005fb8"
-    on-brand: "#ffffff"
     background: "#f3f3f3"
     foreground: "#1a1a1a"
     card: "#fbfbfb"
@@ -49,8 +41,6 @@ colors:
     inset: "#ededed"
     raised: "#fbfbfb"
     glass-edge: "#e5e5e5"
-    scrollbar-thumb: "#868686"
-    scrollbar-thumb-hover: "#868686"
     field: "#fbfbfb"
     line: "#e5e5e5"
     hover: "#f6f6f6"
@@ -59,18 +49,13 @@ colors:
     brand: "#003e92"
     brand-edge: "#00396e"
     track: "#ededed"
-    slider-track: "#868686"
     knob: "#5c5c5c"
-    code: "#1a1a1a"
     info: "#0078d4"
     warn: "#9d5d00"
     up: "#0f7b0f"
-    down: "#c42b1c"
     brand-tint: "#dbe4ed"
-    on-brand-tint: "#1a1a1a"
     inverse: "#f9f9f9"
     inverse-foreground: "#1a1a1a"
-    inverse-muted: "#5c5c5c"
     inverse-brand: "#ffffff"
     info-tint: "#f5f5f5"
     warn-tint: "#fff4ce"
@@ -78,20 +63,7 @@ colors:
     up-tint: "#dff6dd"
     down-tint: "#fde7e9"
     violet: "#6e56c4"
-    window-control-off: "#dcdcdf"
-    dialog: "#f3f3f3"
-    card-edge: "#e5e5e5"
-    bevel: "#cccccc"
-    accent-bevel: "#146cbe"
-    disabled: "#f5f5f5"
-    disabled-foreground: "#9b9b9b"
-    accent-pressed: "#317dc4"
-    on-accent-pressed: "#c2d8ed"
-    selected-foreground: "#ffffff"
-    pressed-foreground: "#5c5c5c"
   dark:
-    brand-fill: "#60cdff"
-    on-brand: "#000000"
     background: "#202020"
     foreground: "#ffffff"
     card: "#2b2b2b"
@@ -126,8 +98,6 @@ colors:
     inset: "#1d1d1d"
     raised: "#2d2d2d"
     glass-edge: "#1a1a1a"
-    scrollbar-thumb: "#9a9a9a"
-    scrollbar-thumb-hover: "#9a9a9a"
     field: "#2d2d2d"
     line: "#323232"
     hover: "#323232"
@@ -136,18 +106,13 @@ colors:
     brand: "#99ebff"
     brand-edge: "#53b1dc"
     track: "#1d1d1d"
-    slider-track: "#9a9a9a"
     knob: "#cccccc"
-    code: "#ffffff"
     info: "#60cdff"
     warn: "#fce100"
     up: "#6ccb5f"
-    down: "#ff99a4"
     brand-tint: "#263136"
-    on-brand-tint: "#ffffff"
     inverse: "#282828"
     inverse-foreground: "#ffffff"
-    inverse-muted: "#cccccc"
     inverse-brand: "#000000"
     info-tint: "#272727"
     warn-tint: "#433519"
@@ -155,59 +120,48 @@ colors:
     up-tint: "#393d1b"
     down-tint: "#442726"
     violet: "#b9a2ff"
-    window-control-off: "#45484e"
-    dialog: "#202020"
-    card-edge: "#1d1d1d"
-    bevel: "#353535"
-    accent-bevel: "#6cd1ff"
-    disabled: "#2a2a2a"
-    disabled-foreground: "#717171"
-    accent-pressed: "#53aad2"
-    on-accent-pressed: "#295569"
-    selected-foreground: "#000000"
-    pressed-foreground: "#cccccc"
 typography:
   caption:
     fontFamily: "Segoe UI Variable, Segoe UI, sans-serif"
     fontSize: 12px
     fontWeight: 400
-    lineHeight: 1.3333333333333333
+    lineHeight: 16px
     letterSpacing: 0px
   detail:
     fontFamily: "Segoe UI Variable, Segoe UI, sans-serif"
     fontSize: 12px
     fontWeight: 400
-    lineHeight: 1.3333333333333333
+    lineHeight: 16px
     letterSpacing: 0px
   body:
     fontFamily: "Segoe UI Variable, Segoe UI, sans-serif"
     fontSize: 14px
     fontWeight: 400
-    lineHeight: 1.4285714285714286
+    lineHeight: 20px
     letterSpacing: 0px
   label:
     fontFamily: "Segoe UI Variable, Segoe UI, sans-serif"
     fontSize: 14px
     fontWeight: 400
-    lineHeight: 1.4285714285714286
+    lineHeight: 20px
     letterSpacing: 0px
   title:
     fontFamily: "Segoe UI Variable, Segoe UI, sans-serif"
     fontSize: 14px
     fontWeight: 600
-    lineHeight: 1.4285714285714286
+    lineHeight: 20px
     letterSpacing: 0px
   headline:
     fontFamily: "Segoe UI Variable, Segoe UI, sans-serif"
     fontSize: 20px
     fontWeight: 600
-    lineHeight: 1.4
+    lineHeight: 28px
     letterSpacing: 0px
   display:
     fontFamily: "Segoe UI Variable, Segoe UI, sans-serif"
     fontSize: 28px
     fontWeight: 600
-    lineHeight: 1.2857142857142858
+    lineHeight: 36px
     letterSpacing: 0px
 rounded:
   control: 4px
@@ -216,27 +170,18 @@ rounded:
 spacing:
   hit: 0px
   density:
-    row: 40px
-    pad: 16px
+    pad: 12px
     gap: 8px
-    surface: 4px
   control:
-    row: 32px
     padding: 6px
     gap: 8px
-    control: 20px
-    check: 12px
     dot: 12px
-    tabs: 32px
-    line: 32px
-    clear: 16px
   height:
     sm: 24px
     md: 32px
     lg: 40px
   stroke:
     hairline: 1px
-    surface: 1px
     control: 1px
   focus:
     width: 2px
@@ -250,24 +195,18 @@ motion:
     duration: 250ms
     delay: 0ms
     timingFunction: "cubic-bezier(0, 0, 0, 1)"
-  shake:
-    duration: 500ms
-  press:
+  fast:
     duration: 83ms
     delay: 0ms
     timingFunction: "cubic-bezier(0, 0, 0, 1)"
-  settle:
+  default:
+    duration: 167ms
+    delay: 0ms
+    timingFunction: "cubic-bezier(0, 0, 0, 1)"
+  slow:
     duration: 250ms
     delay: 0ms
     timingFunction: "cubic-bezier(0, 0, 0, 1)"
-  control:
-    duration: 167ms
-    delay: 0ms
-    timingFunction: "cubic-bezier(0.55, 0.55, 0, 1)"
-  move:
-    duration: 333ms
-    delay: 0ms
-    timingFunction: "cubic-bezier(0.55, 0.55, 0, 1)"
 components:
   button-primary:
     backgroundColor: "{colors.light.primary}"
@@ -297,33 +236,33 @@ components:
     backgroundColor: "{colors.light.inset}"
     textColor: "{colors.light.foreground}"
     rounded: "{rounded.control}"
-    padding: "{spacing.density.surface}"
+    padding: "{spacing.control.padding}"
   input-field:
-    backgroundColor: "{colors.light.field}"
+    backgroundColor: "{colors.light.inset}"
     textColor: "{colors.light.foreground}"
     typography: "{typography.label}"
     rounded: "{rounded.control}"
     height: "{spacing.height.md}"
     padding: "{spacing.control.padding}"
   badge-chip:
-    backgroundColor: "{colors.light.raised}"
+    backgroundColor: "{colors.light.secondary}"
     textColor: "{colors.light.secondary-foreground}"
     typography: "{typography.caption}"
     rounded: "{rounded.control}"
   menu-popover:
-    backgroundColor: "{colors.light.popover}"
+    backgroundColor: "#f9f9f9d9"
     textColor: "{colors.light.popover-foreground}"
     typography: "{typography.body}"
     rounded: "{rounded.container}"
     padding: "{spacing.control.padding}"
   dialog:
-    backgroundColor: "{colors.light.dialog}"
+    backgroundColor: "{colors.light.background}"
     textColor: "{colors.light.card-foreground}"
     typography: "{typography.body}"
     rounded: "{rounded.modal}"
     padding: "{spacing.density.pad}"
   tooltip:
-    backgroundColor: "{colors.light.popover}"
+    backgroundColor: "{colors.light.inverse}"
     textColor: "{colors.light.inverse-foreground}"
     typography: "{typography.detail}"
     rounded: "{rounded.container}"
@@ -333,7 +272,7 @@ components:
     typography: "{typography.body}"
     rounded: "{rounded.container}"
   switch-track:
-    backgroundColor: "{colors.light.track}"
+    backgroundColor: "{colors.light.inset}"
     rounded: "{rounded.control}"
   switch-track-on:
     backgroundColor: "{colors.light.primary}"
@@ -342,15 +281,15 @@ components:
   switch-knob-on:
     backgroundColor: "{colors.light.primary-foreground}"
   slider-handle:
-    backgroundColor: "{colors.light.popover}"
+    backgroundColor: "{colors.light.knob}"
   tabs-thumb:
-    backgroundColor: "{colors.light.popover}"
+    backgroundColor: "{colors.light.raised}"
     textColor: "{colors.light.foreground}"
     typography: "{typography.label}"
     rounded: "{rounded.control}"
   toggle-on:
     backgroundColor: "{colors.light.primary}"
-    textColor: "{colors.light.foreground}"
+    textColor: "{colors.light.primary-foreground}"
     rounded: "{rounded.control}"
   glass-overlay:
     backgroundColor: "#f9f9f9d9"
@@ -374,7 +313,7 @@ WinUI 3 (`winui3/release/2.7.0`): Windows 11 fill and stroke resources composite
 
 ### Surface
 
-- **`scrim`** (`#0000004d`): Translucent backdrop scrim behind dialogs and overlays (WinUI SmokeFillColorDefault #4D000000).
+- **`scrim`** (`#0000004d`): Translucent backdrop scrim behind modals and overlays (WinUI SmokeFillColorDefault #4D000000).
 - **`media`** (`#10131a`): Ground behind photographs and videos; invariant across appearances.
 - **`background`** (light `#f3f3f3`, dark `#202020`): Window base surface (WinUI SolidBackgroundFillColorBase).
 - **`card`** (light `#fbfbfb`, dark `#2b2b2b`): Elevated card background (WinUI CardBackgroundFillColorDefault composited over base).
@@ -389,16 +328,12 @@ WinUI 3 (`winui3/release/2.7.0`): Windows 11 fill and stroke resources composite
 - **`field`** (light `#fbfbfb`, dark `#2d2d2d`): Text input surface (WinUI ControlFillColorDefault composited over base).
 - **`hover`** (light `#f6f6f6`, dark `#323232`): Pointer hover fill (WinUI ControlFillColorSecondary composited over base).
 - **`track`** (light `#ededed`, dark `#1d1d1d`): Switch and slider track (WinUI ControlAltFillColorSecondary).
-- **`slider-track`** (light `#868686`, dark `#9a9a9a`): WinUI 3 inactive slider track aliased to {color.input} (SliderTrackFill -> ControlStrongFillColorDefault, Slider_themeresources.xaml:20 in winui3/release/2.7.0).
 - **`knob`** (light `#5c5c5c`, dark `#cccccc`): Unchecked switch thumb (WinUI TextFillColorSecondary).
 - **`inverse`** (light `#f9f9f9`, dark `#282828`): TeachingTip/toast surface (WinUI SolidBackgroundFillColorTertiary composited over base).
-- **`dialog`** (light `#f3f3f3`, dark `#202020`): ContentDialog surface aliased to {color.background} (SolidBackgroundFillColorBase).
-- **`disabled`** (light `#f5f5f5`, dark `#2a2a2a`): Disabled control container fill (WinUI ControlFillColorDisabled composited over base).
 
 ### Ink
 
 - **`on-media`** (`#ffffff`): White ink over photographs and dark media surfaces; invariant across appearances.
-- **`chart-foreground`** (`#1a1a1a`): Dark ink on light chart tiles matching WinUI light TextFillColorPrimary.
 - **`foreground`** (light `#1a1a1a`, dark `#ffffff`): Primary text and icon ink (WinUI TextFillColorPrimary composited over base).
 - **`card-foreground`** (light `#1a1a1a`, dark `#ffffff`): Primary ink on card surfaces (WinUI TextFillColorPrimary).
 - **`popover-foreground`** (light `#1a1a1a`, dark `#ffffff`): Primary ink on popover surfaces (WinUI TextFillColorPrimary).
@@ -408,17 +343,10 @@ WinUI 3 (`winui3/release/2.7.0`): Windows 11 fill and stroke resources composite
 - **`sidebar-foreground`** (light `#1a1a1a`, dark `#ffffff`): Sidebar primary ink (WinUI TextFillColorPrimary).
 - **`sidebar-accent-foreground`** (light `#1a1a1a`, dark `#ffffff`): Sidebar active item ink (WinUI TextFillColorPrimary).
 - **`faint`** (light `#868686`, dark `#969696`): Tertiary label ink (WinUI TextFillColorTertiary composited over base).
-- **`code`** (light `#1a1a1a`, dark `#ffffff`): Inline code ink (WinUI TextFillColorPrimary).
 - **`inverse-foreground`** (light `#1a1a1a`, dark `#ffffff`): Ink on inverse surface (WinUI TextFillColorPrimary).
-- **`inverse-muted`** (light `#5c5c5c`, dark `#cccccc`): Secondary ink on inverse surface (WinUI TextFillColorSecondary).
-- **`disabled-foreground`** (light `#9b9b9b`, dark `#717171`): Disabled control text/icon ink (WinUI TextFillColorDisabled composited over base).
-- **`selected-foreground`** (light `#ffffff`, dark `#000000`): Ink on checked ToggleButton / active AccentFillColorDefault controls aliased to {color.on-brand}.
-- **`pressed-foreground`** (light `#5c5c5c`, dark `#cccccc`): Pressed standard control ink aliased to {color.muted-foreground} (WinUI TextFillColorSecondary).
 
 ### Brand
 
-- **`brand-fill`** (light `#005fb8`, dark `#60cdff`): Primary brand action fill, aliased to {color.primary} (WinUI AccentFillColorDefault).
-- **`on-brand`** (light `#ffffff`, dark `#000000`): Foreground text and icons on brand-fill surfaces, aliased to {color.primary-foreground} (WinUI TextOnAccentFillColorPrimary).
 - **`primary`** (light `#005fb8`, dark `#60cdff`): Accent button fill (WinUI AccentFillColorDefault: Dark1 light / Light2 dark from SystemAccentColor).
 - **`primary-foreground`** (light `#ffffff`, dark `#000000`): Ink on accent fills (WinUI TextOnAccentFillColorPrimary).
 - **`sidebar-primary`** (light `#005fb8`, dark `#60cdff`): Sidebar primary accent matching AccentFillColorDefault.
@@ -426,10 +354,7 @@ WinUI 3 (`winui3/release/2.7.0`): Windows 11 fill and stroke resources composite
 - **`brand`** (light `#003e92`, dark `#99ebff`): Accent text/link/icon ink (WinUI AccentTextFillColorPrimary: Dark2 light / Light3 dark).
 - **`brand-edge`** (light `#00396e`, dark `#53b1dc`): Accent button bottom bevel stroke (WinUI ControlStrokeColorOnAccentSecondary composited over primary).
 - **`brand-tint`** (light `#dbe4ed`, dark `#263136`): 10% accent wash composited opaque over window base.
-- **`on-brand-tint`** (light `#1a1a1a`, dark `#ffffff`): Ink on brand-tint surfaces (WinUI TextFillColorPrimary).
 - **`inverse-brand`** (light `#ffffff`, dark `#000000`): Action ink on inverse surface matching TextOnAccentFillColorPrimary.
-- **`accent-pressed`** (light `#317dc4`, dark `#53aad2`): Pressed accent control fill (WinUI AccentFillColorTertiary composited over base).
-- **`on-accent-pressed`** (light `#c2d8ed`, dark `#295569`): Pressed accent control ink (WinUI TextOnAccentFillColorSecondary composited over accent-pressed).
 
 ### Status
 
@@ -442,7 +367,6 @@ WinUI 3 (`winui3/release/2.7.0`): Windows 11 fill and stroke resources composite
 - **`info`** (light `#0078d4`, dark `#60cdff`): Informational semantic color (WinUI SystemFillColorAttentionBrush).
 - **`warn`** (light `#9d5d00`, dark `#fce100`): Caution semantic color (WinUI SystemFillColorCaution).
 - **`up`** (light `#0f7b0f`, dark `#6ccb5f`): Success semantic color (WinUI SystemFillColorSuccess).
-- **`down`** (light `#c42b1c`, dark `#ff99a4`): Negative trend color matching WinUI SystemFillColorCritical.
 - **`info-tint`** (light `#f5f5f5`, dark `#272727`): Informational wash (WinUI SystemFillColorAttentionBackground composited over base).
 - **`warn-tint`** (light `#fff4ce`, dark `#433519`): Caution wash (WinUI SystemFillColorCautionBackground composited over base).
 - **`destructive-tint`** (light `#fde7e9`, dark `#442726`): Critical wash (WinUI SystemFillColorCriticalBackground composited over base).
@@ -452,25 +376,14 @@ WinUI 3 (`winui3/release/2.7.0`): Windows 11 fill and stroke resources composite
 
 ### Chrome
 
-- **`window-close`** (`#ff5f57`): macOS window close traffic-light button fill.
-- **`window-minimize`** (`#febc2e`): macOS window minimize traffic-light button fill.
-- **`window-zoom`** (`#28c840`): macOS window zoom traffic-light button fill.
-- **`window-control-ink`** (`#00000080`): Glyph ink inside macOS window traffic-light buttons (50% black literal).
-- **`window-control-edge`** (`#0000001f`): Hairline border around macOS window traffic-light buttons (12% black literal).
 - **`border`** (light `#e5e5e5`, dark `#303030`): Standard control hairline border (WinUI ControlStrokeColorDefault composited over base).
 - **`input`** (light `#868686`, dark `#9a9a9a`): Input and check control outline (WinUI ControlStrongStrokeColorDefault composited over base).
 - **`ring`** (light `#1a1a1a`, dark `#ffffff`): Outer keyboard focus stroke (WinUI FocusStrokeColorOuter).
 - **`sidebar-border`** (light `#e5e5e5`, dark `#323232`): Sidebar separator stroke (WinUI DividerStrokeColorDefault).
 - **`sidebar-ring`** (light `#1a1a1a`, dark `#ffffff`): Sidebar focus stroke (WinUI FocusStrokeColorOuter).
 - **`glass-edge`** (light `#e5e5e5`, dark `#1a1a1a`): Flyout and acrylic border (WinUI SurfaceStrokeColorFlyout composited over base).
-- **`scrollbar-thumb`** (light `#868686`, dark `#9a9a9a`): Static scrollbar thumb color (WinUI ControlStrongFillColorDefault).
-- **`scrollbar-thumb-hover`** (light `#868686`, dark `#9a9a9a`): Static scrollbar hover color (WinUI ControlStrongFillColorDefault).
 - **`line`** (light `#e5e5e5`, dark `#323232`): Hairline divider stroke (WinUI DividerStrokeColorDefault).
 - **`ring-halo`** (light `#fbfbfb`, dark `#0a0a0a`): Inner keyboard focus stroke (WinUI FocusStrokeColorInner composited over base).
-- **`window-control-off`** (light `#dcdcdf`, dark `#45484e`): Library-retained unfocused window traffic-light fill (no WinUI equivalent).
-- **`card-edge`** (light `#e5e5e5`, dark `#1d1d1d`): Card border stroke (WinUI CardStrokeColorDefault composited over base).
-- **`bevel`** (light `#cccccc`, dark `#353535`): Standard button elevation bevel stroke (WinUI ControlStrokeColorSecondary composited over base).
-- **`accent-bevel`** (light `#146cbe`, dark `#6cd1ff`): Accent button top/side bevel stroke (WinUI ControlStrokeColorOnAccentDefault composited over primary).
 
 ## Typography
 
@@ -479,23 +392,23 @@ WinUI 3 typography scale mapped from TextBlock_themeresources.xaml (400 and 600 
 - **Font stacks:** Font family stacks.
   - `mono` (`Consolas, monospace`): WinUI 3 monospace font stack (Consolas, monospace).
   - `sans` (`Segoe UI Variable, Segoe UI, sans-serif`): WinUI 3 primary UI font stack (Segoe UI Variable, Segoe UI, sans-serif; typography.md).
-  - Semantic body `fontFamily`: `{font.family.sans}`.
+  - Every role's `fontFamily` is `{font.family.sans}`.
 
-- **`caption`** (12px, weight 400, line-height 1.33, letter-spacing 0px): Small captions and segmented counter labels.
-- **`detail`** (12px, weight 400, line-height 1.33, letter-spacing 0px): Sidebar section labels, counts, and supporting metadata.
-- **`body`** (14px, weight 400, line-height 1.43, letter-spacing 0px): Standard body copy, list rows, and dialog content.
-- **`label`** (14px, weight 400, line-height 1.43, letter-spacing 0px): Control labels, form labels, and interactive triggers.
-- **`title`** (14px, weight 600, line-height 1.43, letter-spacing 0px): Card and section headings.
-- **`headline`** (20px, weight 600, line-height 1.40, letter-spacing 0px): Page-level headings.
-- **`display`** (28px, weight 600, line-height 1.29, letter-spacing 0px): Large display numerals and hero headings.
+- **`caption`** (12px, weight 400, line-height 16px, letter-spacing 0px): Small captions and segmented counter labels.
+- **`detail`** (12px, weight 400, line-height 16px, letter-spacing 0px): Sidebar section labels, counts, and supporting metadata.
+- **`body`** (14px, weight 400, line-height 20px, letter-spacing 0px): Standard body copy, list rows, and dialog content.
+- **`label`** (14px, weight 400, line-height 20px, letter-spacing 0px): Control labels, form labels, and interactive triggers.
+- **`title`** (14px, weight 600, line-height 20px, letter-spacing 0px): Card and section headings.
+- **`headline`** (20px, weight 600, line-height 28px, letter-spacing 0px): Page-level headings.
+- **`display`** (28px, weight 600, line-height 36px, letter-spacing 0px): Large display numerals and hero headings.
 
 ## Layout
 
 Ergonomic sizing scales for pointer input.
 
 - **Hit target:** Minimum hit target size (0 disables padding expansion).
-- **Density:** Page-level row, padding, gap, and surface spacing metrics.
-- **Control geometry:** Control internal geometry and switch size tier.
+- **Density:** Page-level padding and gap.
+- **Control geometry:** Control internal spacing and switch size tier.
 - **Control heights:** Standard control heights (sm, md, lg).
 - **Switch size tier (pointer):** `regular`.
 - **Icons:** Standard icon dimensions (sm, md, lg).
@@ -508,8 +421,7 @@ Ergonomic sizing scales for pointer input.
 WinUI 3 ThemeShadow depths (2/8/16/32/128) paired with composited `ControlStrokeColorDefault` / `SurfaceStrokeColorDefault` borders and `material.windows` blur on `glass`, `menu`, and `tooltip` (`AcrylicInAppFillColorDefault` 0.85 light / 0.96 dark).
 
 - **Strokes:** Border stroke widths.
-  - `stroke.hairline` (1px): Hairline divider and outlined-variant stroke width.
-  - `stroke.surface` (1px): Container surface border width (cards, drawers, overlays).
+  - `stroke.hairline` (1px): Hairline width for dividers, container edges (cards, drawers, overlays) and outlined variants.
   - `stroke.control` (1px): Interactive control border width.
 - **Focus indicator (`style: "double"`):** WinUI 3 double focus stroke (2px outer FocusStrokeColorOuter + 1px inner FocusStrokeColorInner, 0px offset).
   - `focus.width` (2px): 2px outer focus stroke width per WinUI 3.
@@ -530,14 +442,12 @@ Semantic corner radius roles by layer, referencing base dimension.radius.* token
 
 ## Motion & Micro-interaction
 
-Interactive spring and timing physics roles.
+Interactive spring and timing physics roles: fast, default, slow.
 
 - **`enter`** (250ms, `cubic-bezier(0, 0, 0, 1)`): WinUI 3 250ms entrance transition with Direct Entrance decelerate curve (motion.md).
-- **`shake`** (500ms): Duration of validation-error shake animation.
-- **`press`** (83ms, `cubic-bezier(0, 0, 0, 1)`): WinUI 3 ToggleSwitch press timing (83ms decelerate, ToggleSwitch_themeresources.xaml:321).
-- **`settle`** (250ms, `cubic-bezier(0, 0, 0, 1)`): WinUI 3 250ms settle timing with Direct Entrance decelerate curve.
-- **`control`** (167ms, `cubic-bezier(0.55, 0.55, 0, 1)`): WinUI 3 167ms control timing with Point-to-Point curve.
-- **`move`** (333ms, `cubic-bezier(0.55, 0.55, 0, 1)`): WinUI 3 333ms move timing with Point-to-Point curve.
+- **`fast`** (83ms, `cubic-bezier(0, 0, 0, 1)`): WinUI 3 ControlFasterAnimationDuration (83ms, decelerate; ToggleSwitch_themeresources.xaml:321).
+- **`default`** (167ms, `cubic-bezier(0, 0, 0, 1)`): WinUI 3 ControlFastAnimationDuration (167ms, decelerate; Common_themeresources_any.xaml).
+- **`slow`** (250ms, `cubic-bezier(0, 0, 0, 1)`): WinUI 3 ControlNormalAnimationDuration (250ms, decelerate; motion.md).
 - **Press & ripple** (`press-scale: 1`, `pressed-opacity: 1`, `ripple: false`): Interaction state opacities, press scale, and ripple switch.
 - **Timing curves:** Named timing curves shared across themes.
 
@@ -547,35 +457,18 @@ Voice & Content Strategy is intentionally omitted: this theme defines visual tok
 
 ## Components
 
-Appearance-invariant surface finish recipes (background, gradient, border, shadow, blur, material).
-
-- **`finish.card`**: WinUI 3 card surface with layering depth-8 two-layer ThemeShadow approximation.
-- **`finish.section`**: WinUI 3 section card surface using CardBackgroundFillColorDefault and CardStrokeColorDefault border (no drop shadow).
-- **`finish.inset`**: The well inside a card: sunk by its inner shadow alone.
-- **`finish.field`**: A field well: its edge and its inner shadow.
-- **`finish.raised`** (backdropFilter: `none`): WinUI 3 standard control surface with ControlElevationBorderBrush top/bottom bevel and no drop shadow.
-- **`finish.hover`**: WinUI 3 hovered control surface with ControlFillColorSecondary fill and ControlElevationBorderBrush bevel.
-- **`finish.pressed`**: WinUI 3 pressed control surface with ControlFillColorTertiary/muted fill, flat border, and no shadow.
-- **`finish.disabled`**: WinUI 3 disabled control container using ControlFillColorDisabled and ControlStrokeColorDefault border.
-- **`finish.light`**: The main action brightest step: the accent gradient.
-- **`finish.accent`**: WinUI 3 accent control surface using AccentFillColorDefault and AccentControlElevationBorderBrush bevel.
-- **`finish.accentPressed`**: WinUI 3 pressed accent control surface using AccentFillColorTertiary and transparent directional borders (AccentButtonBorderBrushPressed -> ControlFillColorTransparentBrush, WinUI 2.7.0 Button_themeresources.xaml).
-- **`finish.track`**: A groove: an inner shadow and an edge.
-- **`finish.fill`**: The filled run: a slider, a progress bar, a switch that is on.
-- **`finish.knob`**: A switch knob, off.
-- **`finish.knobOn`**: A switch knob, on.
-- **`finish.handle`**: WinUI 3 slider handle using popover fill, depth-2 shadow, and border.
-- **`finish.pill`**: The upstream capsule, left to the app.
-- **`finish.thumb`**: WinUI 3 segmented thumb using popover fill, depth-2 shadow, and border.
-- **`finish.on`**: WinUI 3 checked ToggleButton / active surface using AccentFillColorDefault and AccentControlElevationBorderBrush bevel.
-- **`finish.chip`**: A chosen value label inside a field: a fill, an inner highlight and an edge.
-- **`finish.glass`** (backdropFilter: `blur(30px)`; material: `{"windows":{"backdrop":"blur"}}`): WinUI 3 AcrylicInApp surface with per-appearance TintLuminosityOpacity (0.85 light / 0.96 dark), depth-32 shadow, and Windows blur backdrop.
-- **`finish.menu`** (backdropFilter: `none`; material: `{"windows":{"backdrop":"blur"}}`): WinUI 3 Acrylic flyout/menu surface with depth-32 shadow and Windows blur backdrop.
-- **`finish.dialog`**: WinUI 3 ContentDialog surface with depth-128 shadow and composited SurfaceStrokeColorDefault border.
-- **`finish.grabber`**: The drag handle pill at the top of a bottom sheet.
-- **`finish.tooltip`** (material: `{"windows":{"backdrop":"blur"}}`): WinUI 3 ToolTip surface with depth-16 shadow, glass-edge border, and Windows blur backdrop.
-- **`finish.inverse`** (backdropFilter: `none`): WinUI 3 TeachingTip/toast surface with depth-32 shadow and glass-edge border.
-- **`finish.groove`**: A groove cut inside a menu.
+- **`finish.card`**: A surface that holds content: a card, a section.
+- **`finish.inset`**: A well cut into a surface: an inset, a field, a track, a groove.
+- **`finish.raised`** (backdropFilter: `none`): A control on a surface: a button, a chip, a pill.
+- **`finish.overlay`** (backdropFilter: `none`; material: `"acrylic"`): A panel floating over the page: a menu, a toast.
+- **`finish.modal`**: A surface the page waits for: a dialog, a sheet.
+- **`finish.inverse`** (backdropFilter: `none`): The page's inverse: an inverse surface, a tooltip.
+- **`finish.glass`** (backdropFilter: `blur(30px)`): A translucent surface: what is behind it shows through.
+- **`finish.accent`**: The accent's own surface, with its ink.
+- **`finish.knob`**: A knob: a switch's thumb, a slider's handle, a segmented thumb.
+- **`finish.hover`**: A control under the pointer.
+- **`finish.pressed`**: A control held down.
+- **`finish.disabled`**: A control that cannot be used.
 - **Disabled handling** (content=0.36, fill=true): WinUI 3 disabled styling: 0.36 TextFillColorDisabled content with fill: true container override.
 
 ## Do's and Don'ts

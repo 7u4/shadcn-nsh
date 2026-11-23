@@ -132,6 +132,11 @@ export const buttonSizes: Record<ButtonSize, ButtonDimensions> = {
   },
 };
 
+/** How far a selected filled control rests: the theme dims a press of its accent by
+ * `finish.accent.pressedOpacity`, and a selected one holds the same dim in every theme (Material and WinUI
+ * paint their press instead of dimming it, so the press opacity is not the selected one's). */
+const SELECTED_OPACITY = 0.88;
+
 /** How far a press sinks a button (`activeStyle`): none with reduced motion. */
 const sink = (scale: number): ViewStyle => pressSink(scale).activeStyle;
 
@@ -154,13 +159,32 @@ const dimensions = (o?: ButtonLookOptions) => buttonSizes[read(o?.size) ?? "defa
 
 const filled = (variant: ButtonVariant) => variant === "default";
 
+/** The look a filled control wears while it is held: the accent dimmed to its `pressedOpacity`, or
+ * the flat fill and ink the theme paints instead (`finish.accent.pressedBackground` /
+ * `pressedForeground`): a theme whose press swaps the accent out paints a plain face, so the accent's
+ * gradient and bevels go with it (WinUI's pressed accent: no border of its own). */
+function pressedAccent(): ViewStyle {
+  const pressed = finish.accent.pressedBackground;
+  const accent: ViewStyle = { ...finish.accent, opacity: finish.accent.pressedOpacity };
+  return pressed === undefined
+    ? accent
+    : {
+        ...accent,
+        backgroundColor: pressed,
+        backgroundImage: "none",
+        borderColor: "transparent",
+        borderTopColor: "transparent",
+        borderBottomColor: "transparent",
+      };
+}
+
 const buttonInk = (variant: ButtonVariant, selected = false): keyof Tokens =>
   filled(variant)
-    ? "on-brand"
+    ? "primary-foreground"
     : variant === "destructive"
       ? "destructive"
       : variant === "secondary" && selected
-        ? "selected-foreground"
+        ? "accent-foreground"
         : "foreground";
 
 /** The fill, edge and shadow of a variant at rest (or selected). A disabled filled button gives up the citrus for the
@@ -177,7 +201,7 @@ function restLook(variant: ButtonVariant, selected: boolean, disabled = false): 
     return { ...finish.disabled };
   }
   if (filled(variant) && disabled) return { ...finish.raised };
-  if (filled(variant)) return { ...finish.accent, opacity: selected ? 0.88 : 1 };
+  if (filled(variant)) return { ...finish.accent, opacity: selected ? SELECTED_OPACITY : 1 };
   if (variant === "destructive") {
     return {
       boxShadow: finish.raised.boxShadow,
@@ -193,7 +217,7 @@ function restLook(variant: ButtonVariant, selected: boolean, disabled = false): 
     };
   // Selected stays on: `on`, apart from rest and from hover in both
   // appearances (a sunk `pressed` is a press's, too faint to hold).
-  return selected ? { ...finish.on } : { ...finish.raised };
+  return selected ? { ...finish.accent } : { ...finish.raised };
 }
 
 /**
@@ -255,15 +279,12 @@ export function buttonLook(variant: Live<ButtonVariant> = "secondary", o?: Butto
                 ? finish.accent.backgroundImage
                 : variant === "secondary"
                   ? read(o?.selected)
-                    ? finish.on.backgroundImage
+                    ? finish.accent.backgroundImage
                     : finish.raised.backgroundImage
                   : undefined,
             )
           : filled(variant)
-            ? {
-                ...finish.accentPressed,
-                opacity: themeStyle().state["accent-pressed-opacity"],
-              }
+            ? pressedAccent()
             : variant === "destructive"
               ? { backgroundColor: alpha(colors.destructive, 0.22), boxShadow: "none" }
               : { ...finish.pressed };
@@ -289,15 +310,16 @@ function ink(live: Live<ButtonVariant>, o?: ButtonLookOptions) {
   const variant = read(live) ?? "secondary";
   const disabled = !!read(o?.disabled);
   if (disabled) {
-    if (themeStyle().state.disabled.fill) return colors.disabledForeground;
+    if (themeStyle().state.disabled.fill) return finish.disabled.foreground;
     if (filled(variant)) return colors.mutedForeground;
   }
-  if (filled(variant)) {
-    return read(o?.pressed) ? colors.onAccentPressed : colors.onBrand;
-  }
+  if (filled(variant))
+    return read(o?.pressed)
+      ? (finish.accent.pressedForeground ?? finish.accent.foreground)
+      : finish.accent.foreground;
   if (variant === "destructive") return colors.destructive;
-  if (variant === "secondary" && read(o?.selected)) return colors.selectedForeground;
-  if (read(o?.pressed)) return colors.pressedForeground;
+  if (variant === "secondary" && read(o?.selected)) return finish.accent.foreground;
+  if (read(o?.pressed)) return finish.pressed.foreground;
   return colors.foreground;
 }
 
@@ -469,7 +491,7 @@ export function iconButtonGlyph(o: IconButtonLookOptions = {}) {
       return iconButtonDimensions(o).glyph;
     },
     get tint() {
-      if (read(o.disabled) && themeStyle().state.disabled.fill) return colors.disabledForeground;
+      if (read(o.disabled) && themeStyle().state.disabled.fill) return finish.disabled.foreground;
       return read(o.selected)
         ? colors.brand
         : o.variant === "destructive"
@@ -579,7 +601,7 @@ export function roundButtonGlyph(
   return {
     size: roundSide(o) * ROUND_GLYPH_RATIO,
     get tint() {
-      if (read(o?.disabled) && themeStyle().state.disabled.fill) return colors.disabledForeground;
+      if (read(o?.disabled) && themeStyle().state.disabled.fill) return finish.disabled.foreground;
       return variant === "default" ? colors.primaryForeground : colors.foreground;
     },
   };
@@ -700,7 +722,7 @@ export type ButtonProps = Omit<BaseButtonProps, "children"> & {
 };
 
 /**
- * A scale for a leading glyph that grows in (from half, out of nothing) on `motion.control` each
+ * A scale for a leading glyph that grows in (from half, out of nothing) on `motion.fast` each
  * time `key` changes: a new icon, or the spinner taking its place. At once with reduced motion.
  */
 function growOn(key: () => unknown) {
@@ -712,7 +734,7 @@ function growOn(key: () => unknown) {
     shown = next;
     if (reduceMotion()) return;
     grow.set(0);
-    void animate(grow, 1, motion.control);
+    void animate(grow, 1, motion.fast);
   });
   return {
     opacity: grow,

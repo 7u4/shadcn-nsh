@@ -16,14 +16,14 @@
         ],
         "voiceOmitted": "Voice & Content Strategy is intentionally omitted: this theme defines visual tokens, surface finishes, typography metrics, and motion physics only; product copy, tone, capitalization, and terminology belong to the host application.",
         "overview": "Material 3 Expressive (`material-web` v34.0.21 / Compose Material 3 1.5.0) built from the `#6750A4` baseline with tonal surface containers, Expressive Tone 30 `on*Container` roles, state-layer overlays, and Expressive spatial/effects springs.",
-        "elevation": "Tonal surface stepping plus Material Web Level 1–3 shadows and `material.android.elevation` (1dp/3dp/6dp), with `stroke.surface: 0px` and no backdrop blur.",
+        "elevation": "Tonal surface stepping plus Material Web Level 1–3 shadows and `material.android.elevation` (1dp/3dp/6dp), with no edge drawn (each finish's `border-color: transparent`) and no backdrop blur.",
         "dos": [
           "Express interaction states via M3 state-layer ink overlays (`hover: 0.08`, `focus: 0.10`, `pressed: 0.10`, `dragged: 0.16`) and Android press ripples (`state.ripple: true`) with `state.press-scale: 1`.",
           "Use `shape.curve: \"circular\"` and `controls: \"material\"` for top-rounded underlined fields and underlined tabs.",
-          "Keep `stroke.surface: 0px` on tonal/elevated containers so depth comes from tonal steps and elevation."
+          "Keep tonal and elevated containers edge-free through `border-color: transparent` in the finish, so depth comes from tonal steps and elevation."
         ],
         "donts": [
-          "Do not add backdrop blur (`backdropFilter`) or surface borders (`stroke.surface > 0`) to M3 tonal surfaces.",
+          "Do not add backdrop blur (`backdropFilter`) or a surface edge (`border-color`) to M3 tonal surfaces.",
           "Do not replace `outline` focus rings (`3px` width, `2px` offset) with halo rings."
         ]
       }
@@ -132,17 +132,9 @@
   "typography": {
     "$type": "typography",
     "$description": "Material 3 Expressive typography scale (TypeScaleTokens.kt / _md-sys-typescale.scss).",
-    "$extensions": {
-      "dev.aning.shadcn-nsh": {
-        "fontFamily": null
-      }
-    },
     "caption": {
       "$value": {
-        "fontFamily": [
-          "system-ui",
-          "sans-serif"
-        ],
+        "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.caption}",
         "fontWeight": 500,
         "lineHeight": "{font.line-height.caption}",
@@ -155,10 +147,7 @@
     },
     "detail": {
       "$value": {
-        "fontFamily": [
-          "system-ui",
-          "sans-serif"
-        ],
+        "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.detail}",
         "fontWeight": 400,
         "lineHeight": "{font.line-height.detail}",
@@ -171,10 +160,7 @@
     },
     "body": {
       "$value": {
-        "fontFamily": [
-          "system-ui",
-          "sans-serif"
-        ],
+        "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.body}",
         "fontWeight": 400,
         "lineHeight": "{font.line-height.body}",
@@ -187,10 +173,7 @@
     },
     "label": {
       "$value": {
-        "fontFamily": [
-          "system-ui",
-          "sans-serif"
-        ],
+        "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.label}",
         "fontWeight": 500,
         "lineHeight": "{font.line-height.label}",
@@ -203,10 +186,7 @@
     },
     "title": {
       "$value": {
-        "fontFamily": [
-          "system-ui",
-          "sans-serif"
-        ],
+        "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.title}",
         "fontWeight": 500,
         "lineHeight": "{font.line-height.title}",
@@ -219,10 +199,7 @@
     },
     "headline": {
       "$value": {
-        "fontFamily": [
-          "system-ui",
-          "sans-serif"
-        ],
+        "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.headline}",
         "fontWeight": 400,
         "lineHeight": "{font.line-height.headline}",
@@ -235,10 +212,7 @@
     },
     "display": {
       "$value": {
-        "fontFamily": [
-          "system-ui",
-          "sans-serif"
-        ],
+        "fontFamily": "{font.family.sans}",
         "fontSize": "{font.size.display}",
         "fontWeight": 400,
         "lineHeight": "{font.line-height.display}",
@@ -276,14 +250,7 @@
           "value": 1,
           "unit": "px"
         },
-        "$description": "Hairline divider and outlined-variant stroke width."
-      },
-      "surface": {
-        "$value": {
-          "value": 0,
-          "unit": "px"
-        },
-        "$description": "0px surface outline (M3 elevated/filled surfaces rely on elevation rather than outlines)."
+        "$description": "Hairline width for dividers, container edges (cards, drawers, overlays) and outlined variants."
       },
       "control": {
         "$value": {
@@ -344,19 +311,13 @@
       "$description": "Ergonomic sizing scales for pointer input.",
       "hit": {
         "$value": {
-          "value": 44,
+          "value": 0,
           "unit": "px"
         },
         "$description": "Minimum hit target size (0 disables padding expansion)."
       },
       "density": {
-        "$description": "Page-level row, padding, gap, and surface spacing metrics.",
-        "row": {
-          "$value": {
-            "value": 48,
-            "unit": "px"
-          }
-        },
+        "$description": "Page-level padding and gap.",
         "pad": {
           "$value": {
             "value": 16,
@@ -364,12 +325,6 @@
           }
         },
         "gap": {
-          "$value": {
-            "value": 12,
-            "unit": "px"
-          }
-        },
-        "surface": {
           "$value": {
             "value": 12,
             "unit": "px"
@@ -382,13 +337,7 @@
             "switch": "regular"
           }
         },
-        "$description": "Control internal geometry and switch size tier.",
-        "row": {
-          "$value": {
-            "value": 48,
-            "unit": "px"
-          }
-        },
+        "$description": "Control internal spacing and switch size tier.",
         "padding": {
           "$value": {
             "value": 8,
@@ -397,19 +346,7 @@
         },
         "gap": {
           "$value": {
-            "value": 12,
-            "unit": "px"
-          }
-        },
-        "control": {
-          "$value": {
-            "value": 18,
-            "unit": "px"
-          }
-        },
-        "check": {
-          "$value": {
-            "value": 18,
+            "value": 8,
             "unit": "px"
           }
         },
@@ -418,43 +355,25 @@
             "value": 10,
             "unit": "px"
           }
-        },
-        "tabs": {
-          "$value": {
-            "value": 48,
-            "unit": "px"
-          }
-        },
-        "line": {
-          "$value": {
-            "value": 48,
-            "unit": "px"
-          }
-        },
-        "clear": {
-          "$value": {
-            "value": 20,
-            "unit": "px"
-          }
         }
       },
       "height": {
-        "$description": "Standard control heights (sm, md, lg).",
+        "$description": "Standard control heights at M3 density -2 (24, 32, 48dp): each density step reduces height by 4dp (https://m3.material.io/foundations/layout/grids-spacing/density).",
         "sm": {
           "$value": {
-            "value": 32,
+            "value": 24,
             "unit": "px"
           }
         },
         "md": {
           "$value": {
-            "value": 40,
+            "value": 32,
             "unit": "px"
           }
         },
         "lg": {
           "$value": {
-            "value": 56,
+            "value": 48,
             "unit": "px"
           }
         }
@@ -464,7 +383,7 @@
       "$description": "Standard icon dimensions (sm, md, lg).",
       "sm": {
         "$value": {
-          "value": 18,
+          "value": 16,
           "unit": "px"
         }
       },
@@ -524,9 +443,9 @@
       "$value": 1,
       "$description": "Content stays full opacity when pressed (1; ripple/state layer shows press)."
     },
-    "accent-pressed-opacity": {
-      "$value": 1,
-      "$description": "Pressed opacity for accent controls when no pressed accent finish replaces it."
+    "rest-opacity": {
+      "$value": 0.38,
+      "$description": "Opacity a passive indicator sits at rest (a scrollbar's thumb), before the pointer is on it."
     },
     "disabled": {
       "$description": "M3 disabled controls: 0.38 content opacity with fill: true (10% onSurface container, _md-comp-button-filled.scss).",
@@ -538,17 +457,6 @@
       "content": {
         "$value": 0.38
       }
-    }
-  },
-  "duration": {
-    "$type": "duration",
-    "$description": "Named animation durations.",
-    "shake": {
-      "$value": {
-        "value": 500,
-        "unit": "ms"
-      },
-      "$description": "Duration of validation-error shake animation."
     }
   },
   "transition": {
@@ -570,8 +478,8 @@
     }
   },
   "motion": {
-    "$description": "Interactive spring and timing physics roles.",
-    "press": {
+    "$description": "Interactive spring and timing physics roles: fast, default, slow.",
+    "fast": {
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "spring": {
@@ -580,9 +488,9 @@
           }
         }
       },
-      "$description": "M3 Expressive FastSpatial spring (stiffness 800, damping ratio 0.6; ExpressiveMotionTokens.kt)."
+      "$description": "M3 Expressive FastSpatial spring for control state (stiffness 800, damping ratio 0.6; ExpressiveMotionTokens.kt)."
     },
-    "settle": {
+    "default": {
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "spring": {
@@ -591,29 +499,18 @@
           }
         }
       },
-      "$description": "M3 Expressive DefaultSpatial spring (stiffness 380, damping ratio 0.8)."
+      "$description": "M3 Expressive DefaultSpatial spring for presses and movement (stiffness 380, damping ratio 0.8)."
     },
-    "control": {
+    "slow": {
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "spring": {
-            "stiffness": 1600,
-            "damping": 80
+            "stiffness": 200,
+            "damping": 22.63
           }
         }
       },
-      "$description": "M3 Expressive DefaultEffects spring (stiffness 1600, damping ratio 1.0)."
-    },
-    "move": {
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "spring": {
-            "stiffness": 380,
-            "damping": 31.19
-          }
-        }
-      },
-      "$description": "M3 Expressive DefaultSpatial spring for layout and indicator movement."
+      "$description": "M3 Expressive SlowSpatial spring for settling and panels (stiffness 200, damping ratio 0.8)."
     }
   },
   "controls": {
@@ -629,6 +526,10 @@
     "family": {
       "$type": "fontFamily",
       "$description": "Font family stacks.",
+      "sans": {
+        "$value": "system-ui",
+        "$description": "Primary sans-serif font family stack."
+      },
       "mono": {
         "$value": "monospace",
         "$description": "Monospace font family for code blocks and numeric readouts."
@@ -682,51 +583,33 @@
     },
     "line-height": {
       "$type": "number",
-      "$description": "Unitless line-height ratios per type role for pointer input.",
+      "$description": "Line heights per type role, as a multiple of the role's font size (DTCG's unitless lineHeight); `tokens:build` states the whole points it works out to.",
       "caption": {
-        "$value": 1.4545454545454546
+        "$value": 1.454545
       },
       "detail": {
-        "$value": 1.3333333333333333
+        "$value": 1.333333
       },
       "body": {
-        "$value": 1.4285714285714286
+        "$value": 1.428571
       },
       "label": {
-        "$value": 1.4285714285714286
+        "$value": 1.428571
       },
       "title": {
         "$value": 1.5
       },
       "headline": {
-        "$value": 1.3333333333333333
+        "$value": 1.333333
       },
       "display": {
-        "$value": 1.2222222222222223
+        "$value": 1.222222
       }
     }
   },
   "color": {
     "$type": "color",
     "$description": "Adaptive A-layer and B-layer color roles for light appearance.",
-    "brand-fill": {
-      "$value": "{color.primary}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Primary brand action fill, aliased to {color.primary}."
-    },
-    "on-brand": {
-      "$value": "{color.primary-foreground}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Foreground text and icons on brand-fill surfaces, aliased to {color.primary-foreground}."
-    },
     "scrim": {
       "$value": {
         "colorSpace": "oklch",
@@ -778,140 +661,6 @@
         }
       },
       "$description": "White ink over photographs and dark media surfaces; invariant across appearances."
-    },
-    "chart-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.22652,
-          0.00999,
-          303.714
-        ],
-        "hex": "#1d1b20"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Dark ink on light chart tiles matching M3 light onSurface."
-    },
-    "window-close": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.50128,
-          0.17832,
-          28.705
-        ],
-        "hex": "#b3261e"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "macOS window close traffic-light fill mapped to M3 light error."
-    },
-    "window-minimize": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.5909,
-          0.13245,
-          65.117
-        ],
-        "hex": "#b26a00"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "macOS window minimize traffic-light fill mapped to NSH light warn."
-    },
-    "window-zoom": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.56078,
-          0.1232,
-          159.355
-        ],
-        "hex": "#138a5a"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "macOS window zoom traffic-light fill mapped to NSH light up."
-    },
-    "window-control-ink": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0,
-          0,
-          0
-        ],
-        "alpha": 0.5,
-        "hex": "#000000"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "hex": "#000000"
-            },
-            "percent": 50,
-            "b": "transparent"
-          }
-        }
-      },
-      "$description": "Glyph ink inside macOS window traffic-light buttons."
-    },
-    "window-control-edge": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0,
-          0,
-          0
-        ],
-        "alpha": 0.12,
-        "hex": "#000000"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "hex": "#000000"
-            },
-            "percent": 12,
-            "b": "transparent"
-          }
-        }
-      },
-      "$description": "Hairline border around macOS window traffic-light buttons."
     },
     "background": {
       "$value": {
@@ -1289,15 +1038,7 @@
       "$description": "Fifth chart series color (M3 outlineVariant)."
     },
     "sidebar": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.98379,
-          0.01284,
-          321.894
-        ],
-        "hex": "#fef7ff"
-      },
+      "$value": "{color.background}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1333,15 +1074,7 @@
       "$description": "Text and icon ink on sidebar-primary highlights."
     },
     "sidebar-accent": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.91633,
-          0.03651,
-          303.106
-        ],
-        "hex": "#e8def8"
-      },
+      "$value": "{color.accent}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1350,15 +1083,7 @@
       "$description": "Sidebar active item fill (M3 secondaryContainer)."
     },
     "sidebar-accent-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.40052,
-          0.034,
-          298.591
-        ],
-        "hex": "#4a4458"
-      },
+      "$value": "{color.accent-foreground}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "ink"
@@ -1367,15 +1092,7 @@
       "$description": "Sidebar active item text ink (M3 Expressive onSecondaryContainer)."
     },
     "sidebar-border": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.82875,
-          0.01776,
-          308.223
-        ],
-        "hex": "#cac4d0"
-      },
+      "$value": "{color.border}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "chrome"
@@ -1442,54 +1159,6 @@
         }
       },
       "$description": "Overlay outline edge (M3 outlineVariant)."
-    },
-    "scrollbar-thumb": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.70667,
-          0.01431,
-          312.635
-        ],
-        "hex": "#a39ea7"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": "{color.muted-foreground}",
-            "percent": 50,
-            "b": "{color.background}"
-          }
-        }
-      },
-      "$description": "Scrollbar thumb resting fill."
-    },
-    "scrollbar-thumb-hover": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.52684,
-          0.01583,
-          307.266
-        ],
-        "hex": "#6d6972"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": "{color.muted-foreground}",
-            "percent": 80,
-            "b": "{color.background}"
-          }
-        }
-      },
-      "$description": "Scrollbar thumb fill on pointer hover."
     },
     "field": {
       "$value": {
@@ -1635,15 +1304,6 @@
       },
       "$description": "Switch and slider track fill (M3 surfaceContainerHighest)."
     },
-    "slider-track": {
-      "$value": "{color.brand-tint}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "surface"
-        }
-      },
-      "$description": "M3 Expressive inactive slider track fill aliased to {color.brand-tint} (SecondaryContainer, Compose SliderTokens.kt)."
-    },
     "knob": {
       "$value": {
         "colorSpace": "oklch",
@@ -1660,15 +1320,6 @@
         }
       },
       "$description": "Unchecked switch thumb fill (M3 outline)."
-    },
-    "code": {
-      "$value": "{color.foreground}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Monospace code text ink inside recessed wells."
     },
     "info": {
       "$value": {
@@ -1721,15 +1372,6 @@
       },
       "$description": "Positive trend and growth semantic color."
     },
-    "down": {
-      "$value": "{color.destructive}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "status"
-        }
-      },
-      "$description": "Negative trend and decline semantic color."
-    },
     "brand-tint": {
       "$value": {
         "colorSpace": "oklch",
@@ -1746,23 +1388,6 @@
         }
       },
       "$description": "Opaque selected chip/tile fill (M3 secondaryContainer)."
-    },
-    "on-brand-tint": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.40052,
-          0.034,
-          298.591
-        ],
-        "hex": "#4a4458"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Ink on selected chip/tile fills (M3 Expressive onSecondaryContainer)."
     },
     "inverse": {
       "$value": {
@@ -1797,15 +1422,6 @@
         }
       },
       "$description": "Ink on inverse surfaces (M3 inverseOnSurface)."
-    },
-    "inverse-muted": {
-      "$value": "{color.inverse-foreground}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Supporting text and close icon on inverse snackbars, aliased to {color.inverse-foreground} (Compose SnackbarTokens.kt)."
     },
     "inverse-brand": {
       "$value": {
@@ -1933,7 +1549,7 @@
           "colorOp": {
             "op": "mix",
             "space": "srgb",
-            "a": "{color.down}",
+            "a": "{color.destructive}",
             "percent": 12,
             "b": "transparent"
           }
@@ -1957,315 +1573,15 @@
         }
       },
       "$description": "Tertiary accent color (M3 tertiary)."
-    },
-    "window-control-off": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.82875,
-          0.01776,
-          308.223
-        ],
-        "hex": "#cac4d0"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Unfocused window traffic-light fill (M3 outlineVariant)."
-    },
-    "dialog": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.93251,
-          0.01479,
-          312.24
-        ],
-        "hex": "#ece6f0"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "surface"
-        }
-      },
-      "$description": "Modal dialog surface (M3 surfaceContainerHigh)."
-    },
-    "card-edge": {
-      "$value": "{color.border}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Card border hairline aliased to {color.border}."
-    },
-    "bevel": {
-      "$value": "{color.border}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Control elevation bevel stroke aliased to {color.border}."
-    },
-    "accent-bevel": {
-      "$value": "{color.brand-edge}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Accent bevel stroke aliased to {color.brand-edge}."
-    },
-    "disabled": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.22652,
-          0.00999,
-          303.714
-        ],
-        "alpha": 0.1,
-        "hex": "#1d1b20"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "surface",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": "{color.foreground}",
-            "percent": 10,
-            "b": "transparent"
-          }
-        }
-      },
-      "$description": "Disabled control container fill (10% onSurface over transparent)."
-    },
-    "disabled-foreground": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.22652,
-          0.00999,
-          303.714
-        ],
-        "alpha": 0.38,
-        "hex": "#1d1b20"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": "{color.foreground}",
-            "percent": 38,
-            "b": "transparent"
-          }
-        }
-      },
-      "$description": "Disabled control content ink (38% onSurface over transparent)."
-    },
-    "accent-pressed": {
-      "$value": "{color.primary}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Pressed accent fill aliased to {color.primary} (state layer applies press)."
-    },
-    "on-accent-pressed": {
-      "$value": "{color.on-brand}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "brand"
-        }
-      },
-      "$description": "Pressed accent ink aliased to {color.on-brand}."
-    },
-    "selected-foreground": {
-      "$value": "{color.on-brand-tint}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Ink on tonal selected controls (M3 Expressive onSecondaryContainer)."
-    },
-    "pressed-foreground": {
-      "$value": "{color.foreground}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "ink"
-        }
-      },
-      "$description": "Pressed ink aliased to {color.foreground}."
     }
   },
   "finish": {
-    "$description": "Sparse light-mode surface finish overrides.",
     "card": {
-      "$description": "Elevated M3 card surface with Material Web Level 1 shadow and 1dp Android elevation.",
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.card}",
-            "position": 0
-          },
-          {
-            "color": "{color.card}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.3,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.15,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 3,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 1,
-              "unit": "px"
-            }
-          }
-        ]
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": {
-            "android": {
-              "elevation": 1
-            }
-          }
-        }
-      }
-    },
-    "section": {
-      "$description": "M3 ElevatedCard resting surface (Level 1 shadow and 1dp Android elevation, no border).",
+      "$description": "A surface that holds content: a card, a section.",
       "background": {
         "$type": "color",
         "$value": "{color.card}"
       },
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.3,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.15,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 3,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 1,
-              "unit": "px"
-            }
-          }
-        ]
-      },
       "border-color": {
         "$type": "color",
         "$value": {
@@ -2284,188 +1600,46 @@
           }
         }
       },
+      "shadow": {
+        "$type": "shadow",
+        "$value": [
+          "{shadow.md}"
+        ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.foreground}"
+      },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "material": {
-            "android": {
-              "elevation": 1
-            }
-          }
+          "material": "none",
+          "elevation": 1
         }
       }
     },
     "inset": {
-      "$description": "The well inside a card: sunk by its inner shadow alone.",
+      "$description": "A well cut into a surface: an inset, a field, a track, a groove.",
       "shadow": {
         "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
+        "$value": [
+          "{shadow.inset}"
+        ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.foreground}"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "field": {
-      "$description": "A field well: its edge and its inner shadow.",
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
+          "material": "none"
         }
       }
     },
     "raised": {
-      "$description": "Raised surface with Level 1 shadow and 1dp Android elevation.",
+      "$description": "A control on a surface: a button, a chip, a pill.",
       "background": {
         "$type": "color",
         "$value": "{color.raised}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.raised}",
-            "position": 0
-          },
-          {
-            "color": "{color.raised}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.3,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.15,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 3,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 1,
-              "unit": "px"
-            }
-          }
-        ]
       },
       "border-color": {
         "$type": "color",
@@ -2520,103 +1694,70 @@
             "transparentKeyword": true
           }
         }
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": [
+          "{shadow.edge.surface}",
+          "{shadow.sm}"
+        ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.foreground}"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "backdropFilter": "none",
-          "material": {
-            "android": {
-              "elevation": 1
-            }
-          }
+          "material": "none",
+          "elevation": 1
         }
       }
     },
-    "hover": {
-      "$description": "Hovered state surface over raised background with Level 1 shadow.",
+    "overlay": {
+      "$description": "A panel floating over the page: a menu, a toast.",
       "background": {
         "$type": "color",
-        "$value": "{color.raised}"
+        "$value": "{color.popover}"
       },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.hover}",
-            "position": 0
-          },
-          {
-            "color": "{color.hover}",
-            "position": 1
-          }
-        ],
+      "border-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
         "$extensions": {
           "dev.aning.shadcn-nsh": {
-            "angle": 180
+            "transparentKeyword": true
           }
         }
       },
       "shadow": {
         "$type": "shadow",
         "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.3,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.15,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 3,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 1,
-              "unit": "px"
-            }
-          }
+          "{shadow.lg}"
         ]
       },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.foreground}"
+      },
+      "$extensions": {
+        "dev.aning.shadcn-nsh": {
+          "backdropFilter": "none",
+          "material": "none",
+          "elevation": 3
+        }
+      }
+    },
+    "modal": {
+      "$description": "A surface the page waits for: a dialog, a sheet.",
       "border-color": {
         "$type": "color",
         "$value": {
@@ -2635,766 +1776,40 @@
           }
         }
       },
-      "border-top-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-bottom-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": {
-            "android": {
-              "elevation": 1
-            }
-          }
-        }
-      }
-    },
-    "pressed": {
-      "$description": "Pressed surface at Level 1 elevation (M3 state layer + ripple handles press).",
-      "background": {
-        "$type": "color",
-        "$value": "{color.raised}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.raised}",
-            "position": 0
-          },
-          {
-            "color": "{color.raised}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
       "shadow": {
         "$type": "shadow",
         "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.3,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.15,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 3,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 1,
-              "unit": "px"
-            }
-          }
+          "{shadow.xl}"
         ]
       },
-      "border-color": {
+      "foreground": {
         "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-top-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-bottom-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
+        "$value": "{color.foreground}"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "material": {
-            "android": {
-              "elevation": 1
-            }
-          }
-        }
-      }
-    },
-    "disabled": {
-      "$description": "M3 disabled filled/tonal button container (10% onSurface, flat with no shadow).",
-      "background": {
-        "$type": "color",
-        "$value": "{color.disabled}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.disabled}",
-            "position": 0
-          },
-          {
-            "color": "{color.disabled}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
+          "material": "none",
+          "elevation": 6
         }
       },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "light": {
-      "$description": "The main action brightest step: the accent gradient.",
-      "background": {
-        "$type": "color",
-        "$value": "{color.primary}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.primary}",
-            "position": 0
-          },
-          {
-            "color": "{color.primary}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-top-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-bottom-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "accent": {
-      "$description": "The accent face (the same as light).",
-      "background": {
-        "$type": "color",
-        "$value": "{color.primary}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.primary}",
-            "position": 0
-          },
-          {
-            "color": "{color.primary}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-top-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-bottom-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "accentPressed": {
-      "$description": "M3 pressed accent surface (state layer + ripple handles press).",
-      "background": {
-        "$type": "color",
-        "$value": "{color.accent-pressed}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.accent-pressed}",
-            "position": 0
-          },
-          {
-            "color": "{color.accent-pressed}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-top-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-bottom-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "track": {
-      "$description": "A groove: an inner shadow and an edge.",
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": "{color.input}"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "fill": {
-      "$description": "The filled run: a slider, a progress bar, a switch that is on.",
       "background": {
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0,
-            0,
-            0
+            0.93251,
+            0.01479,
+            312.24
           ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
+          "hex": "#ece6f0"
         }
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.primary}",
-            "position": 0
-          },
-          {
-            "color": "{color.primary}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
+      }
+    },
+    "inverse": {
+      "$description": "The page's inverse: an inverse surface, a tooltip.",
+      "background": {
+        "$type": "color",
+        "$value": "{color.inverse}"
       },
       "border-color": {
         "$type": "color",
@@ -3414,718 +1829,30 @@
           }
         }
       },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "knob": {
-      "$description": "A switch knob, off.",
-      "background": {
-        "$type": "color",
-        "$value": "{color.knob}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.knob}",
-            "position": 0
-          },
-          {
-            "color": "{color.knob}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "knobOn": {
-      "$description": "A switch knob, on.",
-      "background": {
-        "$type": "color",
-        "$value": "{color.on-brand}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.on-brand}",
-            "position": 0
-          },
-          {
-            "color": "{color.on-brand}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "handle": {
-      "$description": "A slider handle (kept apart from knob).",
-      "background": {
-        "$type": "color",
-        "$value": "{color.primary}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.primary}",
-            "position": 0
-          },
-          {
-            "color": "{color.primary}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "pill": {
-      "$description": "The upstream capsule, left to the app.",
-      "background": {
-        "$type": "color",
-        "$value": "{color.raised}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.raised}",
-            "position": 0
-          },
-          {
-            "color": "{color.raised}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
       "shadow": {
         "$type": "shadow",
         "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.3,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.15,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 3,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 1,
-              "unit": "px"
-            }
-          }
+          "{shadow.lg}"
         ]
       },
-      "border-color": {
+      "foreground": {
         "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
+        "$value": "{color.inverse-foreground}"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "material": {
-            "android": {
-              "elevation": 1
-            }
-          }
-        }
-      }
-    },
-    "thumb": {
-      "$description": "The chosen segment of a segmented control or a tag.",
-      "background": {
-        "$type": "color",
-        "$value": "{color.secondary}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.secondary}",
-            "position": 0
-          },
-          {
-            "color": "{color.secondary}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "on": {
-      "$description": "A chosen switch or box, and the mark on it.",
-      "background": {
-        "$type": "color",
-        "$value": "{color.secondary}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.secondary}",
-            "position": 0
-          },
-          {
-            "color": "{color.secondary}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-top-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "border-bottom-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      }
-    },
-    "chip": {
-      "$description": "A chosen value label inside a field: a fill, an inner highlight and an edge.",
-      "background": {
-        "$type": "color",
-        "$value": "{color.background}"
-      },
-      "gradient": {
-        "$type": "gradient",
-        "$value": [
-          {
-            "color": "{color.background}",
-            "position": 0
-          },
-          {
-            "color": "{color.background}",
-            "position": 1
-          }
-        ],
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "angle": 180
-          }
-        }
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": "{color.border}"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
+          "backdropFilter": "none",
+          "material": "none",
+          "elevation": 6
         }
       }
     },
     "glass": {
-      "$description": "Floating surface using opaque M3 popover with Level 2 shadow and 3dp elevation (M3 uses no blur).",
+      "$description": "A translucent surface: what is behind it shows through.",
       "background": {
         "$type": "color",
         "$value": "{color.popover}"
       },
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.3,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.15,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 2,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 6,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 2,
-              "unit": "px"
-            }
-          }
-        ]
-      },
       "border-color": {
         "$type": "color",
         "$value": {
@@ -4143,84 +1870,31 @@
             "transparentKeyword": true
           }
         }
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": [
+          "{shadow.edge.surface}",
+          "{shadow.sm}"
+        ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.foreground}"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "backdropFilter": "none",
-          "material": {
-            "android": {
-              "elevation": 3
-            }
-          }
+          "material": "none",
+          "elevation": 3
         }
       }
     },
-    "menu": {
-      "$description": "M3 menu/popover surface with Level 2 shadow and 3dp Android elevation.",
+    "accent": {
+      "$description": "The accent's own surface, with its ink.",
       "background": {
         "$type": "color",
-        "$value": "{color.popover}"
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.3,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 2,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.15,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 2,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 6,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 2,
-              "unit": "px"
-            }
-          }
-        ]
+        "$value": "{color.primary}"
       },
       "border-color": {
         "$type": "color",
@@ -4240,83 +1914,67 @@
           }
         }
       },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "backdropFilter": "none",
-          "material": {
-            "android": {
-              "elevation": 3
-            }
+      "border-top-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
           }
         }
-      }
-    },
-    "dialog": {
-      "$description": "M3 dialog surface using SurfaceContainerHigh with Level 3 shadow and 6dp Android elevation.",
-      "background": {
+      },
+      "border-bottom-color": {
         "$type": "color",
-        "$value": "{color.dialog}"
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
+          }
+        }
       },
       "shadow": {
         "$type": "shadow",
         "$value": [
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.3,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 1,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 3,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 0,
-              "unit": "px"
-            }
-          },
-          {
-            "color": {
-              "colorSpace": "oklch",
-              "components": [
-                0,
-                0,
-                0
-              ],
-              "alpha": 0.15,
-              "hex": "#000000"
-            },
-            "offsetX": {
-              "value": 0,
-              "unit": "px"
-            },
-            "offsetY": {
-              "value": 4,
-              "unit": "px"
-            },
-            "blur": {
-              "value": 8,
-              "unit": "px"
-            },
-            "spread": {
-              "value": 3,
-              "unit": "px"
-            }
-          }
+          "{shadow.edge.accent}"
         ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.primary-foreground}"
+      },
+      "pressed-opacity": {
+        "$type": "number",
+        "$value": 1
+      },
+      "$extensions": {
+        "dev.aning.shadcn-nsh": {
+          "material": "none"
+        }
+      }
+    },
+    "knob": {
+      "$description": "A knob: a switch's thumb, a slider's handle, a segmented thumb.",
+      "background": {
+        "$type": "color",
+        "$value": "{color.knob}"
       },
       "border-color": {
         "$type": "color",
@@ -4336,91 +1994,509 @@
           }
         }
       },
+      "shadow": {
+        "$type": "shadow",
+        "$value": [
+          "{shadow.sm}"
+        ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.foreground}"
+      },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "material": {
-            "android": {
-              "elevation": 6
-            }
-          }
+          "material": "none"
         }
       }
     },
-    "grabber": {
-      "$description": "M3 bottom sheet drag handle (40% onSurfaceVariant).",
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
-        }
-      },
+    "hover": {
+      "$description": "A control under the pointer.",
       "background": {
+        "$type": "color",
+        "$value": "{color.raised}"
+      },
+      "border-color": {
         "$type": "color",
         "$value": {
           "colorSpace": "oklch",
           "components": [
-            0.39805,
-            0.01736,
-            303.721
+            0,
+            0,
+            0
           ],
-          "alpha": 0.4,
-          "hex": "#49454f"
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
+          }
+        }
+      },
+      "border-top-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
+          }
+        }
+      },
+      "border-bottom-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
+          }
+        }
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": [
+          "{shadow.edge.surface}",
+          "{shadow.sm}"
+        ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.foreground}"
+      },
+      "$extensions": {
+        "dev.aning.shadcn-nsh": {
+          "material": "none",
+          "elevation": 1
+        }
+      }
+    },
+    "pressed": {
+      "$description": "A control held down.",
+      "background": {
+        "$type": "color",
+        "$value": "{color.raised}"
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
+          }
+        }
+      },
+      "border-top-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
+          }
+        }
+      },
+      "border-bottom-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
+          }
+        }
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": [
+          "{shadow.inset}"
+        ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.foreground}"
+      },
+      "$extensions": {
+        "dev.aning.shadcn-nsh": {
+          "material": "none",
+          "elevation": 1
+        }
+      }
+    },
+    "disabled": {
+      "$description": "A control that cannot be used.",
+      "border-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
+          }
+        }
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": [
+          "{shadow.edge.surface}",
+          "{shadow.sm}"
+        ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.22652,
+            0.00999,
+            303.714
+          ],
+          "alpha": 0.38,
+          "hex": "#1d1b20"
         },
         "$extensions": {
           "dev.aning.shadcn-nsh": {
             "colorOp": {
               "op": "alpha",
-              "color": "{color.muted-foreground}",
-              "alpha": 0.4
+              "color": "{color.foreground}",
+              "alpha": 0.38
+            }
+          }
+        }
+      },
+      "$extensions": {
+        "dev.aning.shadcn-nsh": {
+          "material": "none"
+        }
+      },
+      "background": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0.22652,
+            0.00999,
+            303.714
+          ],
+          "alpha": 0.1,
+          "hex": "#1d1b20"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "colorOp": {
+              "op": "alpha",
+              "color": "{color.foreground}",
+              "alpha": 0.1
             }
           }
         }
       }
+    }
+  },
+  "shadow": {
+    "sm": {
+      "$description": "A control's cast shadow, on the surface it sits on.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.3,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.15,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 1,
+            "unit": "px"
+          }
+        }
+      ]
     },
-    "tooltip": {
-      "$description": "M3 plain tooltip using inverse surface without shadow.",
-      "background": {
-        "$type": "color",
-        "$value": "{color.inverse}"
-      },
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
+    "md": {
+      "$description": "A card's cast shadow: the surface is one step off the page.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.3,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.15,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 1,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "lg": {
+      "$description": "An overlay's shadow: a menu floats well above the page.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.3,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 2,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.15,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 2,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 6,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 2,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "xl": {
+      "$description": "A dialog's shadow: the page waits behind it.",
+      "$type": "shadow",
+      "$value": [
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.3,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 1,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 3,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 0,
+            "unit": "px"
+          }
+        },
+        {
+          "color": {
+            "colorSpace": "oklch",
+            "components": [
+              0,
+              0,
+              0
+            ],
+            "alpha": 0.15,
+            "hex": "#000000"
+          },
+          "offsetX": {
+            "value": 0,
+            "unit": "px"
+          },
+          "offsetY": {
+            "value": 4,
+            "unit": "px"
+          },
+          "blur": {
+            "value": 8,
+            "unit": "px"
+          },
+          "spread": {
+            "value": 3,
+            "unit": "px"
+          }
+        }
+      ]
+    },
+    "inset": {
+      "$description": "A well's shadow: light falls into a groove.",
+      "$type": "shadow",
+      "$value": [
+        {
           "color": {
             "colorSpace": "oklch",
             "components": [
@@ -4447,44 +2523,17 @@
             "value": 0,
             "unit": "px"
           }
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "none": true
-          }
         }
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
+      ],
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "material": null
+          "none": true
         }
       }
     },
-    "inverse": {
-      "$description": "M3 snackbar/inverse surface with Level 3 shadow and 6dp Android elevation.",
-      "background": {
-        "$type": "color",
-        "$value": "{color.inverse}"
-      },
-      "shadow": {
+    "edge": {
+      "surface": {
+        "$description": "The hard edge of a raised surface: its highlight, its hairline. (the accent's).",
         "$type": "shadow",
         "$value": [
           {
@@ -4495,7 +2544,7 @@
                 0,
                 0
               ],
-              "alpha": 0.3,
+              "alpha": 0,
               "hex": "#000000"
             },
             "offsetX": {
@@ -4503,18 +2552,29 @@
               "unit": "px"
             },
             "offsetY": {
-              "value": 1,
+              "value": 0,
               "unit": "px"
             },
             "blur": {
-              "value": 3,
+              "value": 0,
               "unit": "px"
             },
             "spread": {
               "value": 0,
               "unit": "px"
             }
-          },
+          }
+        ],
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "none": true
+          }
+        }
+      },
+      "accent": {
+        "$description": "The accent fill's edge: its highlight and its own cast. (the accent's).",
+        "$type": "shadow",
+        "$value": [
           {
             "color": {
               "colorSpace": "oklch",
@@ -4523,7 +2583,7 @@
                 0,
                 0
               ],
-              "alpha": 0.15,
+              "alpha": 0,
               "hex": "#000000"
             },
             "offsetX": {
@@ -4531,90 +2591,23 @@
               "unit": "px"
             },
             "offsetY": {
-              "value": 4,
+              "value": 0,
               "unit": "px"
             },
             "blur": {
-              "value": 8,
+              "value": 0,
               "unit": "px"
             },
             "spread": {
-              "value": 3,
+              "value": 0,
               "unit": "px"
             }
           }
-        ]
-      },
-      "border-color": {
-        "$type": "color",
-        "$value": {
-          "colorSpace": "oklch",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0,
-          "hex": "#000000"
-        },
-        "$extensions": {
-          "dev.aning.shadcn-nsh": {
-            "transparentKeyword": true
-          }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "backdropFilter": "none",
-          "material": {
-            "android": {
-              "elevation": 6
-            }
-          }
-        }
-      }
-    },
-    "groove": {
-      "$description": "A groove cut inside a menu.",
-      "shadow": {
-        "$type": "shadow",
-        "$value": {
-          "color": {
-            "colorSpace": "oklch",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0,
-            "hex": "#000000"
-          },
-          "offsetX": {
-            "value": 0,
-            "unit": "px"
-          },
-          "offsetY": {
-            "value": 0,
-            "unit": "px"
-          },
-          "blur": {
-            "value": 0,
-            "unit": "px"
-          },
-          "spread": {
-            "value": 0,
-            "unit": "px"
-          }
-        },
+        ],
         "$extensions": {
           "dev.aning.shadcn-nsh": {
             "none": true
           }
-        }
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "material": null
         }
       }
     }

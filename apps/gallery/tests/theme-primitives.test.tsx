@@ -22,8 +22,8 @@ test("double focus, timing motion, state-layer inks, ripple and android material
   const initialFocus = readJson<Record<string, unknown>>("focus");
   expect(initialFocus.borderColor).toBeDefined();
   expect(initialFocus.boxShadow).toBeUndefined();
-  expect(read("motionPress")).toMatch(/^spring:\d+:\d+$/);
-  expect(read("motionControl")).toMatch(/^spring:\d+:\d+$/);
+  expect(read("motionFast")).toMatch(/^spring:\d+:\d+$/);
+  expect(read("motionDefault")).toMatch(/^spring:\d+:\d+$/);
   expect(readJson<Record<string, unknown>>("btnHover")).toEqual({ opacity: 0.94 });
   expect(readJson<unknown>("toggleOnHover")).toBeNull();
   expect(readJson<Record<string, unknown>>("bareHover").backgroundColor).toBeDefined();
@@ -48,9 +48,9 @@ test("double focus, timing motion, state-layer inks, ripple and android material
   expect(expressiveFocus.boxShadow).toBe(`0 0 0 1px ${ringHalo}`);
 
   // Timing roles & new platform-neutral curves are resolved reactively.
-  expect(read("motionPress")).toBe("timing:150:[0.05,0.7,0.1,1]");
-  expect(read("motionControl")).toBe("timing:167:[1,0,1,1]");
-  expect(read("motionMove")).toMatch(/^spring:\d+:\d+$/);
+  expect(read("motionFast")).toBe("timing:150:[0.05,0.7,0.1,1]");
+  expect(read("motionDefault")).toBe("timing:250:[0,0,0,1]");
+  expect(read("motionSlow")).toBe("timing:167:[1,0,1,1]");
   expect(read("motionEnter")).toBe("200:[0.55,0.55,0,1]");
 
   // Drive follow/Roll/animate under timing config cleanly.
@@ -58,16 +58,14 @@ test("double focus, timing motion, state-layer inks, ripple and android material
   expect(read("roll")).toBe("2");
 
   // State-layer hover omits backgroundColor: token("hover") and stacks ink over resting gradients.
-  const [onBrand, primaryForeground, inverseForeground, primary, selectedForeground] =
-    read("tokens").split("|");
-  const expectedOnBrandHover = atAlpha(onBrand, 0.08);
+  const [primaryForeground, inverseForeground, selectedInk] = read("tokens").split("|");
   const expectedPrimaryFgHover = atAlpha(primaryForeground, 0.08);
   const expectedInverseFgHover = atAlpha(inverseForeground, 0.08);
-  const expectedSelectedFgHover = atAlpha(selectedForeground, 0.08);
+  const expectedSelectedFgHover = atAlpha(selectedInk, 0.08);
 
   const btnHover = readJson<Record<string, unknown>>("btnHover");
   expect(btnHover.backgroundColor).toBeUndefined();
-  expect(btnHover.backgroundImage).toContain(expectedOnBrandHover);
+  expect(btnHover.backgroundImage).toContain(expectedPrimaryFgHover);
   expect(btnHover.backgroundImage).toContain(", linear-gradient(");
 
   const roundHover = readJson<Record<string, unknown>>("roundHover");
@@ -77,7 +75,7 @@ test("double focus, timing motion, state-layer inks, ripple and android material
 
   const splitHover = readJson<Record<string, unknown>>("splitHover");
   expect(splitHover.backgroundColor).toBeUndefined();
-  expect(splitHover.backgroundImage).toContain(expectedOnBrandHover);
+  expect(splitHover.backgroundImage).toContain(expectedPrimaryFgHover);
 
   const toggleOnHover = readJson<Record<string, unknown>>("toggleOnHover");
   expect(toggleOnHover.backgroundColor).toBeUndefined();
@@ -93,27 +91,27 @@ test("double focus, timing motion, state-layer inks, ripple and android material
   expect(bareHover.backgroundImage).toBeDefined();
 
   // state.ripple: true wires surface-appropriate ripple colors on pressables.
-  expect(readJson("btnAndroid")).toEqual({ ripple: { color: atAlpha(onBrand, 0.1) } });
+  expect(readJson("btnAndroid")).toEqual({
+    ripple: { color: atAlpha(primaryForeground, 0.1) },
+  });
   expect(readJson("roundAndroid")).toEqual({
     ripple: { color: atAlpha(primaryForeground, 0.1) },
   });
   expect(readJson("toggleOnAndroid")).toEqual({
-    ripple: { color: atAlpha(selectedForeground, 0.1) },
+    ripple: { color: atAlpha(selectedInk, 0.1) },
   });
   expect(readJson("toastAndroid")).toEqual({ ripple: { color: atAlpha(inverseForeground, 0.1) } });
 
-  // material.android resolves {token} ripple colors and passes elevation & flags.
+  // A layer's material reaches the platform props, and its elevation rides beside them.
   expect(readJson("menuMaterial")).toEqual({
-    android: {
-      elevation: 6,
-      ripple: { color: primary, borderless: true, radius: 18, foreground: true },
-    },
+    windows: { backdrop: { material: "blur" } },
+    android: { elevation: 6 },
   });
 
   // Switch back to build-time default cleanly.
   await app.press("text:Reset");
   expect(readJson("focus")).toEqual(initialFocus);
-  expect(read("motionPress")).toMatch(/^spring:\d+:\d+$/);
+  expect(read("motionFast")).toMatch(/^spring:\d+:\d+$/);
   expect(readJson("btnAndroid")).toBeNull();
   expect(readJson("menuMaterial")).toEqual({});
 });

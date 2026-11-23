@@ -96,7 +96,7 @@ const dimensions = (o?: ToggleLookOptions) => toggleSizes[read(o?.size) ?? "defa
  * (`sm` 24 / 32, `lg` 34 / 44), padded at its sides when it carries
  * text, its corners a quarter of its side; a hit slop makes a touch target
  * 44 points. Off, a default toggle is bare and an `outline` sits on a
- * field's edge; on (`pressedStyle`), it takes `finish.on`, a fill that stands off
+ * field's edge; on (`pressedStyle`), it takes `finish.accent`, a fill that stands off
  * its surface in both appearances, further than the hover's whisper of the
  * text color. Pressed it sinks to 92% (none with reduced motion). Keyboard
  * focus: `focusRing(1)`. Disabled: 50%, no hover or press. Pair it with
@@ -127,14 +127,14 @@ export function toggleLook(o?: ToggleLookOptions) {
         ...(outline
           ? { borderColor: colors.input, backgroundColor: colors.field }
           : { borderColor: "transparent" }),
-        ...(on && !split ? finish.on : {}),
+        ...(on && !split ? finish.accent : {}),
         ...(split
           ? on
             ? finish.disabled
             : outline
               ? {
                   backgroundColor: "transparent",
-                  borderColor: colors.disabled,
+                  borderColor: finish.disabled.borderColor ?? colors.border,
                   boxShadow: "none",
                 }
               : { backgroundColor: "transparent", borderColor: "transparent", boxShadow: "none" }
@@ -144,12 +144,14 @@ export function toggleLook(o?: ToggleLookOptions) {
       };
     },
     get pressedStyle(): ViewStyle {
-      return { ...finish.on };
+      return { ...finish.accent };
     },
     get hoverStyle(): ViewStyle | undefined {
       if (read(o?.disabled)) return undefined;
       if (themeStyle().state.overlay.hover > 0) {
-        return read(o?.on) ? hovered("selected-foreground", finish.on.backgroundImage) : hovered();
+        return read(o?.on)
+          ? hovered("accent-foreground", finish.accent.backgroundImage)
+          : hovered();
       }
       return read(o?.on) ? undefined : hovered();
     },
@@ -158,7 +160,7 @@ export function toggleLook(o?: ToggleLookOptions) {
       if (themeStyle().state.overlay.pressed > 0) {
         return {
           ...(read(o?.on)
-            ? stateLayer("pressed", "selected-foreground", finish.on.backgroundImage)
+            ? stateLayer("pressed", "accent-foreground", finish.accent.backgroundImage)
             : stateLayer("pressed", "foreground")),
           ...sink(0.92),
         };
@@ -175,15 +177,15 @@ export function toggleLook(o?: ToggleLookOptions) {
       return touchSlop(dimensions(o).side);
     },
     get android(): AndroidProps | undefined {
-      return pressRipple(read(o?.on) ? "selected-foreground" : "foreground", o?.disabled);
+      return pressRipple(read(o?.on) ? "accent-foreground" : "foreground", o?.disabled);
     },
   };
 }
 
 /** The ink of a toggle's content: the selected color while on, muted while off, disabled ink when disabled apart. */
 const ink = (pressed: Live<boolean | undefined>, disabled?: Live<boolean | undefined>) => {
-  if (read(disabled) && themeStyle().state.disabled.fill) return colors.disabledForeground;
-  return read(pressed) ? colors.selectedForeground : colors.mutedForeground;
+  if (read(disabled) && themeStyle().state.disabled.fill) return finish.disabled.foreground;
+  return read(pressed) ? finish.accent.foreground : colors.mutedForeground;
 };
 
 /** The label of a `toggleLook` of the same options: 13 points with a pointer, 15 on a touch screen (`sm` 12 / 13, `lg` 14 / 16), medium weight, muted while off. */

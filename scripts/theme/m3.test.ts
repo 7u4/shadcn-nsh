@@ -211,8 +211,6 @@ describe("m3Roles", () => {
   });
 
   test("default role values round-trip to M3 baseline hexes and preserve RESEARCH var(--x) aliases", () => {
-    expect(baselineRoles.theme["brand-fill"]).toBe("var(--primary)");
-    expect(baselineRoles.theme["on-brand"]).toBe("var(--primary-foreground)");
     expect(baselineRoles.light["card-foreground"]).toBe("var(--foreground)");
     expect(baselineRoles.light["popover-foreground"]).toBe("var(--foreground)");
     expect(baselineRoles.light["sidebar-foreground"]).toBe("var(--foreground)");
@@ -220,39 +218,26 @@ describe("m3Roles", () => {
     expect(baselineRoles.light["sidebar-primary-foreground"]).toBe("var(--primary-foreground)");
     expect(baselineRoles.light["sidebar-ring"]).toBe("var(--ring)");
     expect(baselineRoles.light.brand).toBe("var(--primary)");
-    expect(baselineRoles.light.code).toBe("var(--foreground)");
-    expect(baselineRoles.light.down).toBe("var(--destructive)");
 
     expect(css(parseColor(baselineRoles.light.background)).toUpperCase()).toBe("#FEF7FF");
-    expect(css(parseColor(baselineRoles.light.dialog)).toUpperCase()).toBe("#ECE6F0");
+    expect(css(parseColor(baselineRoles.light.popover)).toUpperCase()).toBe("#F3EDF7");
+    expect(css(parseColor(baselineRoles.light.field)).toUpperCase()).toBe("#E6E0E9");
     expect(css(parseColor(baselineRoles.light.primary)).toUpperCase()).toBe("#6750A4");
     expect(css(parseColor(baselineRoles.light["secondary-foreground"])).toUpperCase()).toBe(
       "#4A4458",
-    );
-    expect(css(parseColor(baselineRoles.light["on-brand-tint"])).toUpperCase()).toBe("#4A4458");
-    expect(baselineRoles.light["selected-foreground"]).toBe("var(--on-brand-tint)");
-    expect(baselineRoles.light["disabled"]).toBe(
-      "color-mix(in srgb, var(--foreground) 10%, transparent)",
-    );
-    expect(baselineRoles.light["disabled-foreground"]).toBe(
-      "color-mix(in srgb, var(--foreground) 38%, transparent)",
     );
     expect(css(parseColor(baselineRoles.light.inverse)).toUpperCase()).toBe("#322F35");
     expect(css(parseColor(baselineRoles.light["inverse-foreground"])).toUpperCase()).toBe(
       "#F5EFF7",
     );
-    expect(baselineRoles.light["inverse-muted"]).toBe("var(--inverse-foreground)");
     expect(css(parseColor(baselineRoles.light["inverse-brand"])).toUpperCase()).toBe("#D0BCFF");
     expect(css(parseColor(baselineRoles.dark.background)).toUpperCase()).toBe("#141218");
-    expect(css(parseColor(baselineRoles.dark.dialog)).toUpperCase()).toBe("#2B2930");
+    expect(css(parseColor(baselineRoles.dark.popover)).toUpperCase()).toBe("#211F26");
     expect(css(parseColor(baselineRoles.dark.primary)).toUpperCase()).toBe("#D0BCFF");
-    expect(css(parseColor(baselineRoles.dark["on-brand-tint"])).toUpperCase()).toBe("#E8DEF8");
-    expect(baselineRoles.dark["selected-foreground"]).toBe("var(--on-brand-tint)");
     expect(css(parseColor(baselineRoles.dark.inverse)).toUpperCase()).toBe("#E6E0E9");
     expect(css(parseColor(baselineRoles.dark["inverse-foreground"])).toUpperCase()).toBe("#322F35");
-    expect(baselineRoles.dark["inverse-muted"]).toBe("var(--inverse-foreground)");
     expect(css(parseColor(baselineRoles.dark["inverse-brand"])).toUpperCase()).toBe("#6750A4");
-    expect(css(parseColor(tealRoles.light.dialog)).toUpperCase()).not.toBe("#ECE6F0");
+    expect(css(parseColor(tealRoles.light.popover)).toUpperCase()).not.toBe("#F3EDF7");
   });
 
   test("foreground/background pairs meet WCAG AA contrast (>= 4.5) for default seed", () => {
@@ -268,10 +253,7 @@ describe("m3Roles", () => {
       ["sidebar-foreground", "sidebar"],
       ["sidebar-primary-foreground", "sidebar-primary"],
       ["sidebar-accent-foreground", "sidebar-accent"],
-      ["on-brand", "brand-fill"],
-      ["on-brand-tint", "brand-tint"],
       ["inverse-foreground", "inverse"],
-      ["inverse-muted", "inverse"],
       ["inverse-brand", "inverse"],
       ["destructive", "destructive-tint"],
     ];
@@ -326,18 +308,20 @@ describe("compiled material theme files", () => {
     ).toEqual([]);
 
     expect(files.semantics.controls).toBe("material");
-    expect(files.semantics.state["accent-pressed-opacity"]).toBe(1);
-    expect(files.semantics.finishes.shared.section).toMatchObject({
-      material: { android: { elevation: 1 } },
-    });
-    expect(files.semantics.finishes.shared.dialog).toMatchObject({
-      background: "{dialog}",
-    });
+    // M3's disabled container and label are `onSurface` state layers, not tokens.
     expect(files.semantics.finishes.shared.disabled).toMatchObject({
-      background: "{disabled}",
+      background: "oklch(from {foreground} l c h / 0.1)",
+      foreground: "oklch(from {foreground} l c h / 0.38)",
     });
-    expect(files.semantics.finishes.shared.grabber).toMatchObject({
-      background: "oklch(from {muted-foreground} l c h / 0.4)",
+    // Elevated surfaces sit at M3's level 1 on Android, and a dialog at level 6.
+    expect(files.semantics.finishes.shared.card).toMatchObject({ elevation: 1 });
+    expect(files.semantics.finishes.shared.modal).toMatchObject({ elevation: 6 });
+    expect(files.semantics.finishes.shared.modal.shadow).toBe(files.semantics.elevation.light.xl);
+    expect(files.semantics.finishes.light.modal).toMatchObject({
+      background: "oklch(0.93251 0.01479 312.24)",
+    });
+    expect(files.semantics.finishes.dark.modal).toMatchObject({
+      background: "oklch(0.2859 0.01293 298.633)",
     });
   });
 });

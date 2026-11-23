@@ -1635,7 +1635,7 @@ function Bridge() {
       <View style={{ flexDirection: "row", alignItems: "center", gap: 16, marginTop: 8 }}>
         <Key color={chart.chart2} label="Total" />
         <Key color={colors.up} label="Adds" />
-        <Key color={colors.down} label="Takes" />
+        <Key color={colors.destructive} label="Takes" />
       </View>
       <View
         style={{ marginTop: size.gap }}
@@ -1649,7 +1649,7 @@ function Bridge() {
           colorScale={{
             type: "ordinal",
             domain: ["total", "increase", "decrease"],
-            range: [chart.chart2, colors.up, colors.down],
+            range: [chart.chart2, colors.up, colors.destructive],
           }}
           appearGeneration={1}
           motion={{
@@ -2303,7 +2303,11 @@ function Candles() {
           data={rows()}
           xScale={{ type: "band", paddingInner: CANDLE_PAD.inner, paddingOuter: CANDLE_PAD.outer }}
           yScale={{ type: "linear", domain: domain() }}
-          colorScale={{ type: "ordinal", domain: ["up", "down"], range: [colors.up, colors.down] }}
+          colorScale={{
+            type: "ordinal",
+            domain: ["up", "down"],
+            range: [colors.up, colors.destructive],
+          }}
           appearGeneration={span()}
           // No pointer spring: the other plot marks the same day at once, so both move together.
           motion={motion}
@@ -2401,7 +2405,7 @@ function Candles() {
             cornerRadii={{ topLeft: 1, topRight: 1 }}
             stagger={0.6}
             inactiveOpacity={0.3}
-            style={{ fill: alpha(colors.down, 0.45) }}
+            style={{ fill: alpha(colors.destructive, 0.45) }}
           />
           <Grid y={[0]} style={plotBaseline()} />
           {mark("volume")}
@@ -3058,7 +3062,11 @@ function Targets() {
           // Stocks down the plot, upside across it.
           xScale={{ type: "linear", domain: UPSIDE_DOMAIN }}
           yScale={{ type: "band", paddingInner: 0.3, paddingOuter: 0.15 }}
-          colorScale={{ type: "ordinal", domain: ["up", "down"], range: [colors.up, colors.down] }}
+          colorScale={{
+            type: "ordinal",
+            domain: ["up", "down"],
+            range: [colors.up, colors.destructive],
+          }}
           appearGeneration={1}
           motion={{
             appear: { duration: 900, easing: "easeOut" },
@@ -3341,7 +3349,7 @@ function VolumePrice() {
         colorScale={{
           type: "ordinal",
           domain: ["up", "down"],
-          range: [alpha(colors.up, 0.5), alpha(colors.down, 0.5)],
+          range: [alpha(colors.up, 0.5), alpha(colors.destructive, 0.5)],
         }}
         appearGeneration={span()}
         motion={{
@@ -3921,7 +3929,7 @@ const kinship = (p: Pair) =>
             ? "Barely related"
             : "Move apart: a hedge";
 /** The cells' labels: the chart's ink on light cells, `on-media` on dark ones (`data-dark`). */
-const CELL_LABEL = "text-chart-foreground/70 data-dark:text-on-media/90";
+const CELL_LABEL = "text-foreground/70 data-dark:text-on-media/90";
 /** The hover cell: a ring in the text's color around the cell, a little out from its edge. */
 const cellRing = () => ({ outlineWidth: 1.5, outlineOffset: 1.5, outlineColor: colors.foreground });
 
@@ -4172,7 +4180,7 @@ function Seasonality() {
   // A phone's narrow card: smaller labels, the returns left out of cells too small for them.
   const compact = () => width() > 0 && width() < 340;
   const tick = () => ({ ...axis(), fontSize: compact() ? 9 : 10.5 });
-  const ramp = () => [colors.down, colors.line, colors.up];
+  const ramp = () => [colors.destructive, colors.line, colors.up];
   const gutter = () => (compact() ? 34 : 36);
   const totals = () => (compact() ? 46 : 54);
   return (
@@ -4898,7 +4906,7 @@ function MarketMap() {
         colorScale={{
           type: "diverging",
           domain: [-range(), range()],
-          range: [colors.down, colors.inset, colors.up],
+          range: [colors.destructive, colors.inset, colors.up],
         }}
         appearGeneration={1}
         motion={{
@@ -4929,7 +4937,7 @@ function MarketMap() {
           label={(d: MapRow) => d.id}
           valueLabel={(d: MapRow) => pct(d.chg ?? 0, 2)}
           labelPlacement="center"
-          labelClass="p-1 text-chart-foreground data-dark:text-on-media"
+          labelClass="p-1 text-foreground data-dark:text-on-media"
           labelStyle={{ fontSize: 11.5, fontWeight: "600", letterSpacing: 0.2 }}
           valueLabelStyle={{
             fontSize: 10,
@@ -4997,7 +5005,7 @@ const classColor = (cls: string): string =>
         ? chart.chart4
         : chart.chart3;
 /**
- * A position's tile is its class's colour, solid. The label is `chart-foreground` on a light
+ * A position's tile is its class's colour, solid. The label is `foreground` on a light
  * tile and `on-media` on a dark one: `data-dark` follows the cell's OKLab lightness (under 0.65),
  * not the appearance, so one ink pair covers every theme. Five `chart-N-foreground` tokens could
  * not, because a treemap takes a single `labelClass`.
@@ -5121,7 +5129,7 @@ function Allocation() {
           groupClass={(d: AllocationRow) => CLASS_GROUP[ASSET_CLASSES.indexOf(d.cls)]}
           label={(d: AllocationRow) => d.id}
           valueLabel={(_: AllocationRow, value: number) => weight(value)}
-          labelClass="px-2 py-1.5 text-chart-foreground data-dark:text-on-media"
+          labelClass="px-2 py-1.5 text-foreground data-dark:text-on-media"
           labelStyle={{ fontSize: 12, fontWeight: "600" }}
           valueLabelStyle={{
             fontSize: 11,

@@ -121,7 +121,7 @@ function popOn(key: () => unknown): AnimatedValue {
     const next = key();
     if (next === shown) return;
     shown = next;
-    if (!reduceMotion()) void animate(s, 1, motion.move, { velocity: 4 });
+    if (!reduceMotion()) void animate(s, 1, motion.default, { velocity: 4 });
   });
   return s;
 }
@@ -131,7 +131,7 @@ function fadeOn(on: () => boolean): AnimatedValue {
   const v = createAnimatedValue(on() ? 1 : 0);
   effect(() => {
     const to = on() ? 1 : 0;
-    void animate(v, to, motion.control);
+    void animate(v, to, motion.fast);
   });
   return v;
 }
@@ -324,7 +324,7 @@ function Split(props: Ctx) {
     state() === "busy" ? "Merging…" : state() === "done" ? strategy().done : strategy().label;
   const done = () => state() === "done";
   // Done, the pair turns the `up` tone: its tint under the word and the hairline.
-  const ink = () => (done() ? colors.up : colors.onBrand);
+  const ink = () => (done() ? colors.up : colors.primaryForeground);
   const doneFrame = () =>
     done()
       ? {
@@ -354,7 +354,7 @@ function Split(props: Ctx) {
                   <Icon icon={done() ? Check : GitMerge} {...buttonGlyph("default")} tint={ink()} />
                 }
               >
-                <Spinner {...buttonGlyph("default")} tint={colors.onBrand} />
+                <Spinner {...buttonGlyph("default")} tint={colors.primaryForeground} />
               </If>
             </View>
             <Text style={[buttonLabel("default"), { color: ink() }]}>{label()}</Text>
@@ -670,7 +670,7 @@ function Hold(props: Ctx) {
             onPressUp={() => {
               if (state() === "done") return;
               state.set("idle");
-              void animate(fill, 0, motion.control);
+              void animate(fill, 0, motion.fast);
             }}
             onLongPress={() => {
               resize();
@@ -712,7 +712,7 @@ function CopyCard(props: Ctx) {
         ...rounded(shape.control),
         borderWidth: 1,
         backgroundColor: colors.field,
-        ...finish.field,
+        ...finish.inset,
         borderColor: colors.input,
       }}
     >

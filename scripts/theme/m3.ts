@@ -33,6 +33,7 @@ import {
 } from "@material/material-color-utilities";
 
 import type { ThemeGeneratorOutput } from "./dtcg";
+import { finishes, shadows } from "./finishes/material";
 import { oklchColor, toOklchText } from "./oklch";
 
 export const M3_BASELINE_SEED = "#6750A4";
@@ -304,19 +305,17 @@ function appearanceRoles(p: M3Palette, appearance: Appearance): Record<string, s
     "chart-3": c(p.secondary),
     "chart-4": c(p.outline),
     "chart-5": c(p.outlineVariant),
-    sidebar: c(p.surface),
+    sidebar: "var(--background)",
     "sidebar-foreground": "var(--foreground)",
     "sidebar-primary": "var(--primary)",
     "sidebar-primary-foreground": "var(--primary-foreground)",
-    "sidebar-accent": c(p.secondaryContainer),
-    "sidebar-accent-foreground": c(p.onSecondaryContainer),
-    "sidebar-border": c(p.outlineVariant),
+    "sidebar-accent": "var(--accent)",
+    "sidebar-accent-foreground": "var(--accent-foreground)",
+    "sidebar-border": "var(--border)",
     "sidebar-ring": "var(--ring)",
     inset: c(p.surfaceContainer),
     raised: c(p.surfaceContainerLow),
     "glass-edge": c(p.outlineVariant),
-    "scrollbar-thumb": "color-mix(in srgb, var(--muted-foreground) 50%, var(--background))",
-    "scrollbar-thumb-hover": "color-mix(in srgb, var(--muted-foreground) 80%, var(--background))",
     field: c(p.surfaceContainerHighest),
     line: c(p.outlineVariant),
     hover: "color-mix(in srgb, var(--foreground) 8%, transparent)",
@@ -325,41 +324,21 @@ function appearanceRoles(p: M3Palette, appearance: Appearance): Record<string, s
     brand: "var(--primary)",
     "brand-edge": c(p.outlineVariant),
     track: c(p.surfaceContainerHighest),
-    "slider-track": "var(--brand-tint)",
     knob: c(p.outline),
-    code: "var(--foreground)",
     info: c(p.primary),
     warn: toOklchText(NSH_EXTENSIONS.warn[appearance]),
     up: toOklchText(NSH_EXTENSIONS.up[appearance]),
-    down: "var(--destructive)",
-    // M3 paints selected chips/tiles/buttons with opaque SecondaryContainer; `on-brand-tint` uses
-    // the matching OnSecondaryContainer ink per RESEARCH §2.2 & §5.1.
+    // M3 paints selected chips/tiles/buttons with opaque SecondaryContainer.
     "brand-tint": c(p.secondaryContainer),
-    "on-brand-tint": c(p.onSecondaryContainer),
     inverse: c(p.inverseSurface),
     "inverse-foreground": c(p.inverseOnSurface),
-    // M3 snackbar supporting text (`SupportingTextColor`) and close icon (`IconColor`) both use
-    // `InverseOnSurface`, so `inverse-muted` maps to `inverse-foreground`:
-    // https://github.com/androidx/androidx/blob/ac364f3c7f575c0e10f089b254a8eedb5b7d705a/compose/material3/material3/src/commonMain/kotlin/androidx/compose/material3/tokens/SnackbarTokens.kt
-    "inverse-muted": "var(--inverse-foreground)",
     "inverse-brand": c(p.inversePrimary),
     "info-tint": tintMix("info"),
     "warn-tint": tintMix("warn"),
     "destructive-tint": c(p.errorContainer),
     "up-tint": tintMix("up"),
-    "down-tint": tintMix("down"),
+    "down-tint": tintMix("destructive"),
     violet: c(p.tertiary),
-    "window-control-off": c(p.outlineVariant),
-    dialog: c(p.surfaceContainerHigh),
-    "card-edge": "var(--border)",
-    bevel: "var(--border)",
-    "accent-bevel": "var(--brand-edge)",
-    disabled: "color-mix(in srgb, var(--foreground) 10%, transparent)",
-    "disabled-foreground": "color-mix(in srgb, var(--foreground) 38%, transparent)",
-    "accent-pressed": "var(--primary)",
-    "on-accent-pressed": "var(--on-brand)",
-    "selected-foreground": "var(--on-brand-tint)",
-    "pressed-foreground": "var(--foreground)",
   };
 }
 
@@ -371,55 +350,14 @@ function appearanceRoles(p: M3Palette, appearance: Appearance): Record<string, s
 export function m3Roles(scheme: M3Scheme): M3Roles {
   return {
     theme: {
-      "brand-fill": "var(--primary)",
-      "on-brand": "var(--primary-foreground)",
       scrim: oklchColor(0, 0, 0, 0.32),
       media: toOklchText(NSH_EXTENSIONS.media),
       "on-media": toOklchText("#FFFFFF"),
-      "chart-foreground": toOklchText(scheme.light.onSurface),
-      "window-close": toOklchText(scheme.light.error),
-      "window-minimize": toOklchText(NSH_EXTENSIONS.warn.light),
-      "window-zoom": toOklchText(NSH_EXTENSIONS.up.light),
-      "window-control-ink": `color-mix(in srgb, ${oklchColor(0, 0, 0)} 50%, transparent)`,
-      "window-control-edge": `color-mix(in srgb, ${oklchColor(0, 0, 0)} 12%, transparent)`,
     },
     light: appearanceRoles(scheme.light, "light"),
     dark: appearanceRoles(scheme.dark, "dark"),
   };
 }
-
-const alias = (token: string) => `{${token}}`;
-const flat = (color: string) => `linear-gradient(180deg, ${color} 0%, ${color} 100%)`;
-
-/** Material Web `_elevation.scss` key + ambient shadow levels in black ink. */
-const LEVEL_1 = `0 1px 2px 0 ${oklchColor(0, 0, 0, 0.3)}, 0 1px 3px 1px ${oklchColor(0, 0, 0, 0.15)}`;
-const LEVEL_2 = `0 1px 2px 0 ${oklchColor(0, 0, 0, 0.3)}, 0 2px 6px 2px ${oklchColor(0, 0, 0, 0.15)}`;
-const LEVEL_3 = `0 1px 3px 0 ${oklchColor(0, 0, 0, 0.3)}, 0 4px 8px 3px ${oklchColor(0, 0, 0, 0.15)}`;
-
-const surface = (
-  color: string,
-  {
-    shadow = "none",
-    "border-color": borderColor = "transparent",
-    "border-top-color": borderTopColor,
-    "border-bottom-color": borderBottomColor,
-    material = null,
-  }: {
-    shadow?: string;
-    "border-color"?: string;
-    "border-top-color"?: string;
-    "border-bottom-color"?: string;
-    material?: { android: { elevation: number } } | null;
-  } = {},
-) => ({
-  background: color,
-  gradient: flat(color),
-  shadow,
-  "border-color": borderColor,
-  ...(borderTopColor !== undefined ? { "border-top-color": borderTopColor } : {}),
-  ...(borderBottomColor !== undefined ? { "border-bottom-color": borderBottomColor } : {}),
-  material,
-});
 
 /**
  * Shared theme-level tokens (`cssVars.theme`) for Material 3 Expressive: M3 Compose tokens at
@@ -433,174 +371,54 @@ function themeLevel(roles: M3Roles): Record<string, string> {
     "radius-control": "4px",
     "radius-container": "12px",
     "radius-modal": "28px",
+    "font-sans": "system-ui",
     "font-mono": "monospace",
     ...roles.theme,
-  };
-}
-
-/**
- * All 23 finish roles for Material 3 Expressive (`{token}` references; light/dark polarity comes
- * from `theme.json`). No frosted glass or blur; elevation maps onto Material Web Level 1–3
- * shadows and `material.android.elevation` (1 / 3 / 6 dp).
- */
-function finishes(): Record<string, Record<string, unknown>> {
-  const level1 = { android: { elevation: 1 } };
-  const level2 = { android: { elevation: 3 } };
-  const level3 = { android: { elevation: 6 } };
-  return {
-    card: {
-      gradient: flat(alias("card")),
-      shadow: LEVEL_1,
-      material: level1,
-    },
-    section: {
-      background: alias("card"),
-      shadow: LEVEL_1,
-      "border-color": "transparent",
-      material: level1,
-    },
-    inset: { shadow: "none", material: null },
-    field: { shadow: "none", material: null },
-    raised: {
-      ...surface(alias("raised"), {
-        shadow: LEVEL_1,
-        "border-top-color": "transparent",
-        "border-bottom-color": "transparent",
-        material: level1,
-      }),
-      backdropFilter: "none",
-    },
-    hover: {
-      background: alias("raised"),
-      gradient: flat(alias("hover")),
-      shadow: LEVEL_1,
-      "border-color": "transparent",
-      "border-top-color": "transparent",
-      "border-bottom-color": "transparent",
-      material: level1,
-    },
-    pressed: surface(alias("raised"), {
-      shadow: LEVEL_1,
-      "border-top-color": "transparent",
-      "border-bottom-color": "transparent",
-      material: level1,
-    }),
-    disabled: surface(alias("disabled")),
-    light: surface(alias("primary"), {
-      "border-top-color": "transparent",
-      "border-bottom-color": "transparent",
-    }),
-    accent: surface(alias("primary"), {
-      "border-top-color": "transparent",
-      "border-bottom-color": "transparent",
-    }),
-    accentPressed: surface(alias("accent-pressed"), {
-      "border-top-color": "transparent",
-      "border-bottom-color": "transparent",
-    }),
-    track: { shadow: "none", "border-color": alias("input"), material: null },
-    fill: {
-      background: "transparent",
-      gradient: flat(alias("primary")),
-      shadow: "none",
-      "border-color": "transparent",
-      material: null,
-    },
-    knob: surface(alias("knob")),
-    knobOn: surface(alias("on-brand")),
-    handle: surface(alias("primary")),
-    pill: surface(alias("raised"), { shadow: LEVEL_1, material: level1 }),
-    thumb: surface(alias("secondary")),
-    on: surface(alias("secondary"), {
-      "border-top-color": "transparent",
-      "border-bottom-color": "transparent",
-    }),
-    chip: surface(alias("background"), { "border-color": alias("border") }),
-    glass: {
-      background: alias("popover"),
-      shadow: LEVEL_2,
-      "border-color": "transparent",
-      backdropFilter: "none",
-      material: level2,
-    },
-    menu: {
-      background: alias("popover"),
-      shadow: LEVEL_2,
-      "border-color": "transparent",
-      backdropFilter: "none",
-      material: level2,
-    },
-    dialog: {
-      background: alias("dialog"),
-      shadow: LEVEL_3,
-      "border-color": "transparent",
-      material: level3,
-    },
-    grabber: {
-      background: "oklch(from {muted-foreground} l c h / 0.4)",
-      shadow: "none",
-      material: null,
-    },
-    tooltip: {
-      background: alias("inverse"),
-      shadow: "none",
-      "border-color": "transparent",
-      material: null,
-    },
-    inverse: {
-      background: alias("inverse"),
-      shadow: LEVEL_3,
-      "border-color": "transparent",
-      backdropFilter: "none",
-      material: level3,
-    },
-    groove: { shadow: "none", material: null },
   };
 }
 
 /** Material 3 Expressive style groups (`semantics.json`); verified values in `docs/specs/native-themes.md` §3.2. */
 export const m3Style = {
   typography: {
-    fontFamily: null,
     caption: {
       fontSize: { pointer: 11, touch: 11 },
-      lineHeight: { pointer: 16 / 11, touch: 16 / 11 },
+      lineHeight: { pointer: 16, touch: 16 },
       fontWeight: 500,
       letterSpacing: 0.5,
     },
     detail: {
       fontSize: { pointer: 12, touch: 12 },
-      lineHeight: { pointer: 16 / 12, touch: 16 / 12 },
+      lineHeight: { pointer: 16, touch: 16 },
       fontWeight: 400,
       letterSpacing: 0.4,
     },
     body: {
       fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20 / 14, touch: 20 / 14 },
+      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 400,
       letterSpacing: 0.25,
     },
     label: {
       fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20 / 14, touch: 20 / 14 },
+      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 500,
       letterSpacing: 0.1,
     },
     title: {
       fontSize: { pointer: 16, touch: 16 },
-      lineHeight: { pointer: 24 / 16, touch: 24 / 16 },
+      lineHeight: { pointer: 24, touch: 24 },
       fontWeight: 500,
       letterSpacing: 0.15,
     },
     headline: {
       fontSize: { pointer: 24, touch: 24 },
-      lineHeight: { pointer: 32 / 24, touch: 32 / 24 },
+      lineHeight: { pointer: 32, touch: 32 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     display: {
       fontSize: { pointer: 36, touch: 36 },
-      lineHeight: { pointer: 44 / 36, touch: 44 / 36 },
+      lineHeight: { pointer: 44, touch: 44 },
       fontWeight: 400,
       letterSpacing: 0,
     },
@@ -612,46 +430,23 @@ export const m3Style = {
       modal: "{radius-modal}",
     },
     size: {
-      hit: { pointer: 44, touch: 48 },
+      hit: { pointer: 0, touch: 48 },
       density: {
-        pointer: { row: 48, pad: 16, gap: 12, surface: 12 },
-        touch: { row: 56, pad: 16, gap: 12, surface: 16 },
+        pointer: { pad: 16, gap: 12 },
+        touch: { pad: 16, gap: 12 },
       },
       control: {
-        pointer: {
-          row: 48,
-          padding: 8,
-          gap: 12,
-          control: 18,
-          check: 18,
-          dot: 10,
-          tabs: 48,
-          line: 48,
-          clear: 20,
-          switch: "regular",
-        },
-        touch: {
-          row: 56,
-          padding: 10,
-          gap: 12,
-          control: 18,
-          check: 18,
-          dot: 10,
-          tabs: 48,
-          line: 56,
-          clear: 24,
-          switch: "regular",
-        },
+        // M3 spacing steps: 8 inside a control, 12 beside it; a radio's dot is 10dp.
+        pointer: { padding: 8, gap: 8, dot: 10, switch: "regular" },
+        touch: { padding: 8, gap: 8, dot: 10, switch: "regular" },
       },
-      height: { pointer: { sm: 32, md: 40, lg: 56 }, touch: { sm: 32, md: 40, lg: 56 } },
+      height: { pointer: { sm: 24, md: 32, lg: 48 }, touch: { sm: 32, md: 40, lg: 56 } },
     },
-    // M3 elevated/filled surfaces (ElevatedCard, Sheet, NavigationDrawer, Dialog, Menu, Snackbar)
-    // have no outline (`surface: 0`); `hairline: 1` stays for dividers and outlined variants.
-    stroke: { hairline: 1, surface: 0, control: 1 },
+    stroke: { hairline: 1, control: 1 },
     focus: { style: "outline", width: 3, offset: 2 },
     icon: {
-      pointer: { sm: 18, md: 20, lg: 24 },
-      touch: { sm: 18, md: 20, lg: 24 },
+      pointer: { sm: 16, md: 20, lg: 24 },
+      touch: { sm: 16, md: 20, lg: 24 },
     },
   },
   shape: {
@@ -661,32 +456,32 @@ export const m3Style = {
     },
   },
   state: {
-    // M3 presses via state layer overlay and Android ripple rather than geometric scale.
+    // M3 presses with a state layer and an Android ripple, not by sinking.
     "press-scale": 1,
     overlay: { hover: 0.08, focus: 0.1, pressed: 0.1, dragged: 0.16 },
     ripple: true,
     "pressed-opacity": 1,
-    "accent-pressed-opacity": 1,
+    "rest-opacity": 0.38,
     disabled: { content: 0.38, fill: true },
   },
-  duration: { shake: 500 },
   transition: {
     enter: { duration: 500, timingFunction: "emphasized-decelerate" },
   },
   motion: {
-    // ExpressiveMotionTokens: FastSpatial (k=800, z=0.6), DefaultSpatial (k=380, z=0.8),
-    // DefaultEffects (k=1600, z=1.0), and DurationLong2 (500ms) with emphasized-decelerate.
-    press: { stiffness: 800, damping: 33.94 },
-    settle: { stiffness: 380, damping: 31.19 },
-    control: { stiffness: 1600, damping: 80 },
-    move: { stiffness: 380, damping: 31.19 },
+    // M3 Expressive spatial springs, named by speed (`ExpressiveMotionTokens.kt`): FastSpatial for
+    // small components reacting, DefaultSpatial for a press or a thumb that moves, SlowSpatial for
+    // a panel that settles (damping 2·ζ·√k: 0.6/800 → 33.94, 0.8/380 → 31.19, 0.8/200 → 22.63).
+    fast: { stiffness: 800, damping: 33.94 },
+    default: { stiffness: 380, damping: 31.19 },
+    slow: { stiffness: 200, damping: 22.63 },
   },
   controls: "material" as const,
 };
 
 /** Material 3 Expressive theme data and DTCG descriptions ready for `emitDtcgTheme`. */
 export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
-  const roles = m3Roles(m3Scheme(seed));
+  const scheme = m3Scheme(seed);
+  const roles = m3Roles(scheme);
   const colorDescs = {
     background: "Primary page surface (M3 surface role, material-web v34.0.21).",
     foreground: "Default text and icon ink on surfaces (M3 onSurface).",
@@ -726,16 +521,11 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
     brand: "Inline brand accent ink, aliased to {color.primary}.",
     "brand-edge": "Brand container outline (M3 outlineVariant).",
     track: "Switch and slider track fill (M3 surfaceContainerHighest).",
-    "slider-track":
-      "M3 Expressive inactive slider track fill aliased to {color.brand-tint} (SecondaryContainer, Compose SliderTokens.kt).",
     knob: "Unchecked switch thumb fill (M3 outline).",
     info: "Informational semantic color matching M3 primary.",
     "brand-tint": "Opaque selected chip/tile fill (M3 secondaryContainer).",
-    "on-brand-tint": "Ink on selected chip/tile fills (M3 Expressive onSecondaryContainer).",
     inverse: "Inverse surface for snackbars and tooltips (M3 inverseSurface).",
     "inverse-foreground": "Ink on inverse surfaces (M3 inverseOnSurface).",
-    "inverse-muted":
-      "Supporting text and close icon on inverse snackbars, aliased to {color.inverse-foreground} (Compose SnackbarTokens.kt).",
     "inverse-brand": "Brand action ink on inverse surfaces (M3 inversePrimary).",
     "info-tint": "Translucent informational wash (12% info over transparent).",
     "warn-tint": "Translucent warning wash (12% warn over transparent).",
@@ -743,17 +533,6 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
     "up-tint": "Translucent positive wash (12% up over transparent).",
     "down-tint": "Translucent negative wash (12% down over transparent).",
     violet: "Tertiary accent color (M3 tertiary).",
-    "window-control-off": "Unfocused window traffic-light fill (M3 outlineVariant).",
-    dialog: "Modal dialog surface (M3 surfaceContainerHigh).",
-    "card-edge": "Card border hairline aliased to {color.border}.",
-    bevel: "Control elevation bevel stroke aliased to {color.border}.",
-    "accent-bevel": "Accent bevel stroke aliased to {color.brand-edge}.",
-    disabled: "Disabled control container fill (10% onSurface over transparent).",
-    "disabled-foreground": "Disabled control content ink (38% onSurface over transparent).",
-    "accent-pressed": "Pressed accent fill aliased to {color.primary} (state layer applies press).",
-    "on-accent-pressed": "Pressed accent ink aliased to {color.on-brand}.",
-    "selected-foreground": "Ink on tonal selected controls (M3 Expressive onSecondaryContainer).",
-    "pressed-foreground": "Pressed ink aliased to {color.foreground}.",
   };
 
   return {
@@ -767,7 +546,7 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
       "Light appearance colors for Material 3 Expressive (#6750A4 baseline with Expressive Tone 30 on*Container).",
     darkDescription: "Dark appearance colors for Material 3 Expressive (#6750A4 baseline).",
     pointerDescription:
-      "Material 3 Expressive desktop pointer input-tier overrides (M3 Desktop 44dp hit target, 48dp row).",
+      "Material 3 Expressive desktop pointer input-tier overrides at M3 density -2 (each step reduces a control's height by 4dp; no hit padding).",
     touchDescription:
       "Material 3 Expressive touch input-tier overrides (Compose InteractiveComponentSize 48dp hit target, ListTokens 56dp row).",
     radiusGroupDescription:
@@ -777,14 +556,14 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
       overview:
         "Material 3 Expressive (`material-web` v34.0.21 / Compose Material 3 1.5.0) built from the `#6750A4` baseline with tonal surface containers, Expressive Tone 30 `on*Container` roles, state-layer overlays, and Expressive spatial/effects springs.",
       elevation:
-        "Tonal surface stepping plus Material Web Level 1–3 shadows and `material.android.elevation` (1dp/3dp/6dp), with `stroke.surface: 0px` and no backdrop blur.",
+        "Tonal surface stepping plus Material Web Level 1–3 shadows and `material.android.elevation` (1dp/3dp/6dp), with no edge drawn (each finish's `border-color: transparent`) and no backdrop blur.",
       dos: [
         "Express interaction states via M3 state-layer ink overlays (`hover: 0.08`, `focus: 0.10`, `pressed: 0.10`, `dragged: 0.16`) and Android press ripples (`state.ripple: true`) with `state.press-scale: 1`.",
         'Use `shape.curve: "circular"` and `controls: "material"` for top-rounded underlined fields and underlined tabs.',
-        "Keep `stroke.surface: 0px` on tonal/elevated containers so depth comes from tonal steps and elevation.",
+        "Keep tonal and elevated containers edge-free through `border-color: transparent` in the finish, so depth comes from tonal steps and elevation.",
       ],
       donts: [
-        "Do not add backdrop blur (`backdropFilter`) or surface borders (`stroke.surface > 0`) to M3 tonal surfaces.",
+        "Do not add backdrop blur (`backdropFilter`) or a surface edge (`border-color`) to M3 tonal surfaces.",
         "Do not replace `outline` focus rings (`3px` width, `2px` offset) with halo rings.",
       ],
     },
@@ -793,46 +572,17 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
       light: roles.light,
       dark: roles.dark,
     },
-    finishes: {
-      light: finishes(),
-      dark: finishes(),
-    },
+    finishes,
+    shadows,
     descriptions: {
       sharedColors: {
-        "brand-fill": "Primary brand action fill, aliased to {color.primary}.",
-        "on-brand":
-          "Foreground text and icons on brand-fill surfaces, aliased to {color.primary-foreground}.",
         scrim: "Translucent backdrop scrim behind modals and sheets (M3 scrim at 32% opacity).",
-        "chart-foreground": "Dark ink on light chart tiles matching M3 light onSurface.",
-        "window-close": "macOS window close traffic-light fill mapped to M3 light error.",
-        "window-minimize": "macOS window minimize traffic-light fill mapped to NSH light warn.",
-        "window-zoom": "macOS window zoom traffic-light fill mapped to NSH light up.",
       },
       lightColors: colorDescs,
       darkColors: colorDescs,
-      finishes: {
-        card: "Elevated M3 card surface with Material Web Level 1 shadow and 1dp Android elevation.",
-        section:
-          "M3 ElevatedCard resting surface (Level 1 shadow and 1dp Android elevation, no border).",
-        raised: "Raised surface with Level 1 shadow and 1dp Android elevation.",
-        hover: "Hovered state surface over raised background with Level 1 shadow.",
-        pressed: "Pressed surface at Level 1 elevation (M3 state layer + ripple handles press).",
-        disabled: "M3 disabled filled/tonal button container (10% onSurface, flat with no shadow).",
-        accentPressed: "M3 pressed accent surface (state layer + ripple handles press).",
-        glass:
-          "Floating surface using opaque M3 popover with Level 2 shadow and 3dp elevation (M3 uses no blur).",
-        menu: "M3 menu/popover surface with Level 2 shadow and 3dp Android elevation.",
-        dialog:
-          "M3 dialog surface using SurfaceContainerHigh with Level 3 shadow and 6dp Android elevation.",
-        grabber: "M3 bottom sheet drag handle (40% onSurfaceVariant).",
-        tooltip: "M3 plain tooltip using inverse surface without shadow.",
-        inverse: "M3 snackbar/inverse surface with Level 3 shadow and 6dp Android elevation.",
-      },
       style: {
         typography:
           "Material 3 Expressive typography scale (TypeScaleTokens.kt / _md-sys-typescale.scss).",
-        "dimension.stroke.surface":
-          "0px surface outline (M3 elevated/filled surfaces rely on elevation rather than outlines).",
         "dimension.focus":
           "M3 focus indicator: 3px solid outline offset 2px (_md-sys-state-focus-indicator.scss).",
         "dimension.focus.offset": "2px outward focus indicator offset per M3.",
@@ -847,13 +597,15 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
           "M3 disabled controls: 0.38 content opacity with fill: true (10% onSurface container, _md-comp-button-filled.scss).",
         "transition.enter":
           "M3 DurationLong2 (500ms) with emphasized-decelerate curve (_md-sys-motion.scss).",
-        "motion.press":
-          "M3 Expressive FastSpatial spring (stiffness 800, damping ratio 0.6; ExpressiveMotionTokens.kt).",
-        "motion.settle": "M3 Expressive DefaultSpatial spring (stiffness 380, damping ratio 0.8).",
-        "motion.control":
-          "M3 Expressive DefaultEffects spring (stiffness 1600, damping ratio 1.0).",
-        "motion.move": "M3 Expressive DefaultSpatial spring for layout and indicator movement.",
+        "motion.fast":
+          "M3 Expressive FastSpatial spring for control state (stiffness 800, damping ratio 0.6; ExpressiveMotionTokens.kt).",
+        "motion.default":
+          "M3 Expressive DefaultSpatial spring for presses and movement (stiffness 380, damping ratio 0.8).",
+        "motion.slow":
+          "M3 Expressive SlowSpatial spring for settling and panels (stiffness 200, damping ratio 0.8).",
         controls: "Material 3 Expressive control geometry presets.",
+        "pointer.dimension.size.height":
+          "Standard control heights at M3 density -2 (24, 32, 48dp): each density step reduces height by 4dp (https://m3.material.io/foundations/layout/grids-spacing/density).",
       },
     },
   };

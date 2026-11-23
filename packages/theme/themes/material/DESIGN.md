@@ -6,15 +6,7 @@ colors:
   scrim: "#00000052"
   media: "#10131a"
   on-media: "#ffffff"
-  chart-foreground: "#1d1b20"
-  window-close: "#b3261e"
-  window-minimize: "#b26a00"
-  window-zoom: "#138a5a"
-  window-control-ink: "#00000080"
-  window-control-edge: "#0000001f"
   light:
-    brand-fill: "#6750a4"
-    on-brand: "#ffffff"
     background: "#fef7ff"
     foreground: "#1d1b20"
     card: "#f7f2fa"
@@ -49,8 +41,6 @@ colors:
     inset: "#f3edf7"
     raised: "#f7f2fa"
     glass-edge: "#cac4d0"
-    scrollbar-thumb: "#a39ea7"
-    scrollbar-thumb-hover: "#6d6972"
     field: "#e6e0e9"
     line: "#cac4d0"
     hover: "#1d1b2014"
@@ -59,18 +49,13 @@ colors:
     brand: "#6750a4"
     brand-edge: "#cac4d0"
     track: "#e6e0e9"
-    slider-track: "#e8def8"
     knob: "#79747e"
-    code: "#1d1b20"
     info: "#6750a4"
     warn: "#b26a00"
     up: "#138a5a"
-    down: "#b3261e"
     brand-tint: "#e8def8"
-    on-brand-tint: "#4a4458"
     inverse: "#322f35"
     inverse-foreground: "#f5eff7"
-    inverse-muted: "#f5eff7"
     inverse-brand: "#d0bcff"
     info-tint: "#6750a41f"
     warn-tint: "#b26a001f"
@@ -78,20 +63,7 @@ colors:
     up-tint: "#138a5a1f"
     down-tint: "#b3261e1f"
     violet: "#7d5260"
-    window-control-off: "#cac4d0"
-    dialog: "#ece6f0"
-    card-edge: "#cac4d0"
-    bevel: "#cac4d0"
-    accent-bevel: "#cac4d0"
-    disabled: "#1d1b201a"
-    disabled-foreground: "#1d1b2061"
-    accent-pressed: "#6750a4"
-    on-accent-pressed: "#ffffff"
-    selected-foreground: "#4a4458"
-    pressed-foreground: "#1d1b20"
   dark:
-    brand-fill: "#d0bcff"
-    on-brand: "#381e72"
     background: "#141218"
     foreground: "#e6e0e9"
     card: "#1d1b20"
@@ -126,8 +98,6 @@ colors:
     inset: "#211f26"
     raised: "#1d1b20"
     glass-edge: "#49454f"
-    scrollbar-thumb: "#6f6b74"
-    scrollbar-thumb-hover: "#a6a0ab"
     field: "#36343b"
     line: "#49454f"
     hover: "#e6e0e914"
@@ -136,18 +106,13 @@ colors:
     brand: "#d0bcff"
     brand-edge: "#49454f"
     track: "#36343b"
-    slider-track: "#4a4458"
     knob: "#938f99"
-    code: "#e6e0e9"
     info: "#d0bcff"
     warn: "#ffb547"
     up: "#45d49a"
-    down: "#f2b8b5"
     brand-tint: "#4a4458"
-    on-brand-tint: "#e8def8"
     inverse: "#e6e0e9"
     inverse-foreground: "#322f35"
-    inverse-muted: "#322f35"
     inverse-brand: "#6750a4"
     info-tint: "#d0bcff1f"
     warn-tint: "#ffb5471f"
@@ -155,94 +120,74 @@ colors:
     up-tint: "#45d49a1f"
     down-tint: "#f2b8b51f"
     violet: "#efb8c8"
-    window-control-off: "#49454f"
-    dialog: "#2b2930"
-    card-edge: "#49454f"
-    bevel: "#49454f"
-    accent-bevel: "#49454f"
-    disabled: "#e6e0e91a"
-    disabled-foreground: "#e6e0e961"
-    accent-pressed: "#d0bcff"
-    on-accent-pressed: "#381e72"
-    selected-foreground: "#e8def8"
-    pressed-foreground: "#e6e0e9"
 typography:
   caption:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 11px
     fontWeight: 500
-    lineHeight: 1.4545454545454546
+    lineHeight: 16px
     letterSpacing: 0.5px
   detail:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 12px
     fontWeight: 400
-    lineHeight: 1.3333333333333333
+    lineHeight: 16px
     letterSpacing: 0.4px
   body:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 14px
     fontWeight: 400
-    lineHeight: 1.4285714285714286
+    lineHeight: 20px
     letterSpacing: 0.25px
   label:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 14px
     fontWeight: 500
-    lineHeight: 1.4285714285714286
+    lineHeight: 20px
     letterSpacing: 0.1px
   title:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 16px
     fontWeight: 500
-    lineHeight: 1.5
+    lineHeight: 24px
     letterSpacing: 0.15px
   headline:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 24px
     fontWeight: 400
-    lineHeight: 1.3333333333333333
+    lineHeight: 32px
     letterSpacing: 0px
   display:
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: system-ui
     fontSize: 36px
     fontWeight: 400
-    lineHeight: 1.2222222222222223
+    lineHeight: 44px
     letterSpacing: 0px
 rounded:
   control: 4px
   container: 12px
   modal: 28px
 spacing:
-  hit: 44px
+  hit: 0px
   density:
-    row: 48px
     pad: 16px
     gap: 12px
-    surface: 12px
   control:
-    row: 48px
     padding: 8px
-    gap: 12px
-    control: 18px
-    check: 18px
+    gap: 8px
     dot: 10px
-    tabs: 48px
-    line: 48px
-    clear: 20px
   height:
-    sm: 32px
-    md: 40px
-    lg: 56px
+    sm: 24px
+    md: 32px
+    lg: 48px
   stroke:
     hairline: 1px
-    surface: 0px
     control: 1px
   focus:
     width: 3px
     offset: 2px
   icon:
-    sm: 18px
+    sm: 16px
     md: 20px
     lg: 24px
 motion:
@@ -250,8 +195,6 @@ motion:
     duration: 500ms
     delay: 0ms
     timingFunction: "cubic-bezier(0.05, 0.7, 0.1, 1)"
-  shake:
-    duration: 500ms
 components:
   button-primary:
     backgroundColor: "{colors.light.primary}"
@@ -281,16 +224,16 @@ components:
     backgroundColor: "{colors.light.inset}"
     textColor: "{colors.light.foreground}"
     rounded: "{rounded.control}"
-    padding: "{spacing.density.surface}"
+    padding: "{spacing.control.padding}"
   input-field:
-    backgroundColor: "{colors.light.field}"
+    backgroundColor: "{colors.light.inset}"
     textColor: "{colors.light.foreground}"
     typography: "{typography.label}"
     rounded: "{rounded.control}"
     height: "{spacing.height.md}"
     padding: "{spacing.control.padding}"
   badge-chip:
-    backgroundColor: "{colors.light.background}"
+    backgroundColor: "{colors.light.secondary}"
     textColor: "{colors.light.secondary-foreground}"
     typography: "{typography.caption}"
     rounded: "{rounded.control}"
@@ -301,7 +244,7 @@ components:
     rounded: "{rounded.container}"
     padding: "{spacing.control.padding}"
   dialog:
-    backgroundColor: "{colors.light.dialog}"
+    backgroundColor: "#ece6f0"
     textColor: "{colors.light.card-foreground}"
     typography: "{typography.body}"
     rounded: "{rounded.modal}"
@@ -317,24 +260,24 @@ components:
     typography: "{typography.body}"
     rounded: "{rounded.container}"
   switch-track:
-    backgroundColor: "{colors.light.track}"
+    backgroundColor: "{colors.light.inset}"
     rounded: "{rounded.control}"
   switch-track-on:
     backgroundColor: "{colors.light.primary}"
   switch-knob:
     backgroundColor: "{colors.light.knob}"
   switch-knob-on:
-    backgroundColor: "{colors.light.on-brand}"
+    backgroundColor: "{colors.light.primary-foreground}"
   slider-handle:
-    backgroundColor: "{colors.light.primary}"
+    backgroundColor: "{colors.light.knob}"
   tabs-thumb:
-    backgroundColor: "{colors.light.secondary}"
+    backgroundColor: "{colors.light.raised}"
     textColor: "{colors.light.foreground}"
     typography: "{typography.label}"
     rounded: "{rounded.control}"
   toggle-on:
-    backgroundColor: "{colors.light.secondary}"
-    textColor: "{colors.light.foreground}"
+    backgroundColor: "{colors.light.primary}"
+    textColor: "{colors.light.primary-foreground}"
     rounded: "{rounded.control}"
   glass-overlay:
     backgroundColor: "{colors.light.popover}"
@@ -373,16 +316,12 @@ Material 3 Expressive (`material-web` v34.0.21 / Compose Material 3 1.5.0) built
 - **`field`** (light `#e6e0e9`, dark `#36343b`): Filled text field background (M3 surfaceContainerHighest).
 - **`hover`** (light `#1d1b2014`, dark `#e6e0e914`): M3 hover state-layer ink (8% foreground over transparent, StateTokens.kt).
 - **`track`** (light `#e6e0e9`, dark `#36343b`): Switch and slider track fill (M3 surfaceContainerHighest).
-- **`slider-track`** (light `#e8def8`, dark `#4a4458`): M3 Expressive inactive slider track fill aliased to {color.brand-tint} (SecondaryContainer, Compose SliderTokens.kt).
 - **`knob`** (light `#79747e`, dark `#938f99`): Unchecked switch thumb fill (M3 outline).
 - **`inverse`** (light `#322f35`, dark `#e6e0e9`): Inverse surface for snackbars and tooltips (M3 inverseSurface).
-- **`dialog`** (light `#ece6f0`, dark `#2b2930`): Modal dialog surface (M3 surfaceContainerHigh).
-- **`disabled`** (light `#1d1b201a`, dark `#e6e0e91a`): Disabled control container fill (10% onSurface over transparent).
 
 ### Ink
 
 - **`on-media`** (`#ffffff`): White ink over photographs and dark media surfaces; invariant across appearances.
-- **`chart-foreground`** (`#1d1b20`): Dark ink on light chart tiles matching M3 light onSurface.
 - **`foreground`** (light `#1d1b20`, dark `#e6e0e9`): Default text and icon ink on surfaces (M3 onSurface).
 - **`card-foreground`** (light `#1d1b20`, dark `#e6e0e9`): Primary text and icon ink on card surfaces.
 - **`popover-foreground`** (light `#1d1b20`, dark `#e6e0e9`): Primary text and icon ink on popover surfaces.
@@ -392,17 +331,10 @@ Material 3 Expressive (`material-web` v34.0.21 / Compose Material 3 1.5.0) built
 - **`sidebar-foreground`** (light `#1d1b20`, dark `#e6e0e9`): Primary text and icon ink inside the sidebar.
 - **`sidebar-accent-foreground`** (light `#4a4458`, dark `#e8def8`): Sidebar active item text ink (M3 Expressive onSecondaryContainer).
 - **`faint`** (light `#79747e`, dark `#938f99`): Quiet caption/placeholder ink (M3 outline).
-- **`code`** (light `#1d1b20`, dark `#e6e0e9`): Monospace code text ink inside recessed wells.
 - **`inverse-foreground`** (light `#f5eff7`, dark `#322f35`): Ink on inverse surfaces (M3 inverseOnSurface).
-- **`inverse-muted`** (light `#f5eff7`, dark `#322f35`): Supporting text and close icon on inverse snackbars, aliased to {color.inverse-foreground} (Compose SnackbarTokens.kt).
-- **`disabled-foreground`** (light `#1d1b2061`, dark `#e6e0e961`): Disabled control content ink (38% onSurface over transparent).
-- **`selected-foreground`** (light `#4a4458`, dark `#e8def8`): Ink on tonal selected controls (M3 Expressive onSecondaryContainer).
-- **`pressed-foreground`** (light `#1d1b20`, dark `#e6e0e9`): Pressed ink aliased to {color.foreground}.
 
 ### Brand
 
-- **`brand-fill`** (light `#6750a4`, dark `#d0bcff`): Primary brand action fill, aliased to {color.primary}.
-- **`on-brand`** (light `#ffffff`, dark `#381e72`): Foreground text and icons on brand-fill surfaces, aliased to {color.primary-foreground}.
 - **`primary`** (light `#6750a4`, dark `#d0bcff`): Primary brand action fill (M3 primary).
 - **`primary-foreground`** (light `#ffffff`, dark `#381e72`): Text and icon ink on primary fills (M3 onPrimary).
 - **`sidebar-primary`** (light `#6750a4`, dark `#d0bcff`): Primary action highlight color in the sidebar.
@@ -410,10 +342,7 @@ Material 3 Expressive (`material-web` v34.0.21 / Compose Material 3 1.5.0) built
 - **`brand`** (light `#6750a4`, dark `#d0bcff`): Inline brand accent ink, aliased to {color.primary}.
 - **`brand-edge`** (light `#cac4d0`, dark `#49454f`): Brand container outline (M3 outlineVariant).
 - **`brand-tint`** (light `#e8def8`, dark `#4a4458`): Opaque selected chip/tile fill (M3 secondaryContainer).
-- **`on-brand-tint`** (light `#4a4458`, dark `#e8def8`): Ink on selected chip/tile fills (M3 Expressive onSecondaryContainer).
 - **`inverse-brand`** (light `#d0bcff`, dark `#6750a4`): Brand action ink on inverse surfaces (M3 inversePrimary).
-- **`accent-pressed`** (light `#6750a4`, dark `#d0bcff`): Pressed accent fill aliased to {color.primary} (state layer applies press).
-- **`on-accent-pressed`** (light `#ffffff`, dark `#381e72`): Pressed accent ink aliased to {color.on-brand}.
 
 ### Status
 
@@ -426,7 +355,6 @@ Material 3 Expressive (`material-web` v34.0.21 / Compose Material 3 1.5.0) built
 - **`info`** (light `#6750a4`, dark `#d0bcff`): Informational semantic color matching M3 primary.
 - **`warn`** (light `#b26a00`, dark `#ffb547`): Warning semantic status color.
 - **`up`** (light `#138a5a`, dark `#45d49a`): Positive trend and growth semantic color.
-- **`down`** (light `#b3261e`, dark `#f2b8b5`): Negative trend and decline semantic color.
 - **`info-tint`** (light `#6750a41f`, dark `#d0bcff1f`): Translucent informational wash (12% info over transparent).
 - **`warn-tint`** (light `#b26a001f`, dark `#ffb5471f`): Translucent warning wash (12% warn over transparent).
 - **`destructive-tint`** (light `#f9dedc`, dark `#8c1d18`): Tonal error container background (M3 errorContainer).
@@ -436,63 +364,52 @@ Material 3 Expressive (`material-web` v34.0.21 / Compose Material 3 1.5.0) built
 
 ### Chrome
 
-- **`window-close`** (`#b3261e`): macOS window close traffic-light fill mapped to M3 light error.
-- **`window-minimize`** (`#b26a00`): macOS window minimize traffic-light fill mapped to NSH light warn.
-- **`window-zoom`** (`#138a5a`): macOS window zoom traffic-light fill mapped to NSH light up.
-- **`window-control-ink`** (`#00000080`): Glyph ink inside macOS window traffic-light buttons.
-- **`window-control-edge`** (`#0000001f`): Hairline border around macOS window traffic-light buttons.
 - **`border`** (light `#cac4d0`, dark `#49454f`): Hairline container border color (M3 outlineVariant).
 - **`input`** (light `#79747e`, dark `#938f99`): Input outline color (M3 outline).
 - **`ring`** (light `#625b71`, dark `#ccc2dc`): Focus indicator ring color (M3 secondary).
 - **`sidebar-border`** (light `#cac4d0`, dark `#49454f`): Sidebar divider border (M3 outlineVariant).
 - **`sidebar-ring`** (light `#625b71`, dark `#ccc2dc`): Focus indicator ring color inside the sidebar.
 - **`glass-edge`** (light `#cac4d0`, dark `#49454f`): Overlay outline edge (M3 outlineVariant).
-- **`scrollbar-thumb`** (light `#a39ea7`, dark `#6f6b74`): Scrollbar thumb resting fill.
-- **`scrollbar-thumb-hover`** (light `#6d6972`, dark `#a6a0ab`): Scrollbar thumb fill on pointer hover.
 - **`line`** (light `#cac4d0`, dark `#49454f`): Inset divider hairline (M3 outlineVariant).
 - **`ring-halo`** (light `#625b7133`, dark `#ccc2dc33`): Outer focus ring halo (20% ring color over transparent).
-- **`window-control-off`** (light `#cac4d0`, dark `#49454f`): Unfocused window traffic-light fill (M3 outlineVariant).
-- **`card-edge`** (light `#cac4d0`, dark `#49454f`): Card border hairline aliased to {color.border}.
-- **`bevel`** (light `#cac4d0`, dark `#49454f`): Control elevation bevel stroke aliased to {color.border}.
-- **`accent-bevel`** (light `#cac4d0`, dark `#49454f`): Accent bevel stroke aliased to {color.brand-edge}.
 
 ## Typography
 
 Material 3 Expressive typography scale (TypeScaleTokens.kt / _md-sys-typescale.scss).
 
 - **Font stacks:** Font family stacks.
+  - `sans` (`system-ui`): Primary sans-serif font family stack.
   - `mono` (`monospace`): Monospace font family for code blocks and numeric readouts.
-  - Semantic body `fontFamily`: `null` (system UI default).
+  - Every role's `fontFamily` is `{font.family.sans}`.
 
-- **`caption`** (11px, weight 500, line-height 1.45, letter-spacing 0.5px): Small captions and segmented counter labels.
-- **`detail`** (12px, weight 400, line-height 1.33, letter-spacing 0.4px): Sidebar section labels, counts, and supporting metadata.
-- **`body`** (14px, weight 400, line-height 1.43, letter-spacing 0.25px): Standard body copy, list rows, and dialog content.
-- **`label`** (14px, weight 500, line-height 1.43, letter-spacing 0.1px): Control labels, form labels, and interactive triggers.
-- **`title`** (16px, weight 500, line-height 1.50, letter-spacing 0.15px): Card and section headings.
-- **`headline`** (24px, weight 400, line-height 1.33, letter-spacing 0px): Page-level headings.
-- **`display`** (36px, weight 400, line-height 1.22, letter-spacing 0px): Large display numerals and hero headings.
+- **`caption`** (11px, weight 500, line-height 16px, letter-spacing 0.5px): Small captions and segmented counter labels.
+- **`detail`** (12px, weight 400, line-height 16px, letter-spacing 0.4px): Sidebar section labels, counts, and supporting metadata.
+- **`body`** (14px, weight 400, line-height 20px, letter-spacing 0.25px): Standard body copy, list rows, and dialog content.
+- **`label`** (14px, weight 500, line-height 20px, letter-spacing 0.1px): Control labels, form labels, and interactive triggers.
+- **`title`** (16px, weight 500, line-height 24px, letter-spacing 0.15px): Card and section headings.
+- **`headline`** (24px, weight 400, line-height 32px, letter-spacing 0px): Page-level headings.
+- **`display`** (36px, weight 400, line-height 44px, letter-spacing 0px): Large display numerals and hero headings.
 
 ## Layout
 
 Ergonomic sizing scales for pointer input.
 
 - **Hit target:** Minimum hit target size (0 disables padding expansion).
-- **Density:** Page-level row, padding, gap, and surface spacing metrics.
-- **Control geometry:** Control internal geometry and switch size tier.
-- **Control heights:** Standard control heights (sm, md, lg).
+- **Density:** Page-level padding and gap.
+- **Control geometry:** Control internal spacing and switch size tier.
+- **Control heights:** Standard control heights at M3 density -2 (24, 32, 48dp): each density step reduces height by 4dp (https://m3.material.io/foundations/layout/grids-spacing/density).
 - **Switch size tier (pointer):** `regular`.
 - **Icons:** Standard icon dimensions (sm, md, lg).
 
-- **Pointer tier:** Material 3 Expressive desktop pointer input-tier overrides (M3 Desktop 44dp hit target, 48dp row).
+- **Pointer tier:** Material 3 Expressive desktop pointer input-tier overrides at M3 density -2 (each step reduces a control's height by 4dp; no hit padding).
 - **Touch tier:** Material 3 Expressive touch input-tier overrides (Compose InteractiveComponentSize 48dp hit target, ListTokens 56dp row).
 
 ## Elevation & Depth
 
-Tonal surface stepping plus Material Web Level 1–3 shadows and `material.android.elevation` (1dp/3dp/6dp), with `stroke.surface: 0px` and no backdrop blur.
+Tonal surface stepping plus Material Web Level 1–3 shadows and `material.android.elevation` (1dp/3dp/6dp), with no edge drawn (each finish's `border-color: transparent`) and no backdrop blur.
 
 - **Strokes:** Border stroke widths.
-  - `stroke.hairline` (1px): Hairline divider and outlined-variant stroke width.
-  - `stroke.surface` (0px): 0px surface outline (M3 elevated/filled surfaces rely on elevation rather than outlines).
+  - `stroke.hairline` (1px): Hairline width for dividers, container edges (cards, drawers, overlays) and outlined variants.
   - `stroke.control` (1px): Interactive control border width.
 - **Focus indicator (`style: "outline"`):** M3 focus indicator: 3px solid outline offset 2px (_md-sys-state-focus-indicator.scss).
   - `focus.width` (3px): Focus ring stroke width.
@@ -513,14 +430,12 @@ Semantic corner radius roles by layer, referencing base dimension.radius.* token
 
 ## Motion & Micro-interaction
 
-Interactive spring and timing physics roles.
+Interactive spring and timing physics roles: fast, default, slow.
 
 - **`enter`** (500ms, `cubic-bezier(0.05, 0.7, 0.1, 1)`): M3 DurationLong2 (500ms) with emphasized-decelerate curve (_md-sys-motion.scss).
-- **`shake`** (500ms): Duration of validation-error shake animation.
-- **`press`** (spring: stiffness=800, damping=33.94 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): M3 Expressive FastSpatial spring (stiffness 800, damping ratio 0.6; ExpressiveMotionTokens.kt).
-- **`settle`** (spring: stiffness=380, damping=31.19 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): M3 Expressive DefaultSpatial spring (stiffness 380, damping ratio 0.8).
-- **`control`** (spring: stiffness=1600, damping=80 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): M3 Expressive DefaultEffects spring (stiffness 1600, damping ratio 1.0).
-- **`move`** (spring: stiffness=380, damping=31.19 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): M3 Expressive DefaultSpatial spring for layout and indicator movement.
+- **`fast`** (spring: stiffness=800, damping=33.94 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): M3 Expressive FastSpatial spring for control state (stiffness 800, damping ratio 0.6; ExpressiveMotionTokens.kt).
+- **`default`** (spring: stiffness=380, damping=31.19 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): M3 Expressive DefaultSpatial spring for presses and movement (stiffness 380, damping ratio 0.8).
+- **`slow`** (spring: stiffness=200, damping=22.63 — omitted from YAML `motion` because DESIGN.md `Motion` only accepts `duration`/`delay`/`timingFunction`): M3 Expressive SlowSpatial spring for settling and panels (stiffness 200, damping ratio 0.8).
 - **Press & ripple** (`press-scale: 1`, `pressed-opacity: 1`, `ripple: true`): Interaction state opacities, press scale, and ripple switch.
 - **Timing curves:** Named timing curves shared across themes.
 
@@ -530,35 +445,18 @@ Voice & Content Strategy is intentionally omitted: this theme defines visual tok
 
 ## Components
 
-Appearance-invariant surface finish recipes (background, gradient, border, shadow, blur, material).
-
-- **`finish.card`** (material: `{"android":{"elevation":1}}`): Elevated M3 card surface with Material Web Level 1 shadow and 1dp Android elevation.
-- **`finish.section`** (material: `{"android":{"elevation":1}}`): M3 ElevatedCard resting surface (Level 1 shadow and 1dp Android elevation, no border).
-- **`finish.inset`**: The well inside a card: sunk by its inner shadow alone.
-- **`finish.field`**: A field well: its edge and its inner shadow.
-- **`finish.raised`** (backdropFilter: `none`; material: `{"android":{"elevation":1}}`): Raised surface with Level 1 shadow and 1dp Android elevation.
-- **`finish.hover`** (material: `{"android":{"elevation":1}}`): Hovered state surface over raised background with Level 1 shadow.
-- **`finish.pressed`** (material: `{"android":{"elevation":1}}`): Pressed surface at Level 1 elevation (M3 state layer + ripple handles press).
-- **`finish.disabled`**: M3 disabled filled/tonal button container (10% onSurface, flat with no shadow).
-- **`finish.light`**: The main action brightest step: the accent gradient.
-- **`finish.accent`**: The accent face (the same as light).
-- **`finish.accentPressed`**: M3 pressed accent surface (state layer + ripple handles press).
-- **`finish.track`**: A groove: an inner shadow and an edge.
-- **`finish.fill`**: The filled run: a slider, a progress bar, a switch that is on.
-- **`finish.knob`**: A switch knob, off.
-- **`finish.knobOn`**: A switch knob, on.
-- **`finish.handle`**: A slider handle (kept apart from knob).
-- **`finish.pill`** (material: `{"android":{"elevation":1}}`): The upstream capsule, left to the app.
-- **`finish.thumb`**: The chosen segment of a segmented control or a tag.
-- **`finish.on`**: A chosen switch or box, and the mark on it.
-- **`finish.chip`**: A chosen value label inside a field: a fill, an inner highlight and an edge.
-- **`finish.glass`** (backdropFilter: `none`; material: `{"android":{"elevation":3}}`): Floating surface using opaque M3 popover with Level 2 shadow and 3dp elevation (M3 uses no blur).
-- **`finish.menu`** (backdropFilter: `none`; material: `{"android":{"elevation":3}}`): M3 menu/popover surface with Level 2 shadow and 3dp Android elevation.
-- **`finish.dialog`** (material: `{"android":{"elevation":6}}`): M3 dialog surface using SurfaceContainerHigh with Level 3 shadow and 6dp Android elevation.
-- **`finish.grabber`**: M3 bottom sheet drag handle (40% onSurfaceVariant).
-- **`finish.tooltip`**: M3 plain tooltip using inverse surface without shadow.
-- **`finish.inverse`** (backdropFilter: `none`; material: `{"android":{"elevation":6}}`): M3 snackbar/inverse surface with Level 3 shadow and 6dp Android elevation.
-- **`finish.groove`**: A groove cut inside a menu.
+- **`finish.card`** (elevation: 1): A surface that holds content: a card, a section.
+- **`finish.inset`**: A well cut into a surface: an inset, a field, a track, a groove.
+- **`finish.raised`** (backdropFilter: `none`; elevation: 1): A control on a surface: a button, a chip, a pill.
+- **`finish.overlay`** (backdropFilter: `none`; elevation: 3): A panel floating over the page: a menu, a toast.
+- **`finish.modal`** (elevation: 6): A surface the page waits for: a dialog, a sheet.
+- **`finish.inverse`** (backdropFilter: `none`; elevation: 6): The page's inverse: an inverse surface, a tooltip.
+- **`finish.glass`** (backdropFilter: `none`; elevation: 3): A translucent surface: what is behind it shows through.
+- **`finish.accent`**: The accent's own surface, with its ink.
+- **`finish.knob`**: A knob: a switch's thumb, a slider's handle, a segmented thumb.
+- **`finish.hover`** (elevation: 1): A control under the pointer.
+- **`finish.pressed`** (elevation: 1): A control held down.
+- **`finish.disabled`**: A control that cannot be used.
 - **Disabled handling** (content=0.38, fill=true): M3 disabled controls: 0.38 content opacity with fill: true (10% onSurface container, _md-comp-button-filled.scss).
 
 ## Do's and Don'ts
@@ -568,9 +466,9 @@ Appearance-invariant surface finish recipes (background, gradient, border, shado
 - **Do:** Use `rounded(shape.<role>, inset)` for concentric nested radii inside cards, switches, and segmented controls.
 - **Do:** Express interaction states via M3 state-layer ink overlays (`hover: 0.08`, `focus: 0.10`, `pressed: 0.10`, `dragged: 0.16`) and Android press ripples (`state.ripple: true`) with `state.press-scale: 1`.
 - **Do:** Use `shape.curve: "circular"` and `controls: "material"` for top-rounded underlined fields and underlined tabs.
-- **Do:** Keep `stroke.surface: 0px` on tonal/elevated containers so depth comes from tonal steps and elevation.
+- **Do:** Keep tonal and elevated containers edge-free through `border-color: transparent` in the finish, so depth comes from tonal steps and elevation.
 - **Don't:** Never write color literals (`#...`, `rgb()`, `oklch()`) in component, lib, or demo-adapter code.
 - **Don't:** Never store `colors.*`, `finish.*`, or `shape.*` values in module-level constants; they freeze on theme or appearance switches.
 - **Don't:** Never delete finish fields or alter the merged finish key set across appearances or themes.
-- **Don't:** Do not add backdrop blur (`backdropFilter`) or surface borders (`stroke.surface > 0`) to M3 tonal surfaces.
+- **Don't:** Do not add backdrop blur (`backdropFilter`) or a surface edge (`border-color`) to M3 tonal surfaces.
 - **Don't:** Do not replace `outline` focus rings (`3px` width, `2px` offset) with halo rings.
