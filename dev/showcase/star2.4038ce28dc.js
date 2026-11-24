@@ -1,0 +1,1 @@
+var e={url:`asset:/assets/star.svg`,size:{width:24,height:24}};export{e as t};

@@ -1,0 +1,101 @@
+# Docs
+
+- [CLI](/dev/docs/cli.md): Every shadcn-nsh@latest command, with its flags and defaults.
+- [Components](/dev/docs/components.md): Copy-into-app components for Native Shell, built on nsh/base.
+- [Customizing](/dev/docs/customizing.md): The three places to change a copied component: the theme, its look, and its shell.
+- [Getting started](/dev/docs/getting-started.md): Add shadcn-nsh to an existing NSH app.
+- [Icons](/dev/docs/icons.md): lucide's icons, drawn by `Icon` in the size and color a component gives them.
+- [Theme](/dev/docs/theme.md): theme.json and semantics.json are the look; lib/ui/theme.ts reads them for every component.
+- [Themes](/dev/docs/themes.md): The palettes the demos can draw in: what a theme is, the radius layers, and a page for each palette.
+- Components
+  - [Accordion](/dev/docs/components/accordion.md): List rows that reveal panels with a turning chevron.
+  - [Alert Dialog](/dev/docs/components/alert-dialog.md): A confirmation of the platform's own.
+  - [Alert](/dev/docs/components/alert.md): A notice of the whole page or form, read out when it appears.
+  - [Aspect ratio](/dev/docs/components/aspect-ratio.md): A box as wide as its column and as tall as its ratio says.
+  - [Attachment](/dev/docs/components/attachment.md): A file, a picture or a link carried by a message: its media, its name, how it is doing, and what can be done to it.
+  - [Avatar](/dev/docs/components/avatar.md): A round picture or name-colored initials on the identity ring.
+  - [Badge](/dev/docs/components/badge.md): A small capsule label in a neutral, toned, or outline style.
+  - [Breadcrumb](/dev/docs/components/breadcrumb.md): The trail from where the app starts to the page it shows.
+  - [Bubble](/dev/docs/components/bubble.md): The framed surface of one turn of a conversation, and the reactions that hang off it.
+  - [Button group](/dev/docs/components/button-group.md): Buttons joined into one control, in a row or a column.
+  - [Button](/dev/docs/components/button.md): A button, an icon button, a round button, and a split button.
+  - [Calendar](/dev/docs/components/calendar.md): A month of days to pick a date or a range, on the shared calendar look.
+  - [Card](/dev/docs/components/card.md): A flat surface that groups related content: a header with its action, a body and a footer.
+  - [Carousel](/dev/docs/components/carousel.md): Snapping slides with arrows and a traveling dot pill.
+  - [Checkbox](/dev/docs/components/checkbox.md): A sunk box that fills in citrus, with a check or a dash springing in.
+  - [CodeBlock](/dev/docs/components/code-block.md): Code, a command's output or a log in a block, with a title, a copy button, line numbers and a footer.
+  - [Collapsible](/dev/docs/components/collapsible.md): A disclosure row that reveals a panel beneath it.
+  - [CollapsingHeader](/dev/docs/components/collapsing-header.md): A page's header that shrinks into a bar as the page scrolls, its picture sliding under the title.
+  - [ColorPicker](/dev/docs/components/color-picker.md): Area, sliders, joined fields, swatches, and a popover trigger.
+  - [Combobox](/dev/docs/components/combobox.md): A searchable field with a list of choices and chips for the values chosen, on the shared listbox look.
+  - [Command](/dev/docs/components/command.md): A search palette with sectioned, virtualized rows.
+  - [Context Menu](/dev/docs/components/context-menu.md): A menu at the pointer, on the shared menu look.
+  - [Coverage](/dev/docs/components/coverage.md): Every shadcn/ui component and every NSH element, and what this library has for it.
+  - [DataTable](/dev/docs/components/data-table.md): A striped table with sortable, resizable columns.
+  - [Date Picker](/dev/docs/components/date-picker.md): A calendar in a popup from a field trigger, on the shared listbox look.
+  - [Dialog](/dev/docs/components/dialog.md): A card dialog with a trigger, content, title, description, footer and close.
+  - [DiffView](/dev/docs/components/diff-view.md): Up and down tints for additions and deletions, with hunk actions.
+  - [DockArea](/dev/docs/components/dock-area.md): Dockable workspace chrome for tabs, splits, and edge docks.
+  - [Drawer](/dev/docs/components/drawer.md): A panel from the bottom edge, with a grabber, that a swipe closes.
+  - [Editor](/dev/docs/components/editor.md): An editor on the field's well, with line numbers, diagnostics and a find bar.
+  - [Emoji picker](/dev/docs/components/emoji-picker.md): Tabs, search, skin tones and grid styled for nsh/base EmojiPicker.
+  - [Empty](/dev/docs/components/empty.md): A centered block that says there is nothing here yet, and what to do about it.
+  - [Field](/dev/docs/components/field.md): A set of fields under a legend: a label, its control, a description and errors that are read out.
+  - [Hover Card](/dev/docs/components/hover-card.md): A preview card that grows from its trigger, on the shared popover surface.
+  - [ImageViewer](/dev/docs/components/image-viewer.md): One image full screen over a dimmed ground, fitted, with pinch to zoom, drag to pan and swipe down to close.
+  - [InputGroup](/dev/docs/components/input-group.md): A field's frame around an input and what sits beside it — an icon, a unit, a button.
+  - [Input](/dev/docs/components/input.md): A text field — sunk, ghost, multiline, masked, or invalid.
+  - [Item](/dev/docs/components/item.md): A row of a list: what sits before its content, a title with a note, and controls after it.
+  - [Kbd](/dev/docs/components/kbd.md): A key of a shortcut, alone or in a group.
+  - [Label](/dev/docs/components/label.md): The visible name of a control, beside it or over a group of them.
+  - [Link](/dev/docs/components/link.md): A text link with underline motion, on the shared nav look.
+  - [Marker](/dev/docs/components/marker.md): A line in a conversation that is not a message: a status, a note, a labeled separator.
+  - [Menu](/dev/docs/components/menu.md): A menu of items, separators and submenus on the shared menu look.
+  - [Menubar](/dev/docs/components/menubar.md): A row of menus whose triggers stand in one bar, as a desktop app's menu bar.
+  - [Message scroller](/dev/docs/components/message-scroller.md): A conversation that keeps up with itself: new turns follow the newest message while you are at the end, and wait when you are not.
+  - [Message](/dev/docs/components/message.md): One row of a conversation: the sender's avatar, who they are, the turn, and what is under it.
+  - [NavStack](/dev/docs/components/nav-stack.md): Pages pushed on a stack — the system header on a phone, the app's own themed header on a desktop.
+  - [Navigation Menu](/dev/docs/components/navigation-menu.md): A row of triggers, each opening a panel of anything under the bar — one at a time.
+  - [Number Input](/dev/docs/components/number-input.md): A sunk number field with − / + or stacked chevron steppers.
+  - [OTP Input](/dev/docs/components/otp-input.md): One-time code cells that lift out of sunk wells as digits fill in.
+  - [Pagination](/dev/docs/components/pagination.md): Page numbers and chevrons with the current page lit primary.
+  - [Plot](/dev/docs/components/plot.md): Chart colors, grid, cross line and tooltip for nsh/base/plot.
+  - [Popover](/dev/docs/components/popover.md): A popup panel that grows from its trigger, on the shared menu surface.
+  - [Pressable](/dev/docs/components/pressable.md): A region that takes presses and adds only their feedback.
+  - [Progress](/dev/docs/components/progress.md): A determinate or indeterminate progress bar.
+  - [Radio](/dev/docs/components/radio-group.md): A sunk ring that fills in citrus, with a dot growing in — alone or as a choice tile.
+  - [RefreshIndicator](/dev/docs/components/refresh-indicator.md): The round chip a pull to refresh draws over a scroll view, traveling in with the pull and spinning while it refreshes.
+  - [Resizable](/dev/docs/components/resizable.md): Resize handles with a quiet hairline and a growing thumb.
+  - [Rich Editor](/dev/docs/components/rich-editor.md): Rich document typography and its session API, on nsh/base's RichEditor.
+  - [Scrollbar](/dev/docs/components/scrollbar.md): A hover scroll bar in the shared gallery theme.
+  - [Segmented](/dev/docs/components/segmented.md): A track of mutually exclusive choices whose thumb springs to the chosen one.
+  - [Select](/dev/docs/components/select.md): A list of choices from a field trigger, on the shared listbox look.
+  - [Separator](/dev/docs/components/separator.md): A hairline across the content, or down a row.
+  - [Sheet](/dev/docs/components/sheet.md): A panel that slides in from an edge of the screen over a scrim.
+  - [Sidebar](/dev/docs/components/sidebar.md): An app's navigation column beside its page — folded to a strip of icons, or sliding in as a sheet on a phone.
+  - [Skeleton](/dev/docs/components/skeleton.md): The shape of content that is still coming.
+  - [Slider](/dev/docs/components/slider.md): A sunk rail, citrus fill, and round thumb with a focus ring.
+  - [Spinner](/dev/docs/components/spinner.md): A turning ring: work going on.
+  - [SplitView](/dev/docs/components/split-view.md): Two or three columns of navigation stacks, with the column header and the sidebar button in the theme's look.
+  - [Stat](/dev/docs/components/stat.md): A label above a value for metric grids.
+  - [Status](/dev/docs/components/status.md): A dot and label for quiet state in rows or headers.
+  - [Switch](/dev/docs/components/switch.md): An on / off switch whose knob springs across a sunk track.
+  - [Table](/dev/docs/components/table.md): Composition parts for a bordered table card using the shared data-table classes.
+  - [Tabs](/dev/docs/components/tabs.md): A pill track or underlined row with a traveling indicator.
+  - [Terminal](/dev/docs/components/terminal.md): A program's output on the theme's field surface, the keys typed back to it.
+  - [TextView](/dev/docs/components/text-view.md): Brand-colored links and a pulsing streaming caret.
+  - [Time Field](/dev/docs/components/time-field.md): A sunk well for a time of day, one segment at a time.
+  - [TitleBar](/dev/docs/components/title-bar.md): The bar that drags a desktop window, the window buttons a frameless one draws for itself, and the edges that resize it.
+  - [Toast](/dev/docs/components/toast.md): A raised banner with a title, optional description, action and close.
+  - [Toggle](/dev/docs/components/toggle.md): A two-state button, in two variants and three sizes, and a group of them.
+  - [Toolbar](/dev/docs/components/toolbar.md): An inset track of tools, with groups and hairline separators.
+  - [Tooltip](/dev/docs/components/tooltip.md): A popover-coloured hint bubble on any element's `tooltip` prop.
+  - [Trace](/dev/docs/components/trace.md): An agent's steps, one line each — reasoning, a tool call, a source, a failed step — where a line can open onto what it did.
+  - [Tree](/dev/docs/components/tree.md): A virtualized tree with chevrons and folder icons.
+- Themes
+  - [Apple](/dev/docs/themes/apple.md): Apple's system colors and Liquid Glass: capsule controls, 20-point cards, hairline edges, and glass on the overlays that float.
+  - [Material](/dev/docs/themes/material.md): Material 3 Expressive: tonal surfaces, capsule controls, circular corners, 8/10/10% state layers, and expressive shapes.
+  - [NSH Gallery](/dev/docs/themes/nsh-gallery.md): The library's own: graphite surfaces, one citrus accent, 8-point controls and 14-point cards.
+  - [shadcn/ui](/dev/docs/themes/shadcn.md): shadcn/ui's neutral palette: near-black and near-white fills, flat finishes, 8-point controls and 14-point cards.
+  - [Solid Glass](/dev/docs/themes/solid-glass.md): Panes of thick smoky glass: a rim of light on each top edge, a hairline round it, a shadow underneath, 11-point controls and 20-point cards.
+  - [WinUI 3](/dev/docs/themes/winui.md): WinUI 3 (Windows 11): WinUI fill and stroke tokens, 4/8-point circular corners, Segoe UI Variable, Consolas, double focus rings, and timing motion.

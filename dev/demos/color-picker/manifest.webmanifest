@@ -1,0 +1,11 @@
+{
+  "id": "dev.shadcn-nsh.docs-demos",
+  "name": "color-picker",
+  "short_name": "color-picker",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": []
+}

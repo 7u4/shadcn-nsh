@@ -1,0 +1,144 @@
+var e=`// The official collapsible scene (\`references/nsh/website/demos/el-collapsible.tsx\`) with this
+// library's parts: a storage summary that opens onto its breakdown, an advanced section that
+// opens onto a switch, a trash section whose chevron points down and turns over (\`chevron="down"\`),
+// and an inspector holding which are open and the last four trigger lines.
+import { mount, signal, Text, View } from "nsh";
+
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/packages/ui/collapsible";
+import {
+  controlSize,
+  listRow,
+  RowDivider,
+  RowLabel,
+  sectionSurface,
+} from "@/packages/ui/lib/surface";
+import { Switch } from "@/packages/ui/switch";
+
+import { DemoPage } from "./kit";
+import { desktop, Log, Panel, Split, ui } from "./stage";
+
+const USAGE: [string, string][] = [
+  ["Photos", "120 GB"],
+  ["Apps", "54 GB"],
+  ["System", "38 GB"],
+];
+
+function App() {
+  const storage = signal(true);
+  const advanced = signal(false);
+  const trash = signal(false);
+  const originals = signal(false);
+  const events = signal<string[]>([]);
+  const log = (line: string) => events.set([line, ...events()].slice(0, 4));
+
+  return (
+    <DemoPage title="Collapsible">
+      <Text style={{ color: ui().muted }}>
+        {desktop
+          ? "Click a summary, or Tab to it and press Space"
+          : "Tap a summary to show its details"}
+      </Text>
+
+      <Split
+        gap={14}
+        inspector={
+          <>
+            <Panel title="open">
+              <Text style={{ fontSize: 13, color: ui().text }}>
+                Storage {storage() ? "open" : "closed"} · Advanced {advanced() ? "open" : "closed"}
+              </Text>
+              <Text style={{ fontSize: 12, color: ui().muted }}>
+                Keep originals {originals() ? "on" : "off"}: kept while collapsed
+              </Text>
+              <Text style={{ fontSize: 12, color: ui().muted }}>
+                Trash {trash() ? "open" : "closed"}: a chevron that points down
+              </Text>
+            </Panel>
+            <Log title="onPress (trigger) → open" lines={events()} minHeight={92} />
+          </>
+        }
+      >
+        <View style={sectionSurface({ padded: true })}>
+          <Collapsible
+            open={storage()}
+            onOpenChange={({ open }) => {
+              storage.set(open);
+              log(\`Storage → \${open ? "open" : "closed"}\`);
+            }}
+          >
+            <CollapsibleTrigger first>
+              <RowLabel label="Storage" detail="212 GB of 256 GB used" />
+            </CollapsibleTrigger>
+            <CollapsibleContent panel={{ start: controlSize.gap }}>
+              {USAGE.map(([name, value]) => (
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    minHeight: controlSize.line,
+                  }}
+                >
+                  <Text style={{ flex: 1, fontSize: controlSize.label, color: ui().muted }}>
+                    {name}
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: controlSize.label,
+                      color: ui().muted,
+                      fontVariant: ["tabular-nums"],
+                    }}
+                  >
+                    {value}
+                  </Text>
+                </View>
+              ))}
+            </CollapsibleContent>
+          </Collapsible>
+
+          <Collapsible
+            open={advanced()}
+            onOpenChange={({ open }) => {
+              advanced.set(open);
+              log(\`Advanced → \${open ? "open" : "closed"}\`);
+            }}
+          >
+            <CollapsibleTrigger>
+              <RowLabel label="Advanced" detail="Options most people leave alone" />
+            </CollapsibleTrigger>
+            <CollapsibleContent panel={{ start: controlSize.gap, end: controlSize.gap, gap: 0 }}>
+              <Switch
+                checked={originals()}
+                onChange={({ checked }) => originals.set(checked)}
+                {...listRow({ style: { flexDirection: "row-reverse" } })}
+              >
+                <RowDivider show />
+                <RowLabel
+                  label="Keep originals"
+                  detail={originals() ? "Edits are saved as copies" : "Edits replace the photo"}
+                />
+              </Switch>
+            </CollapsibleContent>
+          </Collapsible>
+
+          <Collapsible
+            open={trash()}
+            onOpenChange={({ open }) => {
+              trash.set(open);
+              log(\`Trash → \${open ? "open" : "closed"}\`);
+            }}
+          >
+            <CollapsibleTrigger chevron="down">
+              <RowLabel label="Trash" detail="Emptied automatically after 30 days" />
+            </CollapsibleTrigger>
+            <CollapsibleContent panel={{ start: controlSize.gap }}>
+              <Text style={{ fontSize: controlSize.label, color: ui().muted }}>Nothing in it.</Text>
+            </CollapsibleContent>
+          </Collapsible>
+        </View>
+      </Split>
+    </DemoPage>
+  );
+}
+
+mount(App);
+`;export{e as default};

@@ -1,0 +1,22 @@
+# Components (/dev/docs/components)
+
+83 components, one page each: Installation, Usage, an optional Composition,
+Examples and API. They are grouped in two: <strong>Base</strong>, aligned with an NSH element,
+and <strong>Enhanced</strong>, this library's additions with no NSH element of their own.
+Behavior, keyboard support and the full unstyled props live on
+[nsh.dev/elements](https://nsh.dev/elements); each page links its base element and the shadcn/ui
+component it stands in for.
+
+The list is generated from `registry.json` and these pages, so every `registry:ui` item has a page
+and every page has an item. The group comes from 
+
+<a href="/docs/components/coverage">Coverage</a>: a page registered in one of its NSH rows is
+Base, one in none is Enhanced. Add one with `npx shadcn-nsh@latest add <name>`.
+
+## Base [#base]
+
+<ComponentsIndex kind="official" />
+
+## Enhanced [#enhanced]
+
+<ComponentsIndex kind="own" />

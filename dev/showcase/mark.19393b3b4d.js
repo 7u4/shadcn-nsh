@@ -1,0 +1,1 @@
+var e={url:`asset:/assets/mark.svg`,size:{width:120,height:60}};export{e as t};

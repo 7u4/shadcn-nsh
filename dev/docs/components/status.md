@@ -1,0 +1,39 @@
+# Status (/dev/docs/components/status)
+
+## Installation [#installation]
+
+```npm
+npx shadcn-nsh@latest add status
+```
+
+## Usage [#usage]
+
+```tsx
+import { Status } from "@/components/ui/status";
+```
+
+```tsx
+<Status label="Online" tone="up" />
+```
+
+## Examples [#examples]
+
+### Tone [#tone]
+
+```tsx
+<Status label="Idle" tone="neutral" />
+<Status label="Syncing" tone="accent" />
+<Status label="Update available" tone="info" />
+<Status label="Degraded" tone="warn" />
+<Status label="Offline" tone="destructive" />
+<Status label="Online" tone="up" />
+<Status label="Down" tone="down" />
+```
+
+## API [#api]
+
+Gallery atom: no `nsh/base` counterpart.
+
+| Part     | Props           | Description                                                                       |
+| -------- | --------------- | --------------------------------------------------------------------------------- |
+| `Status` | `label`, `tone` | A dot and a word, 12 points; a tone that matters tints both, neutral stays quiet. |

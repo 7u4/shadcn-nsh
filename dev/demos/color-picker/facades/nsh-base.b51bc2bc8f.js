@@ -1,0 +1,12 @@
+const host=globalThis.__nsh_browser_realm.modules;
+let e0=host.get("nsh/base")["Button"];export{e0 as "Button"};
+let e1=host.get("nsh/base")["ColorArea"];export{e1 as "ColorArea"};
+let e2=host.get("nsh/base")["ColorEyeDropper"];export{e2 as "ColorEyeDropper"};
+let e3=host.get("nsh/base")["ColorField"];export{e3 as "ColorField"};
+let e4=host.get("nsh/base")["ColorPicker"];export{e4 as "ColorPicker"};
+let e5=host.get("nsh/base")["ColorSlider"];export{e5 as "ColorSlider"};
+let e6=host.get("nsh/base")["ColorSwatch"];export{e6 as "ColorSwatch"};
+let e7=host.get("nsh/base")["Menu"];export{e7 as "Menu"};
+let e8=host.get("nsh/base")["MenuItem"];export{e8 as "MenuItem"};
+let e9=host.get("nsh/base")["Popover"];export{e9 as "Popover"};
+globalThis.__nsh_browser_realm.watch(()=>{e0=host.get("nsh/base")["Button"];e1=host.get("nsh/base")["ColorArea"];e2=host.get("nsh/base")["ColorEyeDropper"];e3=host.get("nsh/base")["ColorField"];e4=host.get("nsh/base")["ColorPicker"];e5=host.get("nsh/base")["ColorSlider"];e6=host.get("nsh/base")["ColorSwatch"];e7=host.get("nsh/base")["Menu"];e8=host.get("nsh/base")["MenuItem"];e9=host.get("nsh/base")["Popover"];});

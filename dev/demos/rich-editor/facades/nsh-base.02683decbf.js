@@ -1,0 +1,18 @@
+const host=globalThis.__nsh_browser_realm.modules;
+let e0=host.get("nsh/base")["Button"];export{e0 as "Button"};
+let e1=host.get("nsh/base")["Menu"];export{e1 as "Menu"};
+let e2=host.get("nsh/base")["MenuItem"];export{e2 as "MenuItem"};
+let e3=host.get("nsh/base")["RichEditor"];export{e3 as "RichEditor"};
+let e4=host.get("nsh/base")["StarterKit"];export{e4 as "StarterKit"};
+let e5=host.get("nsh/base")["Toggle"];export{e5 as "Toggle"};
+let e6=host.get("nsh/base")["Toolbar"];export{e6 as "Toolbar"};
+let e7=host.get("nsh/base")["ToolbarGroup"];export{e7 as "ToolbarGroup"};
+let e8=host.get("nsh/base")["ToolbarSeparator"];export{e8 as "ToolbarSeparator"};
+let e9=host.get("nsh/base")["chain"];export{e9 as "chain"};
+let e10=host.get("nsh/base")["command"];export{e10 as "command"};
+let e11=host.get("nsh/base")["createRichEditor"];export{e11 as "createRichEditor"};
+let e12=host.get("nsh/base")["defineExtension"];export{e12 as "defineExtension"};
+let e13=host.get("nsh/base")["extendMarkRange"];export{e13 as "extendMarkRange"};
+let e14=host.get("nsh/base")["redo"];export{e14 as "redo"};
+let e15=host.get("nsh/base")["undo"];export{e15 as "undo"};
+globalThis.__nsh_browser_realm.watch(()=>{e0=host.get("nsh/base")["Button"];e1=host.get("nsh/base")["Menu"];e2=host.get("nsh/base")["MenuItem"];e3=host.get("nsh/base")["RichEditor"];e4=host.get("nsh/base")["StarterKit"];e5=host.get("nsh/base")["Toggle"];e6=host.get("nsh/base")["Toolbar"];e7=host.get("nsh/base")["ToolbarGroup"];e8=host.get("nsh/base")["ToolbarSeparator"];e9=host.get("nsh/base")["chain"];e10=host.get("nsh/base")["command"];e11=host.get("nsh/base")["createRichEditor"];e12=host.get("nsh/base")["defineExtension"];e13=host.get("nsh/base")["extendMarkRange"];e14=host.get("nsh/base")["redo"];e15=host.get("nsh/base")["undo"];});

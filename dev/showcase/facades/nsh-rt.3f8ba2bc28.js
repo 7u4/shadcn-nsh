@@ -1,0 +1,17 @@
+const host=globalThis.__nsh_browser_realm.modules;
+let e0=host.get("nsh:rt")["append"];export{e0 as "append"};
+let e1=host.get("nsh:rt")["bindProp"];export{e1 as "bindProp"};
+let e2=host.get("nsh:rt")["component"];export{e2 as "component"};
+let e3=host.get("nsh:rt")["cond"];export{e3 as "cond"};
+let e4=host.get("nsh:rt")["each"];export{e4 as "each"};
+let e5=host.get("nsh:rt")["element"];export{e5 as "element"};
+let e6=host.get("nsh:rt")["font"];export{e6 as "font"};
+let e7=host.get("nsh:rt")["insert"];export{e7 as "insert"};
+let e8=host.get("nsh:rt")["list"];export{e8 as "list"};
+let e9=host.get("nsh:rt")["merge"];export{e9 as "merge"};
+let e10=host.get("nsh:rt")["metaUrl"];export{e10 as "metaUrl"};
+let e11=host.get("nsh:rt")["prop"];export{e11 as "prop"};
+let e12=host.get("nsh:rt")["setup"];export{e12 as "setup"};
+let e13=host.get("nsh:rt")["spread"];export{e13 as "spread"};
+let e14=host.get("nsh:rt")["text"];export{e14 as "text"};
+globalThis.__nsh_browser_realm.watch(()=>{e0=host.get("nsh:rt")["append"];e1=host.get("nsh:rt")["bindProp"];e2=host.get("nsh:rt")["component"];e3=host.get("nsh:rt")["cond"];e4=host.get("nsh:rt")["each"];e5=host.get("nsh:rt")["element"];e6=host.get("nsh:rt")["font"];e7=host.get("nsh:rt")["insert"];e8=host.get("nsh:rt")["list"];e9=host.get("nsh:rt")["merge"];e10=host.get("nsh:rt")["metaUrl"];e11=host.get("nsh:rt")["prop"];e12=host.get("nsh:rt")["setup"];e13=host.get("nsh:rt")["spread"];e14=host.get("nsh:rt")["text"];});

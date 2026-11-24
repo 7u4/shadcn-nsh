@@ -1,0 +1,10 @@
+const host=globalThis.__nsh_browser_realm.modules;
+let e0=host.get("nsh/base")["Table"];export{e0 as "Table"};
+let e1=host.get("nsh/base")["TableBody"];export{e1 as "TableBody"};
+let e2=host.get("nsh/base")["TableCaption"];export{e2 as "TableCaption"};
+let e3=host.get("nsh/base")["TableCell"];export{e3 as "TableCell"};
+let e4=host.get("nsh/base")["TableFooter"];export{e4 as "TableFooter"};
+let e5=host.get("nsh/base")["TableHead"];export{e5 as "TableHead"};
+let e6=host.get("nsh/base")["TableHeader"];export{e6 as "TableHeader"};
+let e7=host.get("nsh/base")["TableRow"];export{e7 as "TableRow"};
+globalThis.__nsh_browser_realm.watch(()=>{e0=host.get("nsh/base")["Table"];e1=host.get("nsh/base")["TableBody"];e2=host.get("nsh/base")["TableCaption"];e3=host.get("nsh/base")["TableCell"];e4=host.get("nsh/base")["TableFooter"];e5=host.get("nsh/base")["TableHead"];e6=host.get("nsh/base")["TableHeader"];e7=host.get("nsh/base")["TableRow"];});
