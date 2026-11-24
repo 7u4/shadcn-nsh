@@ -1,1 +1,0 @@
-import{E as e,N as t,O as n,a as r,j as i}from"./live-value.f269b9e61a.js";function a(a){return{flexDirection:a?.vertical?`column`:`row`,alignItems:a?.vertical&&t?`flex-start`:`center`,gap:t?24:2,flexWrap:t&&!a?.vertical?`wrap`:void 0,padding:3,...e(n.control),borderWidth:i.control,borderColor:r.border,backgroundColor:r.inset}}export{a as t};
