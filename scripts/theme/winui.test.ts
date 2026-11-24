@@ -24,7 +24,7 @@ const defaultSemantics = JSON.parse(
 
 const NON_COLOUR_THEME_KEYS = new Set(
   Object.keys(defaultTheme.cssVars.theme).filter(
-    (key) => key === "radius" || key.startsWith("radius-") || key.startsWith("font-"),
+    (key) => key === "radius" || key.startsWith("radius-"),
   ),
 );
 
@@ -67,12 +67,10 @@ const PUBLISHED_ROLES: Record<Appearance, readonly [string, string][]> = {
     ["border", "#e5e5e5"],
     ["input", "#868686"],
     ["ring", "#1a1a1a"],
-    ["ring-halo", "#fbfbfb"],
     ["chart-2", "#0f7b0f"],
     ["chart-3", "#9d5d00"],
     ["chart-5", "#868686"],
     ["inset", "#ededed"],
-    ["glass-edge", "#e5e5e5"],
     ["hover", "#f6f6f6"],
     ["faint", "#868686"],
     ["brand", "#003e92"],
@@ -98,12 +96,10 @@ const PUBLISHED_ROLES: Record<Appearance, readonly [string, string][]> = {
     ["border", "#303030"],
     ["input", "#9a9a9a"],
     ["ring", "#ffffff"],
-    ["ring-halo", "#0a0a0a"],
     ["chart-2", "#6ccb5f"],
     ["chart-3", "#fce100"],
     ["chart-5", "#9a9a9a"],
     ["inset", "#1d1d1d"],
-    ["glass-edge", "#1a1a1a"],
     ["hover", "#323232"],
     ["faint", "#969696"],
     ["brand", "#99ebff"],
@@ -320,9 +316,10 @@ describe("compiled winui theme files", () => {
   test("match the default keys, the style schema and the WinUI 3 values", () => {
     const files = shipped;
     expect(files.theme.name).toBe("WinUI 3");
-    expect(files.theme.cssVars.theme["font-mono"]).toBe("Consolas, monospace");
     expect(Object.keys(files.theme.cssVars.theme)).toEqual(Object.keys(defaultTheme.cssVars.theme));
-    expect(files.theme.cssVars.theme["font-sans"]).toBe("Segoe UI Variable, Segoe UI, sans-serif");
+    expect(Object.keys(files.theme.cssVars.theme).some((key) => key.startsWith("font-"))).toBe(
+      false,
+    );
     expect(Object.keys(files.theme.cssVars.light)).toEqual(Object.keys(defaultTheme.cssVars.light));
     expect(Object.keys(files.theme.cssVars.dark)).toEqual(Object.keys(defaultTheme.cssVars.dark));
 
@@ -330,7 +327,7 @@ describe("compiled winui theme files", () => {
     expect(files.semantics.dimension.size.height.pointer).toEqual({ sm: 24, md: 32, lg: 40 });
     // A flyout is the overlay layer: Acrylic, its tint over the blur, the flyout's stroke.
     expect(files.semantics.finishes.shared.overlay).toMatchObject({
-      "border-color": "{glass-edge}",
+      "border-color": "{line}",
       material: "acrylic",
     });
     expect(files.semantics.finishes.light.overlay).toMatchObject({
@@ -341,7 +338,7 @@ describe("compiled winui theme files", () => {
     });
     expect(files.semantics.finishes.shared.inverse).toMatchObject({
       background: "{inverse}",
-      "border-color": "{glass-edge}",
+      "border-color": "{line}",
     });
     expect(files.semantics.finishes.light.glass).toMatchObject({
       background: "oklch(from {popover} l c h / 0.85)",

@@ -4,7 +4,7 @@
 // with the arrow that nudges out under the pointer), a footer of quiet links with one closed page,
 // the addresses a hint shows, and the events a link reports. `nsh/base`'s Link owns the press,
 // Return and Space, the focus and the disabled state; `linkLook` / `LinkText` are the look.
-import { colors, mono } from "@shadcn-nsh/theme";
+import { colors } from "@shadcn-nsh/theme";
 import { platform, signal, Text, View } from "nsh";
 
 import { Button } from "@/packages/ui/button";
@@ -35,7 +35,7 @@ const TITLED =
   'Read [the changelog](https://nsh.dev/changelog "What changed in this release") before you update: a Markdown link shows its title over the address.';
 
 /**
- * A link of the gallery's look, with the app's memory of what it opened: the accent, violet once
+ * A link of the gallery's look, with the app's memory of what it opened: the accent, muted once
  * visited, the text color for the current page, muted when quiet, and a footer's closed page
  * staying disabled. `onRoute` hears the press the way the app routes it.
  */
@@ -98,7 +98,7 @@ function Paragraph() {
         {"."}
       </Text>
       <CaptionRow
-        label="Opened links turn violet; the app remembers them"
+        label="Opened links turn muted; the app remembers them"
         note={`${visited().size} visited`}
       />
     </Card>
@@ -134,7 +134,9 @@ function Navigation() {
         </Each>
       </View>
       <View style={{ gap: 4, paddingTop: 10, borderTopWidth: 1, borderTopColor: colors.line }}>
-        <Text style={{ fontSize: 12, color: colors.faint, fontFamily: mono() }}>{route()}</Text>
+        <Text style={{ fontSize: 12, color: colors.faint, fontFamily: "monospace" }}>
+          {route()}
+        </Text>
         <Text style={{ fontSize: 15, color: colors.foreground }}>{page().body}</Text>
       </View>
     </Card>
@@ -314,7 +316,7 @@ function Events() {
                 style={{
                   fontSize: 12,
                   color: i() === 0 ? colors.foreground : colors.mutedForeground,
-                  fontFamily: mono(),
+                  fontFamily: "monospace",
                 }}
               >
                 {line()}

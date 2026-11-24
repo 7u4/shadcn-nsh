@@ -30,21 +30,6 @@
       }
     }
   },
-  "font": {
-    "$description": "Base font family tokens.",
-    "family": {
-      "$type": "fontFamily",
-      "$description": "Font family stacks.",
-      "sans": {
-        "$value": "system-ui",
-        "$description": "The UI's font: the platform's own sans-serif."
-      },
-      "mono": {
-        "$value": "monospace",
-        "$description": "Monospace font family for code blocks and numeric readouts."
-      }
-    }
-  },
   "color": {
     "$type": "color",
     "$description": "Appearance-invariant C-layer color roles shared by light and dark modes.",
@@ -102,6 +87,15 @@
         "donts": [
           "Do not flatten shadows or remove inner highlights on `card`, `raised`, `inset`, or `pill` finishes.",
           "Do not merge distinct semantic finishes (`light` vs `accent`, `thumb` vs `raised`, `knob` vs `handle`)."
+        ]
+      },
+      "contrast": {
+        "waivers": [
+          {
+            "fg": "brand",
+            "bg": "background",
+            "source": "NSH Gallery citrus lime primary is a fill: brand is a reference to primary (ADR 0007), so light-mode brand text is lime on paper"
+          }
         ]
       }
     }

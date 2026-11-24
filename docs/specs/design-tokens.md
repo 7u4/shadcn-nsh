@@ -37,8 +37,8 @@ packages/theme/tokens/
       finishes.shared.tokens.json # 明暗共用的 finish 字段（含 material）
       light.tokens.json           # 亮色外观：A/B 层 56 个颜色 + light 稀疏 finish 覆写
       dark.tokens.json            # 暗色外观：A/B 层 56 个颜色 + dark 稀疏 finish 覆写
-      pointer.tokens.json         # （可选，仅平台主题 apple/material/winui）覆盖 base 的 pointer 档字阶与尺寸
-      touch.tokens.json           # （可选，仅平台主题 apple/material/winui）覆盖 base 的 touch 档字阶与尺寸
+      pointer.tokens.json         # （可选，仅平台主题 apple/material/winui）覆盖 base 的 pointer 档尺寸（字阶不覆盖，全部主题共用一套，ADR 0009）
+      touch.tokens.json           # （可选，仅平台主题 apple/material/winui）覆盖 base 的 touch 档尺寸（字阶不覆盖）
 ```
 
 ### 2.2 Resolver 设计：单 Resolver vs 每主题一个 Resolver
@@ -90,7 +90,7 @@ packages/theme/tokens/
 }
 ```
 
-对于平台主题（`apple` / `material` / `winui`），`modifiers.input.contexts.{pointer,touch}` 在末尾追加 `{ "$ref": "./pointer.tokens.json" }` 与 `{ "$ref": "./touch.tokens.json" }`，按 Resolver §6.2 覆盖 `base` 的默认尺寸与字阶。
+对于平台主题（`apple` / `material` / `winui`），`modifiers.input.contexts.{pointer,touch}` 在末尾追加 `{ "$ref": "./pointer.tokens.json" }` 与 `{ "$ref": "./touch.tokens.json" }`，按 Resolver §6.2 覆盖 `base` 的默认尺寸；字阶（`font.size`、`font.line-height`）只在 `base`，不被主题覆盖。
 
 ---
 
@@ -128,9 +128,8 @@ dimension.size.control.* # $type: "dimension"   控件行内尺寸（padding, ga
 dimension.size.height.*  # $type: "dimension"   高度尺子：按钮、行、标签栏、值行（sm, md, lg）
 dimension.stroke.*       # $type: "dimension"   线宽（hairline, control）
 dimension.focus.*        # $type: "dimension"   焦点环几何（width, offset）
-dimension.control.*      # group ($extensions)  控件维度的六档（selection, field, choice, track, handle, group）
+dimension.control.*      # group ($extensions)  控件维度的四档（field, choice, track, handle）
 dimension.icon.*         # $type: "dimension"   图标尺寸（sm, md, lg）
-font.family.*            # $type: "fontFamily"  sans 与 mono，每套主题各一条
 font.size.*              # $type: "dimension"   7 个字阶字号（随 input modifier 变化，供 typography 引用）
 font.line-height.*       # $type: "number"      7 个字阶无单位行高倍率（line / size，供 typography 引用）
 typography.*             # $type: "typography"  7 个复合字阶角色（caption, detail, body, label, title, headline, display）
@@ -147,28 +146,26 @@ finish.<role>.*          # group + tokens       27 个表面配方（background,
 
 ## 4 完整映射表
 
-### 4.1 `theme.json` → DTCG 2025.10（80 个必填）
+### 4.1 `theme.json` → DTCG 2025.10（78 个必填）
 
-#### A. `cssVars.theme`（9 个必填，含 `font-sans`）
+#### A. `cssVars.theme`（7 个必填）
 
-| `theme.json` 键    | DTCG 路径                    | `$type`      | DTCG `$value` 形态 / 示例                                                           | 说明与反向编译                                                |
-| :----------------- | :--------------------------- | :----------- | :---------------------------------------------------------------------------------- | :------------------------------------------------------------ |
-| `radius`           | `dimension.radius.control`   | `dimension`  | `{"value": 8, "unit": "px"}`                                                        | A 层槽位，编译 `theme.json` 时由 `control` 派生写入           |
-| `radius-control`   | `dimension.radius.control`   | `dimension`  | `{"value": 8, "unit": "px"}`                                                        | 编译为 `"8px"` 写入 `cssVars.theme.radius-control`            |
-| `radius-container` | `dimension.radius.container` | `dimension`  | `{"value": 12, "unit": "px"}`                                                       | 同上，键名还原为 `radius-container`                           |
-| `radius-modal`     | `dimension.radius.modal`     | `dimension`  | `{"value": 14, "unit": "px"}`                                                       | 同上，键名还原为 `radius-modal`                               |
-| `font-mono`        | `font.family.mono`           | `fontFamily` | `"monospace"` 或 `["Cascadia Mono", "Consolas", "monospace"]`                       | 若为数组，编译时用 `", "` 拼回 CSS 字符串                     |
-| `font-sans`        | `font.family.sans`           | `fontFamily` | `["system-ui"]`，或 `["Segoe UI Variable", "Segoe UI", "sans-serif"]`（`winui`）    | 每套主题都声明；通用族在 NSH 里表示“用系统字体”，不生成 token |
-| `scrim`            | `color.scrim`                | `color`      | `{"colorSpace": "oklch", "components": [0, 0, 0], "alpha": 0.45, "hex": "#000000"}` | 无损还原 `"oklch(0 0 0 / 0.45)"`                              |
-| `media`            | `color.media`                | `color`      | DTCG oklch 对象                                                                     | 同上                                                          |
-| `on-media`         | `color.on-media`             | `color`      | DTCG oklch 对象                                                                     | 同上                                                          |
+| `theme.json` 键    | DTCG 路径                    | `$type`     | DTCG `$value` 形态 / 示例                                                           | 说明与反向编译                                      |
+| :----------------- | :--------------------------- | :---------- | :---------------------------------------------------------------------------------- | :-------------------------------------------------- |
+| `radius`           | `dimension.radius.control`   | `dimension` | `{"value": 8, "unit": "px"}`                                                        | A 层槽位，编译 `theme.json` 时由 `control` 派生写入 |
+| `radius-control`   | `dimension.radius.control`   | `dimension` | `{"value": 8, "unit": "px"}`                                                        | 编译为 `"8px"` 写入 `cssVars.theme.radius-control`  |
+| `radius-container` | `dimension.radius.container` | `dimension` | `{"value": 12, "unit": "px"}`                                                       | 同上，键名还原为 `radius-container`                 |
+| `radius-modal`     | `dimension.radius.modal`     | `dimension` | `{"value": 14, "unit": "px"}`                                                       | 同上，键名还原为 `radius-modal`                     |
+| `scrim`            | `color.scrim`                | `color`     | `{"colorSpace": "oklch", "components": [0, 0, 0], "alpha": 0.45, "hex": "#000000"}` | 无损还原 `"oklch(0 0 0 / 0.45)"`                    |
+| `media`            | `color.media`                | `color`     | DTCG oklch 对象                                                                     | 同上                                                |
+| `on-media`         | `color.on-media`             | `color`     | DTCG oklch 对象                                                                     | 同上                                                |
 
 #### B. `cssVars.light` 与 `cssVars.dark`（各 56 个，进入 `light.tokens.json` / `dark.tokens.json`）
 
 - **A 层（31 个 shadcn 槽位）**：`background`, `foreground`, `card`, `card-foreground`, `popover`, `popover-foreground`, `primary`, `primary-foreground`, `secondary`, `secondary-foreground`, `muted`, `muted-foreground`, `accent`, `accent-foreground`, `destructive`, `border`, `input`, `ring`, `chart-1`, `chart-2`, `chart-3`, `chart-4`, `chart-5`, `sidebar`, `sidebar-foreground`, `sidebar-primary`, `sidebar-primary-foreground`, `sidebar-accent`, `sidebar-accent-foreground`, `sidebar-border`, `sidebar-ring` → 全部映射至 `color.<name>`（`$type: "color"`）。其中直接写 `var(--x)` 的槽位（如 `card-foreground`、`popover-foreground`、`secondary`、`secondary-foreground`、`accent-foreground`、`sidebar-foreground`、`sidebar-primary`、`sidebar-primary-foreground`、`sidebar-accent`、`sidebar-accent-foreground`、`sidebar-ring`）写为 DTCG 花括号别名 `"{color.<x>}"`，编译回 `theme.json` 时还原为 `"var(--<x>)"`。
 - **B 层（25 个本库扩展槽位）**：
-  - 直接 oklch 颜色或 `var(--x)` 别名（17 个）：`inset`, `raised`, `glass-edge`（`{color.border}`）, `field`, `line`, `faint`, `brand`, `brand-edge`, `track`, `knob`, `info`, `warn`, `up`, `inverse`（`{color.popover}`）, `inverse-foreground`（`{color.foreground}`）, `inverse-brand`（`{color.primary-foreground}`）, `violet` → `color.<name>`（`$type: "color"`）。
-  - 含 `color-mix(in srgb, ...)` 算术的颜色（8 个）：`hover`, `ring-halo`, `brand-tint`, `info-tint`, `warn-tint`, `destructive-tint`, `up-tint`, `down-tint` → `color.<name>`（`$type: "color"`），`$value` 放静态求值后的 DTCG oklch 对象（含 `hex`），`$extensions["dev.aning.shadcn-nsh"].colorOp` 放混合配方（见第 6 节）。注：在部分平台主题（如 `winui`）中这些键是静态色而非 `color-mix`，此时直接写 DTCG oklch 对象、不附 `colorOp`。
+  - 直接 oklch 颜色或 `var(--x)` 别名（14 个）：`inset`, `raised`, `field`, `line`, `faint`, `brand`, `brand-edge`, `track`, `knob`, `info`, `warn`, `up`, `inverse`（`{color.popover}`）, `inverse-foreground`（`{color.foreground}`）, `inverse-brand`（`{color.primary-foreground}`） → `color.<name>`（`$type: "color"`）。
+  - 含 `color-mix(in srgb, ...)` 算术的颜色（7 个）：`hover`, `brand-tint`, `info-tint`, `warn-tint`, `destructive-tint`, `up-tint`, `down-tint` → `color.<name>`（`$type: "color"`），`$value` 放静态求值后的 DTCG oklch 对象（含 `hex`），`$extensions["dev.aning.shadcn-nsh"].colorOp` 放混合配方（见第 6 节）。注：在部分平台主题（如 `winui`）中这些键是静态色而非 `color-mix`，此时直接写 DTCG oklch 对象、不附 `colorOp`。
 
 ### 4.2 `semantics.json` → DTCG 2025.10
 
@@ -176,7 +173,7 @@ finish.<role>.*          # group + tokens       27 个表面配方（background,
 
 | 现有路径                                                                                    | DTCG 路径                                                           | `$type`                    | DTCG `$value` / 规则                                                                                                                                                                       | 备注                                                                                                                                                                                                   |
 | :------------------------------------------------------------------------------------------ | :------------------------------------------------------------------ | :------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `type.family`                                                                               | `typography.*.fontFamily`（一律 `"{font.family.sans}"`）            | `fontFamily`（复合子字段） | 非空时引用 `"{font.family.sans}"`；为 `null` 时 `typography.*.fontFamily` 填 `["system-ui", "sans-serif"]`（Format §9.8 必填）且扩展记 `"fontFamily": null`                                | `fontFamily.json` schema 不允许 `null`                                                                                                                                                                 |
+| `type.family`                                                                               | `typography.*.fontFamily`（一律占位字面量 `"system-ui"`）           | `fontFamily`（复合子字段） | 主题不带字体族（ADR 0009）；复合 token 必填该字段（Format §9.8），写占位，没有组件读它，应用的 `font-sans` 才是真正的家族                                                                  | `fontFamily.json` schema 不允许 `null`                                                                                                                                                                 |
 | `type.<role>`（7 个：`caption`, `detail`, `body`, `label`, `title`, `headline`, `display`） | `typography.<role>`                                                 | `typography`               | `{"fontFamily": ..., "fontSize": "{font.size.<role>}", "fontWeight": 400\|500\|600\|700, "lineHeight": "{font.line-height.<role>}", "letterSpacing": {"value": <tracking>, "unit": "px"}}` | `fontWeight` 用数字（§8.4 禁 `"400"` 字符串）；`lineHeight` 为倍率 `line / size`（§9.8）；辅助 token `font.size.<role>`（`dimension`）与 `font.line-height.<role>`（`number`）随 `input` modifier 切换 |
 | `shape.{control,container,modal}`                                                           | `dimension.shape.<role>`                                            | `dimension`                | `"{dimension.radius.<role>}"`                                                                                                                                                              | 3 个按层划分的语义圆角引用；嵌套元素经 `rounded(outer, inset)` 同心推出                                                                                                                                |
 | `shape.curve`                                                                               | `shape.$extensions["dev.aning.shadcn-nsh"].curve`                   | —                          | `"continuous" \| "circular"`                                                                                                                                                               | DTCG 无枚举 `$type`                                                                                                                                                                                    |
@@ -185,7 +182,7 @@ finish.<role>.*          # group + tokens       27 个表面配方（background,
 | `size.density.{pointer,touch}.{row,pad,gap,surface}`                                        | `dimension.size.density.<k>`                                        | `dimension`                | `{"value": N, "unit": "px"}`                                                                                                                                                               | 同上                                                                                                                                                                                                   |
 | `size.control.{pointer,touch}.{row,padding,gap,control,check,dot,tabs,line,clear}`          | `dimension.size.control.<k>`                                        | `dimension`                | `{"value": N, "unit": "px"}`                                                                                                                                                               | 同上（`corner` 已移入 `checkboxPresets`）                                                                                                                                                              |
 | `size.control.{pointer,touch}.switch`                                                       | `dimension.size.control.$extensions["dev.aning.shadcn-nsh"].switch` | —                          | `"small" \| "regular"`                                                                                                                                                                     | `input` modifier 切换                                                                                                                                                                                  |
-| 控件维度（6 档：`selection`, `field`, `choice`, `track`, `handle`, `group`）                | `dimension.control.$extensions["dev.aning.shadcn-nsh"].<dimension>` | —                          | 六档各自的枚举值见 [`theme-roles.md`](theme-roles.md) 的枚举表；缺省取 `base` 的值，只写与本主题不同的档                                                                                   | 枚举值由该表登记，`check:theme` 两边对账                                                                                                                                                               |
+| 控件维度（4 档：`field`, `choice`, `track`, `handle`）                                      | `dimension.control.$extensions["dev.aning.shadcn-nsh"].<dimension>` | —                          | 四档各自的枚举值见 [`theme-roles.md`](theme-roles.md) 的枚举表；缺省取 `base` 的值，只写与本主题不同的档                                                                                   | 枚举值由该表登记，`check:theme` 两边对账                                                                                                                                                               |
 | `size.height.{pointer,touch}.{sm,md,lg}`                                                    | `dimension.size.height.<step>`                                      | `dimension`                | `{"value": N, "unit": "px"}`                                                                                                                                                               | 同上                                                                                                                                                                                                   |
 | `stroke.{hairline,surface,control}`                                                         | `dimension.stroke.<k>`                                              | `dimension`                | `{"value": N, "unit": "px"}`                                                                                                                                                               | 3 个线宽                                                                                                                                                                                               |
 | `focus.{width,offset}`                                                                      | `dimension.focus.<k>`                                               | `dimension`                | `{"value": N, "unit": "px"}`                                                                                                                                                               | 焦点环几何                                                                                                                                                                                             |
@@ -291,7 +288,7 @@ finish.<role>.*          # group + tokens       27 个表面配方（background,
 
 DTCG 2025.10 Color Module 不包含任何颜色运算语法，但本库有两处动态算术需求：
 
-- `theme.json` 中每套主题约 8–20 处 `color-mix(in srgb, <A> <P>%, <B>)`（`hover`, `ring-halo`, `*-tint`）；
+- `theme.json` 中每套主题约 8–20 处 `color-mix(in srgb, <A> <P>%, <B>)`（`*-tint`）；
 - `semantics.json` 中 `oklch(from {token} l c h / a)`（如 `apple` 的 `glass` / `overlay` / `inverse` / `raised`、`winui` 的 `glass`、`solid-glass` 的 `accent` / `pressed`）；
 
 **规范写法（双重表示：静态回退 + 符号配方）**：

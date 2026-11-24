@@ -146,7 +146,7 @@
     "$description": "Semantic typography roles referencing tier-specific font.size and font.line-height.",
     "caption": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "system-ui",
         "fontSize": "{font.size.caption}",
         "fontWeight": 400,
         "lineHeight": "{font.line-height.caption}",
@@ -159,7 +159,7 @@
     },
     "detail": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "system-ui",
         "fontSize": "{font.size.detail}",
         "fontWeight": 400,
         "lineHeight": "{font.line-height.detail}",
@@ -172,7 +172,7 @@
     },
     "body": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "system-ui",
         "fontSize": "{font.size.body}",
         "fontWeight": 400,
         "lineHeight": "{font.line-height.body}",
@@ -185,7 +185,7 @@
     },
     "label": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "system-ui",
         "fontSize": "{font.size.label}",
         "fontWeight": 500,
         "lineHeight": "{font.line-height.label}",
@@ -198,7 +198,7 @@
     },
     "title": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "system-ui",
         "fontSize": "{font.size.title}",
         "fontWeight": 600,
         "lineHeight": "{font.line-height.title}",
@@ -211,7 +211,7 @@
     },
     "headline": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "system-ui",
         "fontSize": "{font.size.headline}",
         "fontWeight": 600,
         "lineHeight": "{font.line-height.headline}",
@@ -224,7 +224,7 @@
     },
     "display": {
       "$value": {
-        "fontFamily": "{font.family.sans}",
+        "fontFamily": "system-ui",
         "fontSize": "{font.size.display}",
         "fontWeight": 600,
         "lineHeight": "{font.line-height.display}",
@@ -297,15 +297,13 @@
     "control": {
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "selection": "plate",
           "field": "box",
           "choice": "well",
           "track": "sunk",
-          "handle": "circle",
-          "group": "track"
+          "handle": "circle"
         }
       },
-      "$description": "Control dimensions: the six behaviour-named axes a theme decides for its controls (selection, field, choice, track, handle, group). Themes override only the axes that differ."
+      "$description": "Control dimensions: the four behaviour-named axes a theme decides for its controls (field, choice, track, handle). Themes override only the axes that differ."
     },
     "radius": {
       "$type": "dimension",
@@ -1177,92 +1175,6 @@
       }
     }
   },
-  "font": {
-    "$description": "Desktop pointer typography metrics.",
-    "family": {
-      "$type": "fontFamily",
-      "$description": "Font family stacks.",
-      "sans": {
-        "$value": "system-ui",
-        "$description": "Primary sans-serif font family stack."
-      },
-      "mono": {
-        "$value": "monospace",
-        "$description": "Monospace font family for code blocks and numeric readouts."
-      }
-    },
-    "size": {
-      "$type": "dimension",
-      "$description": "Font sizes per type role for pointer input.",
-      "caption": {
-        "$value": {
-          "value": 11,
-          "unit": "px"
-        }
-      },
-      "detail": {
-        "$value": {
-          "value": 12,
-          "unit": "px"
-        }
-      },
-      "body": {
-        "$value": {
-          "value": 13,
-          "unit": "px"
-        }
-      },
-      "label": {
-        "$value": {
-          "value": 14,
-          "unit": "px"
-        }
-      },
-      "title": {
-        "$value": {
-          "value": 16,
-          "unit": "px"
-        }
-      },
-      "headline": {
-        "$value": {
-          "value": 20,
-          "unit": "px"
-        }
-      },
-      "display": {
-        "$value": {
-          "value": 26,
-          "unit": "px"
-        }
-      }
-    },
-    "line-height": {
-      "$type": "number",
-      "$description": "Line heights per type role, as a multiple of the role's font size (DTCG's unitless lineHeight); `tokens:build` states the whole points it works out to.",
-      "caption": {
-        "$value": 1.454545
-      },
-      "detail": {
-        "$value": 1.333333
-      },
-      "body": {
-        "$value": 1.538462
-      },
-      "label": {
-        "$value": 1.428571
-      },
-      "title": {
-        "$value": 1.5
-      },
-      "headline": {
-        "$value": 1.4
-      },
-      "display": {
-        "$value": 1.230769
-      }
-    }
-  },
   "color": {
     "$type": "color",
     "$description": "Adaptive A-layer and B-layer color roles for light appearance.",
@@ -1379,15 +1291,7 @@
       "$description": "Primary text and icon ink on card surfaces."
     },
     "popover": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          1,
-          0,
-          0
-        ],
-        "hex": "#ffffff"
-      },
+      "$value": "{color.card}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1439,7 +1343,15 @@
       "$description": "Text and icon ink on primary brand action fills."
     },
     "secondary": {
-      "$value": "{color.raised}",
+      "$value": {
+        "colorSpace": "oklch",
+        "components": [
+          0.97,
+          0,
+          0
+        ],
+        "hex": "#f5f5f5"
+      },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1491,15 +1403,7 @@
       "$description": "Secondary and supporting text and icon ink."
     },
     "accent": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.97,
-          0,
-          0
-        ],
-        "hex": "#f5f5f5"
-      },
+      "$value": "{color.muted}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1551,15 +1455,7 @@
       "$description": "Standard hairline border color for containers and controls."
     },
     "input": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.922,
-          0,
-          0
-        ],
-        "hex": "#e5e5e5"
-      },
+      "$value": "{color.border}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "chrome"
@@ -1568,15 +1464,7 @@
       "$description": "Border and stroke color for form fields and control edges."
     },
     "ring": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.708,
-          0,
-          0
-        ],
-        "hex": "#a1a1a1"
-      },
+      "$value": "{color.muted-foreground}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "chrome"
@@ -1588,15 +1476,22 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.87,
+          0.25406,
           0,
           0
         ],
-        "hex": "#d4d4d4"
+        "hex": "#222222"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "role": "status"
+          "role": "status",
+          "colorOp": {
+            "op": "mix",
+            "space": "srgb",
+            "a": "{color.foreground}",
+            "percent": 90,
+            "b": "{color.background}"
+          }
         }
       },
       "$description": "Primary chart series color."
@@ -1605,15 +1500,22 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.556,
+          0.44408,
           0,
           0
         ],
-        "hex": "#737373"
+        "hex": "#545454"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "role": "status"
+          "role": "status",
+          "colorOp": {
+            "op": "mix",
+            "space": "srgb",
+            "a": "{color.foreground}",
+            "percent": 70,
+            "b": "{color.background}"
+          }
         }
       },
       "$description": "Second chart series color."
@@ -1622,15 +1524,22 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.439,
+          0.57354,
           0,
           0
         ],
-        "hex": "#525252"
+        "hex": "#787878"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "role": "status"
+          "role": "status",
+          "colorOp": {
+            "op": "mix",
+            "space": "srgb",
+            "a": "{color.foreground}",
+            "percent": 55,
+            "b": "{color.background}"
+          }
         }
       },
       "$description": "Third chart series color."
@@ -1639,15 +1548,22 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.371,
+          0.69601,
           0,
           0
         ],
-        "hex": "#404040"
+        "hex": "#9d9d9d"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "role": "status"
+          "role": "status",
+          "colorOp": {
+            "op": "mix",
+            "space": "srgb",
+            "a": "{color.foreground}",
+            "percent": 40,
+            "b": "{color.background}"
+          }
         }
       },
       "$description": "Fourth chart series color."
@@ -1656,29 +1572,28 @@
       "$value": {
         "colorSpace": "oklch",
         "components": [
-          0.269,
+          0.81328,
           0,
           0
         ],
-        "hex": "#262626"
+        "hex": "#c2c2c2"
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
-          "role": "status"
+          "role": "status",
+          "colorOp": {
+            "op": "mix",
+            "space": "srgb",
+            "a": "{color.foreground}",
+            "percent": 25,
+            "b": "{color.background}"
+          }
         }
       },
       "$description": "Fifth chart series color."
     },
     "sidebar": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.985,
-          0,
-          0
-        ],
-        "hex": "#fafafa"
-      },
+      "$value": "{color.background}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1714,15 +1629,7 @@
       "$description": "Text and icon ink on sidebar-primary highlights."
     },
     "sidebar-accent": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.97,
-          0,
-          0
-        ],
-        "hex": "#f5f5f5"
-      },
+      "$value": "{color.muted}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1740,15 +1647,7 @@
       "$description": "Text and icon ink on active sidebar rows."
     },
     "sidebar-border": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.922,
-          0,
-          0
-        ],
-        "hex": "#e5e5e5"
-      },
+      "$value": "{color.line}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "chrome"
@@ -1757,7 +1656,7 @@
       "$description": "Sidebar divider and toolbar hairline border color."
     },
     "sidebar-ring": {
-      "$value": "{color.ring}",
+      "$value": "{color.muted-foreground}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "chrome"
@@ -1766,15 +1665,7 @@
       "$description": "Focus indicator ring color inside the sidebar."
     },
     "inset": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.97,
-          0,
-          0
-        ],
-        "hex": "#f5f5f5"
-      },
+      "$value": "{color.muted}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1783,15 +1674,7 @@
       "$description": "Recessed well surface nested inside a card."
     },
     "raised": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.97,
-          0,
-          0
-        ],
-        "hex": "#f5f5f5"
-      },
+      "$value": "{color.secondary}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1799,25 +1682,8 @@
       },
       "$description": "Raised control surface resting on a card."
     },
-    "glass-edge": {
-      "$value": "{color.border}",
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome"
-        }
-      },
-      "$description": "Hairline border aliased to {color.border} (shadcn draws no separate glass edge)."
-    },
     "field": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          1,
-          0,
-          0
-        ],
-        "hex": "#ffffff"
-      },
+      "$value": "{color.card}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1843,38 +1709,13 @@
       "$description": "Hairline divider and grid rule inside recessed wells."
     },
     "hover": {
-      "$value": "{color.accent}",
+      "$value": "{color.muted}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
         }
       },
       "$description": "Pointer hover fill aliased to {color.accent} per shadcn hover:bg-accent."
-    },
-    "ring-halo": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.708,
-          0,
-          0
-        ],
-        "alpha": 0.5,
-        "hex": "#a1a1a1"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "chrome",
-          "colorOp": {
-            "op": "mix",
-            "space": "srgb",
-            "a": "{color.ring}",
-            "percent": 50,
-            "b": "transparent"
-          }
-        }
-      },
-      "$description": "Translucent outer halo around focused controls."
     },
     "faint": {
       "$value": {
@@ -1894,15 +1735,7 @@
       "$description": "Low-emphasis text for placeholders, units, and tertiary labels."
     },
     "brand": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.205,
-          0,
-          0
-        ],
-        "hex": "#171717"
-      },
+      "$value": "{color.primary}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "brand"
@@ -1920,15 +1753,7 @@
       "$description": "Hairline border aliased to {color.border} (shadcn draws no separate brand edge)."
     },
     "track": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.97,
-          0,
-          0
-        ],
-        "hex": "#f5f5f5"
-      },
+      "$value": "{color.muted}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -1937,15 +1762,7 @@
       "$description": "Inactive track background for switches, sliders, and progress bars."
     },
     "knob": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          1,
-          0,
-          0
-        ],
-        "hex": "#ffffff"
-      },
+      "$value": "{color.card}",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "role": "surface"
@@ -2021,7 +1838,7 @@
           "colorOp": {
             "op": "mix",
             "space": "srgb",
-            "a": "{color.brand}",
+            "a": "{color.primary}",
             "percent": 10,
             "b": "transparent"
           }
@@ -2180,23 +1997,6 @@
         }
       },
       "$description": "Translucent negative trend background tint."
-    },
-    "violet": {
-      "$value": {
-        "colorSpace": "oklch",
-        "components": [
-          0.269,
-          0,
-          0
-        ],
-        "hex": "#262626"
-      },
-      "$extensions": {
-        "dev.aning.shadcn-nsh": {
-          "role": "status"
-        }
-      },
-      "$description": "Accent data-visualization and link color mapped onto shadcn's neutral ramp."
     }
   },
   "shadow": {
@@ -2537,6 +2337,80 @@
             "none": true
           }
         }
+      }
+    }
+  },
+  "font": {
+    "$description": "Desktop pointer typography metrics.",
+    "size": {
+      "$type": "dimension",
+      "$description": "Font sizes per type role for pointer input.",
+      "caption": {
+        "$value": {
+          "value": 11,
+          "unit": "px"
+        }
+      },
+      "detail": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        }
+      },
+      "body": {
+        "$value": {
+          "value": 13,
+          "unit": "px"
+        }
+      },
+      "label": {
+        "$value": {
+          "value": 14,
+          "unit": "px"
+        }
+      },
+      "title": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        }
+      },
+      "headline": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        }
+      },
+      "display": {
+        "$value": {
+          "value": 26,
+          "unit": "px"
+        }
+      }
+    },
+    "line-height": {
+      "$type": "number",
+      "$description": "Line heights per type role, as a multiple of the role's font size (DTCG's unitless lineHeight); `tokens:build` states the whole points it works out to.",
+      "caption": {
+        "$value": 1.454545
+      },
+      "detail": {
+        "$value": 1.333333
+      },
+      "body": {
+        "$value": 1.538462
+      },
+      "label": {
+        "$value": 1.428571
+      },
+      "title": {
+        "$value": 1.5
+      },
+      "headline": {
+        "$value": 1.4
+      },
+      "display": {
+        "$value": 1.230769
       }
     }
   }

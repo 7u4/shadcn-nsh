@@ -76,15 +76,15 @@ _Avoid_: 把 `Label` 组件当作无障碍名、把控件的文字抄进 `access
 _Avoid_: 重写行为, 缩减 props
 
 **Theme Source**:
-`default` 主题的真源是 `packages/theme/tokens/`（W3C DTCG 2025.10：`base/` 与 `themes/default/`），经 `bun run tokens:build` 编译为运行时产物 `theme.json`（基础 token 层：颜色、3 个层圆角 `radius-{control,container,modal}` 及 A 层 `radius` 槽、字体，oklch 存储）、`semantics.json`（跨平台语义层：风格数据与 `finishes` 的 `shared` + 稀疏 `light`/`dark`，以 `{token}` 引用基础层）与 `themes/default/{theme,semantics}.json`；其余主题（`shadcn`、`solid-glass`、`apple`、`material`、`winui`）同样由 DTCG 源码编译；`theme.ts` 读取编译产物。分层规则见 [`specs/design-semantics.md`](specs/design-semantics.md)，角色清单见 [`specs/theme-roles.md`](specs/theme-roles.md)，DTCG 2025.10 标准见 [`specs/design-tokens.md`](specs/design-tokens.md)。
+`default` 主题的真源是 `packages/theme/tokens/`（W3C DTCG 2025.10：`base/` 与 `themes/default/`），经 `bun run tokens:build` 编译为运行时产物 `theme.json`（基础 token 层：颜色、3 个层圆角 `radius-{control,container,modal}` 及 A 层 `radius` 槽，oklch 存储）、`semantics.json`（跨平台语义层：风格数据与 `finishes` 的 `shared` + 稀疏 `light`/`dark`，以 `{token}` 引用基础层）与 `themes/default/{theme,semantics}.json`；其余主题（`shadcn`、`solid-glass`、`apple`、`material`、`winui`）同样由 DTCG 源码编译；`theme.ts` 读取编译产物。分层规则见 [`specs/design-semantics.md`](specs/design-semantics.md)，角色清单见 [`specs/theme-roles.md`](specs/theme-roles.md)，DTCG 2025.10 标准见 [`specs/design-tokens.md`](specs/design-tokens.md)。
 _Avoid_: neutral 映射, `custom-*` 键
 
 **Design Semantics（语义层 / `semantics.json`）**:
 跨 Apple HIG、Material 3 Expressive、WinUI 3 与 shadcn/ui 的设计语义超集，存放 NSH 原生标量 token 表达不了的结构（`pointer`/`touch` 两档尺寸与字阶、枚举、动效、表面配方 `finishes` 与平台 `material`），通过 `{token}` 引用 `theme.json` 中的基础 token。见 [`specs/design-semantics.md`](specs/design-semantics.md)。
-_Avoid_: `finishes.json`（旧文件名）、在语义层重复写颜色/圆角/字体字面量
+_Avoid_: `finishes.json`（旧文件名）、在语义层重复写颜色/圆角字面量
 
 **Token**:
-`theme.json` 里的一个基础设计量（按 DTCG `$type` 分 `color`、`dimension`、`fontFamily`）：颜色（`cssVars.light` / `cssVars.dark` 逐外观，或 `cssVars.theme` 共用）、按层划分的 3 个圆角（`radius-control`、`radius-container`、`radius-modal`，以及由 `radius-control` 派生的 A 层 `radius` 槽）、字体（`font-mono` 及可选 `font-sans`）。`theme.json` 内部用 `var(--token)`，语义层用 `{token}` 引用。A 层是 shadcn 的 31 个槽（NSH 的 `Theme::of` 逐名字解析，缺一个就退回 shadcn 的灰），B 层是本库自己的颜色扩展，C 层是明暗共用的 token。
+`theme.json` 里的一个基础设计量（按 DTCG `$type` 分 `color`、`dimension`）：颜色（`cssVars.light` / `cssVars.dark` 逐外观，或 `cssVars.theme` 共用）、按层划分的 3 个圆角（`radius-control`、`radius-container`、`radius-modal`，以及由 `radius-control` 派生的 A 层 `radius` 槽）。字体族不是 token（[决策 0009](decisions/0009-no-theme-type-scale.md)）。`theme.json` 内部用 `var(--token)`，语义层用 `{token}` 引用。A 层是 shadcn 的 31 个槽（NSH 的 `Theme::of` 逐名字解析，缺一个就退回 shadcn 的灰），B 层是本库自己的颜色扩展，C 层是明暗共用的 token。
 _Avoid_: 用别的词指它；在 B 层另起一个与 A 层槽同义的名字
 
 **Finish（Finish Role）**:
@@ -113,7 +113,7 @@ _Avoid_: 只写一档、按主题在代码里补另一档
 _Avoid_: 在 finish 里写阴影字符串；把 `elevation` 放进 `theme.json`
 
 **Alias（`{token}` 引用）**:
-语义层引用 `theme.json` 基础 token 的花括号写法（对齐 DTCG 2025.10）：`dimension.shape.*` 写 `{radius-…}`、7 个 typography 复合 token 的 `fontFamily` 写 `{font.family.sans}`、finish 颜色与 `material.apple.tint` 写 `{token}` 或 `oklch(from {token} l c h / a)`。`theme.ts` 在**读的时候**经 `token()` 响应式解析，所以切外观、`selectTheme` 切主题与宿主 `setThemeOverrides` 都自动生效。finish 允许的字面量只有墨色（黑或白带 alpha）、`transparent`，以及规范里待定表列出的那些；`shadow` 不写字面量，只引用影子刻度。
+语义层引用 `theme.json` 基础 token 的花括号写法（对齐 DTCG 2025.10）：`dimension.shape.*` 写 `{radius-…}`、finish 颜色与 `material.apple.tint` 写 `{token}` 或 `oklch(from {token} l c h / a)`。`theme.ts` 在**读的时候**经 `token()` 响应式解析，所以切外观、`selectTheme` 切主题与宿主 `setThemeOverrides` 都自动生效。finish 允许的字面量只有墨色（黑或白带 alpha）、`transparent`，以及规范里待定表列出的那些；`shadow` 不写字面量，只引用影子刻度。
 _Avoid_: 在语义层写 `var(--token)` 或重复的色值/圆角数字；用别的词指它
 
 **Build-time Theme / AppTheme**:
@@ -121,7 +121,7 @@ _Avoid_: 在语义层写 `var(--token)` 或重复的色值/圆角数字；用别
 _Avoid_: 把 `add theme-<x>` 当成换构建时主题、把主题叫“皮肤”、把 finish 当 token
 
 **Control Dimension（控件维度 / `dimension.control`）**:
-主题对“一个控件怎么画自己的零件”的六个按行为命名的答案：`selection`（选中项标在哪：`pill` / `underline` / `bar`）、`field`（输入框边界：`box` / `underline` / `box-underline`）、`choice`（一组里被选中的那一格：`well` / `outline` / `inset`）、`track`（滑动轨道与进度剩余：`sunk` / `tint` / `hairline`）、`handle`（可拖部分：`circle` / `ring`）、`group`（并排一组控件之间：`track` / `cells`）。各档画成什么样、按什么数字见 [`specs/theme-roles.md`](specs/theme-roles.md) 第 11、14 节；组件经 `@shadcn-nsh/theme` 的 `control()` 读取，换主题后下一帧重画。
+主题对“一个控件怎么画自己的零件”的四个按行为命名的答案：`field`（输入框边界：`box` / `underline` / `box-underline`）、`choice`（一组里被选中的那一格：`well` / `outline` / `inset`）、`track`（滑动轨道与进度剩余：`sunk` / `tint` / `hairline`）、`handle`（可拖部分：`circle` / `ring`）。标签页、分段控件与侧边栏的形态不在维度里：它们各画一种（[决策 0008](decisions/0008-drop-selection-group.md)）。各档画成什么样、按什么数字见 [`specs/theme-roles.md`](specs/theme-roles.md) 第 11、14 节；组件经 `@shadcn-nsh/theme` 的 `control()` 读取，换主题后下一帧重画。
 _Avoid_: 用组件名当维度名、把某个控件的整套尺寸塞进主题、为单个控件在 `theme.json` / `semantics.json` 里逐键放宽几何或状态字段、在组件里按主题 `id` 分支（`bun run check:ui` 拦下）
 
 **Difference Table（差异表）**:

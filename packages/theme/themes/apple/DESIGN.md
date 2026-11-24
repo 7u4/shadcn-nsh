@@ -19,36 +19,34 @@ colors:
     secondary-foreground: "#000000"
     muted: "#efeff0"
     muted-foreground: "#8a8a8e"
-    accent: "#f4f4f5"
+    accent: "#efeff0"
     accent-foreground: "#000000"
     destructive: "#ff3b30"
     border: "#dcdcdd"
-    input: "#c6c6c8"
+    input: "#dcdcdd"
     ring: "#007aff"
     chart-1: "#007aff"
     chart-2: "#34c759"
     chart-3: "#ff9500"
-    chart-4: "#af52de"
-    chart-5: "#ff3b30"
+    chart-4: "#ff3b30"
+    chart-5: "#8a8a8e"
     sidebar: "#f2f2f7"
     sidebar-foreground: "#000000"
     sidebar-primary: "#007aff"
     sidebar-primary-foreground: "#ffffff"
-    sidebar-accent: "#f4f4f5"
+    sidebar-accent: "#efeff0"
     sidebar-accent-foreground: "#000000"
     sidebar-border: "#dcdcdd"
     sidebar-ring: "#007aff"
-    inset: "#f4f4f5"
+    inset: "#efeff0"
     raised: "#efeff0"
-    glass-edge: "#dcdcdd"
     field: "#efeff0"
     line: "#dcdcdd"
-    hover: "#0000000f"
-    ring-halo: "#007aff4d"
+    hover: "#efeff0"
     faint: "#c5c5c7"
     brand: "#007aff"
     brand-edge: "#dcdcdd"
-    track: "#e9e9eb"
+    track: "#efeff0"
     knob: "#ffffff"
     info: "#007aff"
     warn: "#ff9500"
@@ -62,13 +60,12 @@ colors:
     destructive-tint: "#ff3b301f"
     up-tint: "#34c7591f"
     down-tint: "#ff3b301f"
-    violet: "#af52de"
   dark:
     background: "#000000"
     foreground: "#ffffff"
     card: "#1c1c1e"
     card-foreground: "#ffffff"
-    popover: "#2c2c2e"
+    popover: "#1c1c1e"
     popover-foreground: "#ffffff"
     primary: "#0a84ff"
     primary-foreground: "#ffffff"
@@ -76,42 +73,40 @@ colors:
     secondary-foreground: "#ffffff"
     muted: "#323236"
     muted-foreground: "#98989f"
-    accent: "#2c2c30"
+    accent: "#323236"
     accent-foreground: "#ffffff"
     destructive: "#ff453a"
     border: "#353538"
-    input: "#3e3e41"
+    input: "#353538"
     ring: "#0a84ff"
     chart-1: "#0a84ff"
     chart-2: "#30d158"
     chart-3: "#ff9f0a"
-    chart-4: "#bf5af2"
-    chart-5: "#ff453a"
-    sidebar: "#1c1c1e"
+    chart-4: "#ff453a"
+    chart-5: "#98989f"
+    sidebar: "#000000"
     sidebar-foreground: "#ffffff"
     sidebar-primary: "#0a84ff"
     sidebar-primary-foreground: "#ffffff"
-    sidebar-accent: "#2c2c30"
+    sidebar-accent: "#323236"
     sidebar-accent-foreground: "#ffffff"
     sidebar-border: "#353538"
     sidebar-ring: "#0a84ff"
-    inset: "#2c2c30"
+    inset: "#323236"
     raised: "#323236"
-    glass-edge: "#353538"
     field: "#323236"
     line: "#353538"
-    hover: "#ffffff0f"
-    ring-halo: "#0a84ff4d"
+    hover: "#323236"
     faint: "#5a5a5f"
     brand: "#0a84ff"
     brand-edge: "#353538"
-    track: "#39393d"
+    track: "#323236"
     knob: "#ffffff"
     info: "#0a84ff"
     warn: "#ff9f0a"
     up: "#30d158"
     brand-tint: "#0a84ff1f"
-    inverse: "#2c2c2e"
+    inverse: "#1c1c1e"
     inverse-foreground: "#ffffff"
     inverse-brand: "#ffffff"
     info-tint: "#0a84ff1f"
@@ -119,46 +114,38 @@ colors:
     destructive-tint: "#ff453a1f"
     up-tint: "#30d1581f"
     down-tint: "#ff453a1f"
-    violet: "#bf5af2"
 typography:
   caption:
-    fontFamily: system-ui
-    fontSize: 10px
-    fontWeight: 400
-    lineHeight: 13px
-    letterSpacing: 0px
-  detail:
-    fontFamily: system-ui
     fontSize: 11px
     fontWeight: 400
-    lineHeight: 14px
+    lineHeight: 16px
     letterSpacing: 0px
-  body:
-    fontFamily: system-ui
-    fontSize: 13px
+  detail:
+    fontSize: 12px
     fontWeight: 400
     lineHeight: 16px
     letterSpacing: 0px
-  label:
-    fontFamily: system-ui
+  body:
     fontSize: 13px
+    fontWeight: 400
+    lineHeight: 20px
+    letterSpacing: 0px
+  label:
+    fontSize: 14px
     fontWeight: 500
-    lineHeight: 16px
+    lineHeight: 20px
     letterSpacing: 0px
   title:
-    fontFamily: system-ui
-    fontSize: 13px
+    fontSize: 16px
     fontWeight: 600
-    lineHeight: 16px
+    lineHeight: 24px
     letterSpacing: 0px
   headline:
-    fontFamily: system-ui
-    fontSize: 22px
+    fontSize: 20px
     fontWeight: 600
-    lineHeight: 26px
+    lineHeight: 28px
     letterSpacing: 0px
   display:
-    fontFamily: system-ui
     fontSize: 26px
     fontWeight: 600
     lineHeight: 32px
@@ -312,19 +299,19 @@ Apple Human Interface Guidelines / UIKit system palette (`systemBlue`, `systemGr
 - **`media`** (`#10131a`): Ground behind photographs and videos; invariant across appearances.
 - **`background`** (light `#f2f2f7`, dark `#000000`): Grouped page canvas background (UIKit systemGroupedBackground).
 - **`card`** (light `#ffffff`, dark `#1c1c1e`): Elevated list and card surface (UIKit systemBackground).
-- **`popover`** (light `#ffffff`, dark `#2c2c2e`): Floating popover and sheet surface (UIKit secondarySystemBackground / popover).
+- **`popover`** (light `#ffffff`, dark `#1c1c1e`): Floating popover and sheet surface (UIKit secondarySystemBackground / popover).
 - **`secondary`** (light `#efeff0`, dark `#323236`): Secondary control surface fill.
 - **`muted`** (light `#efeff0`, dark `#323236`): Subdued container fill (UIKit tertiarySystemFill composited over card).
-- **`accent`** (light `#f4f4f5`, dark `#2c2c30`): Subtle hover/selection fill (UIKit quaternarySystemFill composited over card).
-- **`sidebar`** (light `#f2f2f7`, dark `#1c1c1e`): Sidebar surface matching Apple system sidebar/grouped background.
-- **`sidebar-accent`** (light `#f4f4f5`, dark `#2c2c30`): Selected or active row fill in the sidebar.
-- **`inset`** (light `#f4f4f5`, dark `#2c2c30`): Inset surface (UIKit quaternarySystemFill composited over card).
+- **`accent`** (light `#efeff0`, dark `#323236`): Subtle hover/selection fill (UIKit quaternarySystemFill composited over card).
+- **`sidebar`** (light `#f2f2f7`, dark `#000000`): Sidebar surface matching Apple system sidebar/grouped background.
+- **`sidebar-accent`** (light `#efeff0`, dark `#323236`): Selected or active row fill in the sidebar.
+- **`inset`** (light `#efeff0`, dark `#323236`): Inset surface (UIKit quaternarySystemFill composited over card).
 - **`raised`** (light `#efeff0`, dark `#323236`): Raised control surface (UIKit tertiarySystemFill composited over card).
 - **`field`** (light `#efeff0`, dark `#323236`): Form input background (UIKit tertiarySystemFill composited over card).
-- **`hover`** (light `#0000000f`, dark `#ffffff0f`): Pointer hover tint (6% foreground ink over transparent).
-- **`track`** (light `#e9e9eb`, dark `#39393d`): Switch and slider track (UIKit secondarySystemFill composited over card).
+- **`hover`** (light `#efeff0`, dark `#323236`): Pointer hover tint (6% foreground ink over transparent).
+- **`track`** (light `#efeff0`, dark `#323236`): Switch and slider track (UIKit secondarySystemFill composited over card).
 - **`knob`** (`#ffffff`): Switch knob and slider handle (pure white).
-- **`inverse`** (light `#ffffff`, dark `#2c2c2e`): High-contrast surface for toasts and tooltips.
+- **`inverse`** (light `#ffffff`, dark `#1c1c1e`): High-contrast surface for toasts and tooltips.
 
 ### Ink
 
@@ -357,8 +344,8 @@ Apple Human Interface Guidelines / UIKit system palette (`systemBlue`, `systemGr
 - **`chart-1`** (light `#007aff`, dark `#0a84ff`): First chart series color (UIKit systemBlue).
 - **`chart-2`** (light `#34c759`, dark `#30d158`): Second chart series color (UIKit systemGreen).
 - **`chart-3`** (light `#ff9500`, dark `#ff9f0a`): Third chart series color (UIKit systemOrange).
-- **`chart-4`** (light `#af52de`, dark `#bf5af2`): Fourth chart series color (UIKit systemPurple).
-- **`chart-5`** (light `#ff3b30`, dark `#ff453a`): Fifth chart series color (UIKit systemRed).
+- **`chart-4`** (light `#ff3b30`, dark `#ff453a`): Fourth chart series color (UIKit systemPurple).
+- **`chart-5`** (light `#8a8a8e`, dark `#98989f`): Fifth chart series color (UIKit systemRed).
 - **`info`** (light `#007aff`, dark `#0a84ff`): Informational semantic color (UIKit systemBlue).
 - **`warn`** (light `#ff9500`, dark `#ff9f0a`): Warning semantic color (UIKit systemOrange).
 - **`up`** (light `#34c759`, dark `#30d158`): Positive trend semantic color (UIKit systemGreen).
@@ -367,35 +354,29 @@ Apple Human Interface Guidelines / UIKit system palette (`systemBlue`, `systemGr
 - **`destructive-tint`** (light `#ff3b301f`, dark `#ff453a1f`): Translucent destructive wash (12% destructive over transparent).
 - **`up-tint`** (light `#34c7591f`, dark `#30d1581f`): Translucent positive wash (12% up over transparent).
 - **`down-tint`** (light `#ff3b301f`, dark `#ff453a1f`): Translucent negative wash (12% destructive over transparent).
-- **`violet`** (light `#af52de`, dark `#bf5af2`): Accent purple ink (UIKit systemPurple).
 
 ### Chrome
 
 - **`border`** (light `#dcdcdd`, dark `#353538`): Hairline separator (UIKit separator hairline composited over card).
-- **`input`** (light `#c6c6c8`, dark `#3e3e41`): Input control border (UIKit separator composited over card).
+- **`input`** (light `#dcdcdd`, dark `#353538`): Input control border (UIKit separator composited over card).
 - **`ring`** (light `#007aff`, dark `#0a84ff`): Focus ring color matching UIKit systemBlue.
 - **`sidebar-border`** (light `#dcdcdd`, dark `#353538`): Sidebar divider and toolbar hairline border color.
 - **`sidebar-ring`** (light `#007aff`, dark `#0a84ff`): Focus indicator ring color inside the sidebar.
-- **`glass-edge`** (light `#dcdcdd`, dark `#353538`): Hairline border on glass, pill, and floating overlay surfaces.
 - **`line`** (light `#dcdcdd`, dark `#353538`): Inset divider hairline (UIKit hairline composited over card).
-- **`ring-halo`** (light `#007aff4d`, dark `#0a84ff4d`): Outer keyboard focus halo (30% ring color over transparent).
 
 ## Typography
 
 Semantic typography roles referencing tier-specific font.size and font.line-height.
 
-- **Font stacks:** Font family stacks.
-  - `sans` (`system-ui`): Primary sans-serif font family stack.
-  - `mono` (`monospace`): Monospace font family for code blocks and numeric readouts.
-  - Every role's `fontFamily` is `{font.family.sans}`.
+- The family is the app's `font-sans` (`font-mono` for code); the sizes are the one shared scale, which the user's system font size scales (ADR 0009).
 
-- **`caption`** (10px (touch: 12px), weight 400, line-height 13px, line-height 16px on touch, letter-spacing 0px): Small captions and segmented counter labels.
-- **`detail`** (11px (touch: 13px), weight 400, line-height 14px, line-height 18px on touch, letter-spacing 0px): Sidebar section labels, counts, and supporting metadata.
-- **`body`** (13px (touch: 17px), weight 400, line-height 16px, line-height 22px on touch, letter-spacing 0px): Standard body copy, list rows, and dialog content.
-- **`label`** (13px (touch: 17px), weight 500, line-height 16px, line-height 22px on touch, letter-spacing 0px): Control labels, form labels, and interactive triggers.
-- **`title`** (13px (touch: 17px), weight 600, line-height 16px, line-height 22px on touch, letter-spacing 0px): Card and section headings.
-- **`headline`** (22px, weight 600, line-height 26px, line-height 28px on touch, letter-spacing 0px): Page-level headings.
-- **`display`** (26px (touch: 34px), weight 600, line-height 32px, line-height 41px on touch, letter-spacing 0px): Large display numerals and hero headings.
+- **`caption`** (11px (touch: 12px), weight 400, line-height 16px, letter-spacing 0px): Small captions and segmented counter labels.
+- **`detail`** (12px (touch: 13px), weight 400, line-height 16px, line-height 20px on touch, letter-spacing 0px): Sidebar section labels, counts, and supporting metadata.
+- **`body`** (13px (touch: 15px), weight 400, line-height 20px, letter-spacing 0px): Standard body copy, list rows, and dialog content.
+- **`label`** (14px (touch: 15px), weight 500, line-height 20px, letter-spacing 0px): Control labels, form labels, and interactive triggers.
+- **`title`** (16px, weight 600, line-height 24px, letter-spacing 0px): Card and section headings.
+- **`headline`** (20px (touch: 22px), weight 600, line-height 28px, letter-spacing 0px): Page-level headings.
+- **`display`** (26px (touch: 28px), weight 600, line-height 32px, line-height 36px on touch, letter-spacing 0px): Large display numerals and hero headings.
 
 ## Layout
 
@@ -436,13 +417,11 @@ Semantic corner radius roles by layer, referencing base dimension.radius.* token
 - **`container`** (12px): Corner radius for containers and overlays: cards, menus, popovers, tooltips, list panels, toasts, and frames.
 - **`modal`** (26px): Corner radius for modal surfaces: dialogs, sheets, and drawers.
 
-**Control dimensions** (no DESIGN.md field; they decide how a control's own parts are drawn): Control dimensions: the six behaviour-named axes a theme decides for its controls (selection, field, choice, track, handle, group). Themes override only the axes that differ.
-- **`selection`**: `plate`
+**Control dimensions** (no DESIGN.md field; they decide how a control's own parts are drawn): Control dimensions: the four behaviour-named axes a theme decides for its controls (field, choice, track, handle). Themes override only the axes that differ.
 - **`field`**: `box`
 - **`choice`**: `well`
 - **`track`**: `sunk`
 - **`handle`**: `circle`
-- **`group`**: `capsule`
 
 ## Motion & Micro-interaction
 

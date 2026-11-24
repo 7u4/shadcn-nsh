@@ -35,6 +35,7 @@ import {
 import type { ThemeGeneratorOutput } from "./dtcg";
 import { finishes, shadows } from "./finishes/material";
 import { oklchColor, toOklchText } from "./oklch";
+import { reduceColours, type ColourScheme } from "./sources";
 
 export const M3_BASELINE_SEED = "#6750A4";
 
@@ -279,6 +280,19 @@ const NSH_EXTENSIONS = {
 
 const tintMix = (token: string) => `color-mix(in srgb, var(--${token}) 12%, transparent)`;
 
+/** The choices the derived keys make (ADR 0007 §4): the hairline is M3's weak outline, a field's edge the strong one. */
+const colourScheme: ColourScheme = {
+  tint: 12,
+  ring: "primary",
+  field: "muted",
+  knob: ["border", "border"],
+  secondaryIsRaised: false,
+  raised: "card",
+  strongBorder: true,
+  inverse: ["foreground", "background"],
+  chart: ["primary", "up", "warn", "destructive", "muted-foreground"],
+};
+
 function appearanceRoles(p: M3Palette, appearance: Appearance): Record<string, string> {
   const c = (hex: string) => toOklchText(hex);
   return {
@@ -315,11 +329,9 @@ function appearanceRoles(p: M3Palette, appearance: Appearance): Record<string, s
     "sidebar-ring": "var(--ring)",
     inset: c(p.surfaceContainer),
     raised: c(p.surfaceContainerLow),
-    "glass-edge": c(p.outlineVariant),
     field: c(p.surfaceContainerHighest),
     line: c(p.outlineVariant),
     hover: "color-mix(in srgb, var(--foreground) 8%, transparent)",
-    "ring-halo": "color-mix(in srgb, var(--ring) 20%, transparent)",
     faint: c(p.outline),
     brand: "var(--primary)",
     "brand-edge": c(p.outlineVariant),
@@ -338,7 +350,6 @@ function appearanceRoles(p: M3Palette, appearance: Appearance): Record<string, s
     "destructive-tint": c(p.errorContainer),
     "up-tint": tintMix("up"),
     "down-tint": tintMix("destructive"),
-    violet: c(p.tertiary),
   };
 }
 
@@ -362,7 +373,7 @@ export function m3Roles(scheme: M3Scheme): M3Roles {
 /**
  * Shared theme-level tokens (`cssVars.theme`) for Material 3 Expressive: M3 Compose tokens at
  * `ac364f3c` (`CornerExtraSmall` 4dp, `CornerLarge` / medium container 12dp, `CornerExtraLarge`
- * 28dp; capsule buttons use `shape.corners.button: "full"`), system monospace font, and M3 colour
+ * 28dp; capsule buttons use `shape.corners.button: "full"`), and M3 colour
  * tokens from `m3Roles`.
  */
 function themeLevel(roles: M3Roles): Record<string, string> {
@@ -371,8 +382,6 @@ function themeLevel(roles: M3Roles): Record<string, string> {
     "radius-control": "4px",
     "radius-container": "12px",
     "radius-modal": "28px",
-    "font-sans": "system-ui",
-    "font-mono": "monospace",
     ...roles.theme,
   };
 }
@@ -381,44 +390,30 @@ function themeLevel(roles: M3Roles): Record<string, string> {
 export const m3Style = {
   typography: {
     caption: {
-      fontSize: { pointer: 11, touch: 11 },
-      lineHeight: { pointer: 16, touch: 16 },
       fontWeight: 500,
       letterSpacing: 0.5,
     },
     detail: {
-      fontSize: { pointer: 12, touch: 12 },
-      lineHeight: { pointer: 16, touch: 16 },
       fontWeight: 400,
       letterSpacing: 0.4,
     },
     body: {
-      fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 400,
       letterSpacing: 0.25,
     },
     label: {
-      fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 500,
       letterSpacing: 0.1,
     },
     title: {
-      fontSize: { pointer: 16, touch: 16 },
-      lineHeight: { pointer: 24, touch: 24 },
       fontWeight: 500,
       letterSpacing: 0.15,
     },
     headline: {
-      fontSize: { pointer: 24, touch: 24 },
-      lineHeight: { pointer: 32, touch: 32 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     display: {
-      fontSize: { pointer: 36, touch: 36 },
-      lineHeight: { pointer: 44, touch: 44 },
       fontWeight: 400,
       letterSpacing: 0,
     },
@@ -452,16 +447,13 @@ export const m3Style = {
     stroke: { hairline: 1, control: 1 },
     focus: { style: "outline", width: 3, offset: 2 },
     control: {
-      // M3's own controls (docs/specs/theme-contract-v2.md §11.2): PrimaryTabs' underline,
-      // underlined text fields, outlined radios and checkboxes, a tinted track, the library's
-      // circle for a handle (M3's 4×44 bar was a stray line in the app, #367), and
-      // SegmentedButton's cells.
-      selection: "underline",
+      // M3's own controls (docs/specs/theme-contract-v2.md §11.2): underlined text fields,
+      // outlined radios and checkboxes, a tinted track, and the library's circle for a handle
+      // (M3's 4×44 bar was a stray line in the app, #367).
       field: "underline",
       choice: "outline",
       track: "tint",
       handle: "circle",
-      group: "cells",
     },
     icon: {
       // A desktop's glyphs keep the base scale (12/16/20); M3's own 16/20/24 stay on touch.
@@ -534,11 +526,9 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
     "sidebar-border": "Sidebar divider border (M3 outlineVariant).",
     inset: "Inset container surface (M3 surfaceContainer).",
     raised: "Raised control surface (M3 surfaceContainerLow).",
-    "glass-edge": "Overlay outline edge (M3 outlineVariant).",
     field: "Filled text field background (M3 surfaceContainerHighest).",
     line: "Inset divider hairline (M3 outlineVariant).",
     hover: "M3 hover state-layer ink (8% foreground over transparent, StateTokens.kt).",
-    "ring-halo": "Outer focus ring halo (20% ring color over transparent).",
     faint: "Quiet caption/placeholder ink (M3 outline).",
     brand: "Inline brand accent ink, aliased to {color.primary}.",
     "brand-edge": "Brand container outline (M3 outlineVariant).",
@@ -554,7 +544,6 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
     "destructive-tint": "Tonal error container background (M3 errorContainer).",
     "up-tint": "Translucent positive wash (12% up over transparent).",
     "down-tint": "Translucent negative wash (12% down over transparent).",
-    violet: "Tertiary accent color (M3 tertiary).",
   };
 
   return {
@@ -591,8 +580,8 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
     },
     cssVars: {
       theme: themeLevel(roles),
-      light: roles.light,
-      dark: roles.dark,
+      light: reduceColours(roles.light, colourScheme, "light"),
+      dark: reduceColours(roles.dark, colourScheme, "dark"),
     },
     finishes,
     shadows,
@@ -605,13 +594,12 @@ export function m3DtcgOutput(seed?: string): ThemeGeneratorOutput {
       style: {
         "dimension.size.item":
           "Material 3 menu rows: the fill spans the menu's width (inset 0; a DropdownMenuItem takes no horizontal margin) and the text sits 12dp in (DropdownMenuItemHorizontalPadding, androidx compose material3 Menu.kt).",
-        typography:
-          "Material 3 Expressive typography scale (TypeScaleTokens.kt / _md-sys-typescale.scss).",
+        typography: "Material 3 Expressive type weights; sizes follow the shared scale (ADR 0009).",
         "dimension.focus":
           "M3 focus indicator: 3px solid outline offset 2px (_md-sys-state-focus-indicator.scss).",
         "dimension.focus.offset": "2px outward focus indicator offset per M3.",
         "dimension.control":
-          "M3 control dimensions: tabs and fields underlined (PrimaryTabs, _md-comp-filled-text-field.scss), selection controls outlined, tracks tinted, the library's circle for a handle, and SegmentedButton's cells (docs/specs/theme-contract-v2.md §11.2).",
+          "M3 control dimensions: underlined text fields (_md-comp-filled-text-field.scss), outlined selection controls, tinted tracks and the library's circle for a handle (docs/specs/theme-contract-v2.md §11.2).",
         shape: "M3 circular arc corners (ShapeTokens.kt).",
         "state.press-scale":
           "Scale factor applied while pressed (1 disables press shrinking; M3 uses state layer + Android ripple).",

@@ -34,6 +34,7 @@ import {
   toOklchText,
   withAlpha,
 } from "./oklch";
+import { reduceColours, type ColourScheme } from "./sources";
 
 export type Appearance = "light" | "dark";
 
@@ -311,11 +312,9 @@ export type WinuiAppearanceRole =
   | "sidebar-ring"
   | "inset"
   | "raised"
-  | "glass-edge"
   | "field"
   | "line"
   | "hover"
-  | "ring-halo"
   | "faint"
   | "brand"
   | "brand-edge"
@@ -332,24 +331,13 @@ export type WinuiAppearanceRole =
   | "warn-tint"
   | "destructive-tint"
   | "up-tint"
-  | "down-tint"
-  | "violet";
+  | "down-tint";
 
 export interface WinuiRoles {
   theme: Record<WinuiThemeRole, string>;
   light: Record<WinuiAppearanceRole, string>;
   dark: Record<WinuiAppearanceRole, string>;
 }
-
-// Library-shared values with no WinUI counterpart (`violet` data series).
-const LIBRARY_KEPT = {
-  light: {
-    violet: "oklch(0.5339 0.1647 289.689)",
-  },
-  dark: {
-    violet: "oklch(0.76787 0.13219 294.446)",
-  },
-} as const;
 
 function buildAppearance(
   appearance: Appearance,
@@ -419,11 +407,9 @@ function buildAppearance(
     "sidebar-ring": "var(--ring)",
     inset,
     raised: secondary,
-    "glass-edge": onBase(w.SurfaceStrokeColorFlyout),
     field: secondary,
     line: divider,
     hover: onBase(w.ControlFillColorSecondary),
-    "ring-halo": onBase(w.FocusStrokeColorInner),
     faint: onBase(w.TextFillColorTertiary),
     brand,
     // `ControlStrokeColorOnAccentSecondary` (bottom bevel of `AccentControlElevationBorderBrush`)
@@ -447,7 +433,6 @@ function buildAppearance(
     "destructive-tint": destructiveTint,
     "up-tint": onBase(w.SystemFillColorSuccessBackground),
     "down-tint": destructiveTint,
-    violet: LIBRARY_KEPT[appearance].violet,
   };
 }
 
@@ -474,8 +459,7 @@ export function winuiRoles(accent: string = WINUI_DEFAULT_ACCENT): WinuiRoles {
 
 /**
  * Shared theme-level tokens (`cssVars.theme`) for WinUI 3: `ControlCornerRadius` 4 (controls and
- * in-page elements) and `OverlayCornerRadius` 8 (containers and modals), Segoe UI Variable +
- * Consolas fonts, and WinUI 3 colour tokens from `winuiRoles`.
+ * in-page elements) and `OverlayCornerRadius` 8 (containers and modals), and WinUI 3 colour tokens from `winuiRoles`.
  */
 function themeLevel(roles: WinuiRoles): Record<string, string> {
   return {
@@ -483,9 +467,7 @@ function themeLevel(roles: WinuiRoles): Record<string, string> {
     "radius-control": "4px",
     "radius-container": "8px",
     "radius-modal": "8px",
-    "font-mono": "Consolas, monospace",
     ...roles.theme,
-    "font-sans": "Segoe UI Variable, Segoe UI, sans-serif",
   };
 }
 
@@ -495,44 +477,30 @@ function themeLevel(roles: WinuiRoles): Record<string, string> {
 export const winuiStyle = {
   typography: {
     caption: {
-      fontSize: { pointer: 12, touch: 12 },
-      lineHeight: { pointer: 16, touch: 16 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     detail: {
-      fontSize: { pointer: 12, touch: 12 },
-      lineHeight: { pointer: 16, touch: 16 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     body: {
-      fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     label: {
-      fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 400,
       letterSpacing: 0,
     },
     title: {
-      fontSize: { pointer: 14, touch: 14 },
-      lineHeight: { pointer: 20, touch: 20 },
       fontWeight: 600,
       letterSpacing: 0,
     },
     headline: {
-      fontSize: { pointer: 20, touch: 20 },
-      lineHeight: { pointer: 28, touch: 28 },
       fontWeight: 600,
       letterSpacing: 0,
     },
     display: {
-      fontSize: { pointer: 28, touch: 28 },
-      lineHeight: { pointer: 36, touch: 36 },
       fontWeight: 600,
       letterSpacing: 0,
     },
@@ -564,10 +532,8 @@ export const winuiStyle = {
     stroke: { hairline: 1, control: 1 },
     focus: { style: "double", width: 2, offset: 0 },
     control: {
-      // WinUI 3's own controls (docs/specs/theme-contract-v2.md §11.2): SelectorBar's bar,
-      // TextBox's box-underline, inset radios and checkboxes, a hairline track and a ring knob.
-      // A group stays in a track, the base's value.
-      selection: "bar",
+      // WinUI 3's own controls (docs/specs/theme-contract-v2.md §11.2): TextBox's box-underline,
+      // inset radios and checkboxes, a hairline track and a ring knob.
       field: "box-underline",
       choice: "inset",
       track: "hairline",
@@ -612,6 +578,19 @@ export const winuiStyle = {
   },
 };
 
+/** The choices the derived keys make (ADR 0007 §4): `border` is the control stroke WinUI draws on a field's edge. */
+const colourScheme: ColourScheme = {
+  tint: 14,
+  ring: "foreground",
+  field: "card",
+  knob: ["muted-foreground", "muted-foreground"],
+  secondaryIsRaised: false,
+  raised: "card",
+  strongBorder: true,
+  inverse: ["card", "foreground"],
+  chart: ["primary", "info", "up", "warn", "destructive"],
+};
+
 /** WinUI 3 (Windows 11) theme data and DTCG descriptions ready for `emitDtcgTheme`. */
 export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGeneratorOutput {
   const roles = winuiRoles(accent);
@@ -654,12 +633,9 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
     "sidebar-ring": "Sidebar focus stroke (WinUI FocusStrokeColorOuter).",
     inset: "Inset well fill (WinUI ControlAltFillColorSecondary composited over base).",
     raised: "Raised control fill (WinUI ControlFillColorDefault composited over base).",
-    "glass-edge":
-      "Flyout and acrylic border (WinUI SurfaceStrokeColorFlyout composited over base).",
     field: "Text input surface (WinUI ControlFillColorDefault composited over base).",
     line: "Hairline divider stroke (WinUI DividerStrokeColorDefault).",
     hover: "Pointer hover fill (WinUI ControlFillColorSecondary composited over base).",
-    "ring-halo": "Inner keyboard focus stroke (WinUI FocusStrokeColorInner composited over base).",
     faint: "Tertiary label ink (WinUI TextFillColorTertiary composited over base).",
     brand:
       "Accent text/link/icon ink (WinUI AccentTextFillColorPrimary: Dark2 light / Light3 dark).",
@@ -684,7 +660,6 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
     "up-tint": "Success wash (WinUI SystemFillColorSuccessBackground composited over base).",
     "down-tint":
       "Negative trend wash (WinUI SystemFillColorCriticalBackground composited over base).",
-    violet: "Library-retained violet data-series hue (no WinUI equivalent).",
   };
 
   return {
@@ -692,7 +667,7 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
     name: "WinUI 3",
     resolverDescription: "WinUI 3 theme (Windows 11, winui3/release/2.7.0).",
     themeDescription:
-      "Appearance-invariant base tokens and WinUI 3 style overrides (Segoe UI Variable, Consolas, double focus rings, timing motion).",
+      "Appearance-invariant base tokens and WinUI 3 style overrides (double focus rings, timing motion).",
     finishesDescription:
       "Appearance-invariant surface finish recipes for WinUI 3 (Windows backdrop blur on glass/menu/tooltip).",
     lightDescription:
@@ -708,13 +683,13 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
     style: winuiStyle,
     designMd: {
       overview:
-        "WinUI 3 (`winui3/release/2.7.0`): Windows 11 fill and stroke resources composited over `SolidBackgroundFillColorBase` (`#F3F3F3` light / `#202020` dark) with `#0078D4` accent, `Segoe UI Variable` + `Consolas`, double focus strokes, and deterministic timing curves.",
+        "WinUI 3 (`winui3/release/2.7.0`): Windows 11 fill and stroke resources composited over `SolidBackgroundFillColorBase` (`#F3F3F3` light / `#202020` dark) with `#0078D4` accent, double focus strokes, and deterministic timing curves.",
       elevation:
         "WinUI 3 ThemeShadow depths (2/8/16/32/128) paired with composited `ControlStrokeColorDefault` / `SurfaceStrokeColorDefault` borders and `material.windows` blur on `glass`, `menu`, and `tooltip` (`AcrylicInAppFillColorDefault` 0.85 light / 0.96 dark).",
       dos: [
         'Use `4px` `ControlCornerRadius` for `control` and `8px` `OverlayCornerRadius` for `container` and `modal` with `shape.curve: "circular"`.',
         'Use `focus.style: "double"` (2px outer `FocusStrokeColorOuter` + 1px inner `FocusStrokeColorInner`) and WinUI timing motion (`decelerate` / `point-to-point`).',
-        "Use underlined tabs and fields with leading navigation bar indicators, and `Segoe UI Variable` (`{font.family.sans}`).",
+        "Use underlined tabs and fields with leading navigation bar indicators.",
       ],
       donts: [
         "Do not substitute continuous squircle corners or spring physics for WinUI 3's circular corners and timing curves.",
@@ -748,8 +723,8 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
     },
     cssVars: {
       theme: themeLevel(roles),
-      light: roles.light,
-      dark: roles.dark,
+      light: reduceColours(roles.light, colourScheme, "light"),
+      dark: reduceColours(roles.dark, colourScheme, "dark"),
     },
     finishes,
     shadows,
@@ -763,16 +738,13 @@ export function winuiDtcgOutput(accent: string = WINUI_DEFAULT_ACCENT): ThemeGen
       style: {
         "dimension.size.item":
           "WinUI 3 menu rows: the fill 4px in from the flyout's edge (MenuFlyoutItemMargin 4,2,4,2) and the text 11px inside it (MenuFlyoutItemThemePadding 11,8,11,9; ComboBoxItemThemePadding 11,5,11,7), the same with a pen or a finger (microsoft-ui-xaml MenuFlyout_themeresources.xaml).",
-        "font.family.mono": "WinUI 3 monospace font stack (Consolas, monospace).",
-        "font.family.sans":
-          "WinUI 3 primary UI font stack (Segoe UI Variable, Segoe UI, sans-serif; typography.md).",
         typography:
-          "WinUI 3 typography scale mapped from TextBlock_themeresources.xaml (400 and 600 weights only).",
+          "WinUI 3 type weights (400 and 600 only); sizes follow the shared scale (ADR 0009).",
         "dimension.focus":
           "WinUI 3 double focus stroke (2px outer FocusStrokeColorOuter + 1px inner FocusStrokeColorInner, 0px offset).",
         "dimension.focus.width": "2px outer focus stroke width per WinUI 3.",
         "dimension.control":
-          "WinUI 3 control dimensions: SelectorBar's bar, TextBox's box-underline, inset selection controls, a hairline track and a ring knob (docs/specs/theme-contract-v2.md §11.2).",
+          "WinUI 3 control dimensions: TextBox's box-underline, inset selection controls, a hairline track and a ring knob (docs/specs/theme-contract-v2.md §11.2).",
         shape: "Circular corner curve (WinUI 3 has no continuous squircle curve; geometry.md).",
         "state.press-scale":
           "Scale factor applied while pressed (1 disables press shrinking; WinUI 3 swaps fill brushes instead).",

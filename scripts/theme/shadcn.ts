@@ -23,6 +23,7 @@
 import type { ThemeGeneratorOutput } from "./dtcg";
 import { finishes, shadows } from "./finishes/shadcn";
 import { oklch, oklchColor, over, parseColor, toOklchText, withAlpha } from "./oklch";
+import { reduceColours, type ColourScheme } from "./sources";
 import { scaledRadii } from "./style";
 
 /** shadcn's neutrals, quoted from `registry/themes.ts` (theme `neutral`). */
@@ -141,7 +142,6 @@ function own(appearance: Appearance) {
     info: p.mutedForeground,
     warn: appearance === "light" ? p.chart[2] : p.chart[0],
     up: appearance === "light" ? p.chart[3] : p.primary,
-    violet: appearance === "light" ? p.chart[4] : p.foreground,
     line: p.border,
   };
 }
@@ -149,15 +149,23 @@ function own(appearance: Appearance) {
 /** The theme's own tokens, shared by the appearances (a colour may name one: `var(--primary)`). */
 const themeLevel = (): Record<string, string> => ({
   ...scaledRadii(RADII),
-  // The families: NSH's generic `system-ui` and `monospace`, the system's own — neither theme
-  // ships a font face. A theme that names one states its family here (the app imports the file).
-  "font-sans": "system-ui",
-  "font-mono": "monospace",
   scrim: oklchColor(0, 0, 0, 0.5),
   // The ground a photograph sits on, white ink on it. Neither flips.
   media: oklchColor(0.1869, 0.0151, 266.766),
   "on-media": oklchColor(1, 0, 0),
 });
+
+/** The choices the derived keys make (ADR 0007 §4). */
+const scheme: ColourScheme = {
+  tint: 10,
+  ring: "muted-foreground",
+  field: "card",
+  knob: ["card", "foreground"],
+  secondaryIsRaised: true,
+  raised: "secondary",
+  inverse: ["card", "foreground"],
+  chart: "ramp",
+};
 
 /** One appearance's colour tokens. */
 function section(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
@@ -199,12 +207,9 @@ function section(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
     line: o.line,
     // A pressable under the pointer: shadcn's `hover:bg-accent`, not an ink over the surface.
     hover: "var(--accent)",
-    // The keyboard focus's halo: shadcn's `ring-ring/50`.
-    "ring-halo": "color-mix(in srgb, var(--ring) 50%, transparent)",
     // shadcn draws no edge on a filled pane or round a glass surface (`border-transparent`), so both
     // roles name the theme's border: a theme switched to this one still has the tokens.
     "brand-edge": "var(--border)",
-    "glass-edge": "var(--border)",
     faint: o.faint,
     brand: p.primary,
     track: o.track,
@@ -221,7 +226,6 @@ function section(p: ReturnType<typeof palette>, o: ReturnType<typeof own>) {
     "destructive-tint": tints("destructive"),
     "up-tint": tints("up"),
     "down-tint": tints("destructive"),
-    violet: o.violet,
   };
 }
 
@@ -235,12 +239,9 @@ export function themeFiles(): ThemeGeneratorOutput {
     hover: "Pointer hover fill aliased to {color.accent} per shadcn hover:bg-accent.",
     "brand-edge":
       "Hairline border aliased to {color.border} (shadcn draws no separate brand edge).",
-    "glass-edge":
-      "Hairline border aliased to {color.border} (shadcn draws no separate glass edge).",
     info: "Informational semantic status color mapped onto shadcn's neutral grey ramp.",
     warn: "Warning semantic status color mapped onto shadcn's neutral chart ramp.",
     up: "Positive trend color mapped onto shadcn's neutral ramp.",
-    violet: "Accent data-visualization and link color mapped onto shadcn's neutral ramp.",
   };
 
   return {
@@ -256,9 +257,6 @@ export function themeFiles(): ThemeGeneratorOutput {
     // A flat theme draws no press of its own: its surfaces change colour under the finger, they
     // do not sink (`state["press-scale"]` of 1, which `press.scale` reads as "no sink").
     "press-scale": 1,
-    // shadcn's tabs: a rounded list with a rounded trigger a step inside it, not the capsule the
-    // base theme's NSH look draws (`docs/specs/theme-roles.md` §控件维度).
-    control: { selection: "plate" },
     designMd: {
       overview:
         "shadcn/ui's neutral palette paired with flat surfaces (`state.press-scale: 1`) and Tailwind-style border/shadow lifts (`references/shadcn-ui` `new-york-v4`).",
@@ -282,8 +280,8 @@ export function themeFiles(): ThemeGeneratorOutput {
     },
     cssVars: {
       theme: themeLevel(),
-      light: section(light, ownLight),
-      dark: section(dark, ownDark),
+      light: reduceColours(section(light, ownLight), scheme, "light"),
+      dark: reduceColours(section(dark, ownDark), scheme, "dark"),
     },
     finishes,
     shadows,

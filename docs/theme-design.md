@@ -24,14 +24,14 @@
 
 ```mermaid
 flowchart LR
-  T["主题（值）<br/>颜色 · finish · 刻度 · 动效"] --> P["控件维度（形态）<br/>selection · field · choice · track · handle · group"]
+  T["主题（值）<br/>颜色 · finish · 刻度 · 动效"] --> P["控件维度（形态）<br/>field · choice · track · handle"]
   T --> C["组件<br/>packages/ui"]
   P --> C
   C --> A["应用<br/>窗口材质 · 文案 · 布局"]
 ```
 
 - **主题**回答“这一层、这种语义长什么样”：页面是什么底色，浮层用什么面，控件多高，按下怎么变。它不回答“某个组件长什么样”。
-- **控件维度**回答“一个控件怎么画自己的零件”：选中标记是胶囊、下划线还是竖条，字段是盒子、下划线还是两者，一组控件是沟槽还是格子。六个维度各选一档（第 2.12 节）。
+- **控件维度**回答“一个控件怎么画自己的零件”：字段是盒子、下划线还是两者，选择框是沟槽底、外包框还是内嵌底，轨道是内凹槽、色带还是一条细线，手柄是圆点还是环。四个维度各选一档（第 2.12 节）。标签页、分段控件与侧边栏不读维度：它们各画一种形态（[决策 0008](decisions/0008-drop-selection-group.md)）。
 - **组件**按层读主题：一个按钮读 `accent` finish 和 `control` 圆角，而不是读“按钮色”。
 - **应用**拥有窗口和内容：窗口级材质、文案、布局都不在主题里（第 3 节）。
 
@@ -64,13 +64,17 @@ flowchart LR
 
 **设计问题**：调色板是什么？页面分几层，每层什么色？亮暗怎么翻？墨色和底色的对比度要多少？哪些语义要单独的颜色（品牌、信息、警告、涨跌）？
 
-**定义项**（`theme.json`，共 59 个角色）
+**定义项**（`theme.json`，共 56 个角色：约 15 个源色写值，其余只引用或派生，见 [ADR 0007](decisions/0007-theme-customization-scope.md) 第 4 条）
 
-| 层           | 内容                                                                                                                                                                                                                                              | 说明                                                                                     |
-| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| A 层（31）   | shadcn / NSH 的槽：`background`、`foreground`、`card`、`popover`、`primary`、`secondary`、`muted`、`accent`、`destructive`、`border`、`input`、`ring`、`chart-1…5`、`sidebar-*` 及各自的 `*-foreground`                                           | 一个都不能缺：缺了 NSH 会退回 shadcn 的 neutral 灰。`sidebar-*` 写成指向本层角色的 alias |
-| B 层（25）   | 面 `inset`、`raised`、`field`、`track`、`knob`；墨 `faint`、`brand`；边 `line`、`brand-edge`、`glass-edge`、`ring-halo`；状态 `hover`；数据 `info`、`warn`、`up`、`violet` 与六个 `*-tint`；反色 `inverse`、`inverse-foreground`、`inverse-brand` | 本库自己的角色，按层分组                                                                 |
-| C 层（3 色） | `scrim`、`media`、`on-media`                                                                                                                                                                                                                      | 亮暗共用（同层还有 3 个圆角和两族字体，见 2.6、2.8）                                     |
+| 类           | 角色                                                                                                                                                                                                                        | 主题写什么                                                                 |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| 源色（15）   | `primary`、`primary-foreground`、`secondary`、`foreground`、`muted-foreground`、`faint`、`background`、`card`、`muted`、`border`（强：控件与输入框的边）、`line`（弱：分割线、卡片边）、`destructive`、`warn`、`info`、`up` | 字面值                                                                     |
+| 引用         | `popover`、`accent`、`inset`、`raised`、`field`、`track`、`knob`、`hover`、`input`、`ring`、`brand`、`brand-edge`、`inverse*`、`sidebar*`、`*-foreground`（foreground 族）                                                  | DTCG 引用（`{color.x}`）指向某个源色，每套主题自己选指向哪个               |
+| 派生         | 六个 `*-tint`（`brand-tint`、`info-tint`、`warn-tint`、`destructive-tint`、`up-tint`、`down-tint`）                                                                                                                         | 同一条公式 `color-mix(in srgb, X N%, transparent)`，`N` 每套主题一个数     |
+| 图表         | `chart-1…5`                                                                                                                                                                                                                 | 只引用源色：状态色序列（主色、蓝、绿、黄、红）或由 `foreground` 混出的灰阶 |
+| C 层（3 色） | `scrim`、`media`、`on-media`                                                                                                                                                                                                | 亮暗共用（同层还有 3 个圆角，见 2.6、2.8）                                 |
+
+`violet`、`glass-edge`、`ring-halo` 已删：读它们的组件改读源色（链接的已访问色读 `muted-foreground`，焦点环的晕是 `ring` 的 30%，`double` 的内线读 `card`，玻璃的边读 `line`）。
 
 **约束**
 
@@ -225,16 +229,16 @@ finish 的 `shadow` 只写引用（`["{shadow.edge.surface}", "{shadow.sm}"]`）
 
 ### 2.8 排版
 
-**设计问题**：用什么字体？字阶几级？行高多少？用户放大字号时比例还对不对？
+**设计问题**：字阶里每个角色多重、字距多少？用户放大字号时比例还对不对？
 
 **定义项**
 
-- 字体：`font-sans` 与 `font-mono` 两族（`theme.json` `cssVars.theme`，必填）。
-- 字阶：`typography` 的 7 个角色，`caption`、`detail`、`body`、`label`、`title`、`headline`、`display`。每个角色有 `fontSize` / `lineHeight`（分 `pointer` / `touch`）、`fontWeight`、`letterSpacing`。
+- 字体：主题不带字体族，没有可填的项；应用的 `font-sans` 画正文，等宽文字写 `monospace`（[决策 0009](decisions/0009-no-theme-type-scale.md)）。
+- 字阶：`typography` 的 7 个角色，`caption`、`detail`、`body`、`label`、`title`、`headline`、`display`。字号与行高是全主题共用的一把字阶，主题只写每个角色的 `fontWeight`、`letterSpacing`。
 
 **约束**：字号按角色顺序不降；行高是整数点，且不小于字号（DTCG 源码存倍数，编译时换回点）。字阶成比例设计，不放零散的数。
 
-**参照**：`winui` 用 `Segoe UI Variable`；`material` 的 `title` 字重 500（M3），其余主题 600。
+**参照**：`material` 的 `title` 字重 500（M3），其余主题 600；WinUI 3 只用 400 与 600 两档。
 
 ### 2.9 描边与焦点
 
@@ -243,7 +247,7 @@ finish 的 `shadow` 只写引用（`["{shadow.edge.surface}", "{shadow.sm}"]`）
 **定义项**
 
 - `dimension.stroke`：`hairline`（分割线、面的边）与 `control`（控件的边）。
-- `dimension.focus`：`style`（`halo` 光晕、`outline` 外描边、`double` 双线）、`width`、`offset`；颜色读 `ring`，`double` 的内线读 `ring-halo`。
+- `dimension.focus`：`style`（`halo` 光晕、`outline` 外描边、`double` 双线）、`width`、`offset`；颜色读 `ring`，`halo` 的晕是它的 30%，`double` 的内线读 `card`。
 
 **约束**：描边只有两档。不想要边的面，在 finish 里把边色写成 `transparent`，不用 0 宽。焦点只在键盘导航时出现，不能和选中、悬停混淆。
 
@@ -301,22 +305,20 @@ finish 的 `shadow` 只写引用（`["{shadow.edge.surface}", "{shadow.sm}"]`）
 
 **设计问题**：开关、滑杆、复选框、单选、进度条、标签页、日历、输入框怎么画自己的零件？选中标记是胶囊、下划线还是竖条？字段是盒子、下划线，还是盒子上加一道下划线？
 
-**定义项**：`semantics.json` 的 `dimension.control`，六个维度各一档（`control()` 读）：
+**定义项**：`semantics.json` 的 `dimension.control`，四个维度各一档（`control()` 读）：
 
-| 维度        | 回答什么                 | 取值                                                                    |
-| ----------- | ------------------------ | ----------------------------------------------------------------------- |
-| `selection` | 一个被选中的项标在哪     | `pill`（胶囊底）、`underline`（下划线）、`bar`（左侧竖条）              |
-| `field`     | 输入框的边界             | `box`（盒子）、`underline`（下划线）、`box-underline`（盒子加强调底边） |
-| `choice`    | 一组里被选中的那一格     | `well`（沟槽底）、`outline`（外包框）、`inset`（内嵌底）                |
-| `track`     | 滑动轨道与进度的剩余部分 | `sunk`（内凹槽）、`tint`（同色淡底）、`hairline`（一条细线）            |
-| `handle`    | 滑杆、开关的可拖部分     | `circle`（圆点）、`ring`（带外圈的圆）                                  |
-| `group`     | 并排一组控件之间         | `track`（轨道到底）、`cells`（格子分段）                                |
+| 维度     | 回答什么                 | 取值                                                                    |
+| -------- | ------------------------ | ----------------------------------------------------------------------- |
+| `field`  | 输入框的边界             | `box`（盒子）、`underline`（下划线）、`box-underline`（盒子加强调底边） |
+| `choice` | 一组里被选中的那一格     | `well`（沟槽底）、`outline`（外包框）、`inset`（内嵌底）                |
+| `track`  | 滑动轨道与进度的剩余部分 | `sunk`（内凹槽）、`tint`（同色淡底）、`hairline`（一条细线）            |
+| `handle` | 滑杆、开关的可拖部分     | `circle`（圆点）、`ring`（带外圈的圆）                                  |
 
 每个取值画成什么样、按什么数字，见 [`specs/theme-roles.md`](specs/theme-roles.md) 第 11、14 节；枚举值登记在同文件的枚举表里，`check:theme` 把表、`style.ts` 的白名单和三套平台主题编译出的值三方对账。
 
 **约束**：主题只选维度，不在主题里细调某个控件的几何；以组件命名的值（开关多宽、日历格多大）不进主题——同样大小的开关和复选框，几何由各自组件决定，维度只决定“画成哪一类”。要新增一种形态，先在本表登记一个新取值，再改组件怎么画它。
 
-**参照**：`default` / `shadcn` / `solid-glass` / `apple` 用中性一套（胶囊、盒子、沟槽底、内凹槽、圆点、轨道）；`material` 照 M3 的 PrimaryTabs / outlined、text field / tinted track / SegmentedButton，取 `underline`、`underline`、`outline`、`tint`、`circle`、`cells`；`winui` 照 WinUI 的 NavigationView 指示条、控件描边与 ToggleSwitch，取 `bar`、`box-underline`、`inset`、`hairline`、`ring`，并排仍是 `track`。
+**参照**：`default` / `shadcn` / `solid-glass` / `apple` 用中性一套（盒子、沟槽底、内凹槽、圆点）；`material` 照 M3 的 text field / outlined 选择控件 / tinted track，取 `underline`、`outline`、`tint`、`circle`；`winui` 照 WinUI 的 TextBox 边框、控件描边与 ToggleSwitch，取 `box-underline`、`inset`、`hairline`、`ring`。标签页、分段控件与侧边栏在六套主题里画同一种形态，与 material / winui 原生的差别记在 [`specs/native-themes.md`](specs/native-themes.md) 第 3.6 节。
 
 ## 3 不属于主题的东西
 
@@ -335,13 +337,13 @@ finish 的 `shadow` 只写引用（`["{shadow.edge.surface}", "{shadow.sm}"]`）
 
 所有主题的真源是 `packages/theme/tokens/` 下的 DTCG 2025.10 源码（[`design-tokens.md`](specs/design-tokens.md#2-源文件布局与-resolver-架构)）：
 
-| 文件                                                   | 管什么                                     |
-| ------------------------------------------------------ | ------------------------------------------ |
-| `tokens/base/style.{shared,pointer,touch}.tokens.json` | 各主题共用的基础 token                     |
-| `tokens/themes/<id>/theme.tokens.json`                 | 这套主题的颜色（C 层）、圆角、字体与风格组 |
-| `tokens/themes/<id>/{light,dark}.tokens.json`          | 两种外观的颜色与阴影刻度                   |
-| `tokens/themes/<id>/finishes.shared.tokens.json`       | 15 个 finish                               |
-| `tokens/themes/<id>/theme.resolver.json`               | 把上面几个文件按外观与档位组合起来         |
+| 文件                                                   | 管什么                               |
+| ------------------------------------------------------ | ------------------------------------ |
+| `tokens/base/style.{shared,pointer,touch}.tokens.json` | 各主题共用的基础 token               |
+| `tokens/themes/<id>/theme.tokens.json`                 | 这套主题的颜色（C 层）、圆角与风格组 |
+| `tokens/themes/<id>/{light,dark}.tokens.json`          | 两种外观的颜色与阴影刻度             |
+| `tokens/themes/<id>/finishes.shared.tokens.json`       | 15 个 finish                         |
+| `tokens/themes/<id>/theme.resolver.json`               | 把上面几个文件按外观与档位组合起来   |
 
 除 `default` 外的 5 套主题由生成器写：`scripts/theme/<id>.ts` 写颜色、风格和控件维度，`scripts/theme/finishes/<id>.ts` 写 15 个 finish 与阴影刻度，`bun scripts/theme/generate-<id>.ts` 把它们编码成 DTCG 源码并编译。改这 5 套主题时改生成器，不改生成的源码。`default` 是唯一手写的主题：它同时是构建时的根主题，编译产物除了 `themes/default/` 还有 `packages/theme/` 顶层那对 `theme.json` / `semantics.json`（`BUILD_ROOT_THEME`，`scripts/theme/tokens.ts`），这是它唯一特殊的地方——没有一条规则因为它是 `default` 而不同。
 
@@ -359,13 +361,13 @@ finish 的 `shadow` 只写引用（`["{shadow.edge.surface}", "{shadow.sm}"]`）
 
 ### 4.3 检查分别拦什么
 
-| 检查                                        | 拦什么                                                                                                                                                                                                                               |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `bun run check:theme`                       | 键齐全、15 个 finish 的 13 个字段齐全（`knob` 另有可选的 `checked-*`）、材质枚举与不透明度下限、两档都在且键相同、刻度（三档、4 网格、间距值、字阶不降、行高取整、touch 的 hit ≥ 44），以及 `$extensions` 里的豁免与出处有没有被用到 |
-| `bun run theme:contrast`                    | 每套主题亮暗的角色对与每个 finish 的墨达到 WCAG AA；平台例外要点名                                                                                                                                                                   |
-| `bun run tokens:build --check`              | 产物与源码一致                                                                                                                                                                                                                       |
-| `bun run test:unit`（`generators.test.ts`） | 生成器逐字节重现提交的源码                                                                                                                                                                                                           |
-| `bun run theme:diff --gate`                 | 契约的改动（键的新增或删除、共用源改动）没有同一分支的 `docs/decisions/` 记录；CI 在碰主题的 PR 上跑，`theme-contract-freeze` 标签放行四件冻结工作                                                                                   |
+| 检查                                        | 拦什么                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `bun run check:theme`                       | 键齐全、只用 [ADR 0007](decisions/0007-theme-customization-scope.md) 的源色与引用色（多一个颜色键、引用键写字面量、tint 写字面量、`dimension.control` 超出 `field` / `choice` / `track` / `handle`、主题带字体或自己的字阶，都失败）、15 个 finish 的 13 个字段齐全（`knob` 另有可选的 `checked-*`）、材质枚举与不透明度下限、两档都在且键相同、刻度（三档、4 网格、间距值、字阶不降、行高取整、touch 的 hit ≥ 44），以及 `$extensions` 里的豁免与出处有没有被用到 |
+| `bun run theme:contrast`                    | 每套主题亮暗的角色对与每个 finish 的墨达到 WCAG AA；平台例外要点名                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `bun run tokens:build --check`              | 产物与源码一致                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `bun run test:unit`（`generators.test.ts`） | 生成器逐字节重现提交的源码                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `bun run theme:diff --gate`                 | 契约的改动（键的新增或删除、共用源改动）没有同一分支的 `docs/decisions/` 记录；CI 在碰主题的 PR 上跑，没有放行开关                                                                                                                                                                                                                                                                                                                                                 |
 
 ### 4.4 改完怎么验收
 
@@ -390,10 +392,10 @@ finish 的 `shadow` 只写引用（`["{shadow.edge.surface}", "{shadow.sm}"]`）
 | 5   | 透明材质       | finish 的 `material`                                                     | `finishes.shared.tokens.json`                               | `check:theme`（不透明度下限）         |
 | 6   | 圆角           | `radius-control/container/modal`、`corners.button`、`curve`              | `theme.tokens.json`                                         | `check:theme`、截图                   |
 | 7   | 尺度与密度     | `size.height`、`icon`、`density`、`control`、`hit`                       | `theme.tokens.json`                                         | `checkScales`，例外进出处表           |
-| 8   | 字体与字阶     | `font-sans`、`font-mono`、7 个 `typography` 角色                         | `theme.tokens.json`                                         | `checkScales`                         |
+| 8   | 字重与字距     | 7 个 `typography` 角色的 `fontWeight`、`letterSpacing`                   | `theme.tokens.json`                                         | `checkScales`                         |
 | 9   | 线与焦点       | `stroke`、`focus`                                                        | `theme.tokens.json`                                         | 截图（键盘焦点）                      |
 | 10  | 交互状态       | `hover` / `pressed` / `disabled` finish、`accent` 的按下字段、`state` 组 | `finishes.shared.tokens.json`、`theme.tokens.json`          | `theme:contrast`、截图                |
 | 11  | 动效           | `motion.{fast,default,slow}`、`motion.state`、`transition.enter`         | `theme.tokens.json`                                         | 真机或演示里看                        |
-| 12  | 控件维度       | `dimension.control.{selection,field,choice,track,handle,group}`          | `theme.tokens.json`                                         | `check:theme`                         |
+| 12  | 控件维度       | `dimension.control.{field,choice,track,handle}`                          | `theme.tokens.json`                                         | `check:theme`                         |
 | —   | 无障碍收尾     | 对比度 AA、不只靠颜色、禁用可辨、touch 触控 ≥ 44、放大字号比例不乱       | —                                                           | `theme:contrast`、`checkScales`、截图 |
 | —   | 产物           | `tokens:build`、`registry:build`                                         | `packages/theme`、`public/r`                                | `tokens:build --check`、`test:unit`   |

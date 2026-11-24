@@ -227,7 +227,6 @@ describe("DTCG 2025.10 build (all six themes)", () => {
       const sparseTheme = {
         $schema: shadcnTheme.$schema,
         $description: "Sparse custom theme.",
-        font: shadcnTheme.font,
         color: shadcnTheme.color,
         state: shadcnTheme.state,
       };
@@ -384,7 +383,7 @@ describe("DTCG source lint", () => {
     const problems = withMutatedDefault((tmp) => {
       const p = path.join(tmp, "packages/theme/tokens/themes/default/light.tokens.json");
       const doc = JSON.parse(fs.readFileSync(p, "utf8"));
-      doc.color.hover.$value.components = [0.5, 0.2, 120];
+      doc.color["brand-tint"].$value.components = [0.5, 0.2, 120];
       fs.writeFileSync(p, JSON.stringify(doc, null, 2));
     });
     expect(problems.join("\n")).toContain("differs from live colorOp evaluation");
@@ -428,8 +427,8 @@ describe("DTCG source lint", () => {
         "packages/theme/tokens/themes/solid-glass/dark.tokens.json",
       );
       const sgDark = JSON.parse(fs.readFileSync(sgDarkPath, "utf8"));
-      // Corrupt ring-halo (mix of translucent ring 0.4 alpha and transparent) -> must fail.
-      sgDark.color["ring-halo"].$value.alpha = 0.5;
+      // Corrupt info-tint (a mix of info and transparent) -> must fail.
+      sgDark.color["info-tint"].$value.alpha = 0.5;
       // Corrupt finish.accent.background (alpha colorOp) -> must fail.
       sgDark.finish.accent.background.$value.alpha = 0.9;
       fs.writeFileSync(sgDarkPath, JSON.stringify(sgDark, null, 2));
@@ -439,7 +438,7 @@ describe("DTCG source lint", () => {
         { repoRoot: tmp },
       ).join("\n");
       expect(problems).toContain(
-        "color.ring-halo: static $value differs from live colorOp evaluation",
+        "color.info-tint: static $value differs from live colorOp evaluation",
       );
       expect(problems).toContain(
         "finish.accent.background: static $value differs from live colorOp evaluation",
@@ -449,7 +448,7 @@ describe("DTCG source lint", () => {
     }
   });
 
-  test("resolves per-tier overrides, motion timing/spring replacement, font-sans, and alias colorOps", () => {
+  test("resolves per-tier overrides, motion timing/spring replacement, and alias colorOps", () => {
     // 1. Per-tier overrides (apple pointer vs touch)
     const appleResolver = path.join(root, "packages/theme/tokens/themes/apple/theme.resolver.json");
     const applePointer = resolvePermutation(appleResolver, {
@@ -462,8 +461,9 @@ describe("DTCG source lint", () => {
     }).resolved as Record<string, any>;
     expect(applePointer.dimension.size.height.md.$value.value).toBe(28);
     expect(appleTouch.dimension.size.height.md.$value.value).toBe(44);
+    // Type sizes are one shared scale, not per theme (ADR 0009)
     expect(applePointer.typography.body.$value.fontSize.value).toBe(13);
-    expect(appleTouch.typography.body.$value.fontSize.value).toBe(17);
+    expect(appleTouch.typography.body.$value.fontSize.value).toBe(15);
 
     // 2. Motion union replacement (winui timing replaces base spring; spring replaces timing)
     const winuiResolver = path.join(root, "packages/theme/tokens/themes/winui/theme.resolver.json");
@@ -487,11 +487,10 @@ describe("DTCG source lint", () => {
       damping: 30,
     });
 
-    // 3. WinUI font-sans, sidebar-primary = var(--primary), and Material alias-backed colorOp (down-tint)
+    // 3. WinUI sidebar-primary = var(--primary), and Material alias-backed colorOp (down-tint)
     const winuiTheme = compileThemeJson(winuiResolver);
-    expect(winuiTheme.cssVars.theme["font-sans"]).toBe("Segoe UI Variable, Segoe UI, sans-serif");
+    expect(Object.keys(winuiTheme.cssVars.theme).some((k) => k.startsWith("font-"))).toBe(false);
     expect(winuiTheme.cssVars.light["sidebar-primary"]).toBe("var(--primary)");
-    expect(Object.keys(winuiTheme.cssVars.theme).at(-1)).toBe("font-sans");
 
     const matResolver = path.join(
       root,
@@ -583,23 +582,17 @@ describe("per-appearance standalone .tokens.json distribution", () => {
           );
         }
 
-        // Radii & font families in theme.json cssVars.theme
+        // Radii in theme.json cssVars.theme
         for (const { cssVar, dtcg } of RADIUS_KEYS) {
           const dim = resolved.dimension.radius[dtcg].$value as { value: number; unit: string };
           expect(`${dim.value}${dim.unit}`).toBe(themeJson.cssVars.theme[cssVar]);
         }
-        for (const [key, tok] of Object.entries(doc.font.family as Record<string, any>)) {
-          if (key.startsWith("$")) continue;
-          const v = tok.$value;
-          expect(Array.isArray(v) ? v.join(", ") : String(v)).toBe(
-            themeJson.cssVars.theme[`font-${key}`],
-          );
-        }
+        expect(doc.font.family, "a theme states no font family").toBeUndefined();
 
         // Colors in theme.json cssVars.theme (C-layer) and cssVars[appearance] (A/B-layer)
         const expectedColors: Record<string, string> = {};
         for (const [k, v] of Object.entries(themeJson.cssVars.theme)) {
-          if (k === "radius" || k.startsWith("radius-") || k.startsWith("font-")) continue;
+          if (k === "radius" || k.startsWith("radius-")) continue;
           expectedColors[k] = v;
         }
         Object.assign(expectedColors, themeJson.cssVars[appearance]);
@@ -621,10 +614,10 @@ describe("per-appearance standalone .tokens.json distribution", () => {
           expect(cssColor, `color.${key}`).toBe(expectedColors[key]);
         }
 
-        // Typography at pointer tier: one family for every role, and line heights stated as points
+        // Typography at pointer tier: the placeholder family for every role, and line heights stated as points
         for (const role of TYPE_ROLES) {
           const val = resolved.typography[role].$value as DtcgTypography;
-          expect(doc.typography[role].$value.fontFamily).toBe("{font.family.sans}");
+          expect(doc.typography[role].$value.fontFamily).toBe("system-ui");
           expect((val.fontSize as { value: number }).value).toBe(
             semanticsJson.typography[role].fontSize.pointer,
           );
@@ -812,12 +805,8 @@ describe("generated DESIGN.md validation and compiled equality", () => {
       // Typography (pointer tier)
       for (const role of TYPE_ROLES) {
         const expected = lightDoc.typography[role].$value as DtcgTypography;
-        const expectedFamily = Array.isArray(expected.fontFamily)
-          ? expected.fontFamily.join(", ")
-          : String(expected.fontFamily);
         const expectedSize = expected.fontSize as { value: number; unit: string };
         expect(yaml.typography[role]).toEqual({
-          fontFamily: expectedFamily,
           fontSize: `${expectedSize.value}${expectedSize.unit}`,
           fontWeight: expected.fontWeight,
           // DESIGN.md states the line box in points; the DTCG source keeps the multiple
