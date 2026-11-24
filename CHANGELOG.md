@@ -123,6 +123,8 @@
 
 ### Fixed
 
+- **`nsh run` builds the demos and the showcase again (#347).** Their start-up no longer uses a top-level `await`, which `nsh run`'s hot-reload bundle can't compile; the page stays hidden until the chosen palette is drawn, so the first visible frame is still in the site's theme.
+
 - **A menu, select, combobox or command row with a second line grows to hold it (#333).** A row's height in the size table (`menuItemSize.height`, the listbox and command row heights) is now its least height: a row with `detail` or a note under its label grows, with the theme's item inset (at least 4) above and below, instead of drawing both lines in a one-line box over the next row. One-line rows keep their height.
 
 - **A `SelectGroup` or `ComboboxGroup` built from children shows its heading on the web (#345).** Items mapped beside a `SelectLabel` lost their group on the web target, so the heading was missing and same-named items in different groups merged; the group's children now sit in a `View`, which keeps the group in scope.
