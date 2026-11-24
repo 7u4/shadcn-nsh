@@ -1,0 +1,14 @@
+const host=globalThis.__nsh_browser_realm.modules;
+let e0=host.get("nsh/base/plot")["Arc"];export{e0 as "Arc"};
+let e1=host.get("nsh/base/plot")["Area"];export{e1 as "Area"};
+let e2=host.get("nsh/base/plot")["Bar"];export{e2 as "Bar"};
+let e3=host.get("nsh/base/plot")["Cell"];export{e3 as "Cell"};
+let e4=host.get("nsh/base/plot")["Dot"];export{e4 as "Dot"};
+let e5=host.get("nsh/base/plot")["Grid"];export{e5 as "Grid"};
+let e6=host.get("nsh/base/plot")["Line"];export{e6 as "Line"};
+let e7=host.get("nsh/base/plot")["Pie"];export{e7 as "Pie"};
+let e8=host.get("nsh/base/plot")["Plot"];export{e8 as "Plot"};
+let e9=host.get("nsh/base/plot")["PlotAxis"];export{e9 as "PlotAxis"};
+let e10=host.get("nsh/base/plot")["Rule"];export{e10 as "Rule"};
+let e11=host.get("nsh/base/plot")["Treemap"];export{e11 as "Treemap"};
+globalThis.__nsh_browser_realm.watch(()=>{e0=host.get("nsh/base/plot")["Arc"];e1=host.get("nsh/base/plot")["Area"];e2=host.get("nsh/base/plot")["Bar"];e3=host.get("nsh/base/plot")["Cell"];e4=host.get("nsh/base/plot")["Dot"];e5=host.get("nsh/base/plot")["Grid"];e6=host.get("nsh/base/plot")["Line"];e7=host.get("nsh/base/plot")["Pie"];e8=host.get("nsh/base/plot")["Plot"];e9=host.get("nsh/base/plot")["PlotAxis"];e10=host.get("nsh/base/plot")["Rule"];e11=host.get("nsh/base/plot")["Treemap"];});

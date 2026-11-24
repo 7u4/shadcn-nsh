@@ -1,0 +1,1 @@
+var e={url:`asset:/assets/logo@2x.png`,size:{width:64,height:64}};export{e as t};

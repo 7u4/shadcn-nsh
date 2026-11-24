@@ -1,0 +1,10 @@
+const host=globalThis.__nsh_browser_realm.modules;
+let e0=host.get("nsh/base")["Button"];export{e0 as "Button"};
+let e1=host.get("nsh/base")["Carousel"];export{e1 as "Carousel"};
+let e2=host.get("nsh/base")["CarouselContent"];export{e2 as "CarouselContent"};
+let e3=host.get("nsh/base")["CarouselItem"];export{e3 as "CarouselItem"};
+let e4=host.get("nsh/base")["CarouselNext"];export{e4 as "CarouselNext"};
+let e5=host.get("nsh/base")["CarouselPagination"];export{e5 as "CarouselPagination"};
+let e6=host.get("nsh/base")["CarouselPaginationItem"];export{e6 as "CarouselPaginationItem"};
+let e7=host.get("nsh/base")["CarouselPrevious"];export{e7 as "CarouselPrevious"};
+globalThis.__nsh_browser_realm.watch(()=>{e0=host.get("nsh/base")["Button"];e1=host.get("nsh/base")["Carousel"];e2=host.get("nsh/base")["CarouselContent"];e3=host.get("nsh/base")["CarouselItem"];e4=host.get("nsh/base")["CarouselNext"];e5=host.get("nsh/base")["CarouselPagination"];e6=host.get("nsh/base")["CarouselPaginationItem"];e7=host.get("nsh/base")["CarouselPrevious"];});

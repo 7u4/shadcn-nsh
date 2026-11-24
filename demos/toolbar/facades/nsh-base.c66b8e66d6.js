@@ -1,0 +1,13 @@
+const host=globalThis.__nsh_browser_realm.modules;
+let e0=host.get("nsh/base")["Button"];export{e0 as "Button"};
+let e1=host.get("nsh/base")["Menu"];export{e1 as "Menu"};
+let e2=host.get("nsh/base")["MenuItem"];export{e2 as "MenuItem"};
+let e3=host.get("nsh/base")["MenuSeparator"];export{e3 as "MenuSeparator"};
+let e4=host.get("nsh/base")["Tab"];export{e4 as "Tab"};
+let e5=host.get("nsh/base")["Tabs"];export{e5 as "Tabs"};
+let e6=host.get("nsh/base")["Toggle"];export{e6 as "Toggle"};
+let e7=host.get("nsh/base")["ToggleGroup"];export{e7 as "ToggleGroup"};
+let e8=host.get("nsh/base")["Toolbar"];export{e8 as "Toolbar"};
+let e9=host.get("nsh/base")["ToolbarGroup"];export{e9 as "ToolbarGroup"};
+let e10=host.get("nsh/base")["ToolbarSeparator"];export{e10 as "ToolbarSeparator"};
+globalThis.__nsh_browser_realm.watch(()=>{e0=host.get("nsh/base")["Button"];e1=host.get("nsh/base")["Menu"];e2=host.get("nsh/base")["MenuItem"];e3=host.get("nsh/base")["MenuSeparator"];e4=host.get("nsh/base")["Tab"];e5=host.get("nsh/base")["Tabs"];e6=host.get("nsh/base")["Toggle"];e7=host.get("nsh/base")["ToggleGroup"];e8=host.get("nsh/base")["Toolbar"];e9=host.get("nsh/base")["ToolbarGroup"];e10=host.get("nsh/base")["ToolbarSeparator"];});

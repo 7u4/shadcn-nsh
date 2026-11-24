@@ -1,0 +1,11 @@
+{
+  "id": "dev.shadcn-nsh.docs-demos",
+  "name": "otp-input",
+  "short_name": "otp-input",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": []
+}

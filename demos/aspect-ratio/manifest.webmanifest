@@ -1,0 +1,11 @@
+{
+  "id": "dev.shadcn-nsh.docs-demos",
+  "name": "aspect-ratio",
+  "short_name": "aspect-ratio",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": []
+}

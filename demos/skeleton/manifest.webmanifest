@@ -1,0 +1,11 @@
+{
+  "id": "dev.shadcn-nsh.docs-demos",
+  "name": "skeleton",
+  "short_name": "skeleton",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "dev.shadcn-nsh.docs-demos",
+  "name": "accordion",
+  "short_name": "accordion",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": []
+}
