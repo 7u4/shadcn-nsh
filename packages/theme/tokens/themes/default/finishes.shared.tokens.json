@@ -32,6 +32,10 @@
         "$type": "shadow",
         "$value": ["{shadow.inset}"]
       },
+      "border-color": {
+        "$type": "color",
+        "$value": "{color.border}"
+      },
       "foreground": {
         "$type": "color",
         "$value": "{color.foreground}"
@@ -253,8 +257,24 @@
         }
       }
     },
+    "fill": {
+      "$description": "A run's fill: a progress bar's bar, a slider's range, a meter's column.",
+      "shadow": {
+        "$type": "shadow",
+        "$value": ["{shadow.edge.accent}"]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.primary-foreground}"
+      },
+      "$extensions": {
+        "dev.aning.shadcn-nsh": {
+          "material": "none"
+        }
+      }
+    },
     "knob": {
-      "$description": "A knob: a switch's thumb, a slider's handle, a segmented thumb.",
+      "$description": "A knob: a switch's thumb, a slider's handle. Its checked state, `checked-*`, is the knob while its control is on.",
       "shadow": {
         "$type": "shadow",
         "$value": ["{shadow.sm}"]
@@ -265,6 +285,7 @@
       },
       "$extensions": {
         "dev.aning.shadcn-nsh": {
+          "checked-gradient": "none",
           "material": "none"
         }
       }

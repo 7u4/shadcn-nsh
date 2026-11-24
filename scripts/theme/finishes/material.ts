@@ -19,7 +19,12 @@ export const finishes: ThemeFinishes = {
       material: "none",
       elevation: 1,
     },
-    inset: { shadow: "{shadow.inset}", foreground: "{foreground}", material: "none" },
+    inset: {
+      shadow: "{shadow.inset}",
+      "border-color": "{input}",
+      foreground: "{foreground}",
+      material: "none",
+    },
     channel: {
       background: "{inset}",
       "border-color": "{border}",
@@ -91,11 +96,20 @@ export const finishes: ThemeFinishes = {
       // M3 presses with a state layer and a ripple, not by dimming.
       "pressed-opacity": 1,
     },
+    fill: {
+      background: "{primary}",
+      "border-color": "transparent",
+      foreground: "{primary-foreground}",
+      shadow: "{shadow.edge.accent}",
+      material: "none",
+    },
     knob: {
       background: "{knob}",
       "border-color": "transparent",
       shadow: "{shadow.sm}",
       foreground: "{foreground}",
+      // Upstream `knobOn` paints an open knob in the accent's ink; the rest is still `knob`.
+      "checked-background": "{primary-foreground}",
       material: "none",
     },
     hover: {

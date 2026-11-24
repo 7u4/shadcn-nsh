@@ -620,6 +620,10 @@
           "pressed-foreground": "none"
         }
       },
+      "border-color": {
+        "$type": "color",
+        "$value": "{color.border}"
+      },
       "shadow": {
         "$type": "shadow",
         "$value": [
@@ -1020,8 +1024,55 @@
         "$value": 0.88
       }
     },
+    "fill": {
+      "$description": "A run's fill: a progress bar's bar, a slider's range, a meter's column.",
+      "$extensions": {
+        "dev.aning.shadcn-nsh": {
+          "backdropFilter": "none",
+          "border-bottom-color": "none",
+          "border-top-color": "none",
+          "elevation": null,
+          "gradient": "none",
+          "material": "none",
+          "pressed-background": "none",
+          "pressed-foreground": "none"
+        }
+      },
+      "background": {
+        "$type": "color",
+        "$value": "{color.primary}"
+      },
+      "border-color": {
+        "$type": "color",
+        "$value": {
+          "colorSpace": "oklch",
+          "components": [
+            0,
+            0,
+            0
+          ],
+          "alpha": 0,
+          "hex": "#000000"
+        },
+        "$extensions": {
+          "dev.aning.shadcn-nsh": {
+            "transparentKeyword": true
+          }
+        }
+      },
+      "shadow": {
+        "$type": "shadow",
+        "$value": [
+          "{shadow.edge.accent}"
+        ]
+      },
+      "foreground": {
+        "$type": "color",
+        "$value": "{color.primary-foreground}"
+      }
+    },
     "knob": {
-      "$description": "A knob: a switch's thumb, a slider's handle, a segmented thumb.",
+      "$description": "A knob: a switch's thumb, a slider's handle. Its checked state, `checked-*`, is the knob while its control is on.",
       "$extensions": {
         "dev.aning.shadcn-nsh": {
           "backdropFilter": "none",
@@ -1065,6 +1116,10 @@
       "foreground": {
         "$type": "color",
         "$value": "{color.foreground}"
+      },
+      "checked-background": {
+        "$type": "color",
+        "$value": "{color.primary-foreground}"
       }
     },
     "hover": {

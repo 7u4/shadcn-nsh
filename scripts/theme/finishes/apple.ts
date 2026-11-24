@@ -18,7 +18,12 @@ export const finishes: ThemeFinishes = {
       foreground: "{foreground}",
       material: "none",
     },
-    inset: { shadow: "{shadow.inset}", foreground: "{foreground}", material: "none" },
+    inset: {
+      shadow: "{shadow.inset}",
+      "border-color": "transparent",
+      foreground: "{foreground}",
+      material: "none",
+    },
     // iOS 26's segmented track: a capsule on the card layer, a hairline edge and a soft drop shadow.
     channel: {
       background: "{card}",
@@ -82,11 +87,20 @@ export const finishes: ThemeFinishes = {
       material: "none",
       "pressed-opacity": 0.88,
     },
+    fill: {
+      background: "{primary}",
+      "border-color": "transparent",
+      foreground: "{primary-foreground}",
+      shadow: "{shadow.edge.accent}",
+      material: "none",
+    },
     knob: {
       background: "{knob}",
       "border-color": "transparent",
       shadow: "{shadow.sm}",
       foreground: "{foreground}",
+      // Upstream `knobOn` paints an open knob in the accent's ink; the rest is still `knob`.
+      "checked-background": "{primary-foreground}",
       material: "none",
     },
     hover: {

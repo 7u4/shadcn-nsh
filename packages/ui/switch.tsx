@@ -200,18 +200,21 @@ function geometry(size: SwitchSize): ResolvedSwitchGeometry {
 }
 
 /**
- * A switch's knob: the `knob` layer, and on an open switch the accent's own ink in place of the
- * knob's fill, with no ring of the track's. A switch is one assembly; what its knob wears open is
- * the switch's business.
+ * A switch's knob: the `knob` layer, and on an open switch its checked state — the fill, the edge
+ * and the gradient the theme states in `checked-*`, which a field it leaves out keeps from the
+ * unchecked knob.
  */
 function knobLook(on: boolean): ViewStyle {
-  if (!on) return { ...finish.knob };
-  return {
-    ...finish.knob,
-    backgroundColor: finish.accent.foreground,
-    backgroundImage: "none",
-    borderColor: "transparent",
-  };
+  const checked: ViewStyle = { ...finish.knob };
+  if (!on) return checked;
+  const background = finish.knob.checkedBackground;
+  if (background !== undefined) checked.backgroundColor = background;
+  const border = finish.knob.checkedBorderColor;
+  if (border !== undefined) checked.borderColor = border;
+  const gradient = finish.knob.checkedGradient;
+  if (gradient === null) delete checked.backgroundImage;
+  else if (gradient !== undefined) checked.backgroundImage = gradient;
+  return checked;
 }
 
 /**
@@ -269,10 +272,10 @@ export function switchLook(on: () => boolean, size: SwitchSize = "default"): Swi
         height: g.height,
         borderRadius: g.height / 2,
         padding: g.inset,
-        backgroundColor: checked ? colors.primary : colors.track,
+        backgroundColor: checked ? finish.fill.backgroundColor : colors.track,
         borderWidth: checked ? g.onBorder : g.border,
-        borderColor: checked ? finish.accent.borderColor : finish.inset.borderColor,
-        boxShadow: checked ? finish.accent.boxShadow : finish.inset.boxShadow,
+        borderColor: checked ? finish.fill.borderColor : finish.inset.borderColor,
+        boxShadow: checked ? finish.fill.boxShadow : finish.inset.boxShadow,
         transitionProperty: reduceMotion() ? "none" : "background-color, border-color, box-shadow",
         ...cssMotion(motion.fast),
       };

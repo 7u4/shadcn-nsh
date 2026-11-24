@@ -26,6 +26,7 @@ const layers = [
   "inverse",
   "glass",
   "accent",
+  "fill",
   "knob",
   "hover",
   "pressed",
