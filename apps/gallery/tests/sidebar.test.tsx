@@ -60,6 +60,16 @@ test("a row takes a press", async () => {
   expect(app.texts()).toContain("presses 1");
 });
 
+// `selectedStyle` applies only while the row's `nsh/base` button is `selected`, the state screen
+// readers announce.
+test("an active row is selected for screen readers", async () => {
+  const app = await open("./sidebar-active.fixture.tsx", wide);
+  expect(app.viewStyle("role:button[Row B]")?.opacity).toBe(0.5);
+  expect(app.viewStyle("role:button[Row A]")?.opacity).not.toBe(0.5);
+  expect(app.viewStyle("role:button[Sub B]")?.opacity).toBe(0.5);
+  expect(app.viewStyle("role:button[Sub A]")?.opacity).not.toBe(0.5);
+});
+
 test("a narrow window opens the column as a sheet", async () => {
   const app = await open("./sidebar.fixture.tsx", narrow);
   expect(app.texts()).toContain("state expanded · sheet false");

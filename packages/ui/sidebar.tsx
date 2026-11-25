@@ -1375,6 +1375,7 @@ export function SidebarMenuButton(props: SidebarMenuButtonProps) {
     <BaseButton
       {...rest}
       disabled={props.disabled}
+      selected={!!props.isActive}
       accessibilityLabel={
         props.accessibilityLabel !== undefined
           ? props.accessibilityLabel
@@ -1581,6 +1582,7 @@ export function SidebarMenuSubButton(props: SidebarMenuSubButtonProps) {
     <BaseButton
       {...rest}
       disabled={props.disabled}
+      selected={!!props.isActive}
       style={[look.style, props.style ?? null]}
       hoverStyle={[look.hoverStyle ?? null, props.hoverStyle ?? null]}
       activeStyle={[look.activeStyle ?? null, props.activeStyle ?? null]}
