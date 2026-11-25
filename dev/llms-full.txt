@@ -338,7 +338,7 @@ The box is the platform's own (`nsh/base`'s `AlertDialog.show`): UIAlertControll
 on macOS, NSH's drawing of the same box on the web, the platform dialog on Android. The parts only
 fill it in — they register a title, a message and buttons, and `AlertDialogContent` shows it when
 the root is open. So the box **does not follow this library's theme**, what it shows is **text
-only** (no views, icons or fields), and an Android alert takes **at most three buttons**. The
+only** (no views or icons; at most one text field, `input`, where the platform's alert has one), and an Android alert takes **at most three buttons**. The
 platform shows one box at a time, so a process has one: two `AlertDialog`s opened together share
 it, and the second is not stacked on the first.
 
@@ -401,10 +401,35 @@ own, `destructive` in red where the platform has red.
 <AlertDialog onAction={({ action }) => action === "delete" && remove()}>…</AlertDialog>
 ```
 
+### A text field [#a-text-field]
+
+`input` on `AlertDialogContent` adds one text field to an alert (not an action sheet) —
+`defaultValue`, `placeholder`, `selectTextOnFocus`, `required` (no confirming an empty one).
+`onAction` reports its text as `value` with the button chosen. Windows, Linux and the terminal
+show no field there: `value` is `null`, so an app that must have the text uses a `Dialog` with
+an `Input`.
+
+```tsx
+<AlertDialog onAction={({ action, value }) => action === "rename" && rename(value)}>
+  <AlertDialogTrigger>Rename…</AlertDialogTrigger>
+  <AlertDialogContent
+    input={{ defaultValue: name(), placeholder: "Name", selectTextOnFocus: true }}
+  >
+    <AlertDialogHeader>
+      <AlertDialogTitle>Rename the photo</AlertDialogTitle>
+    </AlertDialogHeader>
+    <AlertDialogFooter>
+      <AlertDialogCancel>Cancel</AlertDialogCancel>
+      <AlertDialogAction id="rename">Rename</AlertDialogAction>
+    </AlertDialogFooter>
+  </AlertDialogContent>
+</AlertDialog>
+```
+
 ### Awaiting the answer [#awaiting-the-answer]
 
 An app that wants the choice before it draws anything else — `await`, then act — shows the same box
-with `nsh/base`'s own `AlertDialog.show`, which resolves with `{ action }`. That is the app's call.
+with `nsh/base`'s own `AlertDialog.show`, which resolves with `{ action, value }`. That is the app's call.
 The parts above declare a box under a root of the page's, for an alert that is part of what the page
 draws; the library has no imperative `show` of its own: a web alert is
 always the app's own drawing, and a second way in would be two APIs for one box.
@@ -465,17 +490,17 @@ const open = signal(false);
 one while it is up: a part that renders again with the alert still open — a page whose layout
 rebuilds its children does — stacks nothing, and the answer belongs to the app that asked.
 
-| Part                     | Props                                                                                         | Description                                                                                                 |
-| ------------------------ | --------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `AlertDialog`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onAction({ action })`               | The root: owns the open state and the text its parts registered.                                            |
-| `AlertDialogTrigger`     | `Action`'s props — `children`, `variant`, `disabled`, and every view prop — without `onPress` | The press that opens it; a string child is a `Button`, `variant` picking its look (`secondary` by default). |
-| `AlertDialogContent`     | `presentation`, `closeOnEscape`, `closeOnBackdropPress` — the rest of `AlertDialogOptions`    | The parts the box shows, and the `AlertDialog.show` call when the root opens.                               |
-| `AlertDialogTitle`       | `children` (a string)                                                                         | The heading.                                                                                                |
-| `AlertDialogDescription` | `children` (a string)                                                                         | The message.                                                                                                |
-| `AlertDialogAction`      | `id`, `role`, `children` (a string; the `id` when left out)                                   | A choice; `role` is what it means and `onAction` reports its `id`.                                          |
-| `AlertDialogCancel`      | `id` (default `"cancel"`), `children`                                                         | The same button with `role="cancel"`.                                                                       |
-| `AlertDialogHeader`      | `children`                                                                                    | A group that draws nothing.                                                                                 |
-| `AlertDialogFooter`      | `children`                                                                                    | A group that draws nothing; the buttons keep the order they are written in.                                 |
+| Part                     | Props                                                                                               | Description                                                                                                 |
+| ------------------------ | --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `AlertDialog`            | `open`, `defaultOpen`, `onOpenChange({ open, reason })`, `onAction({ action, value })`              | The root: owns the open state and the text its parts registered.                                            |
+| `AlertDialogTrigger`     | `Action`'s props — `children`, `variant`, `disabled`, and every view prop — without `onPress`       | The press that opens it; a string child is a `Button`, `variant` picking its look (`secondary` by default). |
+| `AlertDialogContent`     | `presentation`, `closeOnEscape`, `closeOnBackdropPress`, `input` — the rest of `AlertDialogOptions` | The parts the box shows, and the `AlertDialog.show` call when the root opens.                               |
+| `AlertDialogTitle`       | `children` (a string)                                                                               | The heading.                                                                                                |
+| `AlertDialogDescription` | `children` (a string)                                                                               | The message.                                                                                                |
+| `AlertDialogAction`      | `id`, `role`, `children` (a string; the `id` when left out)                                         | A choice; `role` is what it means and `onAction` reports its `id`.                                          |
+| `AlertDialogCancel`      | `id` (default `"cancel"`), `children`                                                               | The same button with `role="cancel"`.                                                                       |
+| `AlertDialogHeader`      | `children`                                                                                          | A group that draws nothing.                                                                                 |
+| `AlertDialogFooter`      | `children`                                                                                          | A group that draws nothing; the buttons keep the order they are written in.                                 |
 
 # Alert (/dev/docs/components/alert)
 
@@ -1750,7 +1775,9 @@ import { Calendar } from "@/components/ui/calendar";
 <Calendar value={day()} onChange={({ value }) => day.set(value)} />
 ```
 
-`value` is an ISO date; with `range` it is `[start, end]`.
+`value` is an ISO date; with `range` it is `[start, end]`. While the second end is chosen, the band
+previews the range from the first to a later day under the pointer or the keyboard; the pick
+commits it. A day before the first starts the range again, so nothing is previewed there.
 
 ### Uncontrolled [#uncontrolled]
 
@@ -3303,7 +3330,8 @@ DatePicker
 
 ### A range [#a-range]
 
-`range` on the content; the trigger shows both ends.
+`range` on the content; the trigger shows both ends. After the first pick the band previews the
+range to the day under the pointer or the keyboard, as the calendar's does.
 
 ```tsx
 <DatePicker value={range} onChange={({ value }) => setRange(value)}>
@@ -7868,7 +7896,7 @@ import { Pressable } from "@/components/ui/pressable";
 
 ### A stretch of text [#a-stretch-of-text]
 
-A string child is plain text, and its text is the region's name for screen readers unless `accessibilityLabel` says otherwise. Children drawn as given are named by the texts inside them; one that draws no text needs an `accessibilityLabel` (the icon-only case is an `IconButton`, where it is required).
+A string child is plain text, and its text is the region's name for screen readers unless `accessibilityLabel` says otherwise. Children drawn as given are named by the texts inside them; one that draws no text needs an `accessibilityLabel` (the icon-only case is an `IconButton`, where it is required). `accessibilityHint` says what a press does, read after the name.
 
 ```tsx
 <Pressable onPress={read}>A whole paragraph can be the region.</Pressable>
@@ -7923,7 +7951,7 @@ The look is a function, for a `nsh/base` control of your own. Its `shape.control
 
 ## API [#api]
 
-Every prop of [`nsh/base` Button](https://nsh.dev/elements/button) passes through (`onPress`, `disabled`, `selected`, `role`, `hitSlop`, …). `style`, `hoverStyle`, `activeStyle` and `focusVisibleStyle` go over the look's. `scale` is the sink of a press.
+Every prop of [`nsh/base` Button](https://nsh.dev/elements/button) passes through (`onPress`, `disabled`, `selected`, `role`, `hitSlop`, `accessibilityLabel`, `accessibilityHint`, …). `style`, `hoverStyle`, `activeStyle` and `focusVisibleStyle` go over the look's. `scale` is the sink of a press.
 
 | Part        | Props                                | Description                                                                       |
 | ----------- | ------------------------------------ | --------------------------------------------------------------------------------- |
@@ -7932,10 +7960,7 @@ Every prop of [`nsh/base` Button](https://nsh.dev/elements/button) passes throug
 There is no axis: a pressable has one look — the hover, the sink and the ring — and its appearance
 is its content's. `pressableLook` takes `disabled` (no hover or press feedback), `scale` (how far a
 press sinks it) and `style` (geometry over the look's), and is what the reference page spreads on
-`nsh/base`'s Button. A hint beside the name has no prop here: `nsh/base`'s Button takes no
-`accessibilityHint`, so `Pressable` cannot pass one on. A row that needs one is a `View` with
-`accessible`, `role="button"`, `accessibilityLabel`, `accessibilityHint` and `pressableLook()`
-spread on it.
+`nsh/base`'s Button.
 
 # Progress (/dev/docs/components/progress)
 
