@@ -482,8 +482,19 @@ function ToastItem(props: { entry: ToastEntry }) {
   );
 }
 
+/** What `Toaster` takes. */
+export type ToasterProps = {
+  /**
+   * Escape and the Android back button dismiss the newest toast (default `true`, as `nsh/base`'s
+   * `ToastStack`). `false` leaves them to the app: a dialog or a menu it keeps open hears them.
+   */
+  closeOnEscape?: boolean;
+};
+
 /** Where the toasts show: the foot of the window, bottom-right when it is at least 700 points wide. */
-export function Toaster() {
+export function Toaster(props: ToasterProps) {
+  // `ToastStack`'s own default, stated: the prop is passed whether or not the app gave it.
+  const closeOnEscape = () => props.closeOnEscape ?? true;
   const wide = () => windowSize().width >= 700;
   const newest = () =>
     shown()
@@ -492,6 +503,7 @@ export function Toaster() {
   if (terminal) {
     return (
       <ToastStack
+        closeOnEscape={closeOnEscape()}
         onCancel={() => {
           const id = newest()?.id;
           if (id) toast.dismiss(id);
@@ -518,6 +530,7 @@ export function Toaster() {
       <ToastStack
         placement={wide() ? "bottomRight" : "bottomCenter"}
         style={{ width: 340, maxWidth: "100%" }}
+        closeOnEscape={closeOnEscape()}
         onExpandedChange={({ expanded: open }) => {
           expanded.set(open);
           emit({ phase: "expanded", expanded: open });

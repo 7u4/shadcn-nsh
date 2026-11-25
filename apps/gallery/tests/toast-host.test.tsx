@@ -13,6 +13,23 @@ test("toast raises, updates and dismisses", async () => {
   expect(app.texts().some((line) => line === "Updated")).toBe(false);
 });
 
+test("Escape dismisses the newest toast", async () => {
+  const app = await open("./toast-host.fixture.tsx");
+  await app.press("Raise");
+  await app.waitFor("text:Hello");
+  await app.keyboard.press("escape");
+  await app.waitFor("text:status=dismissed null");
+});
+
+test("a Toaster with closeOnEscape={false} keeps its toast on Escape", async () => {
+  const app = await open("./toast-escape.fixture.tsx");
+  await app.press("Raise");
+  await app.waitFor("text:Kept");
+  await app.keyboard.press("escape");
+  await app.wait(500);
+  expect(app.shows("text:Kept")).toBe(true);
+});
+
 test("an action dismisses with its label, and update misses an unknown id", async () => {
   const app = await open("./toast-host.fixture.tsx");
   await app.press("With undo");

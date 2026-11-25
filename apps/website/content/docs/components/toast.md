@@ -57,13 +57,13 @@ An action's `onClick` runs when it is pressed, and `onDismiss` hears that action
 
 Every prop of [`nsh/base` Toast](https://nsh.dev/elements/toast) passes through. `style` goes over `toastLook`.
 
-| Part            | Props                                                                                     | Description                                                                            |
-| --------------- | ----------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| `Toast`         | `title`, `description`, `children`, and every `nsh/base` Toast prop                       | A raised banner; without children it draws `title` and `description`                   |
-| `toast`         | `(title, options?)` → `string`                                                            | Shows one. `success`, `error`, `warning`, `info`, `loading` set `type`                 |
-| `options`       | `id`, `description`, `duration`, `type`, `action`, `closeButton`, `progress`, `onDismiss` | `duration` defaults to 4000; `Infinity` stays. `closeButton: true` is labelled "Close" |
-| `toast.update`  | `(id, change) → boolean`                                                                  | Changes a toast in place. `null` clears `description`, `action` or `progress`          |
-| `toast.dismiss` | `(id?)`                                                                                   | Closes one toast, or every toast when `id` is omitted                                  |
-| `Toaster`       |                                                                                           | The stack at the foot of the window. Mount it once                                     |
+| Part            | Props                                                                                     | Description                                                                                                         |
+| --------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `Toast`         | `title`, `description`, `children`, and every `nsh/base` Toast prop                       | A raised banner; without children it draws `title` and `description`                                                |
+| `toast`         | `(title, options?)` → `string`                                                            | Shows one. `success`, `error`, `warning`, `info`, `loading` set `type`                                              |
+| `options`       | `id`, `description`, `duration`, `type`, `action`, `closeButton`, `progress`, `onDismiss` | `duration` defaults to 4000; `Infinity` stays. `closeButton: true` is labelled "Close"                              |
+| `toast.update`  | `(id, change) → boolean`                                                                  | Changes a toast in place. `null` clears `description`, `action` or `progress`                                       |
+| `toast.dismiss` | `(id?)`                                                                                   | Closes one toast, or every toast when `id` is omitted                                                               |
+| `Toaster`       | `closeOnEscape`                                                                           | The stack at the foot of the window. Mount it once. `closeOnEscape={false}` leaves Escape to an open dialog or menu |
 
 `toastLook`, `toastTitle`, `toastText`, `toastCloseLook`, `toastActionLook` and `toastActionLabel` are the look's parts, for content of your own.

@@ -4,6 +4,8 @@
 
 ### Added
 
+- **`Toaster` takes `closeOnEscape`.** `closeOnEscape={false}` leaves Escape and the Android back button to the app, so a dialog or a menu it keeps open hears them instead of the newest toast. Left out, it is `true` and Escape dismisses the newest toast as before.
+
 - **`AlertDialogContent` takes an `input` (#122).** One text field in the platform's alert (`defaultValue`, `placeholder`, `selectTextOnFocus`, `required`); `onAction` reports its text as `value` beside the chosen `action`. Windows, Linux and the terminal show no field, and `value` is `null` there. Needs NSH v0.7.0.
 
 - **A half-picked range previews its band (#326).** In `Calendar` and `DatePicker` with `range`, the band runs from the first pick to the later day under the pointer or the keyboard until the second pick commits it. A day before the first starts the range again, as `nsh/base` does, so nothing is previewed there.
