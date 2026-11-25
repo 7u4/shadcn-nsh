@@ -110,7 +110,7 @@ export type AlertDescriptionProps = ViewProps;
  * terminal draws no icons), then `AlertTitle` and `AlertDescription`.
  */
 export function Alert(props: AlertProps) {
-  const [, rest] = split(props, ["variant", "style"]);
+  const [, rest] = split(props, ["variant", "style", "children"]);
   return (
     <AlertVariantContext.Provider value={props.variant ?? "default"}>
       <View {...rest} role="alert" style={[alertLook().root(), props.style ?? null]}>
@@ -122,7 +122,7 @@ export function Alert(props: AlertProps) {
 
 /** An alert's title, one line above its note: `destructive` puts it in the danger tone. */
 export function AlertTitle(props: AlertTitleProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <Text {...rest} style={[alertLook().title(AlertVariantContext()), props.style ?? null]}>
       {props.children}

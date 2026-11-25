@@ -185,7 +185,7 @@ function useMenubarMenu() {
 
 /** The bar: a row of menus, each its trigger and its popup. */
 export function Menubar(props: MenubarProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} role="menubar" style={[menubarLook().bar, props.style ?? null]}>
       {props.children}

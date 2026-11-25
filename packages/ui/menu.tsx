@@ -667,7 +667,7 @@ export function MenuRadioItem(props: MenuRadioItemProps) {
 
 /** Groups related rows. */
 export function MenuGroup(props: MenuGroupProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} role="group" style={props.style}>
       {props.children}

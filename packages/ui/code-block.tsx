@@ -200,7 +200,7 @@ export type CodeBlockProps = ViewProps & {
  * syntax highlighting: the code is one color, in the theme's monospaced family.
  */
 export function CodeBlock(props: CodeBlockProps) {
-  const [, rest] = split(props, ["variant", "size", "style"]);
+  const [, rest] = split(props, ["variant", "size", "style", "children"]);
   const state: CodeBlockState = {
     get variant() {
       return props.variant ?? "default";
@@ -223,7 +223,7 @@ export type CodeBlockHeaderProps = ViewProps;
 
 /** A row above the code: a `CodeBlockTitle` at the start, `CodeBlockActions` at the end. */
 export function CodeBlockHeader(props: CodeBlockHeaderProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const block = CodeBlockContext();
   return (
     <View
@@ -240,7 +240,7 @@ export type CodeBlockTitleProps = TextProps;
 
 /** A filename or a label: one line, cut with an ellipsis when the header is narrower. */
 export function CodeBlockTitle(props: CodeBlockTitleProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const block = CodeBlockContext();
   return (
     <Text {...rest} style={[codeBlockLook().title(block.variant), props.style ?? null]}>
@@ -254,7 +254,7 @@ export type CodeBlockActionsProps = ViewProps;
 
 /** Buttons at the end of the header, a hairline apart: a wrap toggle, a `CodeBlockCopyButton`. */
 export function CodeBlockActions(props: CodeBlockActionsProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} style={[codeBlockLook().actions(), props.style ?? null]}>
       {props.children}

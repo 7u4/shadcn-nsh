@@ -313,7 +313,7 @@ export function BubbleContent(props: BubbleContentProps) {
  */
 export function BubbleText(props: BubbleTextProps) {
   const variant = (): BubbleVariant => BubbleContext()?.variant() ?? "default";
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <Text {...rest} style={[bubbleLook().text(variant()), props.style ?? null]}>
       {props.children}

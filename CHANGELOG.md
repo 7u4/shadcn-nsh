@@ -32,6 +32,8 @@
 
 ### Fixed
 
+- **Layout parts mount their children once.** `SidebarProvider`, `SidebarInset`, `SidebarHeader`, `SidebarFooter`, `SidebarGroup`, `SidebarMenu`, `SidebarMenuItem` and the other parts of `sidebar`, `empty`, `menu`, `menubar`, `breadcrumb`, `bubble`, `navigation-menu`, `title-bar`, `collapsing-header`, `alert`, `trace`, `code-block`, `aspect-ratio` and `button-group` passed `children` to their view twice, so each child was built twice — four times for a page inside `SidebarProvider` > `SidebarInset`, and every effect or request in it ran as many times. Each part now draws its children once.
+
 - **An active sidebar row is selected for screen readers.** `SidebarMenuButton` and `SidebarMenuSubButton` with `isActive` now set `selected` on their `nsh/base` button, so screen readers and tests see the row as selected, and its `selectedStyle` applies. Before, `isActive` changed only the look.
 
 - **Themes keep their spec's colours again (#403).** Since 0.10.0 every derived colour (references, `*-tint`, `chart-*`) was recomputed from a formula, which overwrote the values the official specs give — 287 of them across the six themes. NSH Gallery now matches upstream `nsh-gallery-ui` key by key (a grey select popup, a green row tint with its `brand/30` edge, `brand` #4a840a); WinUI's subtle fills, Material's `secondary-foreground` and `inverse-brand`, solid-glass's green `brand`, shadcn's `ring` and `sidebar`, and Apple's dark `popover` take their official values. A theme may now state a derived colour when the token records its source in `$extensions["dev.aning.shadcn-nsh"].source`; `bun run theme:parity` holds NSH Gallery to upstream. Why: [ADR 0012](docs/decisions/0012-derived-colours-are-defaults.md).

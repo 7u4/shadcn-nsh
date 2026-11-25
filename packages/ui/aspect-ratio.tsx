@@ -36,7 +36,7 @@ export type AspectRatioProps = ViewProps & {
  * color block — so a box of pictures holds the same shape on every screen.
  */
 export function AspectRatio(props: AspectRatioProps) {
-  const [, rest] = split(props, ["ratio", "style"]);
+  const [, rest] = split(props, ["ratio", "style", "children"]);
   return (
     <View {...rest} style={[aspectRatioLook(props.ratio), props.style ?? null]}>
       {props.children}

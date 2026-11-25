@@ -193,7 +193,7 @@ export type TraceProps = ViewProps;
  * ones that open onto what they did. Lines are as wide as their content.
  */
 export function Trace(props: TraceProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} style={[traceLook().root, props.style ?? null]}>
       {props.children}
@@ -217,7 +217,7 @@ export type TraceLineProps = ViewProps & {
  * the text color under the pointer.
  */
 export function TraceLine(props: TraceLineProps) {
-  const [, rest] = split(props, ["status", "onPress", "style", "accessibilityLabel"]);
+  const [, rest] = split(props, ["status", "onPress", "style", "accessibilityLabel", "children"]);
   const collapsible = TraceCollapsibleContext();
   // The trigger's chevron follows the line's state, wherever it changes.
   effect(() => collapsible?.status.set(props.status));
@@ -255,7 +255,7 @@ export type TraceIconProps = ViewProps;
  * instead.
  */
 export function TraceIcon(props: TraceIconProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const line = TraceLineContext();
   return (
     <View {...rest} style={[traceLook().icon, props.style ?? null]}>
@@ -273,7 +273,7 @@ export type TraceTitleProps = TextProps;
 
 /** What a line says it is doing or did: one line, cut with an ellipsis; it pulses while the line is `running`. */
 export function TraceTitle(props: TraceTitleProps) {
-  const [, rest] = split(props, ["style", "class"]);
+  const [, rest] = split(props, ["style", "class", "children"]);
   const line = TraceLineContext();
   return (
     <Text
@@ -295,7 +295,7 @@ export type TraceDescriptionProps = TextProps;
 
 /** A quieter note after the title (`3 s`, `4 results`): it keeps its width, and its digits do not jump as they count. */
 export function TraceDescription(props: TraceDescriptionProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <Text {...rest} style={[traceLook().description, props.style ?? null]}>
       {props.children}

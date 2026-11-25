@@ -128,7 +128,7 @@ export type ButtonGroupSeparatorProps = Omit<ViewProps, "children">;
  * on its `style`, `first` at the leading edge and `last` at the trailing one.
  */
 export function ButtonGroup(props: ButtonGroupProps) {
-  const [, rest] = split(props, ["orientation", "style"]);
+  const [, rest] = split(props, ["orientation", "style", "children"]);
   const orientation = props.orientation ?? "horizontal";
   return (
     <OrientationContext.Provider value={orientation}>

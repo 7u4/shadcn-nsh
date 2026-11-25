@@ -469,7 +469,7 @@ export function NavigationMenu(props: NavigationMenuProps) {
 
 /** The bar's items side by side, a gap apart, wrapping onto a second line when narrow. */
 export function NavigationMenuList(props: NavigationMenuListProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View role="list" {...rest} style={[navigationMenuLook().list, props.style ?? null]}>
       {props.children}

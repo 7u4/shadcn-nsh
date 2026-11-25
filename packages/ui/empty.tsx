@@ -127,7 +127,7 @@ export type EmptyContentProps = ViewProps;
  * about it. In the terminal the block is its lines: no padding, and one Cell row between them.
  */
 export function Empty(props: EmptyProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} style={[emptyLook().root(), props.style ?? null]}>
       {props.children}
@@ -137,7 +137,7 @@ export function Empty(props: EmptyProps) {
 
 /** The media and the words under it, a column centered in the block. */
 export function EmptyHeader(props: EmptyHeaderProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} style={[emptyLook().header(), props.style ?? null]}>
       {props.children}
@@ -150,7 +150,7 @@ export function EmptyHeader(props: EmptyHeaderProps) {
  * `variant="icon"` for a square of the muted fill with an `EMPTY_ICON` icon in it.
  */
 export function EmptyMedia(props: EmptyMediaProps) {
-  const [, rest] = split(props, ["variant", "style"]);
+  const [, rest] = split(props, ["variant", "style", "children"]);
   return (
     <View {...rest} style={[emptyLook().media(props.variant ?? "default"), props.style ?? null]}>
       {props.children}
@@ -160,7 +160,7 @@ export function EmptyMedia(props: EmptyMediaProps) {
 
 /** The line that says there is nothing here: medium, a step above the body's size. */
 export function EmptyTitle(props: EmptyTitleProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <Text {...rest} style={[emptyLook().title(), props.style ?? null]}>
       {props.children}
@@ -170,7 +170,7 @@ export function EmptyTitle(props: EmptyTitleProps) {
 
 /** The line under the title: the body's size, in the muted ink, centered. */
 export function EmptyDescription(props: EmptyDescriptionProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <Text {...rest} style={[emptyLook().description(), props.style ?? null]}>
       {props.children}
@@ -180,7 +180,7 @@ export function EmptyDescription(props: EmptyDescriptionProps) {
 
 /** What the reader can do about it: a button or two, a field, a link, a gap of 16 apart. */
 export function EmptyContent(props: EmptyContentProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} style={[emptyLook().content(), props.style ?? null]}>
       {props.children}

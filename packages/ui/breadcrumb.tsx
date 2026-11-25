@@ -220,7 +220,7 @@ export type BreadcrumbEllipsisProps = Omit<ViewProps, "children"> & {
  * `"Breadcrumb"` by default, so screen reader users can jump to it.
  */
 export function Breadcrumb(props: BreadcrumbProps) {
-  const [, rest] = split(props, ["accessibilityLabel", "style"]);
+  const [, rest] = split(props, ["accessibilityLabel", "style", "children"]);
   return (
     <View
       role="navigation"
@@ -235,7 +235,7 @@ export function Breadcrumb(props: BreadcrumbProps) {
 
 /** The trail's steps side by side, a gap apart, wrapping onto a second line when narrow. */
 export function BreadcrumbList(props: BreadcrumbListProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} style={[breadcrumbLook().list, props.style ?? null]}>
       {props.children}
@@ -245,7 +245,7 @@ export function BreadcrumbList(props: BreadcrumbListProps) {
 
 /** One step: its link or page, and the separator after it. */
 export function BreadcrumbItem(props: BreadcrumbItemProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} style={[breadcrumbLook().item, props.style ?? null]}>
       {props.children}
@@ -274,7 +274,7 @@ export function BreadcrumbLink(props: BreadcrumbLinkProps) {
 
 /** The page the trail ends at, in the text color, announced as the current one. */
 export function BreadcrumbPage(props: BreadcrumbPageProps) {
-  const [, rest] = split(props, ["style", "accessibilityState"]);
+  const [, rest] = split(props, ["style", "accessibilityState", "children"]);
   return (
     <Text
       {...rest}

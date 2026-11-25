@@ -182,7 +182,7 @@ export type TitleBarProps = ViewProps;
 export function TitleBar(props: TitleBarProps) {
   // No window, no bar: this is chrome for a window the app draws itself.
   if (!isAvailable) return null;
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View
       {...rest}

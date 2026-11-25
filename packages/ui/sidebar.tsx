@@ -947,7 +947,7 @@ export type SidebarProviderProps = ViewProps & {
  * trigger opens that instead.
  */
 export function SidebarProvider(props: SidebarProviderProps) {
-  const [, rest] = split(props, ["defaultOpen", "open", "onOpenChange", "style"]);
+  const [, rest] = split(props, ["defaultOpen", "open", "onOpenChange", "style", "children"]);
   const own = signal(props.defaultOpen ?? true);
   const sheet = signal(false);
   const axes = signal<SidebarAxes>(noAxes);
@@ -1094,7 +1094,7 @@ export type SidebarHeaderProps = ViewProps;
 
 /** The top of the column: a team switcher, a title, a search field. */
 export function SidebarHeader(props: SidebarHeaderProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const look = sidebarLook(useLookOptions());
   return (
     <View {...rest} style={[look.header, props.style ?? null]}>
@@ -1109,7 +1109,7 @@ export type SidebarFooterProps = ViewProps;
 
 /** The bottom of the column: the user's row, a help link. */
 export function SidebarFooter(props: SidebarFooterProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const look = sidebarLook(useLookOptions());
   return (
     <View {...rest} style={[look.footer, props.style ?? null]}>
@@ -1153,7 +1153,7 @@ export type SidebarGroupProps = ViewProps;
 
 /** A titled group of rows, 8 points of room around it. */
 export function SidebarGroup(props: SidebarGroupProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const look = sidebarGroupLook(useFoldOptions());
   return (
     <View {...rest} style={[look.group, props.style ?? null]}>
@@ -1228,7 +1228,7 @@ export type SidebarGroupContentProps = ViewProps;
 
 /** A group's rows, as wide as the group. */
 export function SidebarGroupContent(props: SidebarGroupContentProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const look = sidebarGroupLook(useFoldOptions());
   return (
     <View {...rest} style={[look.content, props.style ?? null]}>
@@ -1247,7 +1247,7 @@ export type SidebarMenuProps = ViewProps;
 
 /** The rows of a group: a gap apart, as wide as the group. */
 export function SidebarMenu(props: SidebarMenuProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View
       {...rest}
@@ -1280,7 +1280,7 @@ export type SidebarMenuItemProps = ViewProps;
  * this box), and a sub menu under it.
  */
 export function SidebarMenuItem(props: SidebarMenuItemProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const holds = signal({ action: false, badge: false });
   return (
     <SidebarItemContext.Provider
@@ -1517,7 +1517,7 @@ export type SidebarMenuSubProps = ViewProps;
 
 /** The rows under a row that opens them: a hairline down the start, 14 points in. */
 export function SidebarMenuSub(props: SidebarMenuSubProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const look = sidebarMenuSubLook(useFoldOptions());
   const shown = useShown();
   return (
@@ -1534,7 +1534,7 @@ export type SidebarMenuSubItemProps = ViewProps;
 
 /** A sub menu's row's box. */
 export function SidebarMenuSubItem(props: SidebarMenuSubItemProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const look = sidebarMenuSubLook(useFoldOptions());
   return (
     <View {...rest} style={[look.item, props.style ?? null]}>
@@ -1607,7 +1607,7 @@ export type SidebarInsetProps = ViewProps;
  * from the window's edges.
  */
 export function SidebarInset(props: SidebarInsetProps) {
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   const look = sidebarLook(useLookOptions());
   return (
     <View {...rest} style={[look.inset, props.style ?? null]}>

@@ -241,7 +241,7 @@ function collapsingHeaderState(): CollapsingHeaderState {
  * with `stickyHeaderOffset`.
  */
 export function CollapsingHeader(props: CollapsingHeaderProps) {
-  const [mine, rest] = split(props, ["scroll", "expandedHeight", "collapsedHeight", "style"]);
+  const [mine, rest] = split(props, ["scroll", "expandedHeight", "collapsedHeight", "style", "children"]);
   const look = collapsingHeaderLook();
   const heights = look.heights(mine.expandedHeight, mine.collapsedHeight);
   const collapsed = mine.scroll.interpolate({
@@ -266,7 +266,7 @@ export function CollapsingHeader(props: CollapsingHeaderProps) {
 export function CollapsingHeaderBackdrop(props: ViewProps) {
   const state = collapsingHeaderState();
   const look = collapsingHeaderLook();
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   if (terminal) return null;
   return (
     <>
@@ -303,7 +303,7 @@ export function CollapsingHeaderDescription(props: ViewProps) {
 export function CollapsingHeaderBar(props: ViewProps) {
   const state = collapsingHeaderState();
   const look = collapsingHeaderLook();
-  const [, rest] = split(props, ["style"]);
+  const [, rest] = split(props, ["style", "children"]);
   return (
     <View {...rest} style={[look.bar(state.heights), props.style ?? null]}>
       {props.children}
@@ -319,7 +319,7 @@ export function CollapsingHeaderBar(props: ViewProps) {
 export function CollapsingHeaderTitle(props: TextProps) {
   const state = collapsingHeaderState();
   const look = collapsingHeaderLook();
-  const [mine, rest] = split(props, ["style", "class"]);
+  const [mine, rest] = split(props, ["style", "class", "children"]);
   return (
     <Text
       {...rest}
